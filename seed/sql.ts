@@ -17,7 +17,8 @@ type ActivityTypeSeed = {
   tiers: { minValue: number; points: number }[];
 };
 
-// Default config (docs/specs/02_scoring.md). Seeded once; editable in-app from here on.
+// Default config, snapshotted from the live database 2026-08-24 (original defaults:
+// docs/specs/02_scoring.md). Seeded once; editable in-app from here on.
 const ACTIVITY_TYPES: ActivityTypeSeed[] = [
   {
     key: "bear_trap",
@@ -32,7 +33,7 @@ const ACTIVITY_TYPES: ActivityTypeSeed[] = [
   },
   {
     key: "contribution",
-    name: "Contribution",
+    name: "Alliance Contribution",
     unitLabel: "Contribution",
     weight: 1,
     maxInstance: 1,
@@ -61,6 +62,93 @@ const ACTIVITY_TYPES: ActivityTypeSeed[] = [
       { minValue: 5000, points: 2 },
       { minValue: 10000, points: 3 },
     ],
+  },
+  {
+    key: "alliance_championship",
+    name: "Alliance Championship",
+    unitLabel: "Appearance",
+    weight: 1,
+    maxInstance: 1,
+    minValue: 0,
+    sort: 0,
+    color: "slate",
+    tiers: [{ minValue: 0, points: 1 }],
+  },
+  {
+    key: "castle_battle",
+    name: "Castle Battle",
+    unitLabel: "Points",
+    weight: 3,
+    maxInstance: 1,
+    minValue: 0,
+    sort: 0,
+    color: "red",
+    tiers: [{ minValue: 0, points: 1 }],
+  },
+  {
+    key: "kvk_prep",
+    name: "KvK Prep",
+    unitLabel: "Points",
+    weight: 6,
+    maxInstance: 1,
+    minValue: 0,
+    sort: 0,
+    color: "red",
+    tiers: [{ minValue: 0, points: 1 }],
+  },
+  {
+    key: "kvk_battle",
+    name: "KvK Battle",
+    unitLabel: "Points",
+    weight: 3,
+    maxInstance: 1,
+    minValue: 0,
+    sort: 0,
+    color: "red",
+    tiers: [{ minValue: 0, points: 1 }],
+  },
+  {
+    key: "triumph",
+    name: "Triumph",
+    unitLabel: "points",
+    weight: 1,
+    maxInstance: 1,
+    minValue: 0,
+    sort: 0,
+    color: "sky",
+    tiers: [
+      { minValue: 500, points: 1 },
+      { minValue: 5000, points: 2 },
+      { minValue: 10000, points: 3 },
+    ],
+  },
+  {
+    key: "alliance_brawl",
+    name: "Alliance Brawl",
+    unitLabel: "points",
+    weight: 1,
+    maxInstance: 1,
+    minValue: 0,
+    sort: 0,
+    color: "pink",
+    tiers: [
+      { minValue: 1000000, points: 1 },
+      { minValue: 1700000, points: 2 },
+      { minValue: 2500000, points: 3 },
+      { minValue: 3900000, points: 4 },
+      { minValue: 6000000, points: 5 },
+    ],
+  },
+  {
+    key: "swordland",
+    name: "Swordland",
+    unitLabel: "points",
+    weight: 3,
+    maxInstance: 2,
+    minValue: 0,
+    sort: 0,
+    color: "green",
+    tiers: [{ minValue: 0, points: 1 }],
   },
 ];
 

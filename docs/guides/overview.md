@@ -16,6 +16,8 @@ Access comes from a key with one of three tiers:
 
 The app is unusable without a valid key — the first thing you see on load is a prompt asking for the alliance access key, and nothing else renders until the key is accepted. An unrecognized key re-prompts rather than letting you in with reduced access.
 
+The interface is available in English, Spanish, French, German, and Korean. Use the globe button — in the top bar once you're in, or on the access-key prompt before you unlock — to pick a language; the page reloads in it and the choice sticks in this browser. On a first visit the app follows your browser's language when it is one of the five, otherwise English. Names, activity names, unit labels, and any text an officer typed into the app are shown exactly as entered, in whatever language they were written.
+
 See [Ranking](ranking.md), [Attendance](attendance.md), [Members](members.md), [Events](events.md), [Roster](roster.md), [Aliases](aliases.md), [Scoring](scoring.md), [Rewards](rewards.md), and [Backup](backup.md) for the rest.
 
 ## What you see

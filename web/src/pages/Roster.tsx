@@ -30,7 +30,7 @@ import type { MergeResult, RenameResult } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
 import { normalizeName } from "@/lib/normalize";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import {
   buildRosterRows,
@@ -771,10 +771,11 @@ function DecisionSegmented({
   value: Decision["kind"];
   onChange: (kind: Decision["kind"]) => void;
 }) {
+  const { t } = useTranslation();
   const opts: { key: Decision["kind"]; label: string }[] = [
-    { key: "new", label: "New member" },
-    { key: "alias", label: "Alias of…" },
-    { key: "skip", label: "Skip" },
+    { key: "new", label: t("roster.import.newMember") },
+    { key: "alias", label: t("roster.import.aliasOf") },
+    { key: "skip", label: t("roster.import.skip") },
   ];
   return (
     <Tabs value={value} onValueChange={(v) => onChange(v as Decision["kind"])}>
@@ -797,7 +798,7 @@ function DecisionSegmented({
 function metaLabel(row: ParsedRosterRow): string {
   return [
     row.alliance_rank ?? "—",
-    row.power === null ? "—" : row.power.toLocaleString(),
+    row.power === null ? "—" : formatNumber(row.power),
     row.power_position === null ? "—" : `#${row.power_position}`,
   ].join(" · ");
 }
@@ -1090,16 +1091,12 @@ function ImportRosterDialog({
       <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {initial ? "Edit roster update" : "Import roster (TSV)"}
+            {initial ? t("roster.import.editTitle") : t("roster.import.title")}
             {!result && !dataError && (
-              <span className="font-normal text-muted"> — step {step} of 3</span>
+              <span className="font-normal text-muted"> {t("roster.import.step", { step })}</span>
             )}
           </DialogTitle>
-          <DialogDescription>
-            Paste the in-game Alliance Ranking screen. Matched names update existing members;
-            unrecognized names and absent members are decided one by one. Identity is never guessed
-            and absence is never read as departure.
-          </DialogDescription>
+          <DialogDescription>{t("roster.import.desc")}</DialogDescription>
         </DialogHeader>
 
         {result ? (
@@ -1107,19 +1104,33 @@ function ImportRosterDialog({
             <div className="flex items-center gap-2 rounded-[6px] border border-up/20 bg-up/5 p-3 text-[13px] text-up">
               <CheckCircle2 className="size-4 shrink-0" />
               <span>
-                Updated <span className="num font-semibold">{result.updated}</span> · Created{" "}
-                <span className="num font-semibold">{result.created}</span> · Aliased{" "}
-                <span className="num font-semibold">{result.aliased}</span> · Deactivated{" "}
-                <span className="num font-semibold">{result.deactivated}</span> · Reactivated{" "}
-                <span className="num font-semibold">{result.reactivated}</span> · Skipped{" "}
-                <span className="num font-semibold">{skippedDecisionCount}</span> · Recomputed{" "}
-                <span className="num font-semibold">{result.recomputed}</span> participations.
+                <Trans
+                  i18nKey="roster.import.result"
+                  values={{
+                    updated: result.updated,
+                    created: result.created,
+                    aliased: result.aliased,
+                    deactivated: result.deactivated,
+                    reactivated: result.reactivated,
+                    skipped: skippedDecisionCount,
+                    recomputed: result.recomputed,
+                  }}
+                  components={{
+                    1: <span className="num font-semibold" />,
+                    2: <span className="num font-semibold" />,
+                    3: <span className="num font-semibold" />,
+                    4: <span className="num font-semibold" />,
+                    5: <span className="num font-semibold" />,
+                    6: <span className="num font-semibold" />,
+                    7: <span className="num font-semibold" />,
+                  }}
+                />
               </span>
             </div>
             <RosterDeltaPanel delta={result.delta} capturedOn={capturedOn} />
             <div className="flex justify-end">
               <Button size="sm" onClick={() => onOpenChange(false)}>
-                Done
+                {t("common.actions.done")}
               </Button>
             </div>
           </div>
@@ -1128,7 +1139,7 @@ function ImportRosterDialog({
             <ErrorState message={dataError} />
             <div className="flex justify-end">
               <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-                Close
+                {t("common.actions.close")}
               </Button>
             </div>
           </div>
@@ -1137,35 +1148,34 @@ function ImportRosterDialog({
             {error && <ErrorState message={error} />}
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[12px] font-medium text-secondary">Capture date</label>
-              <p className="text-[12px] text-muted">
-                The day this Alliance Ranking screen was captured. Rank and power are recorded
-                against it, so the next import can report what changed.
-              </p>
+              <label className="text-[12px] font-medium text-secondary">
+                {t("roster.import.captureDate")}
+              </label>
+              <p className="text-[12px] text-muted">{t("roster.import.captureDateHelp")}</p>
               {initial ? (
                 <span className="num text-[13px] font-medium">{capturedOn}</span>
               ) : (
                 <>
                   <DatePicker value={capturedOn} onChange={setCapturedOn} className="w-56" />
-                  {!dateValid && <p className="text-[12px] text-down">Pick a valid date (YYYY-MM-DD).</p>}
+                  {!dateValid && (
+                    <p className="text-[12px] text-down">{t("roster.import.invalidDate")}</p>
+                  )}
                 </>
               )}
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[12px] font-medium text-secondary">Roster</label>
+              <label className="text-[12px] font-medium text-secondary">{t("roster.title")}</label>
               <p className="text-[12px] text-muted">
-                One member per line, tab-separated, columns in this exact order:{" "}
-                <span className="num text-secondary">Governor</span>
-                <span className="text-faint"> · </span>
-                <span className="num text-secondary">Rank</span>
-                <span className="text-faint"> · </span>
-                <span className="num text-secondary">Power</span>
-                <span className="text-faint"> · </span>
-                <span className="num text-secondary">Position</span>. Rank is the R-level badge
-                (R1–R5); Position is the leaderboard number on the left of the row. Keep all four
-                columns even when a cell is empty. Power may include commas (stripped). Use the LLM
-                prompt below to turn the screenshots into this format.
+                <Trans
+                  i18nKey="roster.import.rosterHelp"
+                  components={{
+                    1: <span className="num text-secondary" />,
+                    2: <span className="num text-secondary" />,
+                    3: <span className="num text-secondary" />,
+                    4: <span className="num text-secondary" />,
+                  }}
+                />
               </p>
               <LlmPrompt prompt={ROSTER_PROMPT} />
               <Textarea
@@ -1182,18 +1192,29 @@ function ImportRosterDialog({
             ) : parsed.rows.length > 0 || parsed.noGovernor > 0 || parsed.invalid.length > 0 ? (
               <div className="flex flex-col gap-2 rounded-[6px] border border-border bg-background p-3 text-[13px]">
                 <div className="text-secondary">
-                  <span className="num font-semibold text-foreground">{matchedCount}</span> row
-                  {matchedCount === 1 ? " matches" : "s match"} existing members (will update
-                  Rank/Power/Position)
+                  <Trans
+                    i18nKey="roster.import.matched"
+                    count={matchedCount}
+                    components={{ 1: <span className="num font-semibold text-foreground" /> }}
+                  />
                   <span className="text-faint"> · </span>
-                  <span className="num font-semibold text-foreground">{unrecognizedCount}</span>{" "}
-                  unrecognized name{unrecognizedCount === 1 ? " needs" : "s need"} a decision
+                  <Trans
+                    i18nKey="roster.import.unrecognized"
+                    count={unrecognizedCount}
+                    components={{ 1: <span className="num font-semibold text-foreground" /> }}
+                  />
                   <span className="text-faint"> · </span>
-                  <span className="num font-semibold text-foreground">{classified.duplicates}</span>{" "}
-                  duplicate row{classified.duplicates === 1 ? "" : "s"} collapsed
+                  <Trans
+                    i18nKey="roster.import.duplicates"
+                    count={classified.duplicates}
+                    components={{ 1: <span className="num font-semibold text-foreground" /> }}
+                  />
                   <span className="text-faint"> · </span>
-                  <span className="num font-semibold text-foreground">{parsed.noGovernor}</span> line
-                  {parsed.noGovernor === 1 ? "" : "s"} skipped (no governor)
+                  <Trans
+                    i18nKey="roster.import.noGovernor"
+                    count={parsed.noGovernor}
+                    components={{ 1: <span className="num font-semibold text-foreground" /> }}
+                  />
                 </div>
                 {classified.r5Count !== 1 && (
                   <p className="text-[12px] text-warn">
@@ -1208,15 +1229,23 @@ function ImportRosterDialog({
                 <TriangleAlert />
                 <AlertContent>
                   <div className="font-medium">
-                    {parsed.invalid.length} row{parsed.invalid.length === 1 ? " has" : "s have"} an
-                    unreadable cell. Fix the paste — nothing is imported until they are gone.
+                    {t("roster.import.invalidRows", { count: parsed.invalid.length })}
                   </div>
                   <div className="num text-[12px]">
                     {parsed.invalid
                       .slice(0, 8)
-                      .map((r) => `line ${r.line}: ${r.governor} ${r.field} → "${r.value}"`)
+                      .map((r) =>
+                        t("roster.import.invalidDetail", {
+                          line: r.line,
+                          governor: r.governor,
+                          field: t(`roster.import.field.${r.field}`),
+                          value: r.value,
+                        }),
+                      )
                       .join(" · ")}
-                    {parsed.invalid.length > 8 ? ` · and ${parsed.invalid.length - 8} more` : ""}
+                    {parsed.invalid.length > 8
+                      ? ` ${t("roster.import.andMore", { n: parsed.invalid.length - 8 })}`
+                      : ""}
                   </div>
                 </AlertContent>
               </Alert>
@@ -1227,9 +1256,7 @@ function ImportRosterDialog({
                 <TriangleAlert />
                 <AlertContent>
                   <div className="font-medium">
-                    {classified.conflicts.length} member
-                    {classified.conflicts.length === 1 ? " is" : "s are"} named more than once in
-                    this capture. A member can only be observed once per date.
+                    {t("roster.import.conflicts", { count: classified.conflicts.length })}
                   </div>
                   <div className="num text-[12px]">
                     {classified.conflicts
@@ -1245,18 +1272,25 @@ function ImportRosterDialog({
                 <TriangleAlert />
                 <AlertContent>
                   <div>
-                    <span className="num font-semibold">{capturedOn}</span> already holds{" "}
-                    <span className="num font-semibold">{existingCount}</span> snapshot
-                    {existingCount === 1 ? "" : "s"}; this paste carries{" "}
-                    <span className="num font-semibold">
-                      {matchedCount + unrecognizedCount - skippedDecisionCount}
-                    </span>
-                    . Importing replaces that date wholesale — members not in this paste lose their
-                    observation for it.
+                    <Trans
+                      i18nKey="roster.import.existing"
+                      count={existingCount}
+                      values={{
+                        date: capturedOn,
+                        carries: matchedCount + unrecognizedCount - skippedDecisionCount,
+                      }}
+                      components={{
+                        1: <span className="num font-semibold" />,
+                        2: <span className="num font-semibold" />,
+                        3: <span className="num font-semibold" />,
+                      }}
+                    />
                   </div>
                   {initial === null && (
                     <Checkbox checked={overwriteAck} onChange={setOverwriteAck}>
-                      <span className="text-warn">Replace the existing capture for {capturedOn}</span>
+                      <span className="text-warn">
+                        {t("roster.import.replaceExisting", { date: capturedOn })}
+                      </span>
                     </Checkbox>
                   )}
                 </AlertContent>
@@ -1271,9 +1305,11 @@ function ImportRosterDialog({
                 <TriangleAlert />
                 <AlertContent>
                   <div>
-                    <span className="num font-semibold">{capturedOn}</span> is in the future. A
-                    capture on a wrong date cannot be removed from the app — check the date before
-                    applying.
+                    <Trans
+                      i18nKey="roster.import.futureDate"
+                      values={{ date: capturedOn }}
+                      components={{ 1: <span className="num font-semibold" /> }}
+                    />
                   </div>
                 </AlertContent>
               </Alert>
@@ -1284,11 +1320,14 @@ function ImportRosterDialog({
                 <TriangleAlert />
                 <AlertContent>
                   <div>
-                    Could not check whether <span className="num font-semibold">{capturedOn}</span>{" "}
-                    already has a capture. If it does, importing replaces it wholesale.
+                    <Trans
+                      i18nKey="roster.import.checkFailed"
+                      values={{ date: capturedOn }}
+                      components={{ 1: <span className="num font-semibold" /> }}
+                    />
                   </div>
                   <Checkbox checked={overwriteAck} onChange={setOverwriteAck}>
-                    <span className="text-warn">Import anyway</span>
+                    <span className="text-warn">{t("roster.import.importAnyway")}</span>
                   </Checkbox>
                 </AlertContent>
               </Alert>
@@ -1297,12 +1336,12 @@ function ImportRosterDialog({
             <div className="flex items-center justify-end gap-2">
               <DialogClose asChild>
                 <Button variant="ghost" size="sm">
-                  Cancel
+                  {t("common.actions.cancel")}
                 </Button>
               </DialogClose>
               {unrecognizedCount === 0 && !showMembershipStep ? (
                 <Button size="sm" onClick={apply} disabled={submitting || !canApply}>
-                  {submitting ? "Applying…" : "Apply"}
+                  {submitting ? t("roster.import.applying") : t("roster.import.apply")}
                 </Button>
               ) : (
                 <Button
@@ -1313,7 +1352,7 @@ function ImportRosterDialog({
                   }}
                   disabled={!canAdvance}
                 >
-                  Next
+                  {t("roster.import.next")}
                 </Button>
               )}
             </div>
@@ -1323,20 +1362,23 @@ function ImportRosterDialog({
             {error && <ErrorState message={error} />}
 
             <p className="text-[13px] text-secondary">
-              Unrecognized names may be existing members who renamed. Map them to the right member as
-              an <span className="font-medium text-foreground">alias</span>, add as a{" "}
-              <span className="font-medium text-foreground">new member</span>, or{" "}
-              <span className="font-medium text-foreground">skip</span>. Names are never
-              auto-created.
+              <Trans
+                i18nKey="roster.import.step2Intro"
+                components={{
+                  1: <span className="font-medium text-foreground" />,
+                  2: <span className="font-medium text-foreground" />,
+                  3: <span className="font-medium text-foreground" />,
+                }}
+              />
             </p>
 
             <Card className="overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead>Name</TableHead>
-                    <TableHead>Rank · Power · Position</TableHead>
-                    <TableHead>Decision</TableHead>
+                    <TableHead>{t("roster.import.name")}</TableHead>
+                    <TableHead>{t("roster.import.meta")}</TableHead>
+                    <TableHead>{t("roster.import.decision")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1378,7 +1420,7 @@ function ImportRosterDialog({
                                   }
                                 >
                                   <span className="text-[12px] text-secondary">
-                                    Make this the primary name
+                                    {t("roster.import.makePrimary")}
                                   </span>
                                 </Checkbox>
                               </>
@@ -1393,22 +1435,23 @@ function ImportRosterDialog({
             </Card>
 
             <p className="text-[12px] text-muted">
-              Ticking <span className="font-medium text-secondary">Make this the primary name</span>{" "}
-              renames the member: the pasted name becomes their governor and the old name is kept as
-              an alias. Leave it off unless you know this is a rename — the alliance runs decoy
-              renames where similar names are different people.
+              <Trans
+                i18nKey="roster.import.promoteHelp"
+                values={{ label: t("roster.import.makePrimary") }}
+                components={{ 1: <span className="font-medium text-secondary" /> }}
+              />
             </p>
 
             {aliasMissingMember && (
               <p className="text-[12px] text-down">
-                Pick a member for every "Alias of…" row before continuing.
+                {t("roster.import.pickMember", { label: t("roster.import.aliasOf") })}
               </p>
             )}
             {classified.conflicts.length > 0 && (
               <p className="text-[12px] text-down">
-                Two names now point at the same member ({classified.conflicts
-                  .map((c) => c.governor)
-                  .join(", ")}). A member can only be observed once per capture.
+                {t("roster.import.conflictsStep2", {
+                  names: classified.conflicts.map((c) => c.governor).join(", "),
+                })}
               </p>
             )}
 
@@ -1422,11 +1465,11 @@ function ImportRosterDialog({
                 }}
                 disabled={submitting}
               >
-                Back
+                {t("roster.import.back")}
               </Button>
               {!showMembershipStep ? (
                 <Button size="sm" onClick={apply} disabled={submitting || !canApply}>
-                  {submitting ? "Applying…" : "Apply"}
+                  {submitting ? t("roster.import.applying") : t("roster.import.apply")}
                 </Button>
               ) : (
                 <Button
@@ -1437,7 +1480,7 @@ function ImportRosterDialog({
                   }}
                   disabled={!canAdvance || aliasMissingMember}
                 >
-                  Next
+                  {t("roster.import.next")}
                 </Button>
               )}
             </div>
@@ -1448,17 +1491,15 @@ function ImportRosterDialog({
 
             {backdated ? (
               <div className="rounded-[10px] border border-border bg-muted-surface p-3 text-[12.5px] text-secondary">
-                Backfilling {capturedOn} — newest capture on record is {latestCapture}. Membership is
-                left alone: who was in the alliance then says nothing about who is in it now. Power,
-                position and rank are recorded for this date. Anyone seen in a later capture keeps
-                their newer standing; anyone this paste is the most recent word on has theirs updated.
+                {t("roster.import.backfill", { date: capturedOn, latest: latestCapture })}
               </div>
             ) : (
               <>
                 <p className="text-[13px] text-secondary">
-                  These members' membership is not settled by the paste. Absence is{" "}
-                  <span className="font-medium text-foreground">not</span> treated as departure — tick
-                  only the members you know have left.
+                  <Trans
+                    i18nKey="roster.import.step3Intro"
+                    components={{ 1: <span className="font-medium text-foreground" /> }}
+                  />
                 </p>
 
                 {partialPaste && (
@@ -1466,10 +1507,14 @@ function ImportRosterDialog({
                     <TriangleAlert />
                     <AlertContent>
                       <div>
-                        <span className="num font-semibold">{classified.absent.length}</span> of{" "}
-                        <span className="num font-semibold">{activeCount}</span> active members are
-                        missing from this paste. The Alliance Ranking screen scrolls — check you
-                        captured all of it before deactivating anyone.
+                        <Trans
+                          i18nKey="roster.import.partialPaste"
+                          values={{ absent: classified.absent.length, active: activeCount }}
+                          components={{
+                            1: <span className="num font-semibold" />,
+                            2: <span className="num font-semibold" />,
+                          }}
+                        />
                       </div>
                     </AlertContent>
                   </Alert>
@@ -1479,7 +1524,7 @@ function ImportRosterDialog({
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[12px] font-medium text-secondary">
-                        Absent from this capture ({classified.absent.length})
+                        {t("roster.import.absentTitle", { n: classified.absent.length })}
                       </span>
                       <div className="flex items-center gap-1">
                         <Button
@@ -1491,13 +1536,13 @@ function ImportRosterDialog({
                             )
                           }
                         >
-                          Deactivate all
+                          {t("roster.import.deactivateAll")}
                         </Button>
                         {/* The inverse of the bulk action, on the one screen where the mistake is a
                             mass deactivation. Hidden until there is something to clear. */}
                         {classified.absent.some((m) => deactivateIds[m.id]) && (
                           <Button variant="ghost" size="sm" onClick={() => setDeactivateIds({})}>
-                            Clear all
+                            {t("roster.import.clearAll")}
                           </Button>
                         )}
                       </div>
@@ -1506,9 +1551,11 @@ function ImportRosterDialog({
                       <Table>
                         <TableHeader>
                           <TableRow className="hover:bg-transparent">
-                            <TableHead>Member</TableHead>
-                            <TableHead>Rank</TableHead>
-                            <TableHead className="text-right">Deactivate</TableHead>
+                            <TableHead>{t("common.member")}</TableHead>
+                            <TableHead>{t("common.rank")}</TableHead>
+                            <TableHead className="text-right">
+                              {t("roster.import.deactivateHeader")}
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -1532,7 +1579,9 @@ function ImportRosterDialog({
                                       setDeactivateIds((prev) => ({ ...prev, [m.id]: checked }))
                                     }
                                   >
-                                    <span className="sr-only">Deactivate {m.governor}</span>
+                                    <span className="sr-only">
+                                      {t("roster.aria.deactivate", { governor: m.governor })}
+                                    </span>
                                   </Checkbox>
                                 </div>
                               </TableCell>
@@ -1547,14 +1596,16 @@ function ImportRosterDialog({
                 {classified.returning.length > 0 && (
                   <div className="flex flex-col gap-2">
                     <span className="text-[12px] font-medium text-secondary">
-                      Inactive but present in this capture ({classified.returning.length})
+                      {t("roster.import.returningTitle", { n: classified.returning.length })}
                     </span>
                     <Card className="overflow-hidden">
                       <Table>
                         <TableHeader>
                           <TableRow className="hover:bg-transparent">
-                            <TableHead>Member</TableHead>
-                            <TableHead className="text-right">Reactivate</TableHead>
+                            <TableHead>{t("common.member")}</TableHead>
+                            <TableHead className="text-right">
+                              {t("roster.import.reactivateHeader")}
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -1571,7 +1622,9 @@ function ImportRosterDialog({
                                       setReactivateIds((prev) => ({ ...prev, [m.id]: checked }))
                                     }
                                   >
-                                    <span className="sr-only">Reactivate {m.governor}</span>
+                                    <span className="sr-only">
+                                      {t("roster.import.reactivateAria", { governor: m.governor })}
+                                    </span>
                                   </Checkbox>
                                 </div>
                               </TableCell>
@@ -1595,10 +1648,10 @@ function ImportRosterDialog({
                 }}
                 disabled={submitting}
               >
-                Back
+                {t("roster.import.back")}
               </Button>
               <Button size="sm" onClick={apply} disabled={submitting || !canApply}>
-                {submitting ? "Applying…" : "Apply"}
+                {submitting ? t("roster.import.applying") : t("roster.import.apply")}
               </Button>
             </div>
           </div>

@@ -49,7 +49,7 @@ export function MemberSearchSelect({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="flex h-9 w-full items-center gap-2 rounded-[8px] border border-border bg-surface px-3 text-left text-[13px] text-muted outline-none transition-colors duration-150 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/30"
+          className="flex h-9 w-full items-center gap-2 rounded-[8px] border border-border bg-surface px-3 text-start text-[13px] text-muted outline-none transition-colors duration-150 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/30"
         >
           <Search className="size-4 shrink-0 text-muted" />
           {ph}

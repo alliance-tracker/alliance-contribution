@@ -51,12 +51,12 @@ function DeltaPct({ delta }: { delta: number | null | undefined }) {
   const { t } = useTranslation();
   if (delta === undefined) return null;
   const pp = delta === null ? 0 : Math.round(delta * 100);
-  if (pp === 0) return <span className="num ml-1.5 text-[11px] text-muted">—</span>;
+  if (pp === 0) return <span className="num ms-1.5 text-[11px] text-muted">—</span>;
   const up = pp > 0;
   return (
     <span
       className={cn(
-        "num ml-1.5 inline-flex items-center gap-0.5 text-[11px] font-semibold",
+        "num ms-1.5 inline-flex items-center gap-0.5 text-[11px] font-semibold",
         up ? "text-up" : "text-down",
       )}
       title={t("attendance.deltaTitle")}
@@ -239,7 +239,7 @@ export function Attendance() {
                 <TableHead>{t("common.governor")}</TableHead>
                 <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
                 <TableHead className="w-[45%]">{t("nav.attendance")}</TableHead>
-                <TableHead className="text-right">{t("attendance.rate")}</TableHead>
+                <TableHead className="text-end">{t("attendance.rate")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -270,11 +270,11 @@ export function Attendance() {
                         className="h-1.5 w-full"
                       />
                     </TableCell>
-                    <TableCell className="num text-right">
+                    <TableCell className="num text-end">
                       <span className="font-semibold" style={{ color }}>
                         {pctInt}%
                       </span>
-                      <span className="ml-1.5 text-muted">
+                      <span className="ms-1.5 text-muted">
                         {row.attended}/{row.total}
                       </span>
                       <DeltaPct delta={row.delta} />

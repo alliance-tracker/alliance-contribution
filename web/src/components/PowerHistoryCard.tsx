@@ -49,13 +49,13 @@ function HistoryTooltip({ active, payload, label }: HistoryTooltipProps) {
         <>
           <div className="text-[12px]">
             <span className="text-muted">{t("common.power")}</span>
-            <span className="num ml-2 font-semibold text-foreground">
+            <span className="num ms-2 font-semibold text-foreground">
               {point.power === null ? "—" : formatNumber(point.power)}
             </span>
           </div>
           <div className="text-[12px]">
             <span className="text-muted">{t("common.position")}</span>
-            <span className="num ml-2 font-semibold text-foreground">
+            <span className="num ms-2 font-semibold text-foreground">
               {point.position === null ? "—" : `#${point.position}`}
             </span>
           </div>

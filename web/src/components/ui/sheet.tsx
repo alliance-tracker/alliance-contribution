@@ -43,7 +43,7 @@ export const SheetContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "scr fixed inset-y-0 left-0 z-50 flex w-[250px] flex-col overflow-y-auto border-r border-border bg-background outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-left",
+        "scr fixed inset-y-0 start-0 z-50 flex w-[250px] flex-col overflow-y-auto border-e border-border bg-background outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-left rtl:data-[state=open]:slide-in-from-right",
         className,
       )}
       {...props}

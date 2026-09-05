@@ -63,12 +63,12 @@ export const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex h-8 cursor-pointer select-none items-center rounded-[6px] pl-7 pr-2 text-[13px] text-foreground outline-none transition-colors data-[highlighted]:bg-accent-subtle data-[highlighted]:text-accent",
+      "relative flex h-8 cursor-pointer select-none items-center rounded-[6px] ps-7 pe-2 text-[13px] text-foreground outline-none transition-colors data-[highlighted]:bg-accent-subtle data-[highlighted]:text-accent",
       className,
     )}
     {...props}
   >
-    <span className="absolute left-2 flex size-4 items-center justify-center">
+    <span className="absolute start-2 flex size-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="size-3.5 text-accent" />
       </SelectPrimitive.ItemIndicator>

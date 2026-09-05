@@ -75,7 +75,7 @@ function CompTooltip({ active, payload, label }: CompTooltipProps) {
         <div key={p.name} className="flex items-center gap-1.5 text-[12px]">
           <span className="size-2 rounded-full" style={{ background: p.color }} />
           <span className="text-muted">{p.name}</span>
-          <span className="num ml-auto font-semibold text-foreground">{p.value}</span>
+          <span className="num ms-auto font-semibold text-foreground">{p.value}</span>
         </div>
       ))}
     </div>
@@ -131,7 +131,7 @@ function ActivityRow({
       </span>
 
       {config && (
-        <div className="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 hidden w-max rounded-[8px] border border-border bg-surface px-2.5 py-1.5 shadow-md group-hover:block">
+        <div className="pointer-events-none absolute bottom-full start-0 z-10 mb-1.5 hidden w-max rounded-[8px] border border-border bg-surface px-2.5 py-1.5 shadow-md group-hover:block">
           <div className="mb-1 text-[11px] text-muted">
             {t("profile.tooltipWeight", { activity: activity.name, weight: config.weight })}
           </div>
@@ -143,7 +143,7 @@ function ActivityRow({
                 <span className="num text-muted">
                   {t("profile.tierMin", { min: formatNumber(tier.min_value), unit: activity.unit_label })}
                 </span>
-                <span className="num ml-auto font-semibold text-foreground">
+                <span className="num ms-auto font-semibold text-foreground">
                   {t("profile.tierPoints", { count: tier.points })}
                 </span>
               </div>
@@ -417,7 +417,7 @@ function BackLink() {
       to={origin.to}
       className="inline-flex w-fit items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-foreground"
     >
-      <ArrowLeft className="size-3.5" />
+      <ArrowLeft className="size-3.5 rtl:rotate-180" />
       {t(origin.label)}
     </Link>
   );

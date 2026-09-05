@@ -109,7 +109,7 @@ export function DatePicker({ value, onChange, placeholder, className }: DatePick
       </button>
 
       {open && (
-        <div className="absolute left-0 top-[calc(100%+4px)] z-50 w-64 rounded-[8px] border border-border bg-surface p-3 shadow-md">
+        <div className="absolute start-0 top-[calc(100%+4px)] z-50 w-64 rounded-[8px] border border-border bg-surface p-3 shadow-md">
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"
@@ -117,7 +117,7 @@ export function DatePicker({ value, onChange, placeholder, className }: DatePick
               onClick={prevMonth}
               className="inline-flex size-7 items-center justify-center rounded-[6px] text-secondary outline-none transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/30"
             >
-              <ChevronLeft className="size-4" />
+              <ChevronLeft className="size-4 rtl:rotate-180" />
             </button>
             <span className="text-[13px] font-medium text-secondary">
               {monthName(view.m)} {view.y}
@@ -128,7 +128,7 @@ export function DatePicker({ value, onChange, placeholder, className }: DatePick
               onClick={nextMonth}
               className="inline-flex size-7 items-center justify-center rounded-[6px] text-secondary outline-none transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/30"
             >
-              <ChevronRight className="size-4" />
+              <ChevronRight className="size-4 rtl:rotate-180" />
             </button>
           </div>
 

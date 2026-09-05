@@ -59,7 +59,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div className="flex flex-col gap-1.5">
       <label className="text-[12px] font-medium text-secondary">
         {label}
-        {hint && <span className="ml-1 text-muted">{hint}</span>}
+        {hint && <span className="ms-1 text-muted">{hint}</span>}
       </label>
       {children}
     </div>
@@ -241,7 +241,7 @@ function EditActivityDialog({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Field label={t("scoring.maxInstance")} hint={t("scoring.hintMin1")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 min={1}
                 step={1}
@@ -252,7 +252,7 @@ function EditActivityDialog({
             </Field>
             <Field label={t("scoring.minValue")} hint={t("scoring.hintMin0")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 min={0}
                 value={minValue}
@@ -262,7 +262,7 @@ function EditActivityDialog({
             </Field>
             <Field label={t("scoring.sort")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 step={1}
                 value={sort}
@@ -479,7 +479,7 @@ function AddActivityDialog({
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Field label={t("scoring.weight")} hint={t("scoring.hintMin0")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 min={0}
                 step={1}
@@ -490,7 +490,7 @@ function AddActivityDialog({
             </Field>
             <Field label={t("scoring.maxInstanceShort")} hint={t("scoring.hintMin1")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 min={1}
                 step={1}
@@ -501,7 +501,7 @@ function AddActivityDialog({
             </Field>
             <Field label={t("scoring.minValue")} hint={t("scoring.hintMin0")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 min={0}
                 value={minValue}
@@ -511,7 +511,7 @@ function AddActivityDialog({
             </Field>
             <Field label={t("scoring.sort")} hint={t("common.optional")}>
               <Input
-                className="num text-right"
+                className="num text-end"
                 type="number"
                 step={1}
                 value={sort}

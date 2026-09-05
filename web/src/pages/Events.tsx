@@ -126,8 +126,8 @@ function ParticipationTable({
         <TableRow className="hover:bg-transparent">
           <TableHead>{t("events.rawName")}</TableHead>
           <TableHead>{t("common.governor")}</TableHead>
-          <TableHead className="text-right">{t("common.value")}</TableHead>
-          <TableHead className="text-right">{t("common.points")}</TableHead>
+          <TableHead className="text-end">{t("common.value")}</TableHead>
+          <TableHead className="text-end">{t("common.points")}</TableHead>
           {showNotes && <TableHead>{t("common.notes")}</TableHead>}
         </TableRow>
       </TableHeader>
@@ -145,8 +145,8 @@ function ParticipationTable({
                 <Badge variant="warn">{t("events.unmappedBadge")}</Badge>
               )}
             </TableCell>
-            <TableCell className="num text-right text-secondary">{row.value}</TableCell>
-            <TableCell className="num text-right font-semibold text-foreground">
+            <TableCell className="num text-end text-secondary">{row.value}</TableCell>
+            <TableCell className="num text-end font-semibold text-foreground">
               {row.points}
             </TableCell>
             {showNotes && (
@@ -403,7 +403,7 @@ After the closing fence — never inside it — add a short "Coverage check:" no
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[12px] font-medium text-secondary">
                     {t("events.instance")}
-                    <span className="ml-1 text-muted">{t("events.instanceRange", { max: maxInstance })}</span>
+                    <span className="ms-1 text-muted">{t("events.instanceRange", { max: maxInstance })}</span>
                   </label>
                   <Input
                     className="num"
@@ -840,10 +840,10 @@ export function Events() {
                   <TableHead>{t("common.date")}</TableHead>
                   <TableHead>{t("common.week")}</TableHead>
                   <TableHead>{t("common.activity")}</TableHead>
-                  <TableHead className="text-right">{t("events.instance")}</TableHead>
-                  <TableHead className="text-right">{t("common.unmapped")}</TableHead>
+                  <TableHead className="text-end">{t("events.instance")}</TableHead>
+                  <TableHead className="text-end">{t("common.unmapped")}</TableHead>
                   <TableHead>{t("events.status")}</TableHead>
-                  <TableHead className="w-32 text-right">{t("events.actions")}</TableHead>
+                  <TableHead className="w-32 text-end">{t("events.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -866,8 +866,8 @@ export function Events() {
                           );
                         })()}
                       </TableCell>
-                      <TableCell className="num text-right text-secondary">{ev.instance}</TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="num text-end text-secondary">{ev.instance}</TableCell>
+                      <TableCell className="text-end">
                         {unmappedState.loading || unmappedState.error ? (
                           <span className="num text-faint">—</span>
                         ) : unmappedCount > 0 ? (

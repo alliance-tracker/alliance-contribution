@@ -144,7 +144,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div className="flex flex-col gap-1.5">
       <label className="text-[12px] font-medium text-secondary">
         {label}
-        {hint && <span className="ml-1 text-muted">{hint}</span>}
+        {hint && <span className="ms-1 text-muted">{hint}</span>}
       </label>
       {children}
     </div>
@@ -1553,7 +1553,7 @@ function ImportRosterDialog({
                           <TableRow className="hover:bg-transparent">
                             <TableHead>{t("common.member")}</TableHead>
                             <TableHead>{t("common.rank")}</TableHead>
-                            <TableHead className="text-right">
+                            <TableHead className="text-end">
                               {t("roster.import.deactivateHeader")}
                             </TableHead>
                           </TableRow>
@@ -1571,7 +1571,7 @@ function ImportRosterDialog({
                                     classifies against — does not declare `alliance_rank`. */}
                                 {members.find((x) => x.id === m.id)?.alliance_rank ?? "—"}
                               </TableCell>
-                              <TableCell className="text-right">
+                              <TableCell className="text-end">
                                 <div className="flex justify-end">
                                   <Checkbox
                                     checked={deactivateIds[m.id] === true}
@@ -1603,7 +1603,7 @@ function ImportRosterDialog({
                         <TableHeader>
                           <TableRow className="hover:bg-transparent">
                             <TableHead>{t("common.member")}</TableHead>
-                            <TableHead className="text-right">
+                            <TableHead className="text-end">
                               {t("roster.import.reactivateHeader")}
                             </TableHead>
                           </TableRow>
@@ -1614,7 +1614,7 @@ function ImportRosterDialog({
                               <TableCell className="num font-medium text-foreground">
                                 {m.governor}
                               </TableCell>
-                              <TableCell className="text-right">
+                              <TableCell className="text-end">
                                 <div className="flex justify-end">
                                   <Checkbox
                                     checked={reactivateIds[m.id] !== false}
@@ -1909,7 +1909,7 @@ export function Roster() {
                 {/* Not <SelectValue/>: Radix mirrors the selected item's full text into the trigger,
                     and the item line carries "· latest · N members" noise the trigger doesn't need. */}
                 <SelectTrigger className="w-44">
-                  <CalendarDays className="mr-1.5 size-4 shrink-0 text-muted" />
+                  <CalendarDays className="me-1.5 size-4 shrink-0 text-muted" />
                   <span className="num">{fmtCaptureDate(viewDate ?? latestCaptureDate!)}</span>
                 </SelectTrigger>
                 <SelectContent>
@@ -2023,17 +2023,17 @@ export function Roster() {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[52px] text-right">#</TableHead>
+                  <TableHead className="w-[52px] text-end">#</TableHead>
                   <TableHead>{t("common.member")}</TableHead>
                   <TableHead className="w-16 text-center">{t("common.rank")}</TableHead>
-                  <TableHead className="w-[190px] text-right">{t("common.power")}</TableHead>
+                  <TableHead className="w-[190px] text-end">{t("common.power")}</TableHead>
                   {/* The two columns the page exists for get a darker header and a group separator. */}
-                  <TableHead className="w-[200px] border-l border-muted-surface text-right text-foreground">
+                  <TableHead className="w-[200px] border-s border-muted-surface text-end text-foreground">
                     {t("roster.changeInPower")}
                   </TableHead>
                   <TableHead className="w-[86px] text-center text-foreground">{t("roster.move")}</TableHead>
-                  <TableHead className="w-28 border-l border-muted-surface">{t("roster.sortStatus")}</TableHead>
-                  {!historical && <TableHead className="w-[104px] text-right">{t("roster.actions")}</TableHead>}
+                  <TableHead className="w-28 border-s border-muted-surface">{t("roster.sortStatus")}</TableHead>
+                  {!historical && <TableHead className="w-[104px] text-end">{t("roster.actions")}</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -2047,7 +2047,7 @@ export function Roster() {
                     <TableRow key={m.id} className={rowClass(r)}>
                       <TableCell
                         className={cn(
-                          "num text-right font-bold",
+                          "num text-end font-bold",
                           top ? "text-foreground" : "text-faint",
                           riskEdgeClass(r),
                         )}
@@ -2076,16 +2076,16 @@ export function Roster() {
                           <RankChangeChip change={r.rankChange} />
                         </span>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-end">
                         <PowerCell power={m.power} maxPower={scales.maxPower} top={top} />
                       </TableCell>
-                      <TableCell className="border-l border-muted-surface text-right">
+                      <TableCell className="border-s border-muted-surface text-end">
                         <PowerChangeCell delta={r.deltaPower} maxAbsDelta={scales.maxAbsDelta} />
                       </TableCell>
                       <TableCell className="text-center">
                         <MoveCell move={r.move} />
                       </TableCell>
-                      <TableCell className="border-l border-muted-surface">
+                      <TableCell className="border-s border-muted-surface">
                         <StatusCell status={r.status} />
                       </TableCell>
                       {live && (

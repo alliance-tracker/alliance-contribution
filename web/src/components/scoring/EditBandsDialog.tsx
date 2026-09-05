@@ -53,7 +53,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div className="flex flex-col gap-1.5">
       <label className="text-[12px] font-medium text-secondary">
         {label}
-        {hint && <span className="ml-1 text-muted">{hint}</span>}
+        {hint && <span className="ms-1 text-muted">{hint}</span>}
       </label>
       {children}
     </div>
@@ -178,7 +178,7 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
       <div className="grid grid-cols-1 gap-4 sm:max-w-xs">
         <Field label={t("scoring.weight")} hint={t("scoring.hintMin0")}>
           <Input
-            className="num text-right"
+            className="num text-end"
             type="number"
             min={0}
             step={1}
@@ -207,9 +207,9 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="text-right">{t("scoring.minValue")}</TableHead>
-                  <TableHead className="text-right">{t("common.points")}</TableHead>
-                  <TableHead className="text-right">{t("scoring.editor.effective")}</TableHead>
+                  <TableHead className="text-end">{t("scoring.minValue")}</TableHead>
+                  <TableHead className="text-end">{t("common.points")}</TableHead>
+                  <TableHead className="text-end">{t("scoring.editor.effective")}</TableHead>
                   <TableHead className="w-12" />
                 </TableRow>
               </TableHeader>
@@ -223,7 +223,7 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
                     <TableRow key={i}>
                       <TableCell>
                         <Input
-                          className="num text-right"
+                          className="num text-end"
                           type="number"
                           min={0}
                           value={tier.min_value}
@@ -233,7 +233,7 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
                       </TableCell>
                       <TableCell>
                         <Input
-                          className="num text-right"
+                          className="num text-end"
                           type="number"
                           min={0}
                           value={tier.points}
@@ -241,10 +241,10 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
                           aria-invalid={pts === null || pts < 0}
                         />
                       </TableCell>
-                      <TableCell className="num text-right text-secondary">
+                      <TableCell className="num text-end text-secondary">
                         {effective === null ? "—" : effective}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-end">
                         <Button
                           variant="ghost"
                           size="icon"

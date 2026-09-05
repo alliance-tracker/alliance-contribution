@@ -197,10 +197,10 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
                   <TableHead>{t("common.member")}</TableHead>
                   <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
                   <TableHead className="w-[240px]">{t("common.score")}</TableHead>
-                  <TableHead className="w-28 text-right" title={attendanceScope}>
+                  <TableHead className="w-28 text-end" title={attendanceScope}>
                     {t("nav.attendance")}
                   </TableHead>
-                  {weekly && <TableHead className="w-24 text-right">{t("ranking.move")}</TableHead>}
+                  {weekly && <TableHead className="w-24 text-end">{t("ranking.move")}</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -233,11 +233,11 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
                       <TableCell>
                         <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-end">
                         <AttendanceBadge pct={row.attendance} />
                       </TableCell>
                       {weekly && (
-                        <TableCell className="text-right">
+                        <TableCell className="text-end">
                           <Movement value={row.movement} />
                         </TableCell>
                       )}

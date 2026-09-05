@@ -39,7 +39,7 @@ export function RankChangeChip({ change }: { change: { from: string; to: string 
   return (
     <span
       className={cn(
-        "num absolute -right-3.5 -top-2 inline-flex items-center gap-px rounded-[4px] border px-[3px] py-px text-[8.5px] font-bold leading-none",
+        "num absolute -end-3.5 -top-2 inline-flex items-center gap-px rounded-[4px] border px-[3px] py-px text-[8.5px] font-bold leading-none",
         up ? "border-up/20 bg-up/10 text-up" : "border-down/20 bg-down/10 text-down",
       )}
     >
@@ -49,11 +49,11 @@ export function RankChangeChip({ change }: { change: { from: string; to: string 
   );
 }
 
-/** A right-filled 3px bar. `pct` is already clamped 0..100 by the callers below. */
+/** An end-filled 3px bar. `pct` is already clamped 0..100 by the callers below. */
 function Bar({ pct, className, width }: { pct: number; className: string; width: string }) {
   return (
     <div className={cn("h-[3px] overflow-hidden rounded-[2px] bg-muted-surface", width)}>
-      <div className={cn("ml-auto h-full rounded-[2px]", className)} style={{ width: `${pct}%` }} />
+      <div className={cn("ms-auto h-full rounded-[2px]", className)} style={{ width: `${pct}%` }} />
     </div>
   );
 }
@@ -133,7 +133,7 @@ export function StatusCell({ status }: { status: RosterStatus }) {
   if (status === "unknown") return <span className="text-[12.5px] text-faint">—</span>;
   if (status === "at-risk") {
     return (
-      <span className="inline-flex h-[22px] items-center gap-1.5 rounded-[6px] border border-warn/20 bg-warn/10 py-0 pl-[7px] pr-[9px] text-[11.5px] font-bold text-warn">
+      <span className="inline-flex h-[22px] items-center gap-1.5 rounded-[6px] border border-warn/20 bg-warn/10 py-0 ps-[7px] pe-[9px] text-[11.5px] font-bold text-warn">
         <span className="size-1.5 shrink-0 rounded-full bg-warn" />
         {t("roster.status.atRisk")}
       </span>

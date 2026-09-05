@@ -59,7 +59,7 @@ export function SidebarNav() {
 
 export function Sidebar() {
   return (
-    <aside className="scr hidden w-[250px] shrink-0 flex-col overflow-y-auto border-r border-border bg-background md:flex">
+    <aside className="scr hidden w-[250px] shrink-0 flex-col overflow-y-auto border-e border-border bg-background md:flex">
       <SidebarNav />
     </aside>
   );

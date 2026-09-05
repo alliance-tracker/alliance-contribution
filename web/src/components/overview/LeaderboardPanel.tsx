@@ -91,7 +91,7 @@ export function LeaderboardPanel({
                   <span className="sr-only">{t("common.score")}</span>
                   <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
                 </div>
-                <span className="w-10 shrink-0 text-right">
+                <span className="w-10 shrink-0 text-end">
                   <Movement value={row.movement} />
                 </span>
               </li>

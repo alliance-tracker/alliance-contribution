@@ -45,7 +45,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div className="flex flex-col gap-1.5">
       <label className="text-[12px] font-medium text-secondary">
         {label}
-        {hint && <span className="ml-1 text-muted">{hint}</span>}
+        {hint && <span className="ms-1 text-muted">{hint}</span>}
       </label>
       {children}
     </div>
@@ -522,7 +522,7 @@ export function Aliases() {
                     <Avatar name={group.governor} size={28} />
                     <span className="text-[13px] font-medium text-foreground">{group.governor}</span>
                   </Link>
-                  <div className="flex flex-wrap items-center gap-1.5 pl-[calc(28px+0.5rem)]">
+                  <div className="flex flex-wrap items-center gap-1.5 ps-[calc(28px+0.5rem)]">
                     <span className="rounded-[6px] bg-accent px-2 py-0.5 font-mono text-[11px] text-accent-foreground">
                       {group.governor}
                     </span>

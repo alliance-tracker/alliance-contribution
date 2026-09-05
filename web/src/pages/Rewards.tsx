@@ -51,7 +51,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div className="flex min-w-0 flex-col gap-1.5">
       <label className="truncate font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
         {label}
-        {hint && <span className="ml-1 font-sans font-medium normal-case tracking-normal text-muted">· {hint}</span>}
+        {hint && <span className="ms-1 font-sans font-medium normal-case tracking-normal text-muted">· {hint}</span>}
       </label>
       {children}
     </div>
@@ -120,7 +120,7 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-const TH = "sticky top-0 z-[2] border-b border-border bg-surface px-3.5 py-2.5 text-left font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-muted";
+const TH = "sticky top-0 z-[2] border-b border-border bg-surface px-3.5 py-2.5 text-start font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-muted";
 const TD = "border-b border-border/50 px-3.5 py-2";
 
 /** Shared by preview and history: rank badge, avatar, attendance (preview only), metric bar,
@@ -147,10 +147,10 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
             <th className={TH}>#</th>
             <th className={TH}>{t("common.member")}</th>
             <th className={cn(TH, "px-2 text-center")}>{t("common.rank")}</th>
-            <th className={cn(TH, "text-right")}>{t("common.power")}</th>
+            <th className={cn(TH, "text-end")}>{t("common.power")}</th>
             {showAttendance && <th className={cn(TH, "px-2 text-center")}>{t("rewards.att")}</th>}
-            <th className={cn(TH, "text-right")}>{metric === "points" ? t("common.score") : t("rewards.eventDays")}</th>
-            <th className={cn(TH, "pr-4 text-right")}>{t("rewards.amount")}</th>
+            <th className={cn(TH, "text-end")}>{metric === "points" ? t("common.score") : t("rewards.eventDays")}</th>
+            <th className={cn(TH, "pe-4 text-end")}>{t("rewards.amount")}</th>
           </tr>
         </thead>
         <tbody>
@@ -182,7 +182,7 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
                 <td className={cn(TD, "px-2 text-center")}>
                   <AllianceRankBadge rank={l.alliance_rank ?? null} />
                 </td>
-                <td className={cn(TD, "text-right")}>
+                <td className={cn(TD, "text-end")}>
                   <span
                     className="num text-[13px] text-secondary"
                     title={l.power != null ? formatNumber(l.power) : undefined}
@@ -204,10 +204,10 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
                         indicatorClassName="bg-foreground"
                       />
                     </div>
-                    <span className="num min-w-[34px] text-right text-[13px] font-semibold">{l.metric_value}</span>
+                    <span className="num min-w-[34px] text-end text-[13px] font-semibold">{l.metric_value}</span>
                   </div>
                 </td>
-                <td className={cn(TD, "pr-4 text-right")}>
+                <td className={cn(TD, "pe-4 text-end")}>
                   <span
                     className="num inline-flex h-[26px] min-w-[34px] items-center justify-center rounded-[7px] px-2 font-mono text-[14px] font-bold"
                     style={{ background: amountBg, color: amountFg }}
@@ -302,11 +302,11 @@ function HistoryRow({
     <div className="flex flex-col border-b border-border last:border-b-0">
       {error && <ErrorState message={error} />}
       <div className="flex items-center gap-2 py-2.5">
-        <button type="button" onClick={toggle} className="flex min-w-0 flex-1 items-center gap-2 text-left">
+        <button type="button" onClick={toggle} className="flex min-w-0 flex-1 items-center gap-2 text-start">
           {expanded ? (
             <ChevronDown className="size-4 shrink-0 text-muted" />
           ) : (
-            <ChevronRight className="size-4 shrink-0 text-muted" />
+            <ChevronRight className="size-4 shrink-0 text-muted rtl:rotate-180" />
           )}
           <div className="flex min-w-0 flex-col">
             {editing ? null : (
@@ -353,7 +353,7 @@ function HistoryRow({
       </div>
 
       {expanded && (
-        <div className="pb-3 pl-6">
+        <div className="pb-3 ps-6">
           {detail ? <LinesTable lines={detail.lines} metric={allocation.metric} /> : <LoadingState />}
         </div>
       )}
@@ -544,7 +544,7 @@ export function Rewards() {
               >
                 {picked.length === weeks.length ? t("rewards.clearAll") : t("rewards.selectAll")}
               </button>
-              <span className="mr-2 text-[12px] text-muted">
+              <span className="me-2 text-[12px] text-muted">
                 {t("rewards.selected", { picked: picked.length, total: weeks.length })}
               </span>
               {weeks.map((week) => {

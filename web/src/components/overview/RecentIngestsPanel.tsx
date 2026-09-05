@@ -57,8 +57,8 @@ export function RecentIngestsPanel({
               <TableHead>{t("common.date")}</TableHead>
               <TableHead>{t("common.activity")}</TableHead>
               <TableHead>{t("overview.ingests.instance")}</TableHead>
-              <TableHead className="text-right">{t("overview.ingests.rows")}</TableHead>
-              <TableHead className="text-right">{t("overview.ingests.unmapped")}</TableHead>
+              <TableHead className="text-end">{t("overview.ingests.rows")}</TableHead>
+              <TableHead className="text-end">{t("overview.ingests.unmapped")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -78,8 +78,8 @@ export function RecentIngestsPanel({
                     </Badge>
                   </TableCell>
                   <TableCell className="num">#{event.instance}</TableCell>
-                  <TableCell className="num text-right">{event.rows}</TableCell>
-                  <TableCell className="num text-right">
+                  <TableCell className="num text-end">{event.rows}</TableCell>
+                  <TableCell className="num text-end">
                     {event.unmapped > 0 ? (
                       <span className="rounded-[4px] bg-warn/10 px-1.5 py-0.5 font-semibold text-warn">
                         {event.unmapped}

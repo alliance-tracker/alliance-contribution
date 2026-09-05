@@ -44,7 +44,7 @@ export function LlmPrompt({
           {open ? (
             <ChevronDown className="size-3.5 text-muted" />
           ) : (
-            <ChevronRight className="size-3.5 text-muted" />
+            <ChevronRight className="size-3.5 text-muted rtl:rotate-180" />
           )}
           {t("llmPrompt.title")}
         </Button>

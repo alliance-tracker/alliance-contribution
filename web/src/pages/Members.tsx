@@ -34,7 +34,7 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
   return (
     <button
       onClick={onOpen}
-      className="flex flex-col gap-3 rounded-[14px] border border-border bg-surface p-4 text-left transition-transform hover:-translate-y-0.5 hover:shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="flex flex-col gap-3 rounded-[14px] border border-border bg-surface p-4 text-start transition-transform hover:-translate-y-0.5 hover:shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
     >
       <div className="flex items-center justify-between">
         <span

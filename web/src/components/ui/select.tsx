@@ -3,7 +3,12 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const Select = SelectPrimitive.Root;
+// Direction is fixed for the page lifetime (switching languages reloads), so reading the
+// document once per render is enough; Radix would otherwise stamp dir="ltr" and un-mirror its subtree.
+const documentDir = () => (document.documentElement.dir === "rtl" ? "rtl" : "ltr");
+export const Select = (props: React.ComponentProps<typeof SelectPrimitive.Root>) => (
+  <SelectPrimitive.Root dir={documentDir()} {...props} />
+);
 export const SelectValue = SelectPrimitive.Value;
 
 export const SelectTrigger = React.forwardRef<

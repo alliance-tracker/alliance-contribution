@@ -2,7 +2,12 @@ import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 
-export const Tabs = TabsPrimitive.Root;
+// Direction is fixed for the page lifetime (switching languages reloads), so reading the
+// document once per render is enough; Radix would otherwise stamp dir="ltr" and un-mirror its subtree.
+const documentDir = () => (document.documentElement.dir === "rtl" ? "rtl" : "ltr");
+export const Tabs = (props: React.ComponentProps<typeof TabsPrimitive.Root>) => (
+  <TabsPrimitive.Root dir={documentDir()} {...props} />
+);
 
 export const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,

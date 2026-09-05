@@ -259,6 +259,11 @@ body {
   letter-spacing: 0;
 }
 
+/* recharts draws in a fixed left-to-right coordinate system; keep its SVG text anchoring physical. */
+.recharts-surface {
+  direction: ltr;
+}
+
 ::selection {
   background: var(--color-border);
 }

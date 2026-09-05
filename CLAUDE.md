@@ -43,10 +43,12 @@ single Worker** serving `/api/*` and the built SPA (`dist/`). Backend layering i
 `routes → services → repositories → D1`, with pure domain logic in `domain/` and types shared across the
 Worker/SPA boundary in `shared/`.
 
-**UI strings are i18next keys**, never literals — `web/src/i18n.ts` loads one `web/src/locales/<lng>.json`
-per language (en es fr de ko ar; `ar` is RTL and uses logical Tailwind utilities — never `ml-`/`pl-`/`left-`/`text-right`) before first render; `t()` keys are typed from `en.json`. A new string goes
-into all six files in the same change, or `test/unit/i18n-parity.test.ts` fails (key parity, per-language
-plural suffixes, placeholder parity, no dead keys). Server error text and operator data stay untranslated.
+**UI strings are i18next keys**, never literals — `web/src/i18n.ts` loads one
+`web/src/locales/<lng>.json` per language (en es fr de ko ar; `ar` is RTL and uses logical Tailwind
+utilities — never `ml-`/`pl-`/`left-`/`text-right`) before first render; `t()` keys are typed from
+`en.json`. A new string goes into all six files in the same change, or `test/unit/i18n-parity.test.ts`
+fails (key parity, per-language plural suffixes, placeholder parity, no dead keys). Server error text
+and operator data stay untranslated.
 
 ## Non-obvious decisions
 - **D1 is the only store** — system of record *and* serves every read. No KV/cache layer (dropped

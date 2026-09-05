@@ -2,13 +2,15 @@ import * as React from "react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { localeTag } from "@/lib/format";
+import { lang, localeTag } from "@/lib/format";
 
 // Monday-first grid (matches the existing firstWeekdayOffset). Weekday labels come from Intl for a fixed
 // Monday..Sunday week: 2024-01-01 is a Monday. Month names likewise, for the 1st of each month.
 const weekdays = () =>
   Array.from({ length: 7 }, (_, i) =>
-    new Intl.DateTimeFormat(localeTag(), { weekday: "short", timeZone: "UTC" }).format(Date.UTC(2024, 0, 1 + i)),
+    new Intl.DateTimeFormat(localeTag(), { weekday: lang() === "ar" ? "narrow" : "short", timeZone: "UTC" }).format(
+      Date.UTC(2024, 0, 1 + i),
+    ),
   );
 const monthName = (m: number) =>
   new Intl.DateTimeFormat(localeTag(), { month: "long", timeZone: "UTC" }).format(Date.UTC(2024, m, 1));

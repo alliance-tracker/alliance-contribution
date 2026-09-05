@@ -24,7 +24,7 @@ It replaces the spreadsheet most alliances end up maintaining by hand.
   and re-scores all history from the current configuration. No effective-dating.
 - **Three access tiers** — admin, manager, viewer (read-only) — so you can hand out a viewer key
   without exposing writes or the alias map.
-- **Five UI languages** — English, Spanish, French, German, Korean. Picked from a globe button in the
+- **Six UI languages** — English, Spanish, French, German, Korean, Arabic (right-to-left). Picked from a globe button in the
   top bar (or on the key prompt), remembered per browser. Operator-entered data (names, activity
   names, unit labels) is shown as typed; server error messages stay English.
 

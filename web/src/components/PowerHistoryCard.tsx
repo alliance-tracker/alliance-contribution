@@ -11,14 +11,14 @@ import {
 } from "recharts";
 import type { MemberSnapshotSeries } from "@shared/types";
 import { Card } from "@/components/ui/card";
-import { formatNumber, formatCompact, lang } from "@/lib/format";
+import { formatNumber, formatCompact, localeTag } from "@/lib/format";
 
 /** "2026-07-29" -> "Jul 29". Falls back to the raw value if it is not an ISO date. */
 function dateLabel(d: string): string {
   const parsed = new Date(`${d}T00:00:00Z`);
   return Number.isNaN(parsed.getTime())
     ? d
-    : parsed.toLocaleDateString(lang(), { month: "short", day: "numeric", timeZone: "UTC" });
+    : parsed.toLocaleDateString(localeTag(), { month: "short", day: "numeric", timeZone: "UTC" });
 }
 
 /** ≥1M compact in the active locale ("64.2M" en, "64,2 Mio." de, "6420만" ko); smaller values grouped. */

@@ -1,7 +1,7 @@
 import i18n, { type ParseKeys } from "i18next";
 import { initReactI18next } from "react-i18next";
 
-export const LANGUAGES = ["en", "es", "fr", "de", "ko"] as const;
+export const LANGUAGES = ["en", "es", "fr", "de", "ko", "ar"] as const;
 export type Language = (typeof LANGUAGES)[number];
 /** A key of en.json, e.g. "nav.overview". Use for props/consts that hold a key rather than text. */
 export type TKey = ParseKeys;
@@ -52,6 +52,13 @@ export async function initI18n(): Promise<void> {
     react: { useSuspense: false }, // nothing loads after init
   });
   document.documentElement.lang = lng;
+  document.documentElement.dir = lng === "ar" ? "rtl" : "ltr";
+  // Western digits for Arabic in {{count, number}} — mirrors format.ts localeTag().
+  i18n.services.formatter?.add(
+    "number",
+    (value: unknown, lng: string | undefined, options: Intl.NumberFormatOptions) =>
+      new Intl.NumberFormat(lng === "ar" ? "ar-u-nu-latn" : lng, options).format(Number(value)),
+  );
 }
 
 export default i18n;

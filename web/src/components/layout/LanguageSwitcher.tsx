@@ -12,9 +12,10 @@ const NAMES: Record<Language, string> = {
   fr: "Français",
   de: "Deutsch",
   ko: "한국어",
+  ar: "العربية",
 };
 
-/** Globe button → list of the five languages. Picking one persists it and reloads (see i18n.ts). */
+/** Globe button → list of the six languages. Picking one persists it and reloads (see i18n.ts). */
 export function LanguageSwitcher() {
   const { t } = useTranslation();
   const current = lang();

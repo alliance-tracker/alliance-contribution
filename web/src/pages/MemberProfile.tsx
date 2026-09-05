@@ -30,7 +30,7 @@ import { PowerHistoryCard } from "@/components/PowerHistoryCard";
 import { StatCard } from "@/components/overview/StatCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 import { activitySolidClass, activityFillVar } from "@/lib/activity";
-import { formatNumber, lang } from "@/lib/format";
+import { formatNumber, localeTag } from "@/lib/format";
 import type { TKey } from "@/i18n";
 
 /** Monday (week-start) date of an ISO "YYYY-Www" label, or null if unparseable. */
@@ -47,7 +47,7 @@ function isoWeekStart(w: string): Date | null {
 /** "2026-W22" -> "May 25". Falls back to the raw label if not an ISO week. */
 function weekLabel(w: string): string {
   const d = isoWeekStart(w);
-  return d ? d.toLocaleDateString(lang(), { month: "short", day: "numeric", timeZone: "UTC" }) : w;
+  return d ? d.toLocaleDateString(localeTag(), { month: "short", day: "numeric", timeZone: "UTC" }) : w;
 }
 
 /**

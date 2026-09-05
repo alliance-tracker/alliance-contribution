@@ -3,14 +3,14 @@ import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 /**
- * Guards the five locale files against drift. en.json is the source of truth (typed t() keys come from
- * it); this test is what keeps es/fr/de/ko honest, since i18next silently renders the key path for a
+ * Guards the six locale files against drift. en.json is the source of truth (typed t() keys come from
+ * it); this test is what keeps es/fr/de/ko/ar honest, since i18next silently renders the key path for a
  * missing translation.
  */
 
 const LOCALES_DIR = fileURLToPath(new URL("../../web/src/locales/", import.meta.url));
 const SRC_DIR = fileURLToPath(new URL("../../web/src/", import.meta.url));
-const LANGUAGES = ["en", "es", "fr", "de", "ko"] as const;
+const LANGUAGES = ["en", "es", "fr", "de", "ko", "ar"] as const;
 const PLURAL_SUFFIX = /_(zero|one|two|few|many|other)$/;
 
 type Flat = Record<string, string>;

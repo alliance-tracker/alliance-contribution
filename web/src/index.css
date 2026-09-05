@@ -101,8 +101,8 @@
   --color-badge-pink-bg: #fdf2f8;
   --color-badge-pink-fg: #be185d;
 
-  --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Apple SD Gothic Neo", "Malgun Gothic", monospace;
+  --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans Arabic", "Geeza Pro", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans Arabic", "Geeza Pro", monospace;
 
   --radius: 8px;
 
@@ -252,6 +252,11 @@ body {
 /* Korean: never break inside a word. */
 :lang(ko) {
   word-break: keep-all;
+}
+
+/* Arabic: never letter-space; the tracked mono labels would break the script's joining. */
+:lang(ar) [class*="tracking-"] {
+  letter-spacing: 0;
 }
 
 ::selection {

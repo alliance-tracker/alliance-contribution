@@ -13,6 +13,8 @@
     "selectWeek": "Sélectionner la semaine",
     "seasonAllWeeks": "Saison · toutes les semaines combinées",
     "hideLeadership": "Masquer R4/R5",
+    "power": "Puissance",
+    "position": "Position",
     "actions": {
       "reload": "Recharger",
       "cancel": "Annuler",
@@ -194,5 +196,56 @@
     "searchPlaceholder": "Rechercher par nom ou alias…",
     "shown": "{{shown}} sur {{total}} affichés",
     "emptyMatch": "Aucun membre ne correspond."
+  },
+  "profile": {
+    "notFound": "Membre introuvable.",
+    "inactive": "inactif",
+    "inactiveBadge": "Inactif",
+    "knownAliases": "Alias connus :",
+    "scoreRank": "Rang de score",
+    "ofMembers_one": "sur {{count}} membre",
+    "ofMembers_many": "sur {{count}} membres",
+    "ofMembers_other": "sur {{count}} membres",
+    "notRanked": "pas encore classé",
+    "totalScore": "Score total",
+    "acrossActivities_one": "sur {{count}} activité",
+    "acrossActivities_many": "sur {{count}} activités",
+    "acrossActivities_other": "sur {{count}} activités",
+    "weeklyAvg": "Moyenne hebdomadaire",
+    "lastWeeks_one": "dernière {{count}} semaine",
+    "lastWeeks_many": "dernières {{count}} semaines",
+    "lastWeeks_other": "dernières {{count}} semaines",
+    "eventDaysRatio": "<1>{{attended}}</1>/<2>{{total}}</2> jours d'événement",
+    "noData": "aucune donnée",
+    "pts": "pts",
+    "tooltipWeight": "{{activity}} · poids ×{{weight}}",
+    "noTiers": "Aucun palier de score configuré.",
+    "tierMin": "≥ {{min}} {{unit}}",
+    "tierPoints_one": "{{count}} pt",
+    "tierPoints_many": "{{count}} pts",
+    "tierPoints_other": "{{count}} pts",
+    "composition": {
+      "title": "Composition du score",
+      "subtitle_one": "Points hebdomadaires par activité, dernière {{count}} semaine",
+      "subtitle_many": "Points hebdomadaires par activité, dernières {{count}} semaines",
+      "subtitle_other": "Points hebdomadaires par activité, dernières {{count}} semaines",
+      "empty": "Aucune donnée de composition pour le moment."
+    },
+    "byActivity": {
+      "title": "Score par activité",
+      "subtitle": "Totaux depuis toujours · survolez une ligne pour le détail du score"
+    },
+    "backToRoster": "Retour à la liste",
+    "backToMembers": "Retour aux membres"
+  },
+  "powerHistory": {
+    "title": "Puissance et position",
+    "absent": "Absent de cette capture",
+    "captures": "{{observed}} sur {{total}} captures",
+    "now": "actuellement {{power}} de puissance",
+    "position": "#{{position}}",
+    "positionOf": "#{{position}} sur {{total}}",
+    "emptyCaptures": "Aucune capture de liste pour le moment — importez une liste pour démarrer l'historique.",
+    "emptyMember": "Ce membre n'est encore apparu dans aucune capture."
   }
 }

@@ -13,6 +13,8 @@
     "selectWeek": "Seleccionar semana",
     "seasonAllWeeks": "Temporada · todas las semanas combinadas",
     "hideLeadership": "Ocultar R4/R5",
+    "power": "Poder",
+    "position": "Posición",
     "actions": {
       "reload": "Recargar",
       "cancel": "Cancelar",
@@ -194,5 +196,56 @@
     "searchPlaceholder": "Buscar por nombre o alias…",
     "shown": "{{shown}} de {{total}} mostrados",
     "emptyMatch": "Ningún miembro coincide."
+  },
+  "profile": {
+    "notFound": "Miembro no encontrado.",
+    "inactive": "inactivo",
+    "inactiveBadge": "Inactivo",
+    "knownAliases": "Alias conocidos:",
+    "scoreRank": "Rango de puntuación",
+    "ofMembers_one": "de {{count}} miembro",
+    "ofMembers_many": "de {{count}} miembros",
+    "ofMembers_other": "de {{count}} miembros",
+    "notRanked": "aún sin clasificar",
+    "totalScore": "Puntuación total",
+    "acrossActivities_one": "en {{count}} actividad",
+    "acrossActivities_many": "en {{count}} actividades",
+    "acrossActivities_other": "en {{count}} actividades",
+    "weeklyAvg": "Media semanal",
+    "lastWeeks_one": "última {{count}} semana",
+    "lastWeeks_many": "últimas {{count}} semanas",
+    "lastWeeks_other": "últimas {{count}} semanas",
+    "eventDaysRatio": "<1>{{attended}}</1>/<2>{{total}}</2> días de evento",
+    "noData": "sin datos",
+    "pts": "pts",
+    "tooltipWeight": "{{activity}} · peso ×{{weight}}",
+    "noTiers": "No hay niveles de puntuación configurados.",
+    "tierMin": "≥ {{min}} {{unit}}",
+    "tierPoints_one": "{{count}} pt",
+    "tierPoints_many": "{{count}} pts",
+    "tierPoints_other": "{{count}} pts",
+    "composition": {
+      "title": "Composición de la puntuación",
+      "subtitle_one": "Puntos semanales por actividad, última {{count}} semana",
+      "subtitle_many": "Puntos semanales por actividad, últimas {{count}} semanas",
+      "subtitle_other": "Puntos semanales por actividad, últimas {{count}} semanas",
+      "empty": "Aún no hay datos de composición."
+    },
+    "byActivity": {
+      "title": "Puntuación por actividad",
+      "subtitle": "Totales históricos · pase el cursor sobre una fila para ver el detalle de puntuación"
+    },
+    "backToRoster": "Volver a la lista",
+    "backToMembers": "Volver a miembros"
+  },
+  "powerHistory": {
+    "title": "Poder y posición",
+    "absent": "No está en esta captura",
+    "captures": "{{observed}} de {{total}} capturas",
+    "now": "ahora {{power}} de poder",
+    "position": "#{{position}}",
+    "positionOf": "#{{position}} de {{total}}",
+    "emptyCaptures": "Aún no hay capturas de la lista — importe una lista para iniciar el historial.",
+    "emptyMember": "Este miembro aún no ha aparecido en ninguna captura."
   }
 }

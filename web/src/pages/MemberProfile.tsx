@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -29,6 +30,8 @@ import { PowerHistoryCard } from "@/components/PowerHistoryCard";
 import { StatCard } from "@/components/overview/StatCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 import { activitySolidClass, activityFillVar } from "@/lib/activity";
+import { formatNumber, lang } from "@/lib/format";
+import type { TKey } from "@/i18n";
 
 /** Monday (week-start) date of an ISO "YYYY-Www" label, or null if unparseable. */
 function isoWeekStart(w: string): Date | null {
@@ -44,9 +47,7 @@ function isoWeekStart(w: string): Date | null {
 /** "2026-W22" -> "May 25". Falls back to the raw label if not an ISO week. */
 function weekLabel(w: string): string {
   const d = isoWeekStart(w);
-  return d
-    ? d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })
-    : w;
+  return d ? d.toLocaleDateString(lang(), { month: "short", day: "numeric", timeZone: "UTC" }) : w;
 }
 
 /**
@@ -94,6 +95,7 @@ function ActivityRow({
   stat: { points: number; appearances: number };
   max: number;
 }) {
+  const { t } = useTranslation();
   const [config, setConfig] = useState<ScoringConfig | null>(null);
   const requested = useRef(false);
   const load = () => {
@@ -117,7 +119,7 @@ function ActivityRow({
       <span className="min-w-0 truncate text-[13px] font-medium">{activity.name}</span>
       <span className="num shrink-0 text-[11px] text-faint">×{stat.appearances}</span>
       {activity.active === 0 && (
-        <span className="shrink-0 text-[11px] text-faint">inactive</span>
+        <span className="shrink-0 text-[11px] text-faint">{t("profile.inactive")}</span>
       )}
       <Progress
         value={Math.round((stat.points / max) * 100)}
@@ -125,24 +127,24 @@ function ActivityRow({
         className="h-2 min-w-14 flex-1 rounded-full bg-background"
       />
       <span className="num shrink-0 text-[13px] font-semibold">
-        {stat.points} <span className="text-[11px] font-normal text-faint">pts</span>
+        {stat.points} <span className="text-[11px] font-normal text-faint">{t("profile.pts")}</span>
       </span>
 
       {config && (
         <div className="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 hidden w-max rounded-[8px] border border-border bg-surface px-2.5 py-1.5 shadow-md group-hover:block">
           <div className="mb-1 text-[11px] text-muted">
-            {activity.name} · weight ×{config.weight}
+            {t("profile.tooltipWeight", { activity: activity.name, weight: config.weight })}
           </div>
           {tiers.length === 0 ? (
-            <div className="text-[12px] text-muted">No scoring tiers configured.</div>
+            <div className="text-[12px] text-muted">{t("profile.noTiers")}</div>
           ) : (
-            tiers.map((t) => (
-              <div key={t.min_value} className="flex items-baseline gap-3 text-[12px]">
+            tiers.map((tier) => (
+              <div key={tier.min_value} className="flex items-baseline gap-3 text-[12px]">
                 <span className="num text-muted">
-                  ≥ {t.min_value.toLocaleString()} {activity.unit_label}
+                  {t("profile.tierMin", { min: formatNumber(tier.min_value), unit: activity.unit_label })}
                 </span>
                 <span className="num ml-auto font-semibold text-foreground">
-                  {t.points} pt{t.points === 1 ? "" : "s"}
+                  {t("profile.tierPoints", { count: tier.points })}
                 </span>
               </div>
             ))
@@ -154,6 +156,7 @@ function ActivityRow({
 }
 
 export function MemberProfile() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const memberId = Number(id);
 
@@ -220,7 +223,7 @@ export function MemberProfile() {
       <div className="flex flex-col gap-4">
         <BackLink />
         <Card className="overflow-hidden">
-          <EmptyState message="Member not found." />
+          <EmptyState message={t("profile.notFound")} />
         </Card>
       </div>
     );
@@ -255,11 +258,11 @@ export function MemberProfile() {
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[18px] font-bold tracking-[-0.01em]">{member.governor}</span>
               <AllianceRankBadge rank={member.alliance_rank} />
-              {member.active === 0 && <Badge variant="warn">Inactive</Badge>}
+              {member.active === 0 && <Badge variant="warn">{t("profile.inactiveBadge")}</Badge>}
             </div>
             {aliases.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                <span className="text-[12px] text-muted">Known aliases:</span>
+                <span className="text-[12px] text-muted">{t("profile.knownAliases")}</span>
                 {aliases.map((a) => (
                   <span
                     key={a.id}
@@ -273,22 +276,22 @@ export function MemberProfile() {
           </div>
         </Card>
         <StatCard
-          label="Score Rank"
+          label={t("profile.scoreRank")}
           value={rank !== null ? `#${rank}` : "—"}
-          sub={rank !== null ? `of ${memberCount} members` : "not ranked yet"}
+          sub={rank !== null ? t("profile.ofMembers", { count: memberCount }) : t("profile.notRanked")}
         />
         <StatCard
-          label="Total Score"
-          value={totals.score.toLocaleString()}
-          sub={`across ${scoredCount} activit${scoredCount === 1 ? "y" : "ies"}`}
+          label={t("profile.totalScore")}
+          value={formatNumber(totals.score)}
+          sub={t("profile.acrossActivities", { count: scoredCount })}
         />
         <StatCard
-          label="Weekly Avg"
+          label={t("profile.weeklyAvg")}
           value={weeklyAvg ?? "—"}
-          sub={`last ${series.length} week${series.length === 1 ? "" : "s"}`}
+          sub={t("profile.lastWeeks", { count: series.length })}
         />
         <StatCard
-          label="Attendance"
+          label={t("nav.attendance")}
           value={attendancePct !== null ? `${attendancePct}%` : "—"}
           sub={
             attendanceRow ? (
@@ -297,11 +300,14 @@ export function MemberProfile() {
                   value={attendancePct ?? 0}
                   className="mb-1.5 h-1.5 rounded-full bg-background"
                 />
-                <span className="num">{attendanceRow.attended}</span>/
-                <span className="num">{attendanceRow.total}</span> event-days
+                <Trans
+                  i18nKey="profile.eventDaysRatio"
+                  values={{ attended: attendanceRow.attended, total: attendanceRow.total }}
+                  components={{ 1: <span className="num" />, 2: <span className="num" /> }}
+                />
               </div>
             ) : (
-              "no data"
+              t("profile.noData")
             )
           }
         />
@@ -312,9 +318,9 @@ export function MemberProfile() {
         <Card className={snapshotsState.data ? "p-5" : "p-5 lg:col-span-2"}>
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <div className="text-[14px] font-semibold">Score composition</div>
+              <div className="text-[14px] font-semibold">{t("profile.composition.title")}</div>
               <div className="text-[12px] text-muted">
-                Weekly points by activity, last {series.length} weeks
+                {t("profile.composition.subtitle", { count: series.length })}
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -322,13 +328,13 @@ export function MemberProfile() {
                 <span key={a.id} className="flex items-center gap-1.5 text-[11px] text-muted">
                   <span className="size-2 rounded-full" style={{ background: activityFillVar(a.color) }} />
                   {a.name}
-                  {a.active === 0 && <span className="text-faint">· inactive</span>}
+                  {a.active === 0 && <span className="text-faint">· {t("profile.inactive")}</span>}
                 </span>
               ))}
             </div>
           </div>
           {series.length === 0 ? (
-            <div className="py-10 text-center text-[13px] text-muted">No composition data yet.</div>
+            <div className="py-10 text-center text-[13px] text-muted">{t("profile.composition.empty")}</div>
           ) : (
             <ResponsiveContainer width="100%" height={230} className="mt-3">
               <BarChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
@@ -372,10 +378,8 @@ export function MemberProfile() {
       {/* Score by activity */}
       <Card className="p-5">
         <div className="mb-4">
-          <div className="text-[14px] font-semibold">Score by activity</div>
-          <div className="text-[12px] text-muted">
-            All-time totals · hover a row for scoring detail
-          </div>
+          <div className="text-[14px] font-semibold">{t("profile.byActivity.title")}</div>
+          <div className="text-[12px] text-muted">{t("profile.byActivity.subtitle")}</div>
         </div>
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 xl:grid-cols-4">
           {activitiesByPoints.map((activity) => (
@@ -398,13 +402,14 @@ export function MemberProfile() {
  * public members page drops them out of the admin area entirely. Everything else falls through, and
  * so does a deep link or a page refresh, where there is no origin to honour.
  */
-const ORIGINS: Record<string, { to: string; label: string }> = {
-  roster: { to: "/admin/roster", label: "Back to roster" },
+const ORIGINS: Record<string, { to: string; label: TKey }> = {
+  roster: { to: "/admin/roster", label: "profile.backToRoster" },
 };
 
-const DEFAULT_ORIGIN = { to: "/members", label: "Back to members" };
+const DEFAULT_ORIGIN: { to: string; label: TKey } = { to: "/members", label: "profile.backToMembers" };
 
 function BackLink() {
+  const { t } = useTranslation();
   const state = useLocation().state as { from?: string } | null;
   const origin = (state?.from && ORIGINS[state.from]) || DEFAULT_ORIGIN;
   return (
@@ -413,7 +418,7 @@ function BackLink() {
       className="inline-flex w-fit items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-foreground"
     >
       <ArrowLeft className="size-3.5" />
-      {origin.label}
+      {t(origin.label)}
     </Link>
   );
 }

@@ -13,6 +13,8 @@
     "selectWeek": "Woche auswählen",
     "seasonAllWeeks": "Saison · alle Wochen kombiniert",
     "hideLeadership": "R4/R5 ausblenden",
+    "power": "Macht",
+    "position": "Position",
     "actions": {
       "reload": "Neu laden",
       "cancel": "Abbrechen",
@@ -187,5 +189,51 @@
     "searchPlaceholder": "Nach Name oder Alias suchen…",
     "shown": "{{shown}} von {{total}} angezeigt",
     "emptyMatch": "Keine Mitglieder gefunden."
+  },
+  "profile": {
+    "notFound": "Mitglied nicht gefunden.",
+    "inactive": "inaktiv",
+    "inactiveBadge": "Inaktiv",
+    "knownAliases": "Bekannte Aliase:",
+    "scoreRank": "Punkterang",
+    "ofMembers_one": "von {{count}} Mitglied",
+    "ofMembers_other": "von {{count}} Mitgliedern",
+    "notRanked": "noch nicht bewertet",
+    "totalScore": "Gesamtpunktzahl",
+    "acrossActivities_one": "über {{count}} Aktivität",
+    "acrossActivities_other": "über {{count}} Aktivitäten",
+    "weeklyAvg": "Wochendurchschnitt",
+    "lastWeeks_one": "letzte {{count}} Woche",
+    "lastWeeks_other": "letzte {{count}} Wochen",
+    "eventDaysRatio": "<1>{{attended}}</1>/<2>{{total}}</2> Eventtage",
+    "noData": "keine Daten",
+    "pts": "Pkt.",
+    "tooltipWeight": "{{activity}} · Gewichtung ×{{weight}}",
+    "noTiers": "Keine Wertungsstufen konfiguriert.",
+    "tierMin": "≥ {{min}} {{unit}}",
+    "tierPoints_one": "{{count}} Pkt.",
+    "tierPoints_other": "{{count}} Pkt.",
+    "composition": {
+      "title": "Punktezusammensetzung",
+      "subtitle_one": "Wochenpunkte nach Aktivität, letzte {{count}} Woche",
+      "subtitle_other": "Wochenpunkte nach Aktivität, letzte {{count}} Wochen",
+      "empty": "Noch keine Zusammensetzungsdaten."
+    },
+    "byActivity": {
+      "title": "Punktzahl nach Aktivität",
+      "subtitle": "Gesamtwerte · Zeile für Wertungsdetails überfahren"
+    },
+    "backToRoster": "Zurück zur Liste",
+    "backToMembers": "Zurück zu Mitgliedern"
+  },
+  "powerHistory": {
+    "title": "Macht & Position",
+    "absent": "Nicht in dieser Erfassung",
+    "captures": "{{observed}} von {{total}} Erfassungen",
+    "now": "jetzt {{power}} Macht",
+    "position": "#{{position}}",
+    "positionOf": "#{{position}} von {{total}}",
+    "emptyCaptures": "Noch keine Listenerfassungen — importieren Sie eine Liste, um den Verlauf zu starten.",
+    "emptyMember": "Dieses Mitglied ist noch in keiner Erfassung aufgetaucht."
   }
 }

@@ -13,6 +13,8 @@
     "selectWeek": "Select week",
     "seasonAllWeeks": "Season · all weeks combined",
     "hideLeadership": "Hide R4/R5",
+    "power": "Power",
+    "position": "Position",
     "actions": {
       "reload": "Reload",
       "cancel": "Cancel",
@@ -191,5 +193,51 @@
     "searchPlaceholder": "Search by name or alias…",
     "shown": "{{shown}} of {{total}} shown",
     "emptyMatch": "No members match."
+  },
+  "profile": {
+    "notFound": "Member not found.",
+    "inactive": "inactive",
+    "inactiveBadge": "Inactive",
+    "knownAliases": "Known aliases:",
+    "scoreRank": "Score Rank",
+    "ofMembers_one": "of {{count}} member",
+    "ofMembers_other": "of {{count}} members",
+    "notRanked": "not ranked yet",
+    "totalScore": "Total Score",
+    "acrossActivities_one": "across {{count}} activity",
+    "acrossActivities_other": "across {{count}} activities",
+    "weeklyAvg": "Weekly Avg",
+    "lastWeeks_one": "last {{count}} week",
+    "lastWeeks_other": "last {{count}} weeks",
+    "eventDaysRatio": "<1>{{attended}}</1>/<2>{{total}}</2> event-days",
+    "noData": "no data",
+    "pts": "pts",
+    "tooltipWeight": "{{activity}} · weight ×{{weight}}",
+    "noTiers": "No scoring tiers configured.",
+    "tierMin": "≥ {{min}} {{unit}}",
+    "tierPoints_one": "{{count}} pt",
+    "tierPoints_other": "{{count}} pts",
+    "composition": {
+      "title": "Score composition",
+      "subtitle_one": "Weekly points by activity, last {{count}} week",
+      "subtitle_other": "Weekly points by activity, last {{count}} weeks",
+      "empty": "No composition data yet."
+    },
+    "byActivity": {
+      "title": "Score by activity",
+      "subtitle": "All-time totals · hover a row for scoring detail"
+    },
+    "backToRoster": "Back to roster",
+    "backToMembers": "Back to members"
+  },
+  "powerHistory": {
+    "title": "Power & position",
+    "absent": "Not in this capture",
+    "captures": "{{observed}} of {{total}} captures",
+    "now": "now {{power}} power",
+    "position": "#{{position}}",
+    "positionOf": "#{{position}} of {{total}}",
+    "emptyCaptures": "No roster captures yet — import a roster paste to start the history.",
+    "emptyMember": "This member has not appeared in any capture yet."
   }
 }

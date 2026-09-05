@@ -13,6 +13,8 @@
     "selectWeek": "주 선택",
     "seasonAllWeeks": "시즌 · 전체 주 통합",
     "hideLeadership": "R4/R5 숨기기",
+    "power": "전투력",
+    "position": "순위",
     "actions": {
       "reload": "새로 고침",
       "cancel": "취소",
@@ -180,5 +182,46 @@
     "searchPlaceholder": "이름 또는 별칭으로 검색…",
     "shown": "{{total}}개 중 {{shown}}개 표시",
     "emptyMatch": "일치하는 구성원이 없습니다."
+  },
+  "profile": {
+    "notFound": "구성원을 찾을 수 없습니다.",
+    "inactive": "비활성",
+    "inactiveBadge": "비활성",
+    "knownAliases": "알려진 별칭:",
+    "scoreRank": "점수 순위",
+    "ofMembers_other": "{{count}}명 중",
+    "notRanked": "아직 순위 없음",
+    "totalScore": "총점",
+    "acrossActivities_other": "{{count}}개 활동 기준",
+    "weeklyAvg": "주간 평균",
+    "lastWeeks_other": "최근 {{count}}주",
+    "eventDaysRatio": "이벤트 <1>{{attended}}</1>/<2>{{total}}</2>일",
+    "noData": "데이터 없음",
+    "pts": "점",
+    "tooltipWeight": "{{activity}} · 가중치 ×{{weight}}",
+    "noTiers": "설정된 점수 구간이 없습니다.",
+    "tierMin": "≥ {{min}} {{unit}}",
+    "tierPoints_other": "{{count}}점",
+    "composition": {
+      "title": "점수 구성",
+      "subtitle_other": "활동별 주간 점수, 최근 {{count}}주",
+      "empty": "아직 구성 데이터가 없습니다."
+    },
+    "byActivity": {
+      "title": "활동별 점수",
+      "subtitle": "전체 기간 합계 · 행에 마우스를 올리면 점수 세부 정보 표시"
+    },
+    "backToRoster": "명단으로 돌아가기",
+    "backToMembers": "구성원으로 돌아가기"
+  },
+  "powerHistory": {
+    "title": "전투력 및 순위",
+    "absent": "이 캡처에 없음",
+    "captures": "{{total}}개 캡처 중 {{observed}}개",
+    "now": "현재 전투력 {{power}}",
+    "position": "#{{position}}",
+    "positionOf": "#{{position}} / {{total}}",
+    "emptyCaptures": "아직 명단 캡처가 없습니다 — 명단 붙여넣기를 가져와 기록을 시작하세요.",
+    "emptyMember": "이 구성원은 아직 어떤 캡처에도 나타나지 않았습니다."
   }
 }

@@ -7,6 +7,11 @@
     "score": "점수",
     "activity": "활동",
     "date": "날짜",
+    "member": "구성원",
+    "allianceRank": "연맹 순위",
+    "selectWeek": "주 선택",
+    "seasonAllWeeks": "시즌 · 전체 주 통합",
+    "hideLeadership": "R4/R5 숨기기",
     "actions": {
       "reload": "새로 고침",
       "cancel": "취소",
@@ -121,6 +126,26 @@
       "summary_other": "<1>{{count}}</1>개 이름에 매핑이 필요합니다",
       "empty": "모든 이름이 구성원과 매칭되었습니다.",
       "resolve": "별칭에서 해결 →"
+    }
+  },
+  "ranking": {
+    "scoreWeekly": "이번 주 점수",
+    "scoreSeason": "시즌 점수",
+    "allActivities": "전체 활동",
+    "scopeThisWeek": "이번 주",
+    "scopeSeason": "시즌",
+    "scopeOverall": "전체",
+    "attendanceScope": "참석: {{scope}} · {{activity}}",
+    "movementHint": "지난주 대비 변동",
+    "emptyWeek": "이번 주에 기록된 참여가 없습니다.",
+    "emptyAll": "아직 기록된 참여가 없습니다.",
+    "fullStandings": "전체 순위표",
+    "standings_other": "<1>{{count}}</1>명 · {{scope}} · 순위순 정렬",
+    "clickRowHint": "행을 클릭하면 → 프로필로 이동",
+    "move": "이동",
+    "podium": {
+      "attend": "참석",
+      "move": "이동"
     }
   }
 }

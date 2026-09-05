@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import type { WeeklyRankingRow } from "@shared/types";
 import { cn } from "@/lib/utils";
@@ -65,6 +66,7 @@ export function PodiumCard({
   scoreLabel: string; // "Season Score" | "This-Week Score"
   showMovement: boolean;
 }) {
+  const { t } = useTranslation();
   const m = MEDALS[row.rank]; // undefined for ranks 4 & 5
   const first = row.rank === 1;
   return (
@@ -107,14 +109,14 @@ export function PodiumCard({
       <div className="mt-3 flex items-center gap-5">
         <div className="flex flex-col items-center gap-1">
           <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.06em] text-faint">
-            Attend
+            {t("ranking.podium.attend")}
           </span>
           <AttendanceBadge pct={row.attendance} />
         </div>
         {showMovement && (
           <div className="flex flex-col items-center gap-1">
             <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.06em] text-faint">
-              Move
+              {t("ranking.podium.move")}
             </span>
             <Movement value={row.movement} />
           </div>

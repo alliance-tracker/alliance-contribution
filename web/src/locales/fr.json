@@ -7,6 +7,11 @@
     "score": "Score",
     "activity": "Activité",
     "date": "Date",
+    "member": "Membre",
+    "allianceRank": "Rang d'alliance",
+    "selectWeek": "Sélectionner la semaine",
+    "seasonAllWeeks": "Saison · toutes les semaines combinées",
+    "hideLeadership": "Masquer R4/R5",
     "actions": {
       "reload": "Recharger",
       "cancel": "Annuler",
@@ -129,6 +134,28 @@
       "summary_other": "<1>{{count}}</1> noms nécessitent une association",
       "empty": "Tous les noms correspondent à un membre.",
       "resolve": "Résoudre dans Alias →"
+    }
+  },
+  "ranking": {
+    "scoreWeekly": "Score de la semaine",
+    "scoreSeason": "Score de la saison",
+    "allActivities": "toutes les activités",
+    "scopeThisWeek": "cette semaine",
+    "scopeSeason": "saison",
+    "scopeOverall": "général",
+    "attendanceScope": "Présence : {{scope}} · {{activity}}",
+    "movementHint": "Mouvement par rapport à la semaine précédente",
+    "emptyWeek": "Aucune participation enregistrée pour cette semaine.",
+    "emptyAll": "Aucune participation enregistrée pour le moment.",
+    "fullStandings": "Classement complet",
+    "standings_one": "<1>{{count}}</1> membre · {{scope}} · classé par rang",
+    "standings_many": "<1>{{count}}</1> membres · {{scope}} · classés par rang",
+    "standings_other": "<1>{{count}}</1> membres · {{scope}} · classés par rang",
+    "clickRowHint": "Cliquez sur une ligne → profil",
+    "move": "Mouvement",
+    "podium": {
+      "attend": "Présence",
+      "move": "Mouvement"
     }
   }
 }

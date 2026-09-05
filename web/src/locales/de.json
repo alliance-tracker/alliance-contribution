@@ -7,6 +7,11 @@
     "score": "Punktzahl",
     "activity": "Aktivität",
     "date": "Datum",
+    "member": "Mitglied",
+    "allianceRank": "Allianzrang",
+    "selectWeek": "Woche auswählen",
+    "seasonAllWeeks": "Saison · alle Wochen kombiniert",
+    "hideLeadership": "R4/R5 ausblenden",
     "actions": {
       "reload": "Neu laden",
       "cancel": "Abbrechen",
@@ -125,6 +130,27 @@
       "summary_other": "<1>{{count}}</1> Namen müssen zugeordnet werden",
       "empty": "Alle Namen sind einem Mitglied zugeordnet.",
       "resolve": "In Aliase auflösen →"
+    }
+  },
+  "ranking": {
+    "scoreWeekly": "Wochenpunktzahl",
+    "scoreSeason": "Saisonpunktzahl",
+    "allActivities": "alle Aktivitäten",
+    "scopeThisWeek": "diese Woche",
+    "scopeSeason": "Saison",
+    "scopeOverall": "gesamt",
+    "attendanceScope": "Anwesenheit: {{scope}} · {{activity}}",
+    "movementHint": "Bewegung gegenüber der Vorwoche",
+    "emptyWeek": "Für diese Woche wurde keine Teilnahme erfasst.",
+    "emptyAll": "Noch keine Teilnahme erfasst.",
+    "fullStandings": "Vollständige Rangliste",
+    "standings_one": "<1>{{count}}</1> Mitglied · {{scope}} · nach Rang sortiert",
+    "standings_other": "<1>{{count}}</1> Mitglieder · {{scope}} · nach Rang sortiert",
+    "clickRowHint": "Klicken Sie auf eine Zeile → Profil",
+    "move": "Bewegung",
+    "podium": {
+      "attend": "Anwesenheit",
+      "move": "Bewegung"
     }
   }
 }

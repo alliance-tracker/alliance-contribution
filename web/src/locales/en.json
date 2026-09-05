@@ -7,6 +7,11 @@
     "score": "Score",
     "activity": "Activity",
     "date": "Date",
+    "member": "Member",
+    "allianceRank": "Alliance Rank",
+    "selectWeek": "Select week",
+    "seasonAllWeeks": "Season · all weeks combined",
+    "hideLeadership": "Hide R4/R5",
     "actions": {
       "reload": "Reload",
       "cancel": "Cancel",
@@ -129,6 +134,27 @@
       "summary_other": "<1>{{count}}</1> names need mapping",
       "empty": "Every name resolves to a member.",
       "resolve": "Resolve in Aliases →"
+    }
+  },
+  "ranking": {
+    "scoreWeekly": "This-Week Score",
+    "scoreSeason": "Season Score",
+    "allActivities": "all activities",
+    "scopeThisWeek": "this week",
+    "scopeSeason": "season",
+    "scopeOverall": "overall",
+    "attendanceScope": "Attendance: {{scope}} · {{activity}}",
+    "movementHint": "Movement vs previous week",
+    "emptyWeek": "No participation recorded for this week.",
+    "emptyAll": "No participation recorded yet.",
+    "fullStandings": "Full Standings",
+    "standings_one": "<1>{{count}}</1> member · {{scope}} · sorted by rank",
+    "standings_other": "<1>{{count}}</1> members · {{scope}} · sorted by rank",
+    "clickRowHint": "Click any row → profile",
+    "move": "Move",
+    "podium": {
+      "attend": "Attend",
+      "move": "Move"
     }
   }
 }

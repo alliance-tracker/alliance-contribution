@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import {
   DEFAULT_RANK_BANDS,
   type ActivityType,
@@ -44,6 +45,7 @@ import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 const PODIUM_ORDER_CLASSES = ["md:order-3", "md:order-2", "md:order-4", "md:order-1", "md:order-5"];
 
 export function Ranking({ initialScope = "overall" }: { initialScope?: RankingScope }) {
+  const { t } = useTranslation();
   const [scope, setScope] = useState<RankingScope>(initialScope);
   const [week, setWeek] = useState<string | null>(null);
   const [activity, setActivity] = useState("all"); // "all" | activity.key
@@ -97,11 +99,14 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
     [rows, bands, hideLeadership],
   );
   const possible = rankingState.data?.possible ?? 0;
-  const scoreLabel = weekly ? "This-Week Score" : "Season Score";
+  const scoreLabel = weekly ? t("ranking.scoreWeekly") : t("ranking.scoreSeason");
   const activityLabel =
-    activity === "all" ? "all activities" : (activities.find((a) => a.key === activity)?.name ?? activity);
+    activity === "all" ? t("ranking.allActivities") : (activities.find((a) => a.key === activity)?.name ?? activity);
   // Names the attendance column's scope — the original scoping bug existed because it was invisible.
-  const attendanceScope = `Attendance: ${weekly ? "this week" : "season"} · ${activityLabel}`;
+  const attendanceScope = t("ranking.attendanceScope", {
+    scope: weekly ? t("ranking.scopeThisWeek") : t("ranking.scopeSeason"),
+    activity: activityLabel,
+  });
   // The weekly payload flags a week with no events of the selected activity; that is the only reliable
   // signal (`possible` is 0 for a tier-less activity, and boards are roster-seeded so rows are never empty).
   const noEvents = weekly && (rankingState.data as WeeklyRankingData | null)?.hasEvents === false;
@@ -120,7 +125,7 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
         {weekly ? (
           <Select value={week ?? undefined} onValueChange={setWeek} disabled={(weeksState.data ?? []).length === 0}>
             <SelectTrigger className="w-56">
-              <SelectValue placeholder="Select week" />
+              <SelectValue placeholder={t("common.selectWeek")} />
             </SelectTrigger>
             <SelectContent>
               {(weeksState.data ?? []).map((w) => (
@@ -132,14 +137,14 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
           </Select>
         ) : (
           <span className="inline-flex items-center rounded-[8px] border border-border bg-muted-surface px-3 py-1.5 text-[13px] font-medium text-secondary">
-            Season · all weeks combined
+            {t("common.seasonAllWeeks")}
           </span>
         )}
         <label className="flex cursor-pointer items-center gap-2 text-[13px] text-secondary">
           <Checkbox checked={hideLeadership} onCheckedChange={(v) => setHideLeadership(v === true)} />
-          Hide R4/R5
+          {t("common.hideLeadership")}
         </label>
-        <span className="text-[12.5px] text-muted">{weekly ? "Movement vs previous week" : ""}</span>
+        <span className="text-[12.5px] text-muted">{weekly ? t("ranking.movementHint") : ""}</span>
       </div>
 
       <div>
@@ -154,7 +159,7 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
         </Card>
       ) : noEvents || rows.length === 0 ? (
         <Card className="overflow-hidden">
-          <EmptyState message={weekly ? "No participation recorded for this week." : "No participation recorded yet."} />
+          <EmptyState message={weekly ? t("ranking.emptyWeek") : t("ranking.emptyAll")} />
         </Card>
       ) : (
         <>
@@ -173,24 +178,29 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
           <Card className="overflow-hidden">
             <div className="flex items-center justify-between border-b border-border px-[18px] py-[15px]">
               <div>
-                <div className="text-[14px] font-semibold">Full Standings</div>
+                <div className="text-[14px] font-semibold">{t("ranking.fullStandings")}</div>
                 <div className="text-[12px] text-muted">
-                  <span className="num">{visible.length}</span> members · {weekly ? "this week" : "overall"} · sorted by rank
+                  <Trans
+                    i18nKey="ranking.standings"
+                    count={visible.length}
+                    values={{ scope: weekly ? t("ranking.scopeThisWeek") : t("ranking.scopeOverall") }}
+                    components={{ 1: <span className="num" /> }}
+                  />
                 </div>
               </div>
-              <Badge variant="neutral">Click any row → profile</Badge>
+              <Badge variant="neutral">{t("ranking.clickRowHint")}</Badge>
             </div>
             <Table className="min-w-[800px]">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[70px]">Rank</TableHead>
-                  <TableHead>Member</TableHead>
-                  <TableHead className="w-[110px]">Alliance Rank</TableHead>
-                  <TableHead className="w-[240px]">Score</TableHead>
+                  <TableHead className="w-[70px]">{t("common.rank")}</TableHead>
+                  <TableHead>{t("common.member")}</TableHead>
+                  <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
+                  <TableHead className="w-[240px]">{t("common.score")}</TableHead>
                   <TableHead className="w-28 text-right" title={attendanceScope}>
-                    Attendance
+                    {t("nav.attendance")}
                   </TableHead>
-                  {weekly && <TableHead className="w-24 text-right">Move</TableHead>}
+                  {weekly && <TableHead className="w-24 text-right">{t("ranking.move")}</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>

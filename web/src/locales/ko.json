@@ -27,7 +27,8 @@
       "view": "보기",
       "edit": "수정",
       "delete": "삭제",
-      "change": "변경"
+      "change": "변경",
+      "save": "저장"
     },
     "errors": {
       "generic": "문제가 발생했습니다."
@@ -112,7 +113,11 @@
       "memberProfile": "개인 참여 및 이력"
     }
   },
-  "datePicker": { "placeholder": "날짜 선택", "prevMonth": "이전 달", "nextMonth": "다음 달" },
+  "datePicker": {
+    "placeholder": "날짜 선택",
+    "prevMonth": "이전 달",
+    "nextMonth": "다음 달"
+  },
   "llmPrompt": {
     "title": "스크린샷용 LLM 프롬프트",
     "copy": "복사",
@@ -324,5 +329,77 @@
     "queueEmpty": "미매핑 이름이 없습니다 — 모두 해석되었습니다.",
     "mapToMember": "구성원에 매핑",
     "removedNote": "별칭이 제거되었습니다 — 점수가 재계산되었습니다."
+  },
+  "scoring": {
+    "needKey": "점수를 편집하려면 API 키를 설정하십시오 (상단 바).",
+    "loadingBands": "구간을 불러오는 중…",
+    "tierBands": "점수 구간",
+    "noTiersCard": "구간 없음 — 구간이 추가될 때까지 점수는 0입니다.",
+    "anyAppearance": "모든 참여",
+    "below": "< {{value}}",
+    "atLeast": "≥ {{value}}",
+    "pt_other": "{{count}}점",
+    "editTitle": "활동 편집",
+    "editDesc": "<1>{{name}}</1>(<2>{{key}}</2>)을(를) 편집 중입니다. 점수는 카드에서 편집합니다.",
+    "name": "이름",
+    "namePlaceholder": "활동 이름",
+    "unitLabel": "단위 라벨",
+    "unitPlaceholder": "예: 공헌",
+    "maxInstance": "최대 인스턴스",
+    "maxInstanceShort": "최대 인스턴스",
+    "hintMin1": "(≥ 1)",
+    "hintMin0": "(≥ 0)",
+    "minValue": "최소값",
+    "sort": "정렬",
+    "colour": "활동 색상",
+    "colourHelp": "이 활동의 배지와 프로필 막대를 앱 전체에서 결정합니다.",
+    "deactivateTitle": "활동 비활성화",
+    "deactivateDesc": "<1>{{name}}</1>을(를) 비활성화하시겠습니까? 기록은 계속 점수화됩니다 — 완전히 삭제되지 않습니다.",
+    "deactivating": "비활성화하는 중…",
+    "deactivate": "비활성화",
+    "addTitle": "활동 유형 추가",
+    "addDesc": "키는 고유해야 합니다. 새 유형은 아직 구간이 없으며 — 점수 편집기에서 구간을 추가할 때까지 점수는 0입니다.",
+    "key": "키",
+    "keyHint": "(lowercase_underscore)",
+    "weight": "가중치",
+    "adding": "추가하는 중…",
+    "addActivity": "활동 추가",
+    "disabled": "비활성",
+    "active": "활성",
+    "weightMultiplier": "가중치 배수",
+    "editBands": "구간 편집",
+    "enable": "활동 활성화",
+    "disable": "활동 비활성화",
+    "activatedNote": "{{name}}을(를) 활성화했습니다.",
+    "title": "점수 활동",
+    "subtitle": "무엇이 집계되는지, 색상, 점수가 어떻게 구간화되는지 정의합니다.",
+    "recomputeWarning": "가중치나 구간을 편집하면 모든 과거 점수에 대한 <1>전체 재계산</1>이 실행됩니다.",
+    "emptyTypes": "아직 활동 유형이 없습니다. 점수 산정을 시작하려면 하나를 추가하십시오.",
+    "addedNote": "{{name}}을(를) 추가했습니다. 점수 산정을 시작하려면 구간을 추가하십시오.",
+    "savedNote": "{{name}}에 대한 변경 사항을 저장했습니다.",
+    "deactivatedNote": "{{name}}을(를) 비활성화했습니다.",
+    "rankBands": {
+      "title": "순위 구간",
+      "desc": "보드 색상 구간: 상위 N, 다음 M, 나머지. R4/R5는 절대 포함되지 않습니다. 표시 전용 — 재계산 없음.",
+      "topBand": "상위 구간",
+      "secondBand": "두 번째 구간",
+      "invalid": "크기는 0 이상의 정수여야 합니다.",
+      "saved": "저장했습니다."
+    },
+    "editor": {
+      "weightInvalid": "가중치는 0 이상의 숫자여야 합니다.",
+      "tierInvalid": "모든 구간에는 최소값과 0 이상의 점수가 필요합니다.",
+      "tierOrder": "구간의 최소값은 반드시 엄격하게 증가해야 합니다.",
+      "tiers": "구간",
+      "effectiveHint": "실효 점수 = 구간 점수 × 가중치",
+      "noTiers": "구간 없음 — 하나를 추가할 때까지 이 활동의 점수는 0입니다.",
+      "effective": "실효",
+      "removeTier": "구간 제거",
+      "addTier": "구간 추가",
+      "saveHelp": "저장하면 이 활동의 점수 산정 방식이 교체되며 전체 기록에 대한 전체 재계산이 실행됩니다.",
+      "savedRecomputed": "저장했습니다 — 기록을 재계산했습니다.",
+      "saveScoring": "점수 산정 저장",
+      "bandsDesc": "<1>{{name}}</1>의 가중치와 구간입니다."
+    }
   }
 }

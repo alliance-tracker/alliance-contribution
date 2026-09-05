@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { DEFAULT_RANK_BANDS, type RankBands } from "@shared/types";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
  * read-only. Pure presentation — saving triggers no recompute.
  */
 export function RankBandsCard() {
+  const { t } = useTranslation();
   const { role } = useApiKey();
   const admin = role === "admin";
   const state = useApi<RankBands>(() => api.settings.rankBands(), []);
@@ -55,15 +57,12 @@ export function RankBandsCard() {
   return (
     <Card className="flex flex-col gap-3 p-4">
       <div>
-        <div className="text-[14px] font-semibold">Ranking bands</div>
-        <p className="text-[12.5px] text-muted">
-          Board colour bands: top N, next M, remainder. R4/R5 never count. Display-only — no
-          recompute.
-        </p>
+        <div className="text-[14px] font-semibold">{t("scoring.rankBands.title")}</div>
+        <p className="text-[12.5px] text-muted">{t("scoring.rankBands.desc")}</p>
       </div>
       <div className="flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1 text-[12px] text-muted">
-          Top band
+          {t("scoring.rankBands.topBand")}
           <Input
             className="w-24"
             inputMode="numeric"
@@ -77,7 +76,7 @@ export function RankBandsCard() {
           />
         </label>
         <label className="flex flex-col gap-1 text-[12px] text-muted">
-          Second band
+          {t("scoring.rankBands.secondBand")}
           <Input
             className="w-24"
             inputMode="numeric"
@@ -92,14 +91,14 @@ export function RankBandsCard() {
         </label>
         {admin && (
           <Button size="sm" onClick={save} disabled={!valid || saving || state.data === null}>
-            {saving ? "Saving…" : "Save"}
+            {saving ? t("common.actions.saving") : t("common.actions.save")}
           </Button>
         )}
       </div>
       {state.error && <p className="text-[12px] text-down">{state.error}</p>}
-      {!valid && <p className="text-[12px] text-down">Sizes must be whole numbers ≥ 0.</p>}
+      {!valid && <p className="text-[12px] text-down">{t("scoring.rankBands.invalid")}</p>}
       {error && <p className="text-[12px] text-down">{error}</p>}
-      {saved && <p className="text-[12px] text-up">Saved.</p>}
+      {saved && <p className="text-[12px] text-up">{t("scoring.rankBands.saved")}</p>}
     </Card>
   );
 }

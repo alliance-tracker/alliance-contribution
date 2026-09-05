@@ -27,7 +27,8 @@
       "view": "Voir",
       "edit": "Modifier",
       "delete": "Supprimer",
-      "change": "Changer"
+      "change": "Changer",
+      "save": "Enregistrer"
     },
     "errors": {
       "generic": "Une erreur s'est produite."
@@ -112,7 +113,11 @@
       "memberProfile": "Participation et historique individuels"
     }
   },
-  "datePicker": { "placeholder": "Choisir une date", "prevMonth": "Mois précédent", "nextMonth": "Mois suivant" },
+  "datePicker": {
+    "placeholder": "Choisir une date",
+    "prevMonth": "Mois précédent",
+    "nextMonth": "Mois suivant"
+  },
   "llmPrompt": {
     "title": "Invite LLM pour les captures d'écran",
     "copy": "Copier",
@@ -366,5 +371,79 @@
     "queueEmpty": "Aucun nom non associé — tout est résolu.",
     "mapToMember": "Associer à un membre",
     "removedNote": "Alias supprimé — scores recalculés."
+  },
+  "scoring": {
+    "needKey": "Configurez votre clé API (barre supérieure) pour modifier la notation.",
+    "loadingBands": "Chargement des paliers…",
+    "tierBands": "Paliers de points",
+    "noTiersCard": "Aucun palier — le score est 0 tant que des paliers ne sont pas ajoutés.",
+    "anyAppearance": "Toute apparition",
+    "below": "< {{value}}",
+    "atLeast": "≥ {{value}}",
+    "pt_one": "{{count}} pt",
+    "pt_many": "{{count}} pts",
+    "pt_other": "{{count}} pts",
+    "editTitle": "Modifier l'activité",
+    "editDesc": "Modification de <1>{{name}}</1> (<2>{{key}}</2>). La notation se modifie sur la carte.",
+    "name": "Nom",
+    "namePlaceholder": "Nom de l'activité",
+    "unitLabel": "Libellé de l'unité",
+    "unitPlaceholder": "p. ex. contribution",
+    "maxInstance": "Instance maximale",
+    "maxInstanceShort": "Inst. max.",
+    "hintMin1": "(≥ 1)",
+    "hintMin0": "(≥ 0)",
+    "minValue": "Valeur minimale",
+    "sort": "Tri",
+    "colour": "Couleur de l'activité",
+    "colourHelp": "Détermine le badge et les barres de profil de cette activité partout dans l'application.",
+    "deactivateTitle": "Désactiver l'activité",
+    "deactivateDesc": "Désactiver <1>{{name}}</1> ? L'historique reste notable — il n'est jamais supprimé définitivement.",
+    "deactivating": "Désactivation…",
+    "deactivate": "Désactiver",
+    "addTitle": "Ajouter un type d'activité",
+    "addDesc": "La clé doit être unique. Un nouveau type n'a pas encore de paliers — son score est 0 tant que vous n'ajoutez pas de paliers dans son éditeur de notation.",
+    "key": "Clé",
+    "keyHint": "(lowercase_underscore)",
+    "weight": "Poids",
+    "adding": "Ajout…",
+    "addActivity": "Ajouter une activité",
+    "disabled": "Désactivée",
+    "active": "Active",
+    "weightMultiplier": "Multiplicateur de poids",
+    "editBands": "Modifier les paliers",
+    "enable": "Activer l'activité",
+    "disable": "Désactiver l'activité",
+    "activatedNote": "{{name}} activée.",
+    "title": "Activités de notation",
+    "subtitle": "Définissez ce qui compte, sa couleur, et comment les points se répartissent en paliers.",
+    "recomputeWarning": "Modifier les poids ou les paliers déclenche un <1>recalcul complet</1> de tous les scores historiques.",
+    "emptyTypes": "Aucun type d'activité pour le moment. Ajoutez-en un pour commencer à noter.",
+    "addedNote": "{{name}} ajoutée. Ajoutez ses paliers pour commencer à noter.",
+    "savedNote": "Modifications enregistrées pour {{name}}.",
+    "deactivatedNote": "{{name}} désactivée.",
+    "rankBands": {
+      "title": "Paliers de classement",
+      "desc": "Paliers de couleur du tableau : top N, M suivants, reste. R4/R5 ne comptent jamais. Affichage seul — pas de recalcul.",
+      "topBand": "Palier supérieur",
+      "secondBand": "Deuxième palier",
+      "invalid": "Les tailles doivent être des nombres entiers ≥ 0.",
+      "saved": "Enregistré."
+    },
+    "editor": {
+      "weightInvalid": "Le poids doit être un nombre ≥ 0.",
+      "tierInvalid": "Chaque palier nécessite une valeur minimale et des points ≥ 0.",
+      "tierOrder": "Les valeurs minimales des paliers doivent être strictement croissantes.",
+      "tiers": "Paliers",
+      "effectiveHint": "Points effectifs = points du palier × poids",
+      "noTiers": "Aucun palier — cette activité obtient un score de 0 tant que vous n'en ajoutez pas.",
+      "effective": "Effectif",
+      "removeTier": "Supprimer le palier",
+      "addTier": "Ajouter un palier",
+      "saveHelp": "Enregistrer remplace la notation de cette activité et exécute un recalcul complet de tout l'historique.",
+      "savedRecomputed": "Enregistré — historique recalculé.",
+      "saveScoring": "Enregistrer la notation",
+      "bandsDesc": "Poids et paliers de <1>{{name}}</1>."
+    }
   }
 }

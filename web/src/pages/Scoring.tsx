@@ -1,4 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
+import { useTranslation, Trans } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Plus, Pencil, Power, PowerOff, CheckCircle2, TriangleAlert } from "lucide-react";
 import type { ActivityType, NewActivityType } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
@@ -7,6 +9,7 @@ import type { ScoringConfig } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { cn } from "@/lib/utils";
 import { activityBadgeClass } from "@/lib/activity";
+import { formatNumber } from "@/lib/format";
 import { ColorSwatchPicker } from "@/components/ColorSwatchPicker";
 import { EditBandsDialog } from "@/components/scoring/EditBandsDialog";
 import { RankBandsCard } from "@/components/scoring/RankBandsCard";
@@ -26,12 +29,12 @@ import {
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 
 /** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown): string {
+function writeErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError) {
-    if (e.status === 401) return "Set your API key (top bar) to edit scoring.";
+    if (e.status === 401) return t("scoring.needKey");
     return e.message;
   }
-  return e instanceof Error ? e.message : "Something went wrong.";
+  return e instanceof Error ? e.message : t("common.errors.generic");
 }
 
 /** Parse a numeric field: blank/non-numeric → null (invalid), else the finite number. */
@@ -65,13 +68,14 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 
 /** Dismissible success banner (matches roster/aliases note style). */
 function SuccessNote({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  const { t } = useTranslation();
   return (
     <Alert variant="success">
       <CheckCircle2 />
       <AlertContent className="flex-row items-center justify-between gap-3">
         <span>{message}</span>
         <Button variant="ghost" size="sm" onClick={onDismiss}>
-          Dismiss
+          {t("common.actions.dismiss")}
         </Button>
       </AlertContent>
     </Alert>
@@ -82,12 +86,13 @@ function SuccessNote({ message, onDismiss }: { message: string; onDismiss: () =>
 
 /** Read-only tier bands for an activity card. Fetches the current scoring config for display. */
 function TierBandsPreview({ activityType }: { activityType: ActivityType }) {
+  const { t } = useTranslation();
   const { data, loading, error } = useApi<ScoringConfig>(
     () => api.activityTypes.getScoring(activityType.id),
     [activityType.id],
   );
 
-  if (loading) return <div className="text-[12px] text-muted">Loading bands…</div>;
+  if (loading) return <div className="text-[12px] text-muted">{t("scoring.loadingBands")}</div>;
   if (error) return <div className="text-[12px] text-down">{error}</div>;
 
   const tiers = data?.tiers ?? [];
@@ -95,26 +100,26 @@ function TierBandsPreview({ activityType }: { activityType: ActivityType }) {
   return (
     <div className="flex flex-col gap-2">
       <span className="font-mono text-[10.5px] uppercase tracking-[0.06em] text-faint">
-        Tier bands
+        {t("scoring.tierBands")}
       </span>
       {tiers.length === 0 ? (
-        <p className="text-[12px] text-muted">No tiers — scores 0 until bands are added.</p>
+        <p className="text-[12px] text-muted">{t("scoring.noTiersCard")}</p>
       ) : (
         <div className="flex flex-col gap-1.5">
-          {tiers.map((t, i) => {
+          {tiers.map((tier, i) => {
             let label: string;
             if (tiers.length === 1) {
-              label = "Any appearance";
-            } else if (i === 0 && t.points === 0) {
-              label = `< ${tiers[1].min_value.toLocaleString()}`;
+              label = t("scoring.anyAppearance");
+            } else if (i === 0 && tier.points === 0) {
+              label = t("scoring.below", { value: formatNumber(tiers[1].min_value) });
             } else {
-              label = `≥ ${t.min_value.toLocaleString()}`;
+              label = t("scoring.atLeast", { value: formatNumber(tier.min_value) });
             }
             return (
               <div key={i} className="flex items-center justify-between text-[12px]">
                 <span className="text-secondary">{label}</span>
                 <Badge variant="neutral" className="num">
-                  {t.points} pt
+                  {t("scoring.pt", { count: tier.points })}
                 </Badge>
               </div>
             );
@@ -137,6 +142,7 @@ function EditActivityDialog({
   onCancel: () => void;
   onSuccess: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [unitLabel, setUnitLabel] = useState("");
   const [maxInstance, setMaxInstance] = useState("1");
@@ -183,7 +189,7 @@ function EditActivityDialog({
       });
       onSuccess(name.trim());
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -197,14 +203,17 @@ function EditActivityDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit activity</DialogTitle>
+          <DialogTitle>{t("scoring.editTitle")}</DialogTitle>
           {activity && (
             <DialogDescription>
-              Editing{" "}
-              <Badge className={cn(activityBadgeClass(activity.color), "align-middle")}>
-                {activity.name}
-              </Badge>{" "}
-              (<span className="num">{activity.key}</span>). Scoring is edited on the card.
+              <Trans
+                i18nKey="scoring.editDesc"
+                values={{ name: activity.name, key: activity.key }}
+                components={{
+                  1: <Badge className={cn(activityBadgeClass(activity.color), "align-middle")} />,
+                  2: <span className="num" />,
+                }}
+              />
             </DialogDescription>
           )}
         </DialogHeader>
@@ -212,20 +221,25 @@ function EditActivityDialog({
         <div className="flex flex-col gap-4">
           {error && <ErrorState message={error} />}
 
-          <Field label="Name">
-            <Input placeholder="Activity name" value={name} onChange={(e) => setName(e.target.value)} autoFocus />
+          <Field label={t("scoring.name")}>
+            <Input
+              placeholder={t("scoring.namePlaceholder")}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              autoFocus
+            />
           </Field>
 
-          <Field label="Unit label" hint="(optional)">
+          <Field label={t("scoring.unitLabel")} hint={t("common.optional")}>
             <Input
-              placeholder="e.g. contribution"
+              placeholder={t("scoring.unitPlaceholder")}
               value={unitLabel}
               onChange={(e) => setUnitLabel(e.target.value)}
             />
           </Field>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Field label="Max instance" hint="(≥ 1)">
+            <Field label={t("scoring.maxInstance")} hint={t("scoring.hintMin1")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -236,7 +250,7 @@ function EditActivityDialog({
                 aria-invalid={!maxInstanceValid}
               />
             </Field>
-            <Field label="Min value" hint="(≥ 0)">
+            <Field label={t("scoring.minValue")} hint={t("scoring.hintMin0")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -246,7 +260,7 @@ function EditActivityDialog({
                 aria-invalid={!minValueValid}
               />
             </Field>
-            <Field label="Sort">
+            <Field label={t("scoring.sort")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -258,21 +272,19 @@ function EditActivityDialog({
             </Field>
           </div>
 
-          <Field label="Activity colour">
+          <Field label={t("scoring.colour")}>
             <div className="flex flex-col gap-2">
               <ColorSwatchPicker value={color} onChange={setColor} />
-              <p className="text-[12px] text-muted">
-                Drives the badge and profile bars for this activity everywhere.
-              </p>
+              <p className="text-[12px] text-muted">{t("scoring.colourHelp")}</p>
             </div>
           </Field>
 
           <div className="flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button size="sm" onClick={submit} disabled={!canSubmit}>
-              {submitting ? "Saving…" : "Save changes"}
+              {submitting ? t("common.actions.saving") : t("common.actions.saveChanges")}
             </Button>
           </div>
         </div>
@@ -291,6 +303,7 @@ function DeactivateActivityDialog({
   onCancel: () => void;
   onDone: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -309,7 +322,7 @@ function DeactivateActivityDialog({
       await api.activityTypes.update(activity.id, { active: 0 });
       onDone(activity.name);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -323,14 +336,16 @@ function DeactivateActivityDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Deactivate activity</DialogTitle>
+          <DialogTitle>{t("scoring.deactivateTitle")}</DialogTitle>
           {activity && (
             <DialogDescription>
-              Deactivate{" "}
-              <Badge className={cn(activityBadgeClass(activity.color), "align-middle")}>
-                {activity.name}
-              </Badge>
-              ? Keeps history scorable — it is never hard-deleted.
+              <Trans
+                i18nKey="scoring.deactivateDesc"
+                values={{ name: activity.name }}
+                components={{
+                  1: <Badge className={cn(activityBadgeClass(activity.color), "align-middle")} />,
+                }}
+              />
             </DialogDescription>
           )}
         </DialogHeader>
@@ -339,10 +354,10 @@ function DeactivateActivityDialog({
 
         <div className="mt-4 flex items-center justify-end gap-2">
           <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-            Cancel
+            {t("common.actions.cancel")}
           </Button>
           <Button variant="danger" size="sm" onClick={confirm} disabled={submitting}>
-            {submitting ? "Deactivating…" : "Deactivate"}
+            {submitting ? t("scoring.deactivating") : t("scoring.deactivate")}
           </Button>
         </div>
       </DialogContent>
@@ -361,6 +376,7 @@ function AddActivityDialog({
   onOpenChange: (open: boolean) => void;
   onSuccess: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   const [key, setKey] = useState("");
   const [name, setName] = useState("");
   const [unitLabel, setUnitLabel] = useState("");
@@ -421,7 +437,7 @@ function AddActivityDialog({
       await api.activityTypes.create(dto);
       onSuccess(name.trim());
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -430,18 +446,15 @@ function AddActivityDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add activity type</DialogTitle>
-          <DialogDescription>
-            Key must be unique. A new type has no tiers yet — it scores 0 until you add tiers in its
-            scoring editor.
-          </DialogDescription>
+          <DialogTitle>{t("scoring.addTitle")}</DialogTitle>
+          <DialogDescription>{t("scoring.addDesc")}</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           {error && <ErrorState message={error} />}
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Key" hint="(lowercase_underscore)">
+            <Field label={t("scoring.key")} hint={t("scoring.keyHint")}>
               <Input
                 className="num"
                 placeholder="castle_battle"
@@ -450,21 +463,21 @@ function AddActivityDialog({
                 autoFocus
               />
             </Field>
-            <Field label="Name">
+            <Field label={t("scoring.name")}>
               <Input placeholder="Castle Battle" value={name} onChange={(e) => setName(e.target.value)} />
             </Field>
           </div>
 
-          <Field label="Unit label" hint="(optional)">
+          <Field label={t("scoring.unitLabel")} hint={t("common.optional")}>
             <Input
-              placeholder="e.g. contribution"
+              placeholder={t("scoring.unitPlaceholder")}
               value={unitLabel}
               onChange={(e) => setUnitLabel(e.target.value)}
             />
           </Field>
 
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Field label="Weight" hint="(≥ 0)">
+            <Field label={t("scoring.weight")} hint={t("scoring.hintMin0")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -475,7 +488,7 @@ function AddActivityDialog({
                 aria-invalid={!weightValid}
               />
             </Field>
-            <Field label="Max inst." hint="(≥ 1)">
+            <Field label={t("scoring.maxInstanceShort")} hint={t("scoring.hintMin1")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -486,7 +499,7 @@ function AddActivityDialog({
                 aria-invalid={!maxInstanceValid}
               />
             </Field>
-            <Field label="Min value" hint="(≥ 0)">
+            <Field label={t("scoring.minValue")} hint={t("scoring.hintMin0")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -496,7 +509,7 @@ function AddActivityDialog({
                 aria-invalid={!minValueValid}
               />
             </Field>
-            <Field label="Sort" hint="(optional)">
+            <Field label={t("scoring.sort")} hint={t("common.optional")}>
               <Input
                 className="num text-right"
                 type="number"
@@ -508,23 +521,21 @@ function AddActivityDialog({
             </Field>
           </div>
 
-          <Field label="Activity colour">
+          <Field label={t("scoring.colour")}>
             <div className="flex flex-col gap-2">
               <ColorSwatchPicker value={color} onChange={setColor} />
-              <p className="text-[12px] text-muted">
-                Drives the badge and profile bars for this activity everywhere.
-              </p>
+              <p className="text-[12px] text-muted">{t("scoring.colourHelp")}</p>
             </div>
           </Field>
 
           <div className="flex items-center justify-end gap-2">
             <DialogClose asChild>
               <Button variant="ghost" size="sm">
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button size="sm" onClick={submit} disabled={!canSubmit}>
-              {submitting ? "Adding…" : "Add activity"}
+              {submitting ? t("scoring.adding") : t("scoring.addActivity")}
             </Button>
           </div>
         </div>
@@ -548,6 +559,7 @@ function ActivityCard({
   onDeactivate: (a: ActivityType) => void;
   onActivate: (a: ActivityType) => void;
 }) {
+  const { t } = useTranslation();
   const inactive = activity.active !== 1;
   return (
     <Card className={cn("flex flex-col gap-4 p-4", inactive && "opacity-60")}>
@@ -561,16 +573,16 @@ function ActivityCard({
           {activity.name}
         </span>
         {inactive ? (
-          <Badge variant="neutral">Disabled</Badge>
+          <Badge variant="neutral">{t("scoring.disabled")}</Badge>
         ) : (
-          <Badge variant="up">Active</Badge>
+          <Badge variant="up">{t("scoring.active")}</Badge>
         )}
       </div>
 
       {activity.unit_label && <p className="text-[12px] text-muted">{activity.unit_label}</p>}
 
       <div className="flex items-center justify-between text-[12px]">
-        <span className="text-secondary">Weight multiplier</span>
+        <span className="text-secondary">{t("scoring.weightMultiplier")}</span>
         <Badge variant="neutral" className="font-mono">
           ×{activity.weight}
         </Badge>
@@ -582,7 +594,7 @@ function ActivityCard({
         <div className="flex items-center gap-2">
           <Button variant="secondary" size="sm" className="flex-1" onClick={() => onEdit(activity)}>
             <Pencil />
-            Edit
+            {t("common.actions.edit")}
           </Button>
           <Button
             variant="secondary"
@@ -590,18 +602,18 @@ function ActivityCard({
             className="flex-1"
             onClick={() => onEditBands(activity)}
           >
-            Edit bands
+            {t("scoring.editBands")}
           </Button>
         </div>
         {inactive ? (
           <Button variant="ghost" size="sm" onClick={() => onActivate(activity)}>
             <Power />
-            Enable activity
+            {t("scoring.enable")}
           </Button>
         ) : (
           <Button variant="ghost" size="sm" onClick={() => onDeactivate(activity)}>
             <PowerOff />
-            Disable activity
+            {t("scoring.disable")}
           </Button>
         )}
       </div>
@@ -612,6 +624,7 @@ function ActivityCard({
 // ---- Page -------------------------------------------------------------------
 
 export function Scoring() {
+  const { t } = useTranslation();
   const [reloadKey, setReloadKey] = useState(0);
   const activitiesState = useApi<ActivityType[]>(() => api.activityTypes.list(), [reloadKey]);
 
@@ -636,10 +649,10 @@ export function Scoring() {
     setRowError(null);
     try {
       await api.activityTypes.update(a.id, { active: 1 });
-      setNote(`Activated ${a.name}.`);
+      setNote(t("scoring.activatedNote", { name: a.name }));
       refresh();
     } catch (e) {
-      setRowError(writeErrorMessage(e));
+      setRowError(writeErrorMessage(e, t));
     }
   };
 
@@ -648,15 +661,13 @@ export function Scoring() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <h2 className="text-[18px] font-semibold tracking-[-0.01em] text-foreground">
-            Scoring activities
+            {t("scoring.title")}
           </h2>
-          <p className="text-[13px] text-muted">
-            Define what counts, its colour, and how points band up.
-          </p>
+          <p className="text-[13px] text-muted">{t("scoring.subtitle")}</p>
         </div>
         <Button size="sm" onClick={() => setAddOpen(true)}>
           <Plus />
-          Add activity
+          {t("scoring.addActivity")}
         </Button>
       </div>
 
@@ -664,8 +675,10 @@ export function Scoring() {
         <TriangleAlert />
         <AlertContent>
           <span>
-            Editing weights or tiers triggers a <strong className="font-semibold">full recompute</strong> of
-            all historical scores.
+            <Trans
+              i18nKey="scoring.recomputeWarning"
+              components={{ 1: <strong className="font-semibold" /> }}
+            />
           </span>
         </AlertContent>
       </Alert>
@@ -681,7 +694,7 @@ export function Scoring() {
         </Card>
       ) : activities.length === 0 ? (
         <Card className="overflow-hidden">
-          <EmptyState message="No activity types yet. Add one to start scoring." />
+          <EmptyState message={t("scoring.emptyTypes")} />
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -705,7 +718,7 @@ export function Scoring() {
         onOpenChange={setAddOpen}
         onSuccess={(name) => {
           setAddOpen(false);
-          setNote(`Added ${name}. Add its tiers to start scoring.`);
+          setNote(t("scoring.addedNote", { name }));
           refresh();
         }}
       />
@@ -715,7 +728,7 @@ export function Scoring() {
         onCancel={() => setEditActivity(null)}
         onSuccess={(name) => {
           setEditActivity(null);
-          setNote(`Saved changes to ${name}.`);
+          setNote(t("scoring.savedNote", { name }));
           refresh();
         }}
       />
@@ -735,7 +748,7 @@ export function Scoring() {
         onCancel={() => setDeactivateActivity(null)}
         onDone={(name) => {
           setDeactivateActivity(null);
-          setNote(`Deactivated ${name}.`);
+          setNote(t("scoring.deactivatedNote", { name }));
           refresh();
         }}
       />

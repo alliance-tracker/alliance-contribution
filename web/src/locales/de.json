@@ -27,7 +27,8 @@
       "view": "Ansehen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
-      "change": "Ändern"
+      "change": "Ändern",
+      "save": "Speichern"
     },
     "errors": {
       "generic": "Etwas ist schiefgelaufen."
@@ -112,7 +113,11 @@
       "memberProfile": "Individuelle Beteiligung und Verlauf"
     }
   },
-  "datePicker": { "placeholder": "Datum wählen", "prevMonth": "Vormonat", "nextMonth": "Nächster Monat" },
+  "datePicker": {
+    "placeholder": "Datum wählen",
+    "prevMonth": "Vormonat",
+    "nextMonth": "Nächster Monat"
+  },
   "llmPrompt": {
     "title": "LLM-Prompt für Screenshots",
     "copy": "Kopieren",
@@ -345,5 +350,78 @@
     "queueEmpty": "Keine nicht zugeordneten Namen — alles ist aufgelöst.",
     "mapToMember": "Mitglied zuordnen",
     "removedNote": "Alias entfernt — Punktzahlen neu berechnet."
+  },
+  "scoring": {
+    "needKey": "Legen Sie Ihren API-Schlüssel (obere Leiste) fest, um die Wertung zu bearbeiten.",
+    "loadingBands": "Stufen werden geladen…",
+    "tierBands": "Punktestufen",
+    "noTiersCard": "Keine Stufen — Wertung ist 0, bis Stufen hinzugefügt werden.",
+    "anyAppearance": "Jede Teilnahme",
+    "below": "< {{value}}",
+    "atLeast": "≥ {{value}}",
+    "pt_one": "{{count}} Pkt.",
+    "pt_other": "{{count}} Pkt.",
+    "editTitle": "Aktivität bearbeiten",
+    "editDesc": "<1>{{name}}</1> wird bearbeitet (<2>{{key}}</2>). Die Wertung wird auf der Karte bearbeitet.",
+    "name": "Name",
+    "namePlaceholder": "Name der Aktivität",
+    "unitLabel": "Einheitsbezeichnung",
+    "unitPlaceholder": "z. B. Beitrag",
+    "maxInstance": "Max. Instanz",
+    "maxInstanceShort": "Max. Inst.",
+    "hintMin1": "(≥ 1)",
+    "hintMin0": "(≥ 0)",
+    "minValue": "Mindestwert",
+    "sort": "Sortierung",
+    "colour": "Aktivitätsfarbe",
+    "colourHelp": "Bestimmt das Badge und die Profilbalken dieser Aktivität überall in der App.",
+    "deactivateTitle": "Aktivität deaktivieren",
+    "deactivateDesc": "<1>{{name}}</1> deaktivieren? Der Verlauf bleibt wertbar — er wird nie endgültig gelöscht.",
+    "deactivating": "Wird deaktiviert…",
+    "deactivate": "Deaktivieren",
+    "addTitle": "Aktivitätstyp hinzufügen",
+    "addDesc": "Der Schlüssel muss eindeutig sein. Ein neuer Typ hat noch keine Stufen — er wird mit 0 gewertet, bis Sie im zugehörigen Wertungs-Editor Stufen hinzufügen.",
+    "key": "Schlüssel",
+    "keyHint": "(lowercase_underscore)",
+    "weight": "Gewichtung",
+    "adding": "Wird hinzugefügt…",
+    "addActivity": "Aktivität hinzufügen",
+    "disabled": "Deaktiviert",
+    "active": "Aktiv",
+    "weightMultiplier": "Gewichtungsfaktor",
+    "editBands": "Stufen bearbeiten",
+    "enable": "Aktivität aktivieren",
+    "disable": "Aktivität deaktivieren",
+    "activatedNote": "{{name}} aktiviert.",
+    "title": "Wertungsaktivitäten",
+    "subtitle": "Legen Sie fest, was zählt, welche Farbe und wie sich Punkte in Stufen gliedern.",
+    "recomputeWarning": "Das Bearbeiten von Gewichtungen oder Stufen löst eine <1>vollständige Neuberechnung</1> aller historischen Wertungen aus.",
+    "emptyTypes": "Noch keine Aktivitätstypen. Fügen Sie einen hinzu, um mit der Wertung zu beginnen.",
+    "addedNote": "{{name}} hinzugefügt. Fügen Sie dessen Stufen hinzu, um mit der Wertung zu beginnen.",
+    "savedNote": "Änderungen an {{name}} gespeichert.",
+    "deactivatedNote": "{{name}} deaktiviert.",
+    "rankBands": {
+      "title": "Rangstufen",
+      "desc": "Farbstufen der Tabelle: Top N, nächste M, Rest. R4/R5 zählen nie. Nur Anzeige — keine Neuberechnung.",
+      "topBand": "Obere Stufe",
+      "secondBand": "Zweite Stufe",
+      "invalid": "Größen müssen ganze Zahlen ≥ 0 sein.",
+      "saved": "Gespeichert."
+    },
+    "editor": {
+      "weightInvalid": "Die Gewichtung muss eine Zahl ≥ 0 sein.",
+      "tierInvalid": "Jede Stufe benötigt einen Mindestwert und Punkte ≥ 0.",
+      "tierOrder": "Die Mindestwerte der Stufen müssen streng aufsteigend sein.",
+      "tiers": "Stufen",
+      "effectiveHint": "Effektive Punkte = Stufenpunkte × Gewichtung",
+      "noTiers": "Keine Stufen — diese Aktivität wird mit 0 gewertet, bis Sie eine hinzufügen.",
+      "effective": "Effektiv",
+      "removeTier": "Stufe entfernen",
+      "addTier": "Stufe hinzufügen",
+      "saveHelp": "Speichern ersetzt die Wertung dieser Aktivität und führt eine vollständige Neuberechnung des gesamten Verlaufs durch.",
+      "savedRecomputed": "Gespeichert — Verlauf neu berechnet.",
+      "saveScoring": "Wertung speichern",
+      "bandsDesc": "Gewichtung und Stufen für <1>{{name}}</1>."
+    }
   }
 }

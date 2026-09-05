@@ -27,7 +27,8 @@
       "view": "Ver",
       "edit": "Editar",
       "delete": "Eliminar",
-      "change": "Cambiar"
+      "change": "Cambiar",
+      "save": "Guardar"
     },
     "errors": {
       "generic": "Algo salió mal."
@@ -112,7 +113,11 @@
       "memberProfile": "Participación e historial individual"
     }
   },
-  "datePicker": { "placeholder": "Elija una fecha", "prevMonth": "Mes anterior", "nextMonth": "Mes siguiente" },
+  "datePicker": {
+    "placeholder": "Elija una fecha",
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente"
+  },
   "llmPrompt": {
     "title": "Prompt de LLM para capturas de pantalla",
     "copy": "Copiar",
@@ -366,5 +371,79 @@
     "queueEmpty": "No hay nombres sin asignar — todo se resuelve.",
     "mapToMember": "Asignar a un miembro",
     "removedNote": "Alias eliminado — puntuaciones recalculadas."
+  },
+  "scoring": {
+    "needKey": "Configure su clave de API (barra superior) para editar la puntuación.",
+    "loadingBands": "Cargando bandas…",
+    "tierBands": "Bandas de nivel",
+    "noTiersCard": "Sin niveles — la puntuación es 0 hasta que se añadan bandas.",
+    "anyAppearance": "Cualquier aparición",
+    "below": "< {{value}}",
+    "atLeast": "≥ {{value}}",
+    "pt_one": "{{count}} pt",
+    "pt_many": "{{count}} pts",
+    "pt_other": "{{count}} pts",
+    "editTitle": "Editar actividad",
+    "editDesc": "Editando <1>{{name}}</1> (<2>{{key}}</2>). La puntuación se edita en la tarjeta.",
+    "name": "Nombre",
+    "namePlaceholder": "Nombre de la actividad",
+    "unitLabel": "Etiqueta de unidad",
+    "unitPlaceholder": "p. ej. contribución",
+    "maxInstance": "Instancia máxima",
+    "maxInstanceShort": "Inst. máx.",
+    "hintMin1": "(≥ 1)",
+    "hintMin0": "(≥ 0)",
+    "minValue": "Valor mínimo",
+    "sort": "Orden",
+    "colour": "Color de la actividad",
+    "colourHelp": "Determina la insignia y las barras de perfil de esta actividad en toda la aplicación.",
+    "deactivateTitle": "Desactivar actividad",
+    "deactivateDesc": "¿Desactivar <1>{{name}}</1>? El historial sigue siendo puntuable — nunca se elimina de forma permanente.",
+    "deactivating": "Desactivando…",
+    "deactivate": "Desactivar",
+    "addTitle": "Añadir tipo de actividad",
+    "addDesc": "La clave debe ser única. Un tipo nuevo no tiene niveles todavía — su puntuación es 0 hasta que añada niveles en su editor de puntuación.",
+    "key": "Clave",
+    "keyHint": "(lowercase_underscore)",
+    "weight": "Peso",
+    "adding": "Añadiendo…",
+    "addActivity": "Añadir actividad",
+    "disabled": "Deshabilitada",
+    "active": "Activa",
+    "weightMultiplier": "Multiplicador de peso",
+    "editBands": "Editar bandas",
+    "enable": "Habilitar actividad",
+    "disable": "Deshabilitar actividad",
+    "activatedNote": "Se activó {{name}}.",
+    "title": "Actividades de puntuación",
+    "subtitle": "Defina qué cuenta, su color y cómo se agrupan los puntos.",
+    "recomputeWarning": "Editar pesos o niveles activa un <1>recálculo completo</1> de todas las puntuaciones históricas.",
+    "emptyTypes": "Aún no hay tipos de actividad. Añada uno para empezar a puntuar.",
+    "addedNote": "Se añadió {{name}}. Añada sus niveles para empezar a puntuar.",
+    "savedNote": "Se guardaron los cambios en {{name}}.",
+    "deactivatedNote": "Se desactivó {{name}}.",
+    "rankBands": {
+      "title": "Bandas de clasificación",
+      "desc": "Bandas de color del tablero: top N, siguientes M, resto. R4/R5 nunca cuentan. Solo visualización — sin recálculo.",
+      "topBand": "Banda superior",
+      "secondBand": "Segunda banda",
+      "invalid": "Los tamaños deben ser números enteros ≥ 0.",
+      "saved": "Guardado."
+    },
+    "editor": {
+      "weightInvalid": "El peso debe ser un número ≥ 0.",
+      "tierInvalid": "Cada nivel necesita un valor mínimo y puntos ≥ 0.",
+      "tierOrder": "Los valores mínimos de los niveles deben aumentar estrictamente.",
+      "tiers": "Niveles",
+      "effectiveHint": "Puntos efectivos = puntos del nivel × peso",
+      "noTiers": "Sin niveles — esta actividad puntúa 0 hasta que añada uno.",
+      "effective": "Efectivo",
+      "removeTier": "Eliminar nivel",
+      "addTier": "Añadir nivel",
+      "saveHelp": "Guardar reemplaza la puntuación de esta actividad y ejecuta un recálculo completo de todo el historial.",
+      "savedRecomputed": "Guardado — historial recalculado.",
+      "saveScoring": "Guardar puntuación",
+      "bandsDesc": "Peso y niveles de <1>{{name}}</1>."
+    }
   }
 }

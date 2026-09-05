@@ -18,8 +18,25 @@
     "actions": {
       "reload": "새로 고침",
       "cancel": "취소",
-      "close": "닫기"
-    }
+      "close": "닫기",
+      "done": "완료",
+      "saving": "저장 중…",
+      "saveChanges": "변경 사항 저장",
+      "deleting": "삭제 중…",
+      "dismiss": "닫기",
+      "view": "보기",
+      "edit": "수정",
+      "delete": "삭제"
+    },
+    "errors": {
+      "generic": "문제가 발생했습니다."
+    },
+    "inactive": "비활성",
+    "value": "값",
+    "points": "포인트",
+    "notes": "메모",
+    "week": "주",
+    "unmapped": "미매핑"
   },
   "scope": {
     "overall": "전체",
@@ -94,6 +111,49 @@
     }
   },
   "datePicker": { "placeholder": "날짜 선택", "prevMonth": "이전 달", "nextMonth": "다음 달" },
+  "llmPrompt": {
+    "title": "스크린샷용 LLM 프롬프트",
+    "copy": "복사",
+    "copied": "복사됨"
+  },
+  "events": {
+    "needKey": "이벤트를 저장하려면 API 키를 설정하십시오(상단 바).",
+    "rawName": "원본 이름",
+    "unmappedBadge": "미매핑",
+    "persisted_other": "<1>{{count}}</1>행이 저장되고 점수가 매겨졌습니다.",
+    "unmappedResult_other": "{{count}}개의 미매핑 이름 — 집계하려면 별칭에서 매핑하십시오.",
+    "skippedTitle": "건너뜀 — 값 ≤ 기준값, 집계되지 않음",
+    "activityGone": "이 이벤트의 활동 유형이 더 이상 존재하지 않습니다 — 다시 저장할 수 없습니다.",
+    "editTitle": "이벤트 수정",
+    "editDesc": "다시 제출하면 배치가 교체됩니다 — 행이 다시 해석되고 다시 점수가 매겨집니다.",
+    "add": "이벤트 추가",
+    "addDesc": "참가자 배치를 기록하십시오. 이름은 별칭을 통해 해석되며, 점수는 설정에 따라 적용됩니다.",
+    "selectActivity": "활동 선택",
+    "instance": "회차",
+    "instanceRange": "(1–{{max}})",
+    "instanceWord": "회차",
+    "participants": "참가자",
+    "participantsHelp": "한 줄에 하나씩, 탭으로 구분(TSV) — 시트에서 바로 붙여넣기: <1>raw_name</1> · <2>value</2> · <3>notes</3> (선택 사항). 기준값을 초과하는 값만 집계됩니다.",
+    "parsed_other": "<1>{{count}}</1>행 분석됨",
+    "duplicates_other": "<1>{{count}}</1>개의 중복 행 병합됨",
+    "invalid_other": "숫자 값이 없는 {{count}}개 행 (<1>{{lines}}</1>)",
+    "detailTitle": "이벤트 상세",
+    "noParticipations": "이 이벤트에 참여 기록이 없습니다.",
+    "deleteTitle": "이벤트 삭제",
+    "deleteDesc": "<2>{{date}}</2>에 진행된 이 <1>{{activity}}</1> 이벤트(회차 <3>{{instance}}</3>)를 삭제하시겠습니까? 점수가 즉시 재계산됩니다. 이 작업은 되돌릴 수 없습니다.",
+    "eventFallback": "이벤트",
+    "needsMapping": "매핑 필요",
+    "noAliasMatch_other": "별칭과 일치하지 않는 이름 {{count}}개",
+    "everythingResolves": "모두 해석되었습니다 — 매핑할 항목이 없습니다.",
+    "noAliasMatchRow": "별칭 불일치",
+    "map": "매핑 →",
+    "fuzzyWarning": "비슷함 ≠ 동일 인물 — 별칭으로만 해석하고, 절대 유사 매칭하지 마십시오.",
+    "deletedNote": "삭제됨 — 점수가 재계산되었습니다.",
+    "emptyFilter": "이 필터와 일치하는 이벤트가 없습니다.",
+    "status": "상태",
+    "actions": "작업",
+    "ingested": "가져옴"
+  },
   "overview": {
     "noData": "대시보드가 데이터 없이 로드되었습니다. 페이지를 새로고침하십시오. 계속 발생하면 /api에 접근할 수 있는지 확인하십시오.",
     "latestWeek": "최신 주 {{week}}",

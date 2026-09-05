@@ -18,8 +18,25 @@
     "actions": {
       "reload": "Reload",
       "cancel": "Cancel",
-      "close": "Close"
-    }
+      "close": "Close",
+      "done": "Done",
+      "saving": "Saving…",
+      "saveChanges": "Save changes",
+      "deleting": "Deleting…",
+      "dismiss": "Dismiss",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "errors": {
+      "generic": "Something went wrong."
+    },
+    "inactive": "inactive",
+    "value": "Value",
+    "points": "Points",
+    "notes": "Notes",
+    "week": "Week",
+    "unmapped": "Unmapped"
   },
   "scope": {
     "overall": "Overall",
@@ -97,6 +114,55 @@
     "placeholder": "Pick a date",
     "prevMonth": "Previous month",
     "nextMonth": "Next month"
+  },
+  "llmPrompt": {
+    "title": "LLM prompt for screenshots",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "events": {
+    "needKey": "Set your API key (top bar) to save events.",
+    "rawName": "Raw name",
+    "unmappedBadge": "UNMAPPED",
+    "persisted_one": "<1>{{count}}</1> row persisted and scored.",
+    "persisted_other": "<1>{{count}}</1> rows persisted and scored.",
+    "unmappedResult_one": "{{count}} unmapped name — map in Aliases to count.",
+    "unmappedResult_other": "{{count}} unmapped names — map in Aliases to count.",
+    "skippedTitle": "Skipped — value ≤ threshold, not counted",
+    "activityGone": "This event's activity type no longer exists — it can't be re-saved.",
+    "editTitle": "Edit event",
+    "editDesc": "Re-submitting replaces the batch — rows are re-resolved and re-scored.",
+    "add": "Add event",
+    "addDesc": "Log a batch of participants. Names resolve via aliases; scoring is applied from config.",
+    "selectActivity": "Select activity",
+    "instance": "Instance",
+    "instanceRange": "(1–{{max}})",
+    "instanceWord": "instance",
+    "participants": "Participants",
+    "participantsHelp": "One per line, tab-separated (TSV) — paste straight from the sheet: <1>raw_name</1> · <2>value</2> · <3>notes</3> (optional). Only value > threshold is counted.",
+    "parsed_one": "<1>{{count}}</1> row parsed",
+    "parsed_other": "<1>{{count}}</1> rows parsed",
+    "duplicates_one": "<1>{{count}}</1> duplicate row collapsed",
+    "duplicates_other": "<1>{{count}}</1> duplicate rows collapsed",
+    "invalid_one": "{{count}} line missing a numeric value (<1>{{lines}}</1>)",
+    "invalid_other": "{{count}} lines missing a numeric value (<1>{{lines}}</1>)",
+    "detailTitle": "Event detail",
+    "noParticipations": "No participations on this event.",
+    "deleteTitle": "Delete event",
+    "deleteDesc": "Delete this <1>{{activity}}</1> event on <2>{{date}}</2> (instance <3>{{instance}}</3>)? Scores recompute immediately. This can't be undone.",
+    "eventFallback": "event",
+    "needsMapping": "Needs mapping",
+    "noAliasMatch_one": "{{count}} name with no alias match",
+    "noAliasMatch_other": "{{count}} names with no alias match",
+    "everythingResolves": "Everything resolves — nothing to map.",
+    "noAliasMatchRow": "no alias match",
+    "map": "Map →",
+    "fuzzyWarning": "Similar ≠ same person — resolve by alias only, never fuzzy-match.",
+    "deletedNote": "Deleted — scores recomputed.",
+    "emptyFilter": "No events match this filter.",
+    "status": "Status",
+    "actions": "Actions",
+    "ingested": "Ingested"
   },
   "overview": {
     "noData": "The dashboard loaded without data. Reload the page; if it keeps happening, check that /api is reachable.",

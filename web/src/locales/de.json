@@ -18,8 +18,25 @@
     "actions": {
       "reload": "Neu laden",
       "cancel": "Abbrechen",
-      "close": "Schließen"
-    }
+      "close": "Schließen",
+      "done": "Fertig",
+      "saving": "Speichern…",
+      "saveChanges": "Änderungen speichern",
+      "deleting": "Wird gelöscht…",
+      "dismiss": "Verwerfen",
+      "view": "Ansehen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen."
+    },
+    "inactive": "inaktiv",
+    "value": "Wert",
+    "points": "Punkte",
+    "notes": "Notizen",
+    "week": "Woche",
+    "unmapped": "Nicht zugeordnet"
   },
   "scope": {
     "overall": "Gesamt",
@@ -94,6 +111,55 @@
     }
   },
   "datePicker": { "placeholder": "Datum wählen", "prevMonth": "Vormonat", "nextMonth": "Nächster Monat" },
+  "llmPrompt": {
+    "title": "LLM-Prompt für Screenshots",
+    "copy": "Kopieren",
+    "copied": "Kopiert"
+  },
+  "events": {
+    "needKey": "Legen Sie Ihren API-Schlüssel fest (obere Leiste), um Events zu speichern.",
+    "rawName": "Rohname",
+    "unmappedBadge": "NICHT ZUGEORDNET",
+    "persisted_one": "<1>{{count}}</1> Zeile gespeichert und gewertet.",
+    "persisted_other": "<1>{{count}}</1> Zeilen gespeichert und gewertet.",
+    "unmappedResult_one": "{{count}} nicht zugeordneter Name — in Aliase zuordnen, damit er zählt.",
+    "unmappedResult_other": "{{count}} nicht zugeordnete Namen — in Aliase zuordnen, damit sie zählen.",
+    "skippedTitle": "Übersprungen — Wert ≤ Schwellenwert, nicht gezählt",
+    "activityGone": "Der Aktivitätstyp dieses Events existiert nicht mehr — er kann nicht erneut gespeichert werden.",
+    "editTitle": "Event bearbeiten",
+    "editDesc": "Erneutes Absenden ersetzt den Stapel — Zeilen werden neu aufgelöst und neu gewertet.",
+    "add": "Event hinzufügen",
+    "addDesc": "Erfassen Sie einen Stapel von Teilnehmern. Namen werden über Aliase aufgelöst; die Wertung erfolgt gemäß Konfiguration.",
+    "selectActivity": "Aktivität auswählen",
+    "instance": "Instanz",
+    "instanceRange": "(1–{{max}})",
+    "instanceWord": "Instanz",
+    "participants": "Teilnehmer",
+    "participantsHelp": "Eine pro Zeile, tabulatorgetrennt (TSV) — direkt aus dem Sheet einfügen: <1>raw_name</1> · <2>value</2> · <3>notes</3> (optional). Nur ein Wert über dem Schwellenwert wird gezählt.",
+    "parsed_one": "<1>{{count}}</1> Zeile analysiert",
+    "parsed_other": "<1>{{count}}</1> Zeilen analysiert",
+    "duplicates_one": "<1>{{count}}</1> doppelte Zeile zusammengeführt",
+    "duplicates_other": "<1>{{count}}</1> doppelte Zeilen zusammengeführt",
+    "invalid_one": "{{count}} Zeile ohne numerischen Wert (<1>{{lines}}</1>)",
+    "invalid_other": "{{count}} Zeilen ohne numerischen Wert (<1>{{lines}}</1>)",
+    "detailTitle": "Eventdetail",
+    "noParticipations": "Keine Teilnahmen bei diesem Event.",
+    "deleteTitle": "Event löschen",
+    "deleteDesc": "Dieses <1>{{activity}}</1>-Event am <2>{{date}}</2> (Instanz <3>{{instance}}</3>) löschen? Punktzahlen werden sofort neu berechnet. Dies kann nicht rückgängig gemacht werden.",
+    "eventFallback": "Event",
+    "needsMapping": "Zuordnung erforderlich",
+    "noAliasMatch_one": "{{count}} Name ohne Alias-Übereinstimmung",
+    "noAliasMatch_other": "{{count}} Namen ohne Alias-Übereinstimmung",
+    "everythingResolves": "Alles ist aufgelöst — nichts zuzuordnen.",
+    "noAliasMatchRow": "keine Alias-Übereinstimmung",
+    "map": "Zuordnen →",
+    "fuzzyWarning": "Ähnlich ≠ dieselbe Person — nur über Alias auflösen, nie unscharf abgleichen.",
+    "deletedNote": "Gelöscht — Punktzahlen neu berechnet.",
+    "emptyFilter": "Keine Events entsprechen diesem Filter.",
+    "status": "Status",
+    "actions": "Aktionen",
+    "ingested": "Importiert"
+  },
   "overview": {
     "noData": "Das Dashboard wurde ohne Daten geladen. Laden Sie die Seite neu; besteht das Problem weiterhin, prüfen Sie, ob /api erreichbar ist.",
     "latestWeek": "Letzte Woche {{week}}",

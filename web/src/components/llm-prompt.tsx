@@ -1,4 +1,5 @@
 import { useId, useState, type JSX } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronRight, ChevronDown, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,11 +11,12 @@ import { cn } from "@/lib/utils";
  */
 export function LlmPrompt({
   prompt,
-  title = "LLM prompt for screenshots",
+  title,
 }: {
   prompt: string;
   title?: string;
 }): JSX.Element {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const panelId = useId();
@@ -46,7 +48,7 @@ export function LlmPrompt({
           ) : (
             <ChevronRight className="size-3.5 text-muted" />
           )}
-          {title}
+          {title ?? t("llmPrompt.title")}
         </Button>
         <Button
           type="button"
@@ -59,7 +61,7 @@ export function LlmPrompt({
           )}
         >
           {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-          {copied ? "Copied" : "Copy"}
+          {copied ? t("llmPrompt.copied") : t("llmPrompt.copy")}
         </Button>
       </div>
       {open && (

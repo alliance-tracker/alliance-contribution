@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
 import type { ActivityType, Event } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
@@ -53,12 +55,12 @@ import { normalizeName } from "@/lib/normalize";
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown): string {
+function writeErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError) {
-    if (e.status === 401) return "Set your API key (top bar) to save events.";
+    if (e.status === 401) return t("events.needKey");
     return e.message;
   }
-  return e instanceof Error ? e.message : "Something went wrong.";
+  return e instanceof Error ? e.message : t("common.errors.generic");
 }
 
 type ParsedRow = {
@@ -117,15 +119,16 @@ function ParticipationTable({
   rows: EventParticipationRow[];
   showNotes?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <Table>
       <TableHeader>
         <TableRow className="hover:bg-transparent">
-          <TableHead>Raw name</TableHead>
-          <TableHead>Governor</TableHead>
-          <TableHead className="text-right">Value</TableHead>
-          <TableHead className="text-right">Points</TableHead>
-          {showNotes && <TableHead>Notes</TableHead>}
+          <TableHead>{t("events.rawName")}</TableHead>
+          <TableHead>{t("common.governor")}</TableHead>
+          <TableHead className="text-right">{t("common.value")}</TableHead>
+          <TableHead className="text-right">{t("common.points")}</TableHead>
+          {showNotes && <TableHead>{t("common.notes")}</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -139,7 +142,7 @@ function ParticipationTable({
                   <span className="text-secondary">{row.governor}</span>
                 </span>
               ) : (
-                <Badge variant="warn">UNMAPPED</Badge>
+                <Badge variant="warn">{t("events.unmappedBadge")}</Badge>
               )}
             </TableCell>
             <TableCell className="num text-right text-secondary">{row.value}</TableCell>
@@ -158,14 +161,18 @@ function ParticipationTable({
 
 /** Post-ingest summary: persisted rows, resolved table, skipped (value ≤ threshold), unmapped names. */
 function IngestResultPanel({ result }: { result: IngestResult }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-4">
       <Alert variant="success">
         <CheckCircle2 />
         <AlertContent>
           <span>
-            <span className="num font-semibold">{result.rows.length}</span> row
-            {result.rows.length === 1 ? "" : "s"} persisted and scored.
+            <Trans
+              i18nKey="events.persisted"
+              count={result.rows.length}
+              components={{ 1: <span className="num font-semibold" /> }}
+            />
           </span>
         </AlertContent>
       </Alert>
@@ -181,8 +188,7 @@ function IngestResultPanel({ result }: { result: IngestResult }) {
           <TriangleAlert />
           <AlertContent>
             <div className="font-medium">
-              {result.unmapped.length} unmapped name
-              {result.unmapped.length === 1 ? "" : "s"} — map in Aliases to count.
+              {t("events.unmappedResult", { count: result.unmapped.length })}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {result.unmapped.map((name) => (
@@ -199,7 +205,7 @@ function IngestResultPanel({ result }: { result: IngestResult }) {
         <Alert variant="info">
           <AlertContent>
             <AlertTitle className="text-[12px] uppercase tracking-[0.04em] text-muted">
-              Skipped — value ≤ threshold, not counted
+              {t("events.skippedTitle")}
             </AlertTitle>
             <ul className="flex flex-col gap-0.5">
               {result.skipped.map((s, i) => (
@@ -229,6 +235,7 @@ function EventFormDialog({
   detail: EventDetail | null;
   onSuccess: () => void;
 }) {
+  const { t } = useTranslation();
   const isEdit = detail !== null;
   const [activityKey, setActivityKey] = useState("");
   const [date, setDate] = useState("");
@@ -247,7 +254,7 @@ function EventFormDialog({
     if (detail) {
       const at = activityTypes.find((a) => a.id === detail.event.activity_type_id);
       setActivityKey(at?.key ?? "");
-      if (!at) setError("This event's activity type no longer exists — it can't be re-saved.");
+      if (!at) setError(t("events.activityGone"));
       setDate(detail.event.date);
       setInstance(detail.event.instance);
       setRowsText(
@@ -263,7 +270,7 @@ function EventFormDialog({
       setInstance(1);
       setRowsText("");
     }
-  }, [open, detail, activityTypes]);
+  }, [open, detail, activityTypes, t]);
 
   const selected = activityTypes.find((a) => a.key === activityKey);
   // New events pick from active types only; the currently selected type always stays in the list so
@@ -331,7 +338,7 @@ After the closing fence — never inside it — add a short "Coverage check:" no
       setResult(res);
       onSuccess();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setSubmitting(false);
     }
@@ -341,11 +348,9 @@ After the closing fence — never inside it — add a short "Coverage check:" no
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit event" : "Add event"}</DialogTitle>
+          <DialogTitle>{isEdit ? t("events.editTitle") : t("events.add")}</DialogTitle>
           <DialogDescription>
-            {isEdit
-              ? "Re-submitting replaces the batch — rows are re-resolved and re-scored."
-              : "Log a batch of participants. Names resolve via aliases; scoring is applied from config."}
+            {isEdit ? t("events.editDesc") : t("events.addDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -354,7 +359,7 @@ After the closing fence — never inside it — add a short "Coverage check:" no
             <IngestResultPanel result={result} />
             <div className="flex justify-end">
               <Button size="sm" onClick={() => onOpenChange(false)}>
-                Done
+                {t("common.actions.done")}
               </Button>
             </div>
           </div>
@@ -364,10 +369,10 @@ After the closing fence — never inside it — add a short "Coverage check:" no
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[12px] font-medium text-secondary">Activity</label>
+                <label className="text-[12px] font-medium text-secondary">{t("common.activity")}</label>
                 <Select value={activityKey || undefined} onValueChange={onActivityChange}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select activity" />
+                    <SelectValue placeholder={t("events.selectActivity")} />
                   </SelectTrigger>
                   <SelectContent>
                     {options.map((a) => (
@@ -375,7 +380,7 @@ After the closing fence — never inside it — add a short "Coverage check:" no
                         <span className="flex items-center gap-1.5">
                           <span className={cn("size-2 shrink-0 rounded-full", activitySolidClass(a.color))} />
                           {a.name}
-                          {a.active === 0 && <span className="text-muted">· inactive</span>}
+                          {a.active === 0 && <span className="text-muted">· {t("common.inactive")}</span>}
                         </span>
                       </SelectItem>
                     ))}
@@ -384,15 +389,20 @@ After the closing fence — never inside it — add a short "Coverage check:" no
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[12px] font-medium text-secondary">Date</label>
-                <DatePicker value={date} onChange={setDate} placeholder="Pick a date" className="w-full" />
+                <label className="text-[12px] font-medium text-secondary">{t("common.date")}</label>
+                <DatePicker
+                  value={date}
+                  onChange={setDate}
+                  placeholder={t("datePicker.placeholder")}
+                  className="w-full"
+                />
               </div>
 
               {maxInstance > 1 && (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[12px] font-medium text-secondary">
-                    Instance
-                    <span className="ml-1 text-muted">(1–{maxInstance})</span>
+                    {t("events.instance")}
+                    <span className="ml-1 text-muted">{t("events.instanceRange", { max: maxInstance })}</span>
                   </label>
                   <Input
                     className="num"
@@ -411,17 +421,18 @@ After the closing fence — never inside it — add a short "Coverage check:" no
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[12px] font-medium text-secondary">Participants</label>
+              <label className="text-[12px] font-medium text-secondary">{t("events.participants")}</label>
               <p className="text-[12px] text-muted">
-                One per line, tab-separated (TSV) — paste straight from the sheet:{" "}
-                <span className="num text-secondary">raw_name</span>
-                <span className="text-faint"> · </span>
-                <span className="num text-secondary">value</span>
-                <span className="text-faint"> · </span>
-                <span className="num text-secondary">notes</span> (optional). Only value &gt;
-                threshold is counted.
+                <Trans
+                  i18nKey="events.participantsHelp"
+                  components={{
+                    1: <span className="num text-secondary" />,
+                    2: <span className="num text-secondary" />,
+                    3: <span className="num text-secondary" />,
+                  }}
+                />
               </p>
-              <LlmPrompt prompt={eventPrompt} title="LLM prompt for screenshots" />
+              <LlmPrompt prompt={eventPrompt} />
               <Textarea
                 className="min-h-40 resize-y font-mono text-[13px]"
                 placeholder={"Aurora\t120000\nBlaze\t95000\tsub"}
@@ -431,19 +442,29 @@ After the closing fence — never inside it — add a short "Coverage check:" no
               />
               <div className="flex items-center gap-3 text-[12px]">
                 <span className="text-muted">
-                  <span className="num text-secondary">{validCount}</span> row
-                  {validCount === 1 ? "" : "s"} parsed
+                  <Trans
+                    i18nKey="events.parsed"
+                    count={validCount}
+                    components={{ 1: <span className="num text-secondary" /> }}
+                  />
                 </span>
                 {duplicates > 0 && (
                   <span className="text-muted">
-                    <span className="num text-secondary">{duplicates}</span> duplicate row
-                    {duplicates === 1 ? "" : "s"} collapsed
+                    <Trans
+                      i18nKey="events.duplicates"
+                      count={duplicates}
+                      components={{ 1: <span className="num text-secondary" /> }}
+                    />
                   </span>
                 )}
                 {invalid.length > 0 && (
                   <span className="text-down">
-                    {invalid.length} line{invalid.length === 1 ? "" : "s"} missing a numeric value (
-                    <span className="num">{invalid.map((p) => p.lineNo).join(", ")}</span>)
+                    <Trans
+                      i18nKey="events.invalid"
+                      count={invalid.length}
+                      values={{ lines: invalid.map((p) => p.lineNo).join(", ") }}
+                      components={{ 1: <span className="num" /> }}
+                    />
                   </span>
                 )}
               </div>
@@ -452,11 +473,15 @@ After the closing fence — never inside it — add a short "Coverage check:" no
             <div className="flex items-center justify-end gap-2">
               <DialogClose asChild>
                 <Button variant="ghost" size="sm">
-                  Cancel
+                  {t("common.actions.cancel")}
                 </Button>
               </DialogClose>
               <Button size="sm" onClick={submit} disabled={!canSubmit}>
-                {submitting ? "Saving…" : isEdit ? "Save changes" : "Add event"}
+                {submitting
+                  ? t("common.actions.saving")
+                  : isEdit
+                    ? t("common.actions.saveChanges")
+                    : t("events.add")}
               </Button>
             </div>
           </div>
@@ -474,13 +499,14 @@ function ViewEventBody({
   eventId: number;
   activityById: Map<number, ActivityType>;
 }) {
+  const { t } = useTranslation();
   const { data, loading, error } = useApi<EventDetail>(() => api.events.get(eventId), [eventId]);
   const activity = data ? activityById.get(data.event.activity_type_id) : undefined;
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Event detail</DialogTitle>
+        <DialogTitle>{t("events.detailTitle")}</DialogTitle>
         {data && (
           <DialogDescription className="flex flex-wrap items-center gap-1.5">
             <span className="num">{data.event.date}</span> ·
@@ -489,7 +515,7 @@ function ViewEventBody({
             >
               {activity?.name ?? "—"}
             </Badge>
-            · instance <span className="num">{data.event.instance}</span> ·{" "}
+            · {t("events.instanceWord")} <span className="num">{data.event.instance}</span> ·{" "}
             <span className="num">{data.event.week}</span>
           </DialogDescription>
         )}
@@ -500,7 +526,7 @@ function ViewEventBody({
       ) : loading ? (
         <LoadingState />
       ) : !data || data.participations.length === 0 ? (
-        <EmptyState message="No participations on this event." />
+        <EmptyState message={t("events.noParticipations")} />
       ) : (
         <Card className="overflow-hidden">
           <ParticipationTable rows={data.participations} showNotes />
@@ -544,6 +570,7 @@ function DeleteEventDialog({
   onCancel: () => void;
   onDeleted: () => void;
 }) {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -562,7 +589,7 @@ function DeleteEventDialog({
       await api.events.delete(event.id);
       onDeleted();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -576,25 +603,31 @@ function DeleteEventDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete event</DialogTitle>
+          <DialogTitle>{t("events.deleteTitle")}</DialogTitle>
           <DialogDescription>
             {event && (() => {
               const activity = activityById.get(event.activity_type_id);
               return (
-                <>
-                  Delete this{" "}
-                  <Badge
-                    className={cn(
-                      "whitespace-nowrap",
-                      activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR),
-                    )}
-                  >
-                    {activity?.name ?? "event"}
-                  </Badge>{" "}
-                  event on <span className="num">{event.date}</span> (instance{" "}
-                  <span className="num">{event.instance}</span>)? Scores recompute immediately. This
-                  can't be undone.
-                </>
+                <Trans
+                  i18nKey="events.deleteDesc"
+                  values={{
+                    activity: activity?.name ?? t("events.eventFallback"),
+                    date: event.date,
+                    instance: event.instance,
+                  }}
+                  components={{
+                    1: (
+                      <Badge
+                        className={cn(
+                          "whitespace-nowrap",
+                          activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR),
+                        )}
+                      />
+                    ),
+                    2: <span className="num" />,
+                    3: <span className="num" />,
+                  }}
+                />
               );
             })()}
           </DialogDescription>
@@ -604,10 +637,10 @@ function DeleteEventDialog({
 
         <div className="mt-4 flex items-center justify-end gap-2">
           <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-            Cancel
+            {t("common.actions.cancel")}
           </Button>
           <Button variant="danger" size="sm" onClick={confirm} disabled={submitting}>
-            {submitting ? "Deleting…" : "Delete event"}
+            {submitting ? t("common.actions.deleting") : t("events.deleteTitle")}
           </Button>
         </div>
       </DialogContent>
@@ -625,14 +658,15 @@ function NeedsMappingPanel({
   loading: boolean;
   error: string | null;
 }) {
+  const { t } = useTranslation();
   return (
     <Card className="overflow-hidden border-flag-border bg-flag-bg">
       <div className="flex items-center gap-2 border-b border-flag-border p-3">
         <TriangleAlert className="size-[17px] text-flag-accent" />
         <div className="flex flex-col">
-          <span className="text-[13.5px] font-semibold text-flag-fg">Needs mapping</span>
+          <span className="text-[13.5px] font-semibold text-flag-fg">{t("events.needsMapping")}</span>
           <span className="text-[11.5px] text-flag-accent">
-            {rows.length} name{rows.length === 1 ? "" : "s"} with no alias match
+            {t("events.noAliasMatch", { count: rows.length })}
           </span>
         </div>
       </div>
@@ -642,9 +676,7 @@ function NeedsMappingPanel({
         ) : error ? (
           <ErrorState message={error} />
         ) : rows.length === 0 ? (
-          <p className="px-1 py-2 text-[12.5px] text-flag-accent">
-            Everything resolves — nothing to map.
-          </p>
+          <p className="px-1 py-2 text-[12.5px] text-flag-accent">{t("events.everythingResolves")}</p>
         ) : (
           rows.map((row) => (
             <div
@@ -653,26 +685,25 @@ function NeedsMappingPanel({
             >
               <div className="flex min-w-0 flex-col">
                 <span className="num text-[13px] font-semibold text-foreground">{row.raw_name}</span>
-                <span className="text-[11.5px] text-muted">no alias match</span>
+                <span className="text-[11.5px] text-muted">{t("events.noAliasMatchRow")}</span>
               </div>
               <Link
                 to="/admin/aliases"
                 className="shrink-0 rounded-[7px] border border-border bg-surface px-2.5 py-1.5 text-[12.5px] font-medium text-foreground transition-colors hover:bg-muted-surface"
               >
-                Map →
+                {t("events.map")}
               </Link>
             </div>
           ))
         )}
-        <p className="px-1 pt-1 text-[11px] leading-snug text-flag-accent">
-          Similar ≠ same person — resolve by alias only, never fuzzy-match.
-        </p>
+        <p className="px-1 pt-1 text-[11px] leading-snug text-flag-accent">{t("events.fuzzyWarning")}</p>
       </div>
     </Card>
   );
 }
 
 export function Events() {
+  const { t } = useTranslation();
   const { role } = useApiKey();
   // ALL activity types, not just active ones: deactivated types still own historical events, which
   // must stay labelled in the table and keep their own activity selectable when edited.
@@ -742,7 +773,7 @@ export function Events() {
       setFormDetail(detail);
       setFormOpen(true);
     } catch (e) {
-      setRowError(writeErrorMessage(e));
+      setRowError(writeErrorMessage(e, t));
     }
   };
 
@@ -755,13 +786,13 @@ export function Events() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All activities</SelectItem>
+              <SelectItem value="all">{t("rankBy.all")}</SelectItem>
               {activities.map((a) => (
                 <SelectItem key={a.id} value={a.key}>
                   <span className="flex items-center gap-1.5">
                     <span className={cn("size-2 shrink-0 rounded-full", activitySolidClass(a.color))} />
                     {a.name}
-                    {a.active === 0 && <span className="text-muted">· inactive</span>}
+                    {a.active === 0 && <span className="text-muted">· {t("common.inactive")}</span>}
                   </span>
                 </SelectItem>
               ))}
@@ -776,7 +807,7 @@ export function Events() {
         </div>
         <Button size="sm" onClick={openAdd}>
           <Plus />
-          Add event
+          {t("events.add")}
         </Button>
       </div>
 
@@ -784,7 +815,7 @@ export function Events() {
         <div className="flex items-center justify-between rounded-[6px] border border-up/20 bg-up/5 px-3 py-2 text-[13px] text-up">
           <span>{note}</span>
           <Button variant="ghost" size="sm" onClick={() => setNote(null)}>
-            Dismiss
+            {t("common.actions.dismiss")}
           </Button>
         </div>
       )}
@@ -800,18 +831,18 @@ export function Events() {
           ) : eventsState.loading || activitiesState.loading ? (
             <LoadingState />
           ) : events.length === 0 ? (
-            <EmptyState message="No events match this filter." />
+            <EmptyState message={t("events.emptyFilter")} />
           ) : (
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead>Date</TableHead>
-                  <TableHead>Week</TableHead>
-                  <TableHead>Activity</TableHead>
-                  <TableHead className="text-right">Instance</TableHead>
-                  <TableHead className="text-right">Unmapped</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-32 text-right">Actions</TableHead>
+                  <TableHead>{t("common.date")}</TableHead>
+                  <TableHead>{t("common.week")}</TableHead>
+                  <TableHead>{t("common.activity")}</TableHead>
+                  <TableHead className="text-right">{t("events.instance")}</TableHead>
+                  <TableHead className="text-right">{t("common.unmapped")}</TableHead>
+                  <TableHead>{t("events.status")}</TableHead>
+                  <TableHead className="w-32 text-right">{t("events.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -850,14 +881,14 @@ export function Events() {
                         {/* No stored `status` field exists yet — every persisted event renders
                             "Ingested". An "In review" state can be added here if/when a real
                             status field is introduced; unmapped>0 is not a valid stand-in for it. */}
-                        <span className="text-[12.5px] text-muted">Ingested</span>
+                        <span className="text-[12.5px] text-muted">{t("events.ingested")}</span>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-1">
                           <Button
                             variant="ghost"
                             size="icon"
-                            aria-label="View"
+                            aria-label={t("common.actions.view")}
                             onClick={() => setViewId(ev.id)}
                           >
                             <Eye />
@@ -865,7 +896,7 @@ export function Events() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            aria-label="Edit"
+                            aria-label={t("common.actions.edit")}
                             onClick={() => openEdit(ev.id)}
                           >
                             <Pencil />
@@ -874,7 +905,7 @@ export function Events() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              aria-label="Delete"
+                              aria-label={t("common.actions.delete")}
                               onClick={() => setDeleteEvent(ev)}
                             >
                               <Trash2 />
@@ -917,7 +948,7 @@ export function Events() {
         onCancel={() => setDeleteEvent(null)}
         onDeleted={() => {
           setDeleteEvent(null);
-          setNote("Deleted — scores recomputed.");
+          setNote(t("events.deletedNote"));
           refresh();
         }}
       />

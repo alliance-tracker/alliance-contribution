@@ -101,7 +101,7 @@
   --color-badge-pink-bg: #fdf2f8;
   --color-badge-pink-fg: #be185d;
 
-  --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 
   --radius: 8px;
@@ -247,6 +247,11 @@ body {
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Korean: never break inside a word. */
+:lang(ko) {
+  word-break: keep-all;
 }
 
 ::selection {

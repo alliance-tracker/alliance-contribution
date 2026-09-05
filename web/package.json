@@ -21,9 +21,11 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "i18next": "^26.4.2",
     "lucide-react": "^1.26.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.13",
     "react-router-dom": "^7.18.1",
     "recharts": "^3.10.0",
     "tailwind-merge": "^3.6.0"

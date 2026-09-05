@@ -462,7 +462,7 @@
     "chooseFile": "Choisir un fichier de sauvegarde…",
     "replaceTitle": "Remplacer toutes les données ?",
     "replaceDesc": "Restaurer la sauvegarde de {{date}} ({{counts}}) écrasera toute la base de données. Les données actuelles sont téléchargées en premier, puis remplacées — mais ce téléchargement dépend de votre navigateur et l'application ne peut pas confirmer qu'il a été enregistré. Si vous n'avez pas déjà une exportation récente sur disque, annulez et utilisez Exporter ci-dessus d'abord.",
-    "unknownDate": "une date inconnue",
+    "unknownDate": "date inconnue",
     "restoring": "Restauration…",
     "restore": "Télécharger l'actuelle & restaurer"
   },

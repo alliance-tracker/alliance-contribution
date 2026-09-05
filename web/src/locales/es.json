@@ -212,7 +212,7 @@
     "acrossActivities_many": "en {{count}} actividades",
     "acrossActivities_other": "en {{count}} actividades",
     "weeklyAvg": "Media semanal",
-    "lastWeeks_one": "última {{count}} semana",
+    "lastWeeks_one": "{{count}} semana (la última)",
     "lastWeeks_many": "últimas {{count}} semanas",
     "lastWeeks_other": "últimas {{count}} semanas",
     "eventDaysRatio": "<1>{{attended}}</1>/<2>{{total}}</2> días de evento",
@@ -226,7 +226,7 @@
     "tierPoints_other": "{{count}} pts",
     "composition": {
       "title": "Composición de la puntuación",
-      "subtitle_one": "Puntos semanales por actividad, última {{count}} semana",
+      "subtitle_one": "Puntos semanales por actividad, {{count}} semana (la última)",
       "subtitle_many": "Puntos semanales por actividad, últimas {{count}} semanas",
       "subtitle_other": "Puntos semanales por actividad, últimas {{count}} semanas",
       "empty": "Aún no hay datos de composición."

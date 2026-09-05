@@ -14,7 +14,7 @@
     "seasonAllWeeks": "시즌 · 전체 주 통합",
     "hideLeadership": "R4/R5 숨기기",
     "power": "전투력",
-    "position": "순위",
+    "position": "전투력 순위",
     "actions": {
       "reload": "새로 고침",
       "cancel": "취소",
@@ -99,7 +99,7 @@
     "latestWeek": "최신 주 {{week}}",
     "activeMembers": "활동 구성원",
     "ofTracked": "전체 <1>{{total}}</1>명 중",
-    "avgAttendanceActive": "평균 출석률(활동 구성원)",
+    "avgAttendanceActive": "평균 참석률(활동 구성원)",
     "attendanceSub": "<1>{{perfect}}</1>명 완벽 · <2>{{atRisk}}</2>명 위험",
     "noEventsYet": "아직 기록된 이벤트가 없습니다",
     "eventsLogged": "기록된 이벤트",
@@ -107,7 +107,7 @@
     "unmappedQueue": "미매핑 대기열",
     "namesNeedDecision": "이름에 대한 결정이 필요합니다",
     "atRisk": {
-      "title": "출석 위험",
+      "title": "참석 위험",
       "summary_other": "<1>{{count}}</1>명이 50% 미만입니다",
       "empty": "50% 미만인 구성원이 없습니다."
     },
@@ -156,7 +156,7 @@
     "deltaTitle": "이전 이벤트 주 대비 변화(퍼센트 포인트)",
     "deltaValue": "{{value}}pp",
     "eventDays_other": "이벤트 {{count}}일",
-    "avg": "평균 출석률",
+    "avg": "평균 참석률",
     "perfect": "완벽 (100%)",
     "atRisk": "위험 (<50%)",
     "legend": {
@@ -164,21 +164,21 @@
       "watch": "50–79% 주의",
       "risk": "<50% 위험"
     },
-    "emptyRoster": "아직 기록된 출석이 없습니다.",
+    "emptyRoster": "아직 기록된 참석이 없습니다.",
     "emptyWeek": "이번 주에 기록된 이벤트가 없습니다.",
     "emptyAll": "아직 기록된 이벤트가 없습니다.",
     "rate": "비율"
   },
   "members": {
     "scoreRankTitle": "점수 순위",
-    "belowHalfTitle": "출석률 50% 미만",
+    "belowHalfTitle": "참석률 50% 미만",
     "aliasCount_other": "별칭 {{count}}개",
     "roster": "명단",
     "trackedMembers": "추적된 구성원",
-    "avgAttendance": "평균 출석률",
-    "acrossAllEventDays": "모든 이벤트 일 기준",
+    "avgAttendance": "평균 참석률",
+    "acrossAllEventDays": "모든 이벤트일 기준",
     "atRisk": "위험",
-    "belowHalf": "출석률 50% 미만",
+    "belowHalf": "참석률 50% 미만",
     "searchPlaceholder": "이름 또는 별칭으로 검색…",
     "shown": "{{total}}개 중 {{shown}}개 표시",
     "emptyMatch": "일치하는 구성원이 없습니다."
@@ -221,7 +221,7 @@
     "now": "현재 전투력 {{power}}",
     "position": "#{{position}}",
     "positionOf": "#{{position}} / {{total}}",
-    "emptyCaptures": "아직 명단 캡처가 없습니다 — 명단 붙여넣기를 가져와 기록을 시작하세요.",
+    "emptyCaptures": "아직 명단 캡처가 없습니다 — 명단 붙여넣기를 가져와 기록을 시작하십시오.",
     "emptyMember": "이 구성원은 아직 어떤 캡처에도 나타나지 않았습니다."
   }
 }

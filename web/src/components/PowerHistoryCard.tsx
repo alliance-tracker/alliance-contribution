@@ -148,7 +148,7 @@ export function PowerHistoryCard({
               yAxisId="power"
               stroke="var(--color-border)"
               tickLine={false}
-              width={52}
+              width={72}
               tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
               tickFormatter={powerLabel}
             />

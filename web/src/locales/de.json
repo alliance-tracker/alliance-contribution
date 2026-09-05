@@ -101,10 +101,10 @@
     "ofTracked": "von <1>{{total}}</1> erfassten",
     "avgAttendanceActive": "Durchschnittliche Anwesenheit (aktiv)",
     "attendanceSub": "<1>{{perfect}}</1> perfekt · <2>{{atRisk}}</2> gefährdet",
-    "noEventsYet": "noch keine Ereignisse erfasst",
-    "eventsLogged": "Erfasste Ereignisse",
-    "acrossEventDays_one": "an <1>{{count}}</1> Ereignistag",
-    "acrossEventDays_other": "an <1>{{count}}</1> Ereignistagen",
+    "noEventsYet": "noch keine Events erfasst",
+    "eventsLogged": "Erfasste Events",
+    "acrossEventDays_one": "an <1>{{count}}</1> Eventtag",
+    "acrossEventDays_other": "an <1>{{count}}</1> Eventtagen",
     "unmappedQueue": "Nicht zugeordnete Warteschlange",
     "namesNeedDecision": "Namen benötigen eine Entscheidung",
     "atRisk": {
@@ -118,13 +118,13 @@
       "ranked_one": "Diese Woche · <1>{{count}}</1> Gouverneur gewertet",
       "ranked_other": "Diese Woche · <1>{{count}}</1> Gouverneure gewertet",
       "viewFull": "Vollständige Rangliste ansehen →",
-      "empty": "Noch keine gewertete Woche — die Rangliste füllt sich, sobald Ereignisse erfasst werden."
+      "empty": "Noch keine gewertete Woche — die Rangliste füllt sich, sobald Events erfasst werden."
     },
     "ingests": {
       "title": "Letzte Importe",
-      "subtitle": "Neueste Ereignis-Uploads",
-      "viewAll": "Alle Ereignisse ansehen →",
-      "empty": "Noch keine Ereignisse importiert.",
+      "subtitle": "Neueste Event-Uploads",
+      "viewAll": "Alle Events ansehen →",
+      "empty": "Noch keine Events importiert.",
       "instance": "Inst.",
       "rows": "Zeilen",
       "unmapped": "Nicht zugeordnet"
@@ -171,8 +171,8 @@
       "risk": "<50 % Gefährdet"
     },
     "emptyRoster": "Noch keine Anwesenheit erfasst.",
-    "emptyWeek": "Für diese Woche wurden keine Ereignisse erfasst.",
-    "emptyAll": "Noch keine Ereignisse erfasst.",
+    "emptyWeek": "Für diese Woche wurden keine Events erfasst.",
+    "emptyAll": "Noch keine Events erfasst.",
     "rate": "Quote"
   },
   "members": {

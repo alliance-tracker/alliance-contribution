@@ -26,7 +26,8 @@
       "dismiss": "Dismiss",
       "view": "View",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "change": "Change"
     },
     "errors": {
       "generic": "Something went wrong."
@@ -36,7 +37,8 @@
     "points": "Points",
     "notes": "Notes",
     "week": "Week",
-    "unmapped": "Unmapped"
+    "unmapped": "Unmapped",
+    "optional": "(optional)"
   },
   "scope": {
     "overall": "Overall",
@@ -305,5 +307,47 @@
     "positionOf": "#{{position}} of {{total}}",
     "emptyCaptures": "No roster captures yet — import a roster paste to start the history.",
     "emptyMember": "This member has not appeared in any capture yet."
+  },
+  "memberSearch": {
+    "placeholder": "Search governor…",
+    "empty": "No members match."
+  },
+  "aliases": {
+    "needKey": "Set your API key (top bar) to manage aliases.",
+    "recomputed_one": "<1>{{count, number}}</1> participation recomputed.",
+    "recomputed_other": "<1>{{count, number}}</1> participations recomputed.",
+    "conflicts_one": "{{count}} retroactive conflict — review the affected events.",
+    "conflicts_other": "{{count}} retroactive conflicts — review the affected events.",
+    "conflictDuplicate": "Two names now resolve to the same member in event #{{event}}: {{names}}",
+    "conflictBear": "Same member in both Bear traps on {{date}}: {{names}}",
+    "addTitle": "Add alias",
+    "addDesc": "Map a raw name to an existing member or create a new one. History re-resolves and re-scores from the new mapping.",
+    "alias": "Alias",
+    "aliasPlaceholder": "Raw name as logged",
+    "existing": "Existing",
+    "newMember": "New member",
+    "governorPlaceholder": "New governor name",
+    "note": "Note",
+    "notePlaceholder": "Why this mapping",
+    "creating": "Creating…",
+    "createAndMap": "Create & map",
+    "adding": "Adding…",
+    "partialError": "Member \"{{governor}}\" was created, but the alias was not mapped: {{error}} — map \"{{alias}}\" from the Existing tab, do not create the member again.",
+    "removeTitle": "Remove alias",
+    "removeDesc": "Remove <1>{{alias}}</1>? Rows logged under this name re-resolve and re-score — they may become unmapped.",
+    "removeDescWithGovernor": "Remove <1>{{alias}}</1> → <2>{{governor}}</2>? Rows logged under this name re-resolve and re-score — they may become unmapped.",
+    "removing": "Removing…",
+    "removeAria": "Remove alias {{alias}}",
+    "directoryTitle": "Alias directory",
+    "directorySubtitle": "Raw display names mapped to canonical members",
+    "searchPlaceholder": "Search members or aliases…",
+    "emptyNoAliases": "No aliases yet. Map an unmapped name to create one.",
+    "emptyNoMatch": "No members or aliases match your search.",
+    "queueTitle": "Unmapped queue",
+    "queueSubtitle_one": "{{count}} name needs a human decision",
+    "queueSubtitle_other": "{{count}} names need a human decision",
+    "queueEmpty": "No unmapped names — everything resolves.",
+    "mapToMember": "Map to member",
+    "removedNote": "Alias removed — scores recomputed."
   }
 }

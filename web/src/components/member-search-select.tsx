@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Search } from "lucide-react";
 import type { Member } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -13,13 +14,15 @@ export function MemberSearchSelect({
   members,
   value,
   onChange,
-  placeholder = "Search governor…",
+  placeholder,
 }: {
   members: Member[];
   value: number | null;
   onChange: (id: number | null) => void;
   placeholder?: string;
 }) {
+  const { t } = useTranslation();
+  const ph = placeholder ?? t("memberSearch.placeholder");
   const [open, setOpen] = useState(false);
   const selected = value === null ? undefined : members.find((m) => m.id === value);
   const sorted = members.slice().sort((a, b) => a.governor.localeCompare(b.governor));
@@ -37,7 +40,7 @@ export function MemberSearchSelect({
             setOpen(true);
           }}
         >
-          Change
+          {t("common.actions.change")}
         </Button>
       </div>
     );
@@ -51,14 +54,14 @@ export function MemberSearchSelect({
           className="flex h-9 w-full items-center gap-2 rounded-[8px] border border-border bg-surface px-3 text-left text-[13px] text-muted outline-none transition-colors duration-150 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/30"
         >
           <Search className="size-4 shrink-0 text-muted" />
-          {placeholder}
+          {ph}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
         <Command>
-          <CommandInput placeholder={placeholder} autoFocus />
+          <CommandInput placeholder={ph} autoFocus />
           <CommandList>
-            <CommandEmpty>No members match.</CommandEmpty>
+            <CommandEmpty>{t("memberSearch.empty")}</CommandEmpty>
             <CommandGroup>
               {sorted.map((m) => (
                 <CommandItem

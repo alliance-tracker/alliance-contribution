@@ -26,7 +26,8 @@
       "dismiss": "Ignorer",
       "view": "Voir",
       "edit": "Modifier",
-      "delete": "Supprimer"
+      "delete": "Supprimer",
+      "change": "Changer"
     },
     "errors": {
       "generic": "Une erreur s'est produite."
@@ -36,7 +37,8 @@
     "points": "Points",
     "notes": "Notes",
     "week": "Semaine",
-    "unmapped": "Non associés"
+    "unmapped": "Non associés",
+    "optional": "(facultatif)"
   },
   "scope": {
     "overall": "Général",
@@ -319,5 +321,50 @@
     "positionOf": "#{{position}} sur {{total}}",
     "emptyCaptures": "Aucune capture de liste pour le moment — importez une liste pour démarrer l'historique.",
     "emptyMember": "Ce membre n'est encore apparu dans aucune capture."
+  },
+  "memberSearch": {
+    "placeholder": "Rechercher un gouverneur…",
+    "empty": "Aucun membre ne correspond."
+  },
+  "aliases": {
+    "needKey": "Définissez votre clé API (barre supérieure) pour gérer les alias.",
+    "recomputed_one": "<1>{{count, number}}</1> participation recalculée.",
+    "recomputed_many": "<1>{{count, number}}</1> participations recalculées.",
+    "recomputed_other": "<1>{{count, number}}</1> participations recalculées.",
+    "conflicts_one": "{{count}} conflit rétroactif — vérifiez les événements concernés.",
+    "conflicts_many": "{{count}} conflits rétroactifs — vérifiez les événements concernés.",
+    "conflicts_other": "{{count}} conflits rétroactifs — vérifiez les événements concernés.",
+    "conflictDuplicate": "Deux noms sont désormais associés au même membre dans l'événement #{{event}} : {{names}}",
+    "conflictBear": "Même membre dans les deux Pièges à ours du {{date}} : {{names}}",
+    "addTitle": "Ajouter un alias",
+    "addDesc": "Associez un nom d'origine à un membre existant ou créez-en un nouveau. L'historique est de nouveau résolu et noté à partir de la nouvelle association.",
+    "alias": "Alias",
+    "aliasPlaceholder": "Nom d'origine tel qu'enregistré",
+    "existing": "Existant",
+    "newMember": "Nouveau membre",
+    "governorPlaceholder": "Nom du nouveau gouverneur",
+    "note": "Note",
+    "notePlaceholder": "Raison de cette association",
+    "creating": "Création…",
+    "createAndMap": "Créer et associer",
+    "adding": "Ajout…",
+    "partialError": "Le membre « {{governor}} » a été créé, mais l'alias n'a pas été associé : {{error}} — associez « {{alias}} » depuis l'onglet Existant, ne recréez pas le membre.",
+    "removeTitle": "Retirer l'alias",
+    "removeDesc": "Retirer <1>{{alias}}</1> ? Les lignes enregistrées sous ce nom sont de nouveau résolues et notées — elles peuvent devenir non associées.",
+    "removeDescWithGovernor": "Retirer <1>{{alias}}</1> → <2>{{governor}}</2> ? Les lignes enregistrées sous ce nom sont de nouveau résolues et notées — elles peuvent devenir non associées.",
+    "removing": "Retrait…",
+    "removeAria": "Retirer l'alias {{alias}}",
+    "directoryTitle": "Répertoire des alias",
+    "directorySubtitle": "Noms d'origine associés aux membres canoniques",
+    "searchPlaceholder": "Rechercher des membres ou des alias…",
+    "emptyNoAliases": "Aucun alias pour l'instant. Associez un nom non associé pour en créer un.",
+    "emptyNoMatch": "Aucun membre ou alias ne correspond à votre recherche.",
+    "queueTitle": "File d'attente non associée",
+    "queueSubtitle_one": "{{count}} nom nécessite une décision humaine",
+    "queueSubtitle_many": "{{count}} noms nécessitent une décision humaine",
+    "queueSubtitle_other": "{{count}} noms nécessitent une décision humaine",
+    "queueEmpty": "Aucun nom non associé — tout est résolu.",
+    "mapToMember": "Associer à un membre",
+    "removedNote": "Alias supprimé — scores recalculés."
   }
 }

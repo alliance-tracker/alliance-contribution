@@ -26,7 +26,8 @@
       "dismiss": "Verwerfen",
       "view": "Ansehen",
       "edit": "Bearbeiten",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "change": "Ändern"
     },
     "errors": {
       "generic": "Etwas ist schiefgelaufen."
@@ -36,7 +37,8 @@
     "points": "Punkte",
     "notes": "Notizen",
     "week": "Woche",
-    "unmapped": "Nicht zugeordnet"
+    "unmapped": "Nicht zugeordnet",
+    "optional": "(optional)"
   },
   "scope": {
     "overall": "Gesamt",
@@ -301,5 +303,47 @@
     "positionOf": "#{{position}} von {{total}}",
     "emptyCaptures": "Noch keine Listenerfassungen — importieren Sie eine Liste, um den Verlauf zu starten.",
     "emptyMember": "Dieses Mitglied ist noch in keiner Erfassung aufgetaucht."
+  },
+  "memberSearch": {
+    "placeholder": "Gouverneur suchen…",
+    "empty": "Keine Mitglieder gefunden."
+  },
+  "aliases": {
+    "needKey": "Legen Sie Ihren API-Schlüssel fest (obere Leiste), um Aliase zu verwalten.",
+    "recomputed_one": "<1>{{count, number}}</1> Teilnahme neu berechnet.",
+    "recomputed_other": "<1>{{count, number}}</1> Teilnahmen neu berechnet.",
+    "conflicts_one": "{{count}} rückwirkender Konflikt — betroffene Events prüfen.",
+    "conflicts_other": "{{count}} rückwirkende Konflikte — betroffene Events prüfen.",
+    "conflictDuplicate": "Zwei Namen werden jetzt demselben Mitglied in Event #{{event}} zugeordnet: {{names}}",
+    "conflictBear": "Dasselbe Mitglied in beiden Bärenfallen am {{date}}: {{names}}",
+    "addTitle": "Alias hinzufügen",
+    "addDesc": "Ordnen Sie einen Rohnamen einem bestehenden Mitglied zu oder erstellen Sie ein neues. Der Verlauf wird ab der neuen Zuordnung neu aufgelöst und neu gewertet.",
+    "alias": "Alias",
+    "aliasPlaceholder": "Rohname wie erfasst",
+    "existing": "Bestehend",
+    "newMember": "Neues Mitglied",
+    "governorPlaceholder": "Name des neuen Gouverneurs",
+    "note": "Notiz",
+    "notePlaceholder": "Grund für diese Zuordnung",
+    "creating": "Wird erstellt…",
+    "createAndMap": "Erstellen & zuordnen",
+    "adding": "Wird hinzugefügt…",
+    "partialError": "Mitglied „{{governor}}“ wurde erstellt, aber der Alias wurde nicht zugeordnet: {{error}} — ordnen Sie „{{alias}}“ über den Tab Bestehend zu, erstellen Sie das Mitglied nicht erneut.",
+    "removeTitle": "Alias entfernen",
+    "removeDesc": "<1>{{alias}}</1> entfernen? Unter diesem Namen erfasste Zeilen werden neu aufgelöst und neu gewertet — sie können nicht zugeordnet werden.",
+    "removeDescWithGovernor": "<1>{{alias}}</1> → <2>{{governor}}</2> entfernen? Unter diesem Namen erfasste Zeilen werden neu aufgelöst und neu gewertet — sie können nicht zugeordnet werden.",
+    "removing": "Wird entfernt…",
+    "removeAria": "Alias {{alias}} entfernen",
+    "directoryTitle": "Alias-Verzeichnis",
+    "directorySubtitle": "Rohanzeigenamen, kanonischen Mitgliedern zugeordnet",
+    "searchPlaceholder": "Mitglieder oder Aliase suchen…",
+    "emptyNoAliases": "Noch keine Aliase. Ordnen Sie einen nicht zugeordneten Namen zu, um einen zu erstellen.",
+    "emptyNoMatch": "Keine Mitglieder oder Aliase entsprechen Ihrer Suche.",
+    "queueTitle": "Nicht zugeordnete Warteschlange",
+    "queueSubtitle_one": "{{count}} Name benötigt eine menschliche Entscheidung",
+    "queueSubtitle_other": "{{count}} Namen benötigen eine menschliche Entscheidung",
+    "queueEmpty": "Keine nicht zugeordneten Namen — alles ist aufgelöst.",
+    "mapToMember": "Mitglied zuordnen",
+    "removedNote": "Alias entfernt — Punktzahlen neu berechnet."
   }
 }

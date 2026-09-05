@@ -48,7 +48,7 @@ function byBase(flat: Flat): Map<string, Set<string>> {
 }
 
 function placeholders(value: string): string {
-  const names = [...value.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]).sort();
+  const names = [...value.matchAll(/\{\{\s*(\w+)(?:\s*,[^}]*)?\s*\}\}/g)].map((m) => m[1]).sort();
   const tags = [...value.matchAll(/<(\d+)>/g)].map((m) => m[1]).sort();
   return JSON.stringify({ names, tags });
 }

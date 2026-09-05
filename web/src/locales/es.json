@@ -26,7 +26,8 @@
       "dismiss": "Descartar",
       "view": "Ver",
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "change": "Cambiar"
     },
     "errors": {
       "generic": "Algo salió mal."
@@ -36,7 +37,8 @@
     "points": "Puntos",
     "notes": "Notas",
     "week": "Semana",
-    "unmapped": "Sin asignar"
+    "unmapped": "Sin asignar",
+    "optional": "(opcional)"
   },
   "scope": {
     "overall": "General",
@@ -319,5 +321,50 @@
     "positionOf": "#{{position}} de {{total}}",
     "emptyCaptures": "Aún no hay capturas de la lista — importe una lista para iniciar el historial.",
     "emptyMember": "Este miembro aún no ha aparecido en ninguna captura."
+  },
+  "memberSearch": {
+    "placeholder": "Buscar gobernador…",
+    "empty": "Ningún miembro coincide."
+  },
+  "aliases": {
+    "needKey": "Configure su clave de API (barra superior) para gestionar los alias.",
+    "recomputed_one": "<1>{{count, number}}</1> participación recalculada.",
+    "recomputed_many": "<1>{{count, number}}</1> participaciones recalculadas.",
+    "recomputed_other": "<1>{{count, number}}</1> participaciones recalculadas.",
+    "conflicts_one": "{{count}} conflicto retroactivo — revise los eventos afectados.",
+    "conflicts_many": "{{count}} conflictos retroactivos — revise los eventos afectados.",
+    "conflicts_other": "{{count}} conflictos retroactivos — revise los eventos afectados.",
+    "conflictDuplicate": "Dos nombres ahora se resuelven al mismo miembro en el evento #{{event}}: {{names}}",
+    "conflictBear": "Mismo miembro en ambas Trampas de Oso el {{date}}: {{names}}",
+    "addTitle": "Añadir alias",
+    "addDesc": "Asigne un nombre original a un miembro existente o cree uno nuevo. El historial se resuelve y puntúa de nuevo a partir de la nueva asignación.",
+    "alias": "Alias",
+    "aliasPlaceholder": "Nombre original tal como se registró",
+    "existing": "Existente",
+    "newMember": "Nuevo miembro",
+    "governorPlaceholder": "Nombre del nuevo gobernador",
+    "note": "Nota",
+    "notePlaceholder": "Motivo de esta asignación",
+    "creating": "Creando…",
+    "createAndMap": "Crear y asignar",
+    "adding": "Añadiendo…",
+    "partialError": "Se creó el miembro «{{governor}}», pero el alias no se asignó: {{error}} — asigne «{{alias}}» desde la pestaña Existente, no vuelva a crear el miembro.",
+    "removeTitle": "Quitar alias",
+    "removeDesc": "¿Quitar <1>{{alias}}</1>? Las filas registradas con este nombre se resuelven y puntúan de nuevo — pueden quedar sin asignar.",
+    "removeDescWithGovernor": "¿Quitar <1>{{alias}}</1> → <2>{{governor}}</2>? Las filas registradas con este nombre se resuelven y puntúan de nuevo — pueden quedar sin asignar.",
+    "removing": "Quitando…",
+    "removeAria": "Quitar alias {{alias}}",
+    "directoryTitle": "Directorio de alias",
+    "directorySubtitle": "Nombres originales asignados a miembros canónicos",
+    "searchPlaceholder": "Buscar miembros o alias…",
+    "emptyNoAliases": "Aún no hay alias. Asigne un nombre sin asignar para crear uno.",
+    "emptyNoMatch": "Ningún miembro o alias coincide con su búsqueda.",
+    "queueTitle": "Cola sin asignar",
+    "queueSubtitle_one": "{{count}} nombre necesita una decisión humana",
+    "queueSubtitle_many": "{{count}} nombres necesitan una decisión humana",
+    "queueSubtitle_other": "{{count}} nombres necesitan una decisión humana",
+    "queueEmpty": "No hay nombres sin asignar — todo se resuelve.",
+    "mapToMember": "Asignar a un miembro",
+    "removedNote": "Alias eliminado — puntuaciones recalculadas."
   }
 }

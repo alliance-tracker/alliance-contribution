@@ -26,7 +26,8 @@
       "dismiss": "닫기",
       "view": "보기",
       "edit": "수정",
-      "delete": "삭제"
+      "delete": "삭제",
+      "change": "변경"
     },
     "errors": {
       "generic": "문제가 발생했습니다."
@@ -36,7 +37,8 @@
     "points": "포인트",
     "notes": "메모",
     "week": "주",
-    "unmapped": "미매핑"
+    "unmapped": "미매핑",
+    "optional": "(선택 사항)"
   },
   "scope": {
     "overall": "전체",
@@ -283,5 +285,44 @@
     "positionOf": "#{{position}} / {{total}}",
     "emptyCaptures": "아직 명단 캡처가 없습니다 — 명단 붙여넣기를 가져와 기록을 시작하십시오.",
     "emptyMember": "이 구성원은 아직 어떤 캡처에도 나타나지 않았습니다."
+  },
+  "memberSearch": {
+    "placeholder": "영주 검색…",
+    "empty": "일치하는 구성원이 없습니다."
+  },
+  "aliases": {
+    "needKey": "별칭을 관리하려면 API 키를 설정하십시오(상단 바).",
+    "recomputed_other": "<1>{{count, number}}</1>개의 참여가 재계산되었습니다.",
+    "conflicts_other": "{{count}}개의 소급 충돌 — 영향을 받은 이벤트를 확인하십시오.",
+    "conflictDuplicate": "이벤트 #{{event}}에서 두 이름이 이제 동일한 구성원으로 해석됩니다: {{names}}",
+    "conflictBear": "{{date}}의 두 곰 함정에서 동일한 구성원이 발견되었습니다: {{names}}",
+    "addTitle": "별칭 추가",
+    "addDesc": "원본 이름을 기존 구성원에 매핑하거나 새 구성원을 생성하십시오. 이력은 새 매핑에 따라 다시 해석되고 다시 점수가 매겨집니다.",
+    "alias": "별칭",
+    "aliasPlaceholder": "기록된 원본 이름",
+    "existing": "기존",
+    "newMember": "신규 구성원",
+    "governorPlaceholder": "새 영주 이름",
+    "note": "메모",
+    "notePlaceholder": "이 매핑의 이유",
+    "creating": "생성 중…",
+    "createAndMap": "생성 및 매핑",
+    "adding": "추가 중…",
+    "partialError": "구성원 “{{governor}}”이(가) 생성되었지만 별칭이 매핑되지 않았습니다: {{error}} — 기존 탭에서 “{{alias}}”을(를) 매핑하고, 구성원을 다시 생성하지 마십시오.",
+    "removeTitle": "별칭 제거",
+    "removeDesc": "<1>{{alias}}</1>을(를) 제거하시겠습니까? 이 이름으로 기록된 행은 다시 해석되고 다시 점수가 매겨지며 — 미매핑 상태가 될 수 있습니다.",
+    "removeDescWithGovernor": "<1>{{alias}}</1> → <2>{{governor}}</2>을(를) 제거하시겠습니까? 이 이름으로 기록된 행은 다시 해석되고 다시 점수가 매겨지며 — 미매핑 상태가 될 수 있습니다.",
+    "removing": "제거 중…",
+    "removeAria": "별칭 {{alias}} 제거",
+    "directoryTitle": "별칭 목록",
+    "directorySubtitle": "정규 구성원에 매핑된 원본 표시 이름",
+    "searchPlaceholder": "구성원 또는 별칭 검색…",
+    "emptyNoAliases": "아직 별칭이 없습니다. 미매핑 이름을 매핑하여 하나를 생성하십시오.",
+    "emptyNoMatch": "검색과 일치하는 구성원 또는 별칭이 없습니다.",
+    "queueTitle": "미매핑 대기열",
+    "queueSubtitle_other": "{{count}}개 이름에 사람의 결정이 필요합니다",
+    "queueEmpty": "미매핑 이름이 없습니다 — 모두 해석되었습니다.",
+    "mapToMember": "구성원에 매핑",
+    "removedNote": "별칭이 제거되었습니다 — 점수가 재계산되었습니다."
   }
 }

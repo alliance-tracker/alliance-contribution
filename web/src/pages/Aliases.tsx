@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Plus, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
 import type { ActivityType, Alias, Member } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
@@ -29,12 +31,12 @@ import {
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 
 /** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown): string {
+function writeErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError) {
-    if (e.status === 401) return "Set your API key (top bar) to manage aliases.";
+    if (e.status === 401) return t("aliases.needKey");
     return e.message;
   }
-  return e instanceof Error ? e.message : "Something went wrong.";
+  return e instanceof Error ? e.message : t("common.errors.generic");
 }
 
 /** Shared labeled field wrapper. */
@@ -51,11 +53,11 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 }
 
 /** One conflict rendered as a plain, unambiguous sentence keyed to its type. */
-function conflictText(c: AliasConflict): string {
-  if (c.type === "within_event_duplicate") {
-    return `Two names now resolve to the same member in event #${c.event_id}: ${c.raw_names.join(", ")}`;
-  }
-  return `Same member in both Bear traps on ${c.date}: ${c.raw_names.join(", ")}`;
+function conflictText(c: AliasConflict, t: TFunction): string {
+  const names = c.raw_names.join(", ");
+  return c.type === "within_event_duplicate"
+    ? t("aliases.conflictDuplicate", { event: c.event_id, names })
+    : t("aliases.conflictBear", { date: c.date, names });
 }
 
 /**
@@ -63,13 +65,17 @@ function conflictText(c: AliasConflict): string {
  * A write SUCCEEDS even with conflicts — they are surfaced, not treated as failure.
  */
 function AliasChangeResultPanel({ result }: { result: AliasChangeResult }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-4">
       <Alert variant="success">
         <CheckCircle2 />
         <AlertContent>
-          <span className="num font-semibold">{result.recomputed}</span> participation
-          {result.recomputed === 1 ? "" : "s"} recomputed.
+          <Trans
+            i18nKey="aliases.recomputed"
+            count={result.recomputed}
+            components={{ 1: <span className="num font-semibold" /> }}
+          />
         </AlertContent>
       </Alert>
 
@@ -77,13 +83,10 @@ function AliasChangeResultPanel({ result }: { result: AliasChangeResult }) {
         <Alert variant="destructive">
           <TriangleAlert />
           <AlertContent>
-            <AlertTitle>
-              {result.conflicts.length} retroactive conflict
-              {result.conflicts.length === 1 ? "" : "s"} — review the affected events.
-            </AlertTitle>
+            <AlertTitle>{t("aliases.conflicts", { count: result.conflicts.length })}</AlertTitle>
             <ul className="flex flex-col gap-1">
               {result.conflicts.map((c, i) => (
-                <li key={i}>{conflictText(c)}</li>
+                <li key={i}>{conflictText(c, t)}</li>
               ))}
             </ul>
           </AlertContent>
@@ -109,6 +112,7 @@ function AddAliasDialog({
   prefillAlias: string;
   onSuccess: () => void;
 }) {
+  const { t } = useTranslation();
   const [alias, setAlias] = useState("");
   const [mode, setMode] = useState<MemberMode>("existing");
   const [memberId, setMemberId] = useState<number | null>(null);
@@ -163,8 +167,7 @@ function AddAliasDialog({
           // The member exists now and there is no member-delete API to roll it back. Re-running this
           // dialog would also fail on the duplicate governor, so name the partial state instead.
           setError(
-            `Member "${gov}" was created, but the alias was not mapped: ${writeErrorMessage(e)} — ` +
-              `map "${rawName}" from the Existing tab, do not create the member again.`,
+            t("aliases.partialError", { governor: gov, error: writeErrorMessage(e, t), alias: rawName }),
           );
           onSuccess();
           return;
@@ -172,7 +175,7 @@ function AddAliasDialog({
       }
       onSuccess();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setSubmitting(false);
     }
@@ -182,11 +185,8 @@ function AddAliasDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add alias</DialogTitle>
-          <DialogDescription>
-            Map a raw name to an existing member or create a new one. History re-resolves and
-            re-scores from the new mapping.
-          </DialogDescription>
+          <DialogTitle>{t("aliases.addTitle")}</DialogTitle>
+          <DialogDescription>{t("aliases.addDesc")}</DialogDescription>
         </DialogHeader>
 
         {result ? (
@@ -194,7 +194,7 @@ function AddAliasDialog({
             <AliasChangeResultPanel result={result} />
             <div className="flex justify-end">
               <Button size="sm" onClick={() => onOpenChange(false)}>
-                Done
+                {t("common.actions.done")}
               </Button>
             </div>
           </div>
@@ -202,15 +202,15 @@ function AddAliasDialog({
           <div className="flex flex-col gap-4">
             {error && <ErrorState message={error} />}
 
-            <Field label="Alias">
+            <Field label={t("aliases.alias")}>
               <Input
-                placeholder="Raw name as logged"
+                placeholder={t("aliases.aliasPlaceholder")}
                 value={alias}
                 onChange={(e) => setAlias(e.target.value)}
               />
             </Field>
 
-            <Field label="Member">
+            <Field label={t("common.member")}>
               <div className="flex flex-col gap-2">
                 <Tabs value={mode} onValueChange={(v) => setMode(v as MemberMode)}>
                   <TabsList className="rounded-[8px] border border-border bg-background p-0.5">
@@ -218,13 +218,13 @@ function AddAliasDialog({
                       value="existing"
                       className="rounded-[6px] border-none px-3 py-1 text-[12px] font-medium text-secondary transition-colors hover:text-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
                     >
-                      Existing
+                      {t("aliases.existing")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="new"
                       className="rounded-[6px] border-none px-3 py-1 text-[12px] font-medium text-secondary transition-colors hover:text-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
                     >
-                      New member
+                      {t("aliases.newMember")}
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
@@ -232,7 +232,7 @@ function AddAliasDialog({
                   <MemberSearchSelect members={members} value={memberId} onChange={setMemberId} />
                 ) : (
                   <Input
-                    placeholder="New governor name"
+                    placeholder={t("aliases.governorPlaceholder")}
                     value={governor}
                     onChange={(e) => setGovernor(e.target.value)}
                   />
@@ -240,9 +240,9 @@ function AddAliasDialog({
               </div>
             </Field>
 
-            <Field label="Note" hint="(optional)">
+            <Field label={t("aliases.note")} hint={t("common.optional")}>
               <Input
-                placeholder="Why this mapping"
+                placeholder={t("aliases.notePlaceholder")}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
@@ -251,17 +251,17 @@ function AddAliasDialog({
             <div className="flex items-center justify-end gap-2">
               <DialogClose asChild>
                 <Button variant="ghost" size="sm">
-                  Cancel
+                  {t("common.actions.cancel")}
                 </Button>
               </DialogClose>
               <Button size="sm" onClick={submit} disabled={!canSubmit}>
                 {mode === "new"
                   ? submitting
-                    ? "Creating…"
-                    : "Create & map"
+                    ? t("aliases.creating")
+                    : t("aliases.createAndMap")
                   : submitting
-                    ? "Adding…"
-                    : "Add alias"}
+                    ? t("aliases.adding")
+                    : t("aliases.addTitle")}
               </Button>
             </div>
           </div>
@@ -283,6 +283,7 @@ function RemoveAliasDialog({
   onCancel: () => void;
   onDone: () => void;
 }) {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AliasChangeResult | null>(null);
@@ -304,7 +305,7 @@ function RemoveAliasDialog({
       setResult(res);
       onDone();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -318,17 +319,25 @@ function RemoveAliasDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Remove alias</DialogTitle>
+          <DialogTitle>{t("aliases.removeTitle")}</DialogTitle>
           {alias && !result && (
             <DialogDescription>
-              Remove <span className="num font-medium text-foreground">{alias.alias}</span>
-              {governor && (
-                <>
-                  {" "}
-                  → <span className="font-medium text-foreground">{governor}</span>
-                </>
+              {governor ? (
+                <Trans
+                  i18nKey="aliases.removeDescWithGovernor"
+                  values={{ alias: alias.alias, governor }}
+                  components={{
+                    1: <span className="num font-medium text-foreground" />,
+                    2: <span className="font-medium text-foreground" />,
+                  }}
+                />
+              ) : (
+                <Trans
+                  i18nKey="aliases.removeDesc"
+                  values={{ alias: alias.alias }}
+                  components={{ 1: <span className="num font-medium text-foreground" /> }}
+                />
               )}
-              ? Rows logged under this name re-resolve and re-score — they may become unmapped.
             </DialogDescription>
           )}
         </DialogHeader>
@@ -338,7 +347,7 @@ function RemoveAliasDialog({
             <AliasChangeResultPanel result={result} />
             <div className="flex justify-end">
               <Button size="sm" onClick={onCancel}>
-                Done
+                {t("common.actions.done")}
               </Button>
             </div>
           </div>
@@ -347,10 +356,10 @@ function RemoveAliasDialog({
             {error && <ErrorState message={error} />}
             <div className="mt-4 flex items-center justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
               <Button variant="danger" size="sm" onClick={confirm} disabled={submitting}>
-                {submitting ? "Removing…" : "Remove alias"}
+                {submitting ? t("aliases.removing") : t("aliases.removeTitle")}
               </Button>
             </div>
           </>
@@ -374,6 +383,7 @@ function appearanceColor(
 }
 
 export function Aliases() {
+  const { t } = useTranslation();
   const { role } = useApiKey();
   const [reloadKey, setReloadKey] = useState(0);
 
@@ -464,7 +474,7 @@ export function Aliases() {
         <Alert variant="success" className="items-center">
           <AlertContent>{note}</AlertContent>
           <Button variant="ghost" size="sm" onClick={() => setNote(null)}>
-            Dismiss
+            {t("common.actions.dismiss")}
           </Button>
         </Alert>
       )}
@@ -474,21 +484,21 @@ export function Aliases() {
         <Card className="overflow-hidden">
           <div className="flex flex-col gap-3 border-b border-border p-4">
             <div className="flex flex-col">
-              <span className="text-[13.5px] font-semibold text-foreground">Alias directory</span>
-              <span className="text-[11.5px] text-secondary">
-                Raw display names mapped to canonical members
+              <span className="text-[13.5px] font-semibold text-foreground">
+                {t("aliases.directoryTitle")}
               </span>
+              <span className="text-[11.5px] text-secondary">{t("aliases.directorySubtitle")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Input
-                placeholder="Search members or aliases…"
+                placeholder={t("aliases.searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="flex-1"
               />
               <Button size="sm" onClick={() => openAdd("")}>
                 <Plus />
-                Add alias
+                {t("aliases.addTitle")}
               </Button>
             </div>
           </div>
@@ -499,9 +509,7 @@ export function Aliases() {
             ) : filteredAliasGroups.length === 0 ? (
               <EmptyState
                 message={
-                  search.trim() === ""
-                    ? "No aliases yet. Map an unmapped name to create one."
-                    : "No members or aliases match your search."
+                  search.trim() === "" ? t("aliases.emptyNoAliases") : t("aliases.emptyNoMatch")
                 }
               />
             ) : (
@@ -527,7 +535,7 @@ export function Aliases() {
                         {role === "admin" && (
                           <button
                             type="button"
-                            aria-label={`Remove alias ${a.alias}`}
+                            aria-label={t("aliases.removeAria", { alias: a.alias })}
                             onClick={() => setRemoveAlias(a)}
                             className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-down"
                           >
@@ -549,9 +557,11 @@ export function Aliases() {
             <div className="flex items-center gap-2">
               <TriangleAlert className="size-[17px] text-flag-accent" />
               <div className="flex flex-col">
-                <span className="text-[13.5px] font-semibold text-flag-fg">Unmapped queue</span>
+                <span className="text-[13.5px] font-semibold text-flag-fg">
+                  {t("aliases.queueTitle")}
+                </span>
                 <span className="text-[11.5px] text-flag-accent">
-                  {unmapped.length} names need a human decision
+                  {t("aliases.queueSubtitle", { count: unmapped.length })}
                 </span>
               </div>
             </div>
@@ -566,7 +576,7 @@ export function Aliases() {
             {loading ? (
               <LoadingState />
             ) : unmapped.length === 0 ? (
-              <EmptyState message="No unmapped names — everything resolves." />
+              <EmptyState message={t("aliases.queueEmpty")} />
             ) : (
               unmapped.map((row) => (
                 <div
@@ -592,7 +602,7 @@ export function Aliases() {
                     </div>
                   </div>
                   <Button size="sm" variant="secondary" onClick={() => openAdd(row.raw_name)}>
-                    Map to member
+                    {t("aliases.mapToMember")}
                   </Button>
                 </div>
               ))
@@ -617,7 +627,7 @@ export function Aliases() {
           refresh();
         }}
         onDone={() => {
-          setNote("Alias removed — scores recomputed.");
+          setNote(t("aliases.removedNote"));
           refresh();
         }}
       />

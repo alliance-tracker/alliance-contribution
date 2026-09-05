@@ -112,13 +112,16 @@ describe("locale parity", () => {
 
   it("has no dead keys: every en base key (or a dotted ancestor) appears as a literal in web/src", () => {
     const source = walkSources(SRC_DIR).join("\n");
+    const isReferenced = (key: string) =>
+      source.includes(`"${key}"`) ||
+      source.includes(`'${key}'`) ||
+      source.includes(`\`${key}\``) ||
+      source.includes(`\`${key}.\${`);
+
     const dead: string[] = [];
     for (const base of enBases.keys()) {
       const parts = base.split(".");
-      const referenced = parts.some((_, i) => {
-        const candidate = parts.slice(0, parts.length - i).join(".");
-        return source.includes(`"${candidate}`) || source.includes(`'${candidate}`) || source.includes(`\`${candidate}`);
-      });
+      const referenced = parts.some((_, i) => isReferenced(parts.slice(0, parts.length - i).join(".")));
       if (!referenced) dead.push(base);
     }
     expect(dead).toEqual([]);

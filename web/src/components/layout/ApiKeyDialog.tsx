@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { KeyRound } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useApiKey } from "@/lib/apiKey";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import {
 
 /** Top-bar control to swap the API key (persisted to localStorage), e.g. viewer -> manager for writes. */
 export function ApiKeyDialog() {
+  const { t } = useTranslation();
   const { apiKey, setApiKey } = useApiKey();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
@@ -35,7 +37,7 @@ export function ApiKeyDialog() {
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm">
           <KeyRound />
-          {apiKey ? "API key set" : "Set API key"}
+          {apiKey ? t("apiKey.set") : t("apiKey.unset")}
           <span
             className={apiKey ? "size-1.5 rounded-full bg-up" : "size-1.5 rounded-full bg-faint"}
             aria-hidden
@@ -44,16 +46,13 @@ export function ApiKeyDialog() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>API key</DialogTitle>
-          <DialogDescription>
-            The viewer key opens the read pages. A manager or admin key is needed to change events,
-            roster, aliases and scoring. Stored locally in this browser.
-          </DialogDescription>
+          <DialogTitle>{t("apiKey.title")}</DialogTitle>
+          <DialogDescription>{t("apiKey.description")}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <Input
             type="password"
-            placeholder="X-Api-Key value"
+            placeholder={t("apiKey.placeholder")}
             value={draft}
             autoFocus
             onChange={(e) => setDraft(e.target.value)}
@@ -64,11 +63,11 @@ export function ApiKeyDialog() {
           <div className="flex items-center justify-between">
             <DialogClose asChild>
               <Button variant="ghost" size="sm">
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button size="sm" onClick={save}>
-              Save key
+              {t("apiKey.save")}
             </Button>
           </div>
         </div>

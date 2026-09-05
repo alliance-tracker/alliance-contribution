@@ -4,8 +4,33 @@
     "notFound": "Introuvable",
     "comingSoon": "Disponible dans la prochaine tâche.",
     "actions": {
-      "reload": "Recharger"
+      "reload": "Recharger",
+      "cancel": "Annuler"
     }
+  },
+  "language": {
+    "label": "Langue"
+  },
+  "theme": {
+    "dark": "Thème sombre",
+    "light": "Thème clair",
+    "switchToDark": "Passer au thème sombre",
+    "switchToLight": "Passer au thème clair"
+  },
+  "keyGate": {
+    "checking": "Vérification de l'accès…",
+    "unrecognised": "Cette clé n'a pas été reconnue. Vérifiez-la auprès d'un officier et réessayez.",
+    "prompt": "Saisissez la clé d'accès de l'alliance pour continuer. Demandez-la à un officier si vous ne l'avez pas.",
+    "placeholder": "Clé d'accès",
+    "unlock": "Déverrouiller"
+  },
+  "apiKey": {
+    "set": "Clé API définie",
+    "unset": "Définir la clé API",
+    "title": "Clé API",
+    "description": "La clé lecteur ouvre les pages de consultation. Une clé gestionnaire ou administrateur est nécessaire pour modifier les événements, la liste, les alias et le score. Stockée localement dans ce navigateur.",
+    "placeholder": "Valeur de X-Api-Key",
+    "save": "Enregistrer la clé"
   },
   "nav": {
     "tagline": "Suivi de la participation",

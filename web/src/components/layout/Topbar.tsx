@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { titleForPath, subtitleForPath } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { ApiKeyDialog } from "./ApiKeyDialog";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
@@ -32,6 +33,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
       </div>
       <div className="flex items-center gap-1.5">
+        <LanguageSwitcher />
         <ThemeToggle />
         <ApiKeyDialog />
       </div>

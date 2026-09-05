@@ -4,8 +4,33 @@
     "notFound": "Not found",
     "comingSoon": "Coming in the next task.",
     "actions": {
-      "reload": "Reload"
+      "reload": "Reload",
+      "cancel": "Cancel"
     }
+  },
+  "language": {
+    "label": "Language"
+  },
+  "theme": {
+    "dark": "Dark theme",
+    "light": "Light theme",
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
+  },
+  "keyGate": {
+    "checking": "Checking access…",
+    "unrecognised": "That key was not recognised. Check it with an officer and try again.",
+    "prompt": "Enter the alliance access key to continue. Ask an officer if you do not have it.",
+    "placeholder": "Access key",
+    "unlock": "Unlock"
+  },
+  "apiKey": {
+    "set": "API key set",
+    "unset": "Set API key",
+    "title": "API key",
+    "description": "The viewer key opens the read pages. A manager or admin key is needed to change events, roster, aliases and scoring. Stored locally in this browser.",
+    "placeholder": "X-Api-Key value",
+    "save": "Save key"
   },
   "nav": {
     "tagline": "Participation Tracker",

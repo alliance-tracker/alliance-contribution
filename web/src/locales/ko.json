@@ -4,8 +4,33 @@
     "notFound": "찾을 수 없음",
     "comingSoon": "다음 작업에서 제공됩니다.",
     "actions": {
-      "reload": "새로 고침"
+      "reload": "새로 고침",
+      "cancel": "취소"
     }
+  },
+  "language": {
+    "label": "언어"
+  },
+  "theme": {
+    "dark": "어두운 테마",
+    "light": "밝은 테마",
+    "switchToDark": "어두운 테마로 전환",
+    "switchToLight": "밝은 테마로 전환"
+  },
+  "keyGate": {
+    "checking": "접근 권한 확인 중…",
+    "unrecognised": "인식되지 않는 키입니다. 간부에게 확인 후 다시 시도하십시오.",
+    "prompt": "계속하려면 연맹 접근 키를 입력하십시오. 키가 없으면 간부에게 문의하십시오.",
+    "placeholder": "접근 키",
+    "unlock": "잠금 해제"
+  },
+  "apiKey": {
+    "set": "API 키 설정됨",
+    "unset": "API 키 설정",
+    "title": "API 키",
+    "description": "뷰어 키로는 읽기 페이지를 열 수 있습니다. 이벤트, 명단, 별칭, 점수를 변경하려면 매니저 또는 관리자 키가 필요합니다. 이 브라우저에 로컬로 저장됩니다.",
+    "placeholder": "X-Api-Key 값",
+    "save": "키 저장"
   },
   "nav": {
     "tagline": "참여 추적기",

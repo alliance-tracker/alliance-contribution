@@ -4,8 +4,33 @@
     "notFound": "No encontrado",
     "comingSoon": "Disponible en la próxima tarea.",
     "actions": {
-      "reload": "Recargar"
+      "reload": "Recargar",
+      "cancel": "Cancelar"
     }
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "theme": {
+    "dark": "Tema oscuro",
+    "light": "Tema claro",
+    "switchToDark": "Cambiar al tema oscuro",
+    "switchToLight": "Cambiar al tema claro"
+  },
+  "keyGate": {
+    "checking": "Comprobando acceso…",
+    "unrecognised": "Esa clave no fue reconocida. Verifíquela con un oficial e inténtelo de nuevo.",
+    "prompt": "Introduzca la clave de acceso de la alianza para continuar. Pídasela a un oficial si no la tiene.",
+    "placeholder": "Clave de acceso",
+    "unlock": "Desbloquear"
+  },
+  "apiKey": {
+    "set": "Clave API establecida",
+    "unset": "Establecer clave API",
+    "title": "Clave API",
+    "description": "La clave de visor abre las páginas de lectura. Se necesita una clave de gestor o administrador para cambiar eventos, lista, alias y puntuación. Se guarda localmente en este navegador.",
+    "placeholder": "Valor de X-Api-Key",
+    "save": "Guardar clave"
   },
   "nav": {
     "tagline": "Seguimiento de participación",

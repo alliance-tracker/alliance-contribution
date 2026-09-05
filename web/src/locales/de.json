@@ -4,8 +4,33 @@
     "notFound": "Nicht gefunden",
     "comingSoon": "Kommt in der nächsten Aufgabe.",
     "actions": {
-      "reload": "Neu laden"
+      "reload": "Neu laden",
+      "cancel": "Abbrechen"
     }
+  },
+  "language": {
+    "label": "Sprache"
+  },
+  "theme": {
+    "dark": "Dunkles Design",
+    "light": "Helles Design",
+    "switchToDark": "Zum dunklen Design wechseln",
+    "switchToLight": "Zum hellen Design wechseln"
+  },
+  "keyGate": {
+    "checking": "Zugriff wird geprüft…",
+    "unrecognised": "Dieser Schlüssel wurde nicht erkannt. Prüfen Sie ihn mit einem Offizier und versuchen Sie es erneut.",
+    "prompt": "Geben Sie den Zugangsschlüssel der Allianz ein, um fortzufahren. Fragen Sie einen Offizier, falls Sie ihn nicht haben.",
+    "placeholder": "Zugangsschlüssel",
+    "unlock": "Entsperren"
+  },
+  "apiKey": {
+    "set": "API-Schlüssel gesetzt",
+    "unset": "API-Schlüssel setzen",
+    "title": "API-Schlüssel",
+    "description": "Der Betrachter-Schlüssel öffnet die Leseseiten. Zum Ändern von Events, Liste, Aliasen und Wertung ist ein Manager- oder Admin-Schlüssel nötig. Wird lokal in diesem Browser gespeichert.",
+    "placeholder": "X-Api-Key-Wert",
+    "save": "Schlüssel speichern"
   },
   "nav": {
     "tagline": "Teilnahme-Tracker",

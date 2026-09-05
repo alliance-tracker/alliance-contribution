@@ -1,22 +1,16 @@
 import * as React from "react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { lang } from "@/lib/format";
 
-const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+// Monday-first grid (matches the existing firstWeekdayOffset). Weekday labels come from Intl for a fixed
+// Monday..Sunday week: 2024-01-01 is a Monday. Month names likewise, for the 1st of each month.
+const WEEKDAYS = Array.from({ length: 7 }, (_, i) =>
+  new Intl.DateTimeFormat(lang(), { weekday: "short", timeZone: "UTC" }).format(Date.UTC(2024, 0, 1 + i)),
+);
+const monthName = (m: number) =>
+  new Intl.DateTimeFormat(lang(), { month: "long", timeZone: "UTC" }).format(Date.UTC(2024, m, 1));
 
 /** Format local y/m/d as "YYYY-MM-DD" — never via toISOString() (UTC would off-by-one). */
 function toIso(y: number, m: number, d: number): string {
@@ -42,7 +36,8 @@ type DatePickerProps = {
   className?: string;
 };
 
-export function DatePicker({ value, onChange, placeholder = "Pick a date", className }: DatePickerProps) {
+export function DatePicker({ value, onChange, placeholder, className }: DatePickerProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -106,7 +101,7 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date", class
         {value ? (
           <span className="num">{value}</span>
         ) : (
-          <span className="text-muted">{placeholder}</span>
+          <span className="text-muted">{placeholder ?? t("datePicker.placeholder")}</span>
         )}
         <CalendarDays className="size-4 text-muted" />
       </button>
@@ -116,18 +111,18 @@ export function DatePicker({ value, onChange, placeholder = "Pick a date", class
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"
-              aria-label="Previous month"
+              aria-label={t("datePicker.prevMonth")}
               onClick={prevMonth}
               className="inline-flex size-7 items-center justify-center rounded-[6px] text-secondary outline-none transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/30"
             >
               <ChevronLeft className="size-4" />
             </button>
             <span className="text-[13px] font-medium text-secondary">
-              {MONTHS[view.m]} {view.y}
+              {monthName(view.m)} {view.y}
             </span>
             <button
               type="button"
-              aria-label="Next month"
+              aria-label={t("datePicker.nextMonth")}
               onClick={nextMonth}
               className="inline-flex size-7 items-center justify-center rounded-[6px] text-secondary outline-none transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/30"
             >

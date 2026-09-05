@@ -1,1 +1,4 @@
-{ "common": { "loading": "불러오는 중…" } }
+{
+  "common": { "loading": "불러오는 중…" },
+  "datePicker": { "placeholder": "날짜 선택", "prevMonth": "이전 달", "nextMonth": "다음 달" }
+}

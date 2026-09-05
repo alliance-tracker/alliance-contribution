@@ -1,1 +1,4 @@
-{ "common": { "loading": "Wird geladen…" } }
+{
+  "common": { "loading": "Wird geladen…" },
+  "datePicker": { "placeholder": "Datum wählen", "prevMonth": "Vormonat", "nextMonth": "Nächster Monat" }
+}

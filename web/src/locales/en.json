@@ -1,5 +1,10 @@
 {
   "common": {
     "loading": "Loading…"
+  },
+  "datePicker": {
+    "placeholder": "Pick a date",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month"
   }
 }

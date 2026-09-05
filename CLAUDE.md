@@ -45,7 +45,7 @@ Worker/SPA boundary in `shared/`.
 
 **UI strings are i18next keys**, never literals — `web/src/i18n.ts` loads one `web/src/locales/<lng>.json`
 per language (en es fr de ko ar; `ar` is RTL and uses logical Tailwind utilities — never `ml-`/`pl-`/`left-`/`text-right`) before first render; `t()` keys are typed from `en.json`. A new string goes
-into all five files in the same change, or `test/unit/i18n-parity.test.ts` fails (key parity, per-language
+into all six files in the same change, or `test/unit/i18n-parity.test.ts` fails (key parity, per-language
 plural suffixes, placeholder parity, no dead keys). Server error text and operator data stay untranslated.
 
 ## Non-obvious decisions

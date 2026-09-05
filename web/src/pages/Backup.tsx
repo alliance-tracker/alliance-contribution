@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Download, Upload, CheckCircle2, TriangleAlert } from "lucide-react";
 import { api, ApiError, type ImportResult } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -19,13 +21,13 @@ type ParsedBackup = {
 };
 
 /** Map a thrown error to a clear, actionable message. 401 → API-key hint; 403 → admin-key hint. */
-function writeErrorMessage(e: unknown): string {
+function writeErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError) {
-    if (e.status === 401) return "Set your API key (top bar) to export or import.";
-    if (e.status === 403) return "This action requires the admin key.";
+    if (e.status === 401) return t("backup.needKey");
+    if (e.status === 403) return t("common.errors.adminKey");
     return e.message;
   }
-  return e instanceof Error ? e.message : "Something went wrong.";
+  return e instanceof Error ? e.message : t("common.errors.generic");
 }
 
 /**
@@ -46,15 +48,16 @@ function downloadText(filename: string, text: string) {
 
 /** Post-import result: recompute success banner, or a warning when rows loaded but recompute failed. */
 function ImportResultPanel({ result }: { result: ImportResult }) {
+  const { t } = useTranslation();
   const counts = Object.entries(result.imported)
-    .map(([t, n]) => `${t}: ${n}`)
+    .map(([table, n]) => `${table}: ${n}`)
     .join(", ");
 
   if (result.recomputed) {
     return (
       <Alert variant="success">
         <CheckCircle2 />
-        <AlertContent>Imported {counts}. Scores recomputed.</AlertContent>
+        <AlertContent>{t("backup.imported", { counts })}</AlertContent>
       </Alert>
     );
   }
@@ -63,14 +66,15 @@ function ImportResultPanel({ result }: { result: ImportResult }) {
     <Alert variant="destructive">
       <TriangleAlert />
       <AlertContent>
-        <AlertTitle>Rows imported ({counts}) but recompute failed.</AlertTitle>
-        <span>{result.error ?? "Unknown error"} — run Recompute from the admin to retry.</span>
+        <AlertTitle>{t("backup.importedNoRecompute", { counts })}</AlertTitle>
+        <span>{t("backup.retryHint", { error: result.error ?? t("backup.unknownError") })}</span>
       </AlertContent>
     </Alert>
   );
 }
 
 export function Backup() {
+  const { t } = useTranslation();
   const fileInput = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +88,7 @@ export function Backup() {
       const text = await api.admin.export();
       downloadText(`alliance-backup-${new Date().toISOString().slice(0, 10)}.json`, text);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -100,7 +104,7 @@ export function Backup() {
       const text = await file.text();
       setPending(JSON.parse(text) as ParsedBackup);
     } catch {
-      setError("That file is not valid JSON.");
+      setError(t("backup.invalidJson"));
     }
   }
 
@@ -117,7 +121,7 @@ export function Backup() {
       setResult(res);
       setPending(null);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -125,7 +129,7 @@ export function Backup() {
 
   const counts = pending?.tables
     ? Object.entries(pending.tables)
-        .map(([t, rows]) => `${t}: ${Array.isArray(rows) ? rows.length : 0}`)
+        .map(([table, rows]) => `${table}: ${Array.isArray(rows) ? rows.length : 0}`)
         .join(", ")
     : "";
 
@@ -136,23 +140,21 @@ export function Backup() {
 
       <Card className="flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-1">
-          <span className="text-[13.5px] font-semibold text-foreground">Export</span>
-          <span className="text-[12px] text-muted">Download the full database as a JSON file.</span>
+          <span className="text-[13.5px] font-semibold text-foreground">{t("backup.exportTitle")}</span>
+          <span className="text-[12px] text-muted">{t("backup.exportDesc")}</span>
         </div>
         <div>
           <Button size="sm" onClick={handleExport} disabled={busy}>
             <Download />
-            Export database
+            {t("backup.exportButton")}
           </Button>
         </div>
       </Card>
 
       <Card className="flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-1">
-          <span className="text-[13.5px] font-semibold text-foreground">Import</span>
-          <span className="text-[12px] text-muted">
-            Replace ALL data with a backup file. The current database is downloaded first as a safety copy.
-          </span>
+          <span className="text-[13.5px] font-semibold text-foreground">{t("backup.importTitle")}</span>
+          <span className="text-[12px] text-muted">{t("backup.importDesc")}</span>
         </div>
         <div>
           <input
@@ -164,7 +166,7 @@ export function Backup() {
           />
           <Button variant="secondary" size="sm" onClick={() => fileInput.current?.click()} disabled={busy}>
             <Upload />
-            Choose backup file…
+            {t("backup.chooseFile")}
           </Button>
         </div>
       </Card>
@@ -172,21 +174,18 @@ export function Backup() {
       <Dialog open={pending !== null} onOpenChange={(open) => !open && setPending(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Replace all data?</DialogTitle>
+            <DialogTitle>{t("backup.replaceTitle")}</DialogTitle>
             <DialogDescription>
-              Restoring the backup from {pending?.exported_at ?? "an unknown date"} ({counts}) will overwrite
-              the entire database. The current data is downloaded first, then replaced — but that download is
-              your browser's business and the app cannot confirm it saved. If you do not already have a
-              recent export on disk, cancel and use Export above first.
+              {t("backup.replaceDesc", { date: pending?.exported_at ?? t("backup.unknownDate"), counts })}
             </DialogDescription>
           </DialogHeader>
 
           <div className="flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => setPending(null)} disabled={busy}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button variant="danger" size="sm" onClick={confirmImport} disabled={busy}>
-              {busy ? "Restoring…" : "Download current & restore"}
+              {busy ? t("backup.restoring") : t("backup.restore")}
             </Button>
           </div>
         </DialogContent>

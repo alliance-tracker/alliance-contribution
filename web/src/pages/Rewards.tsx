@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useTranslation, Trans } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Check, ChevronDown, ChevronRight, Pencil, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 import type {
   Allocation,
@@ -12,6 +14,8 @@ import type {
 import { api, ApiError } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { cn } from "@/lib/utils";
+import { formatNumber, formatCompact } from "@/lib/format";
+import type { TKey } from "@/i18n";
 import { Alert, AlertContent } from "@/components/ui/alert";
 import { AttendanceBadge } from "@/components/AttendanceBadge";
 import { Avatar } from "@/components/ui/avatar";
@@ -32,13 +36,13 @@ import { MEDALS } from "@/components/ranking-parts";
 import { EmptyState, ErrorState, LoadingState } from "@/components/States";
 
 /** Map a thrown error to a clear, actionable message. 401 → API-key hint; 403 → admin-key hint. */
-function writeErrorMessage(e: unknown): string {
+function writeErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError) {
-    if (e.status === 401) return "Set your API key (top bar) to manage rewards.";
-    if (e.status === 403) return "This action requires the admin key.";
+    if (e.status === 401) return t("rewards.needKey");
+    if (e.status === 403) return t("common.errors.adminKey");
     return e.message;
   }
-  return e instanceof Error ? e.message : "Something went wrong.";
+  return e instanceof Error ? e.message : t("common.errors.generic");
 }
 
 /** Uppercase mono micro-label above a field (design: fldLbl), hint in sentence case. */
@@ -54,20 +58,22 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   );
 }
 
-const METRIC_LABELS: Record<AllocationMetric, string> = {
-  points: "Participation score",
-  attendance: "Attendance (event-days)",
+const METRIC_LABELS: Record<AllocationMetric, TKey> = {
+  points: "rewards.metrics.points",
+  attendance: "rewards.metrics.attendance",
 };
-const STRATEGY_LABELS: Record<AllocationStrategy, string> = {
-  top_n: "Top N (1 each)",
-  proportional: "Proportional to metric",
-  proportional_top: "Proportional to top…",
-  tiered: "Tiered by rank",
+const STRATEGY_LABELS: Record<AllocationStrategy, TKey> = {
+  top_n: "rewards.strategies.top_n",
+  proportional: "rewards.strategies.proportional",
+  proportional_top: "rewards.strategies.proportional_top",
+  tiered: "rewards.strategies.tiered",
 };
 
 /** History summary label — proportional_top carries its saved cutoff. */
-function strategyText(a: Allocation): string {
-  return a.strategy === "proportional_top" ? `Proportional to top ${a.top_count}` : STRATEGY_LABELS[a.strategy];
+function strategyText(a: Allocation, t: TFunction): string {
+  return a.strategy === "proportional_top"
+    ? t("rewards.proportionalTopN", { n: a.top_count })
+    : t(STRATEGY_LABELS[a.strategy]);
 }
 
 // Tier band row as edited (strings so partially-typed numbers don't fight the input).
@@ -114,15 +120,13 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-// 98,512,340 -> "98.5M" — the column is a magnitude cue, the exact value is on hover.
-const compactPower = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 });
-
 const TH = "sticky top-0 z-[2] border-b border-border bg-surface px-3.5 py-2.5 text-left font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-muted";
 const TD = "border-b border-border/50 px-3.5 py-2";
 
 /** Shared by preview and history: rank badge, avatar, attendance (preview only), metric bar,
  *  amount badge. Fixed layout — the design's tight columns, member takes the slack. */
 function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; metric: string }) {
+  const { t } = useTranslation();
   const maxValue = Math.max(...lines.map((l) => l.metric_value), 1);
   const maxAmount = Math.max(...lines.map((l) => l.amount), 1);
   const showAttendance = lines.some((l) => l.attendance !== undefined);
@@ -141,12 +145,12 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
         <thead>
           <tr>
             <th className={TH}>#</th>
-            <th className={TH}>Member</th>
-            <th className={cn(TH, "px-2 text-center")}>Rank</th>
-            <th className={cn(TH, "text-right")}>Power</th>
-            {showAttendance && <th className={cn(TH, "px-2 text-center")}>Att.</th>}
-            <th className={cn(TH, "text-right")}>{metric === "points" ? "Score" : "Event-days"}</th>
-            <th className={cn(TH, "pr-4 text-right")}>Amount</th>
+            <th className={TH}>{t("common.member")}</th>
+            <th className={cn(TH, "px-2 text-center")}>{t("common.rank")}</th>
+            <th className={cn(TH, "text-right")}>{t("common.power")}</th>
+            {showAttendance && <th className={cn(TH, "px-2 text-center")}>{t("rewards.att")}</th>}
+            <th className={cn(TH, "text-right")}>{metric === "points" ? t("common.score") : t("rewards.eventDays")}</th>
+            <th className={cn(TH, "pr-4 text-right")}>{t("rewards.amount")}</th>
           </tr>
         </thead>
         <tbody>
@@ -168,7 +172,9 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
                     <div className="flex min-w-0 flex-col leading-tight">
                       <span className="truncate text-[13.5px] font-semibold text-foreground">{l.governor}</span>
                       {l.last_alias && (
-                        <span className="truncate text-[11px] text-muted">aka {l.last_alias}</span>
+                        <span className="truncate text-[11px] text-muted">
+                          {t("rewards.aka", { alias: l.last_alias })}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -179,9 +185,9 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
                 <td className={cn(TD, "text-right")}>
                   <span
                     className="num text-[13px] text-secondary"
-                    title={l.power != null ? l.power.toLocaleString("en-US") : undefined}
+                    title={l.power != null ? formatNumber(l.power) : undefined}
                   >
-                    {l.power != null ? compactPower.format(l.power) : "—"}
+                    {l.power != null ? formatCompact(l.power) : "—"}
                   </span>
                 </td>
                 {showAttendance && (
@@ -226,6 +232,7 @@ function HistoryRow({
   allocation: Allocation;
   onChanged: () => void;
 }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [detail, setDetail] = useState<AllocationWithLines | null>(null);
   const [editing, setEditing] = useState(false);
@@ -243,7 +250,7 @@ function HistoryRow({
         setDetail(await api.allocations.get(allocation.id));
       } catch (e) {
         // Collapse again so re-expanding retries instead of spinning forever under a stale banner.
-        setError(writeErrorMessage(e));
+        setError(writeErrorMessage(e, t));
         setExpanded(false);
       }
     }
@@ -263,7 +270,7 @@ function HistoryRow({
       setEditing(false);
       onChanged();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -277,14 +284,19 @@ function HistoryRow({
       setConfirming(false);
       onChanged();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setConfirming(false);
     } finally {
       setBusy(false);
     }
   }
 
-  const summary = `${allocation.quantity} × ${METRIC_LABELS[allocation.metric]} · ${strategyText(allocation)} · ${allocation.weeks.length} week${allocation.weeks.length === 1 ? "" : "s"}`;
+  const summary = t("rewards.summary", {
+    quantity: allocation.quantity,
+    metric: t(METRIC_LABELS[allocation.metric]),
+    strategy: strategyText(allocation, t),
+    weeks: t("rewards.weeks", { count: allocation.weeks.length }),
+  });
 
   return (
     <div className="flex flex-col border-b border-border last:border-b-0">
@@ -315,7 +327,7 @@ function HistoryRow({
               autoFocus
             />
             <Button size="sm" onClick={saveTitle} disabled={busy}>
-              Save
+              {t("common.actions.save")}
             </Button>
             <Button
               variant="ghost"
@@ -330,10 +342,10 @@ function HistoryRow({
           </div>
         ) : (
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={() => setEditing(true)} title="Rename">
+            <Button variant="ghost" size="sm" onClick={() => setEditing(true)} title={t("rewards.rename")}>
               <Pencil />
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => setConfirming(true)} title="Delete">
+            <Button variant="ghost" size="sm" onClick={() => setConfirming(true)} title={t("common.actions.delete")}>
               <Trash2 />
             </Button>
           </div>
@@ -349,18 +361,17 @@ function HistoryRow({
       <Dialog open={confirming} onOpenChange={(open) => !open && setConfirming(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete this allocation?</DialogTitle>
+            <DialogTitle>{t("rewards.deleteTitle")}</DialogTitle>
             <DialogDescription>
-              “{allocation.title}” and its {allocation.quantity}-item hand-out record will be removed
-              permanently. Saved amounts cannot be recomputed later — data changes under old inputs.
+              {t("rewards.deleteDesc", { title: allocation.title, quantity: allocation.quantity })}
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => setConfirming(false)} disabled={busy}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button variant="danger" size="sm" onClick={remove} disabled={busy}>
-              {busy ? "Deleting…" : "Delete allocation"}
+              {busy ? t("common.actions.deleting") : t("rewards.deleteAllocation")}
             </Button>
           </div>
         </DialogContent>
@@ -370,6 +381,7 @@ function HistoryRow({
 }
 
 export function Rewards() {
+  const { t } = useTranslation();
   const weeksState = useApi(() => api.weeks(), []); // newest first
   const [historyVersion, setHistoryVersion] = useState(0);
   const historyState = useApi(() => api.allocations.list(), [historyVersion]);
@@ -431,7 +443,7 @@ export function Rewards() {
       setPreview(await api.allocations.preview(buildInput()));
     } catch (e) {
       setPreview(null);
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -442,13 +454,13 @@ export function Rewards() {
     setError(null);
     try {
       const created = await api.allocations.create(buildInput());
-      setSaved(`“${created.title}” saved — ${created.lines.length} member(s)`);
+      setSaved(t("rewards.savedNote", { title: created.title, count: created.lines.length }));
       setPreview(null);
       setTitle("");
       setQuantity("");
       setHistoryVersion((v) => v + 1);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -464,28 +476,29 @@ export function Rewards() {
 
       <Card className="flex flex-col gap-4 p-5">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-semibold text-foreground">New allocation</span>
-          <span className="text-[12.5px] text-muted">
-            Split a batch of rewards across the roster by tracked participation. Preview is free —
-            compare strategies before saving.
-          </span>
+          <span className="text-[14px] font-semibold text-foreground">{t("rewards.newTitle")}</span>
+          <span className="text-[12.5px] text-muted">{t("rewards.newDesc")}</span>
         </div>
 
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-          <Field label="Title" hint="required to save">
-            <Input placeholder="e.g. KvK payout" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Field label={t("rewards.title")} hint={t("rewards.titleHint")}>
+            <Input
+              placeholder={t("rewards.titlePlaceholder")}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </Field>
-          <Field label="Quantity">
+          <Field label={t("rewards.quantity")}>
             <Input
               type="number"
               min={1}
               step={1}
-              placeholder="e.g. 400"
+              placeholder={t("rewards.quantityPlaceholder")}
               value={quantity}
               onChange={(e) => setQuantityT(e.target.value)}
             />
           </Field>
-          <Field label="Metric">
+          <Field label={t("rewards.metric")}>
             <Select value={metric} onValueChange={(v) => setMetricT(v as AllocationMetric)}>
               <SelectTrigger>
                 <SelectValue />
@@ -493,13 +506,13 @@ export function Rewards() {
               <SelectContent>
                 {(Object.keys(METRIC_LABELS) as AllocationMetric[]).map((m) => (
                   <SelectItem key={m} value={m}>
-                    {METRIC_LABELS[m]}
+                    {t(METRIC_LABELS[m])}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Strategy">
+          <Field label={t("rewards.strategy")}>
             <Select value={strategy} onValueChange={(v) => setStrategyT(v as AllocationStrategy)}>
               <SelectTrigger>
                 <SelectValue />
@@ -507,7 +520,7 @@ export function Rewards() {
               <SelectContent>
                 {(Object.keys(STRATEGY_LABELS) as AllocationStrategy[]).map((s) => (
                   <SelectItem key={s} value={s}>
-                    {STRATEGY_LABELS[s]}
+                    {t(STRATEGY_LABELS[s])}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -515,13 +528,13 @@ export function Rewards() {
           </Field>
         </div>
 
-        <Field label="Weeks" hint="newest first — pick the weeks the rewards cover">
+        <Field label={t("rewards.weeksLabel")} hint={t("rewards.weeksHint")}>
           {weeksState.loading ? (
-            <LoadingState label="Loading weeks…" />
+            <LoadingState label={t("rewards.loadingWeeks")} />
           ) : weeksState.error ? (
             <ErrorState message={weeksState.error} />
           ) : weeks.length === 0 ? (
-            <EmptyState message="No event weeks yet — ingest events first." />
+            <EmptyState message={t("rewards.noWeeks")} />
           ) : (
             <div className="flex flex-wrap items-center gap-2">
               <button
@@ -529,10 +542,10 @@ export function Rewards() {
                 onClick={() => setSelectedWeeksT(picked.length === weeks.length ? [] : [...weeks])}
                 className="h-[30px] w-[92px] rounded-full border border-dashed border-faint bg-surface text-[12px] font-semibold text-secondary transition-colors hover:bg-background"
               >
-                {picked.length === weeks.length ? "Clear all" : "Select all"}
+                {picked.length === weeks.length ? t("rewards.clearAll") : t("rewards.selectAll")}
               </button>
               <span className="mr-2 text-[12px] text-muted">
-                {picked.length} of {weeks.length} selected
+                {t("rewards.selected", { picked: picked.length, total: weeks.length })}
               </span>
               {weeks.map((week) => {
                 const checked = picked.includes(week);
@@ -559,12 +572,12 @@ export function Rewards() {
         </Field>
 
         {strategy === "proportional_top" && (
-          <Field label="Top count" hint="quantity is split by metric share among ranks 1..N only">
+          <Field label={t("rewards.topCount")} hint={t("rewards.topCountHint")}>
             <Input
               type="number"
               min={1}
               step={1}
-              placeholder="e.g. 20"
+              placeholder={t("rewards.topCountPlaceholder")}
               value={topCount}
               onChange={(e) => setTopCountT(e.target.value)}
               className="w-40"
@@ -573,14 +586,14 @@ export function Rewards() {
         )}
 
         {strategy === "tiered" && (
-          <Field label="Bands" hint="ranks are 1-based, inclusive; gaps allowed, overlaps not">
+          <Field label={t("rewards.bands")} hint={t("rewards.bandsHint")}>
             <div className="flex flex-col gap-2">
               {tiers.map((band, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <Input
                     type="number"
                     min={1}
-                    placeholder="From rank"
+                    placeholder={t("rewards.fromRank")}
                     value={band.fromRank}
                     onChange={(e) => setTiersT(tiers.map((b, j) => (j === i ? { ...b, fromRank: e.target.value } : b)))}
                     className="w-28"
@@ -589,7 +602,7 @@ export function Rewards() {
                   <Input
                     type="number"
                     min={1}
-                    placeholder="To rank"
+                    placeholder={t("rewards.toRank")}
                     value={band.toRank}
                     onChange={(e) => setTiersT(tiers.map((b, j) => (j === i ? { ...b, toRank: e.target.value } : b)))}
                     className="w-28"
@@ -597,7 +610,7 @@ export function Rewards() {
                   <Input
                     type="number"
                     min={1}
-                    placeholder="Each gets"
+                    placeholder={t("rewards.eachGets")}
                     value={band.amountEach}
                     onChange={(e) => setTiersT(tiers.map((b, j) => (j === i ? { ...b, amountEach: e.target.value } : b)))}
                     className="w-28"
@@ -607,7 +620,7 @@ export function Rewards() {
                     size="sm"
                     onClick={() => setTiersT(tiers.filter((_, j) => j !== i))}
                     disabled={tiers.length === 1}
-                    title="Remove band"
+                    title={t("rewards.removeBand")}
                   >
                     <Trash2 />
                   </Button>
@@ -616,7 +629,7 @@ export function Rewards() {
               <div>
                 <Button variant="secondary" size="sm" onClick={() => setTiersT([...tiers, { ...EMPTY_BAND }])}>
                   <Plus />
-                  Add band
+                  {t("rewards.addBand")}
                 </Button>
               </div>
             </div>
@@ -625,10 +638,10 @@ export function Rewards() {
 
         <div className="flex flex-wrap items-center gap-2.5">
           <Button size="sm" onClick={runPreview} disabled={!canPreview}>
-            Preview
+            {t("rewards.preview")}
           </Button>
           <Button size="sm" variant="secondary" onClick={save} disabled={!canSave}>
-            Save allocation
+            {t("rewards.saveAllocation")}
           </Button>
           {saved && (
             <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-up">
@@ -637,7 +650,7 @@ export function Rewards() {
             </span>
           )}
           {preview !== null && title.trim() === "" && (
-            <span className="text-[12px] text-muted">Add a title to save.</span>
+            <span className="text-[12px] text-muted">{t("rewards.addTitleToSave")}</span>
           )}
         </div>
 
@@ -652,15 +665,19 @@ export function Rewards() {
             {preview.lines.length === 0 ? (
               // Zero lines ≠ zero eligible: valid tiered bands can all start past the eligible count.
               // The warnings above carry the specific reason; keep this line cause-neutral.
-              <EmptyState message="This allocation would hand out nothing — adjust the quantity, weeks, or bands." />
+              <EmptyState message={t("rewards.previewEmpty")} />
             ) : (
               <>
                 <span className="text-[13px] text-secondary">
-                  {preview.lines.length} member(s) receive{" "}
-                  <span className="num font-bold text-foreground">
-                    {preview.lines.reduce((sum, l) => sum + l.amount, 0)}
-                  </span>{" "}
-                  of {quantity} item(s).
+                  <Trans
+                    i18nKey="rewards.previewSummary"
+                    count={preview.lines.length}
+                    values={{
+                      total: preview.lines.reduce((sum, l) => sum + l.amount, 0),
+                      quantity,
+                    }}
+                    components={{ 1: <span className="num font-bold text-foreground" /> }}
+                  />
                 </span>
                 <LinesTable lines={preview.lines} metric={metric} />
               </>
@@ -671,17 +688,15 @@ export function Rewards() {
 
       <Card className="flex flex-col gap-2 p-5">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-semibold text-foreground">History</span>
-          <span className="text-[12.5px] text-muted">
-            Saved hand-outs. Lines are frozen as computed at save time; only the title can change.
-          </span>
+          <span className="text-[14px] font-semibold text-foreground">{t("rewards.historyTitle")}</span>
+          <span className="text-[12.5px] text-muted">{t("rewards.historyDesc")}</span>
         </div>
         {historyState.loading ? (
           <LoadingState />
         ) : historyState.error ? (
           <ErrorState message={historyState.error} />
         ) : (historyState.data ?? []).length === 0 ? (
-          <EmptyState message="No allocations saved yet." />
+          <EmptyState message={t("rewards.noAllocations")} />
         ) : (
           <div className="flex flex-col">
             {(historyState.data ?? []).map((a) => (

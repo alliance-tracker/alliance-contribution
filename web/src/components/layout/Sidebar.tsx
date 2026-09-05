@@ -1,9 +1,11 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { navSections } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 /** Brand header + nav list, shared by the desktop aside and the mobile drawer. */
 export function SidebarNav() {
+  const { t } = useTranslation();
   return (
     <>
       {/* Brand */}
@@ -15,7 +17,7 @@ export function SidebarNav() {
           <div className="text-[14px] font-semibold tracking-[-0.01em] text-foreground">
             Alliance Tracker
           </div>
-          <div className="text-[11px] text-muted">Participation Tracker</div>
+          <div className="truncate text-[11px] text-muted">{t("nav.tagline")}</div>
         </div>
       </div>
 
@@ -24,7 +26,7 @@ export function SidebarNav() {
         {navSections.map((section) => (
           <div key={section.title} className="flex flex-col gap-[3px]">
             <p className="px-2.5 pb-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-faint">
-              {section.title}
+              {t(section.title)}
             </p>
             {section.items.map((item) => (
               <NavLink
@@ -41,7 +43,7 @@ export function SidebarNav() {
                 }
               >
                 <item.icon className="size-[17px]" />
-                {item.label}
+                <span className="truncate">{t(item.label)}</span>
               </NavLink>
             ))}
           </div>

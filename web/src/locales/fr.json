@@ -1,4 +1,34 @@
 {
-  "common": { "loading": "Chargement…" },
+  "common": {
+    "loading": "Chargement…",
+    "notFound": "Introuvable",
+    "comingSoon": "Disponible dans la prochaine tâche.",
+    "actions": {
+      "reload": "Recharger"
+    }
+  },
+  "nav": {
+    "tagline": "Suivi de la participation",
+    "openNavigation": "Ouvrir la navigation",
+    "navigation": "Navigation",
+    "sections": {
+      "dashboard": "Tableau de bord",
+      "manage": "Gérer"
+    },
+    "overview": "Vue d'ensemble",
+    "ranking": "Classement",
+    "members": "Membres",
+    "attendance": "Présence",
+    "admin": "Administration",
+    "memberProfile": "Profil du membre",
+    "subtitles": {
+      "overview": "La participation de l'alliance en un coup d'œil",
+      "ranking": "Classement par semaine d'événement et global",
+      "members": "Liste de l'alliance — choisissez un membre pour ouvrir son profil",
+      "attendance": "Couverture des jours d'événement sur l'ensemble de la liste",
+      "admin": "Gérez les événements, la liste, les alias et le score",
+      "memberProfile": "Participation et historique individuels"
+    }
+  },
   "datePicker": { "placeholder": "Choisir une date", "prevMonth": "Mois précédent", "nextMonth": "Mois suivant" }
 }

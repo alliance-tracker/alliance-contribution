@@ -1,4 +1,34 @@
 {
-  "common": { "loading": "불러오는 중…" },
+  "common": {
+    "loading": "불러오는 중…",
+    "notFound": "찾을 수 없음",
+    "comingSoon": "다음 작업에서 제공됩니다.",
+    "actions": {
+      "reload": "새로 고침"
+    }
+  },
+  "nav": {
+    "tagline": "참여 추적기",
+    "openNavigation": "탐색 열기",
+    "navigation": "탐색",
+    "sections": {
+      "dashboard": "대시보드",
+      "manage": "관리"
+    },
+    "overview": "개요",
+    "ranking": "순위",
+    "members": "구성원",
+    "attendance": "참석",
+    "admin": "관리자",
+    "memberProfile": "구성원 프로필",
+    "subtitles": {
+      "overview": "연맹 참여 현황 한눈에 보기",
+      "ranking": "이벤트 주간별 및 전체 순위표",
+      "members": "연맹 명단 — 구성원을 선택하여 프로필 열기",
+      "attendance": "전체 명단의 이벤트 일 참석 현황",
+      "admin": "이벤트, 명단, 별칭, 점수 관리",
+      "memberProfile": "개인 참여 및 이력"
+    }
+  },
   "datePicker": { "placeholder": "날짜 선택", "prevMonth": "이전 달", "nextMonth": "다음 달" }
 }

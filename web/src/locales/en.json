@@ -1,6 +1,34 @@
 {
   "common": {
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "notFound": "Not found",
+    "comingSoon": "Coming in the next task.",
+    "actions": {
+      "reload": "Reload"
+    }
+  },
+  "nav": {
+    "tagline": "Participation Tracker",
+    "openNavigation": "Open navigation",
+    "navigation": "Navigation",
+    "sections": {
+      "dashboard": "Dashboard",
+      "manage": "Manage"
+    },
+    "overview": "Overview",
+    "ranking": "Ranking",
+    "members": "Members",
+    "attendance": "Attendance",
+    "admin": "Admin",
+    "memberProfile": "Member Profile",
+    "subtitles": {
+      "overview": "Alliance participation at a glance",
+      "ranking": "Leaderboard by event week and all-time",
+      "members": "Alliance roster — pick anyone to open their profile",
+      "attendance": "Event-day coverage across the roster",
+      "admin": "Manage events, roster, aliases & scoring",
+      "memberProfile": "Individual participation & history"
+    }
   },
   "datePicker": {
     "placeholder": "Pick a date",

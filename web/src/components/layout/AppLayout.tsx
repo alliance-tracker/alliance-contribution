@@ -1,11 +1,13 @@
 import { Suspense, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { LoadingState } from "@/components/States";
 import { Sidebar, SidebarNav } from "./Sidebar";
 import { Topbar } from "./Topbar";
 
 export function AppLayout() {
+  const { t } = useTranslation();
   const [navOpen, setNavOpen] = useState(false);
   const { pathname } = useLocation();
 
@@ -21,7 +23,7 @@ export function AppLayout() {
       {/* Mobile off-canvas nav (below md). */}
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
         <SheetContent aria-describedby={undefined}>
-          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <SheetTitle className="sr-only">{t("nav.navigation")}</SheetTitle>
           <SidebarNav />
         </SheetContent>
       </Sheet>

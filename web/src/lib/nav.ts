@@ -6,50 +6,51 @@ import {
   SlidersHorizontal,
   type LucideIcon,
 } from "lucide-react";
+import type { TKey } from "@/i18n";
 
-export type NavItem = { to: string; label: string; icon: LucideIcon };
-export type NavSection = { title: string; items: NavItem[] };
+export type NavItem = { to: string; label: TKey; icon: LucideIcon };
+export type NavSection = { title: TKey; items: NavItem[] };
 
 export const navSections: NavSection[] = [
   {
-    title: "Dashboard",
+    title: "nav.sections.dashboard",
     items: [
-      { to: "/", label: "Overview", icon: LayoutDashboard },
-      { to: "/rankings", label: "Ranking", icon: Trophy },
-      { to: "/members", label: "Members", icon: User },
-      { to: "/attendance", label: "Attendance", icon: CalendarCheck },
+      { to: "/", label: "nav.overview", icon: LayoutDashboard },
+      { to: "/rankings", label: "nav.ranking", icon: Trophy },
+      { to: "/members", label: "nav.members", icon: User },
+      { to: "/attendance", label: "nav.attendance", icon: CalendarCheck },
     ],
   },
   {
-    title: "Manage",
-    items: [{ to: "/admin", label: "Admin", icon: SlidersHorizontal }],
+    title: "nav.sections.manage",
+    items: [{ to: "/admin", label: "nav.admin", icon: SlidersHorizontal }],
   },
 ];
 
-/** Best-match page title for a pathname (handles nested/dynamic routes). */
-export function titleForPath(pathname: string): string {
-  if (pathname.startsWith("/admin")) return "Admin";
-  if (pathname.startsWith("/rankings")) return "Ranking";
-  if (pathname.startsWith("/members/")) return "Member Profile";
+/** Translation key of the best-match page title; null → caller shows the brand name. */
+export function titleForPath(pathname: string): TKey | null {
+  if (pathname.startsWith("/admin")) return "nav.admin";
+  if (pathname.startsWith("/rankings")) return "nav.ranking";
+  if (pathname.startsWith("/members/")) return "nav.memberProfile";
   for (const section of navSections) {
     for (const item of section.items) {
       if (item.to === pathname) return item.label;
     }
   }
-  return "Alliance Tracker";
+  return null;
 }
 
-const subtitles: Record<string, string> = {
-  "/": "Alliance participation at a glance",
-  "/rankings": "Leaderboard by event week and all-time",
-  "/rankings/overall": "Leaderboard by event week and all-time",
-  "/members": "Alliance roster — pick anyone to open their profile",
-  "/attendance": "Event-day coverage across the roster",
+const subtitles: Record<string, TKey> = {
+  "/": "nav.subtitles.overview",
+  "/rankings": "nav.subtitles.ranking",
+  "/rankings/overall": "nav.subtitles.ranking",
+  "/members": "nav.subtitles.members",
+  "/attendance": "nav.subtitles.attendance",
 };
 
-/** Best-match page subtitle for a pathname. */
-export function subtitleForPath(pathname: string): string {
-  if (pathname.startsWith("/admin")) return "Manage events, roster, aliases & scoring";
-  if (pathname.startsWith("/members/")) return "Individual participation & history";
-  return subtitles[pathname] ?? "";
+/** Translation key of the best-match page subtitle; null → none. */
+export function subtitleForPath(pathname: string): TKey | null {
+  if (pathname.startsWith("/admin")) return "nav.subtitles.admin";
+  if (pathname.startsWith("/members/")) return "nav.subtitles.memberProfile";
+  return subtitles[pathname] ?? null;
 }

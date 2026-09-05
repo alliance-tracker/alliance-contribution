@@ -1,4 +1,34 @@
 {
-  "common": { "loading": "Wird geladen…" },
+  "common": {
+    "loading": "Wird geladen…",
+    "notFound": "Nicht gefunden",
+    "comingSoon": "Kommt in der nächsten Aufgabe.",
+    "actions": {
+      "reload": "Neu laden"
+    }
+  },
+  "nav": {
+    "tagline": "Teilnahme-Tracker",
+    "openNavigation": "Navigation öffnen",
+    "navigation": "Navigation",
+    "sections": {
+      "dashboard": "Übersicht",
+      "manage": "Verwalten"
+    },
+    "overview": "Überblick",
+    "ranking": "Rangliste",
+    "members": "Mitglieder",
+    "attendance": "Anwesenheit",
+    "admin": "Verwaltung",
+    "memberProfile": "Mitgliedsprofil",
+    "subtitles": {
+      "overview": "Allianzbeteiligung auf einen Blick",
+      "ranking": "Rangliste nach Eventwoche und gesamt",
+      "members": "Allianzliste — Mitglied wählen, um das Profil zu öffnen",
+      "attendance": "Abdeckung der Eventtage über die gesamte Liste",
+      "admin": "Events, Liste, Aliase und Wertung verwalten",
+      "memberProfile": "Individuelle Beteiligung und Verlauf"
+    }
+  },
   "datePicker": { "placeholder": "Datum wählen", "prevMonth": "Vormonat", "nextMonth": "Nächster Monat" }
 }

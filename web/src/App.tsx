@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ApiKeyProvider } from "@/components/layout/ApiKeyProvider";
 import { KeyGate } from "@/components/layout/KeyGate";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -24,6 +25,7 @@ const Backup = lazy(() => import("@/pages/Backup").then((m) => ({ default: m.Bac
 const Rewards = lazy(() => import("@/pages/Rewards").then((m) => ({ default: m.Rewards })));
 
 export default function App() {
+  const { t } = useTranslation();
   return (
     <ApiKeyProvider>
       <KeyGate>
@@ -45,7 +47,7 @@ export default function App() {
                 <Route path="rewards" element={<Rewards />} />
                 <Route path="backup" element={<Backup />} />
               </Route>
-              <Route path="*" element={<Placeholder title="Not found" />} />
+              <Route path="*" element={<Placeholder title={t("common.notFound")} />} />
             </Route>
           </Routes>
         </BrowserRouter>

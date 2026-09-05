@@ -1,4 +1,34 @@
 {
-  "common": { "loading": "Cargando…" },
+  "common": {
+    "loading": "Cargando…",
+    "notFound": "No encontrado",
+    "comingSoon": "Disponible en la próxima tarea.",
+    "actions": {
+      "reload": "Recargar"
+    }
+  },
+  "nav": {
+    "tagline": "Seguimiento de participación",
+    "openNavigation": "Abrir navegación",
+    "navigation": "Navegación",
+    "sections": {
+      "dashboard": "Panel",
+      "manage": "Gestionar"
+    },
+    "overview": "Resumen",
+    "ranking": "Clasificación",
+    "members": "Miembros",
+    "attendance": "Asistencia",
+    "admin": "Administración",
+    "memberProfile": "Perfil del miembro",
+    "subtitles": {
+      "overview": "Participación de la alianza de un vistazo",
+      "ranking": "Clasificación por semana de evento y total",
+      "members": "Lista de la alianza — elija a alguien para abrir su perfil",
+      "attendance": "Cobertura de los días de evento en toda la lista",
+      "admin": "Gestione eventos, lista, alias y puntuación",
+      "memberProfile": "Participación e historial individual"
+    }
+  },
   "datePicker": { "placeholder": "Elija una fecha", "prevMonth": "Mes anterior", "nextMonth": "Mes siguiente" }
 }

@@ -18,6 +18,7 @@ export function LoadingState({ label }: { label?: string }) {
  * thinks to reload. Deliberately not a `retry` prop — there is nothing to re-run.
  */
 export function ErrorState({ message }: { message: string }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-start gap-2 rounded-[6px] border border-down/20 bg-down/5 p-4 text-[13px] text-down">
       <TriangleAlert className="mt-0.5 size-4 shrink-0" />
@@ -28,7 +29,7 @@ export function ErrorState({ message }: { message: string }) {
         className="shrink-0"
         onClick={() => window.location.reload()}
       >
-        Reload
+        {t("common.actions.reload")}
       </Button>
     </div>
   );

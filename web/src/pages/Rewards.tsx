@@ -363,7 +363,7 @@ function HistoryRow({
           <DialogHeader>
             <DialogTitle>{t("rewards.deleteTitle")}</DialogTitle>
             <DialogDescription>
-              {t("rewards.deleteDesc", { title: allocation.title, quantity: allocation.quantity })}
+              {t("rewards.deleteDesc", { title: allocation.title, quantity: formatNumber(allocation.quantity) })}
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-end gap-2">
@@ -673,8 +673,8 @@ export function Rewards() {
                     i18nKey="rewards.previewSummary"
                     count={preview.lines.length}
                     values={{
-                      total: preview.lines.reduce((sum, l) => sum + l.amount, 0),
-                      quantity,
+                      total: formatNumber(preview.lines.reduce((sum, l) => sum + l.amount, 0)),
+                      quantity: formatNumber(Number(quantity)),
                     }}
                     components={{ 1: <span className="num font-bold text-foreground" /> }}
                   />

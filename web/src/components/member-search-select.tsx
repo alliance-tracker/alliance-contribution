@@ -14,15 +14,13 @@ export function MemberSearchSelect({
   members,
   value,
   onChange,
-  placeholder,
 }: {
   members: Member[];
   value: number | null;
   onChange: (id: number | null) => void;
-  placeholder?: string;
 }) {
   const { t } = useTranslation();
-  const ph = placeholder ?? t("memberSearch.placeholder");
+  const ph = t("memberSearch.placeholder");
   const [open, setOpen] = useState(false);
   const selected = value === null ? undefined : members.find((m) => m.id === value);
   const sorted = members.slice().sort((a, b) => a.governor.localeCompare(b.governor));

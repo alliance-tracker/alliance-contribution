@@ -270,6 +270,7 @@ function EventFormDialog({
       setInstance(1);
       setRowsText("");
     }
+  // t is stable for the page lifetime (language switch reloads — see i18n.ts); listed to satisfy the hooks lint.
   }, [open, detail, activityTypes, t]);
 
   const selected = activityTypes.find((a) => a.key === activityKey);

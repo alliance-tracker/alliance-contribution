@@ -492,7 +492,7 @@
     "deleteDesc": "«{{title}}» y su registro de reparto de {{quantity}} artículos se eliminarán permanentemente. Las cantidades guardadas no se pueden recalcular después — los datos cambian bajo las entradas anteriores.",
     "deleteAllocation": "Eliminar asignación",
     "newTitle": "Nueva asignación",
-    "newDesc": "Reparta un lote de recompensas entre el roster según la participación registrada. La vista previa es gratuita — compare estrategias antes de guardar.",
+    "newDesc": "Reparta un lote de recompensas entre la lista según la participación registrada. La vista previa es gratuita — compare estrategias antes de guardar.",
     "title": "Título",
     "titleHint": "obligatorio para guardar",
     "titlePlaceholder": "p. ej. pago de KvK",

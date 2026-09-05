@@ -11,10 +11,8 @@ import { cn } from "@/lib/utils";
  */
 export function LlmPrompt({
   prompt,
-  title,
 }: {
   prompt: string;
-  title?: string;
 }): JSX.Element {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -48,7 +46,7 @@ export function LlmPrompt({
           ) : (
             <ChevronRight className="size-3.5 text-muted" />
           )}
-          {title ?? t("llmPrompt.title")}
+          {t("llmPrompt.title")}
         </Button>
         <Button
           type="button"

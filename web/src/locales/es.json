@@ -557,7 +557,7 @@
     "mergeTitle": "Fusionar miembro",
     "mergeDesc": "Fusione el duplicado <1>{{governor}}</1> con el miembro que realmente es. Use esta opción cuando un cambio de nombre se confundió con una persona nueva.",
     "mergeInto": "Fusionar con",
-    "mergeWarning": "«{{source}}» y sus alias pasan a ser alias de <1>{{target}}</1>; su historial y capturas se trasladan; la fila duplicada se elimina. No se puede deshacer.",
+    "mergeWarning": "«{{source}}» y sus alias pasan a ser alias de <1>{{target}}</1>; su historial e instantáneas se trasladan; la fila duplicada se elimina. No se puede deshacer.",
     "merging": "Fusionando…",
     "merge": "Fusionar",
     "deactivateTitle": "Desactivar miembro",
@@ -583,7 +583,7 @@
     "observed_one": "{{count}} miembro observado",
     "observed_many": "{{count}} miembros observados",
     "observed_other": "{{count}} miembros observados",
-    "sort": "Ordenar",
+    "sort": "Orden",
     "sortMovers": "Mayores cambios",
     "sortStatus": "Estado",
     "sortName": "Nombre",
@@ -630,7 +630,7 @@
     "legend": {
       "shown": "{{n}} mostrados",
       "atRisk": "En riesgo — menos del 50% de asistencia",
-      "move": "MOVE = puestos ganados/perdidos en el ranking de poder"
+      "move": "MOVIMIENTO = puestos ganados/perdidos en el ranking de poder"
     },
     "delta": {
       "joined": "Incorporados ({{n}})",
@@ -708,7 +708,7 @@
       "name": "Nombre",
       "meta": "Rango · Poder · Posición",
       "decision": "Decisión",
-      "newMember": "Miembro nuevo",
+      "newMember": "Nuevo miembro",
       "aliasOf": "Alias de…",
       "skip": "Omitir",
       "makePrimary": "Hacer que este sea el nombre principal",

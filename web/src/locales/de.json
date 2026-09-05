@@ -532,11 +532,11 @@
     "mergeTitle": "Mitglied zusammenführen",
     "mergeDesc": "Führen Sie das Duplikat <1>{{governor}}</1> mit dem Mitglied zusammen, das es tatsächlich ist. Verwenden Sie dies, wenn eine Umbenennung fälschlich als neue Person angelegt wurde.",
     "mergeInto": "Zusammenführen mit",
-    "mergeWarning": "„{{source}}“ und seine Aliase werden zu Aliasen von <1>{{target}}</1>; sein Verlauf und seine Erfassungen werden übernommen; die doppelte Zeile wird gelöscht. Kann nicht rückgängig gemacht werden.",
+    "mergeWarning": "„{{source}}“ und seine Aliase werden zu Aliasen von <1>{{target}}</1>; sein Verlauf und seine Schnappschüsse werden übernommen; die doppelte Zeile wird gelöscht. Kann nicht rückgängig gemacht werden.",
     "merging": "Wird zusammengeführt…",
     "merge": "Zusammenführen",
     "deactivateTitle": "Mitglied deaktivieren",
-    "deactivateDesc": "<1>{{governor}}</1> deaktivieren? Der Verlauf bleibt wertbar.",
+    "deactivateDesc": "<1>{{governor}}</1> deaktivieren? Der Verlauf bleibt auswertbar.",
     "deactivating": "Wird deaktiviert…",
     "deactivate": "Deaktivieren",
     "deleteCaptureTitle": "Listen-Update löschen",
@@ -555,7 +555,7 @@
     "filterAll": "Alle",
     "observed_one": "{{count}} Mitglied beobachtet",
     "observed_other": "{{count}} Mitglieder beobachtet",
-    "sort": "Sortieren",
+    "sort": "Sortierung",
     "sortMovers": "Größte Bewegungen",
     "sortStatus": "Status",
     "sortName": "Name",
@@ -601,7 +601,7 @@
     "legend": {
       "shown": "{{n}} angezeigt",
       "atRisk": "Gefährdet — unter 50 % Anwesenheit",
-      "move": "MOVE = gewonnene/verlorene Plätze im Machtranking"
+      "move": "BEWEGUNG = gewonnene/verlorene Plätze im Machtranking"
     },
     "delta": {
       "joined": "Beigetreten ({{n}})",
@@ -626,7 +626,7 @@
     },
     "import": {
       "noR5": "Kein R5 in dieser Einfügung — der Allianzführer fehlt oder die Einfügung ist unvollständig.",
-      "manyR5": "{{n}} Zeilen geben R5 an — eine Allianz hat genau einen Anführer, prüfen Sie also die Einfügung.",
+      "manyR5": "{{n}} Zeilen geben R5 an — eine Allianz hat genau einen Allianzführer, prüfen Sie also die Einfügung.",
       "editTitle": "Listen-Update bearbeiten",
       "title": "Liste importieren (TSV)",
       "step": "— Schritt {{step}} von 3",
@@ -648,9 +648,9 @@
       "invalidRows_other": "{{count}} Zeilen haben eine unlesbare Zelle. Korrigieren Sie die Einfügung — es wird nichts importiert, bis diese behoben sind.",
       "invalidDetail": "Zeile {{line}}: {{governor}} {{field}} → „{{value}}“",
       "field": {
-        "rank": "rang",
-        "power": "macht",
-        "power_position": "position"
+        "rank": "Rang",
+        "power": "Macht",
+        "power_position": "Position"
       },
       "andMore": "· und {{n}} weitere",
       "conflicts_one": "{{count}} Mitglied wird in dieser Erfassung mehrfach genannt. Ein Mitglied kann pro Datum nur einmal beobachtet werden.",

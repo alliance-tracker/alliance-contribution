@@ -1113,7 +1113,7 @@ function ImportRosterDialog({
                     deactivated: result.deactivated,
                     reactivated: result.reactivated,
                     skipped: skippedDecisionCount,
-                    recomputed: result.recomputed,
+                    recomputed: formatNumber(result.recomputed),
                   }}
                   components={{
                     1: <span className="num font-semibold" />,

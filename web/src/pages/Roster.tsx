@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
+import type { TFunction } from "i18next";
 import {
   Merge,
   Plus,
@@ -29,6 +30,7 @@ import type { MergeResult, RenameResult } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
 import { normalizeName } from "@/lib/normalize";
+import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import {
   buildRosterRows,
@@ -100,12 +102,12 @@ import {
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 
 /** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown): string {
+function writeErrorMessage(e: unknown, t: TFunction): string {
   if (e instanceof ApiError) {
-    if (e.status === 401) return "Set your API key (top bar) to manage the roster.";
+    if (e.status === 401) return t("roster.needKey");
     return e.message;
   }
-  return e instanceof Error ? e.message : "Something went wrong.";
+  return e instanceof Error ? e.message : t("common.errors.generic");
 }
 
 /** Blank → null, unreadable → undefined (invalid). Same digit-only rule the paste enforces, so a
@@ -193,6 +195,7 @@ function AddMemberDialog({
   const [position, setPosition] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!open) return;
@@ -221,7 +224,7 @@ function AddMemberDialog({
       });
       onSuccess(governor.trim());
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -230,18 +233,16 @@ function AddMemberDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add member</DialogTitle>
-          <DialogDescription>
-            Governor must be unique and can't shadow an existing alias.
-          </DialogDescription>
+          <DialogTitle>{t("roster.addTitle")}</DialogTitle>
+          <DialogDescription>{t("roster.addDesc")}</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           {error && <ErrorState message={error} />}
 
-          <Field label="Governor">
+          <Field label={t("common.governor")}>
             <Input
-              placeholder="Governor name"
+              placeholder={t("roster.governorPlaceholder")}
               value={governor}
               onChange={(e) => setGovernor(e.target.value)}
               autoFocus
@@ -249,10 +250,10 @@ function AddMemberDialog({
           </Field>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Field label="Rank" hint="(optional)">
+            <Field label={t("common.rank")} hint={t("common.optional")}>
               <AllianceRankSelect value={allianceRank} onChange={setAllianceRank} />
             </Field>
-            <Field label="Power" hint="(optional)">
+            <Field label={t("common.power")} hint={t("common.optional")}>
               <Input
                 className="num"
                 inputMode="numeric"
@@ -262,7 +263,7 @@ function AddMemberDialog({
                 aria-invalid={powerNum === undefined}
               />
             </Field>
-            <Field label="Power #" hint="(optional)">
+            <Field label={t("roster.powerPosition")} hint={t("common.optional")}>
               <Input
                 className="num"
                 inputMode="numeric"
@@ -277,11 +278,11 @@ function AddMemberDialog({
           <div className="flex items-center justify-end gap-2">
             <DialogClose asChild>
               <Button variant="ghost" size="sm">
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button size="sm" onClick={submit} disabled={!canSubmit}>
-              {submitting ? "Adding…" : "Add member"}
+              {submitting ? t("roster.adding") : t("roster.addTitle")}
             </Button>
           </div>
         </div>
@@ -306,6 +307,7 @@ function EditMemberDialog({
   const [active, setActive] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!member) return;
@@ -334,7 +336,7 @@ function EditMemberDialog({
       });
       onSuccess(member.governor);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -348,11 +350,14 @@ function EditMemberDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit member</DialogTitle>
+          <DialogTitle>{t("roster.editTitle")}</DialogTitle>
           {member && (
             <DialogDescription>
-              Editing <span className="font-medium text-foreground">{member.governor}</span>. Change
-              the name with Rename.
+              <Trans
+                i18nKey="roster.editDesc"
+                values={{ governor: member.governor }}
+                components={{ 1: <span className="font-medium text-foreground" /> }}
+              />
             </DialogDescription>
           )}
         </DialogHeader>
@@ -361,10 +366,10 @@ function EditMemberDialog({
           {error && <ErrorState message={error} />}
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Field label="Rank" hint="(optional)">
+            <Field label={t("common.rank")} hint={t("common.optional")}>
               <AllianceRankSelect value={allianceRank} onChange={setAllianceRank} />
             </Field>
-            <Field label="Power" hint="(optional)">
+            <Field label={t("common.power")} hint={t("common.optional")}>
               <Input
                 className="num"
                 inputMode="numeric"
@@ -374,7 +379,7 @@ function EditMemberDialog({
                 aria-invalid={powerNum === undefined}
               />
             </Field>
-            <Field label="Power #" hint="(optional)">
+            <Field label={t("roster.powerPosition")} hint={t("common.optional")}>
               <Input
                 className="num"
                 inputMode="numeric"
@@ -387,15 +392,15 @@ function EditMemberDialog({
           </div>
 
           <Checkbox checked={active} onChange={setActive}>
-            Active
+            {t("roster.status.active")}
           </Checkbox>
 
           <div className="flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button size="sm" onClick={submit} disabled={!canSubmit}>
-              {submitting ? "Saving…" : "Save changes"}
+              {submitting ? t("common.actions.saving") : t("common.actions.saveChanges")}
             </Button>
           </div>
         </div>
@@ -419,6 +424,7 @@ function RenameMemberDialog({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RenameResult | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!member) return;
@@ -441,7 +447,7 @@ function RenameMemberDialog({
       const res = await api.members.rename(member.id, trimmed, { addAlias });
       setResult(res);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -455,11 +461,14 @@ function RenameMemberDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rename member</DialogTitle>
+          <DialogTitle>{t("roster.renameTitle")}</DialogTitle>
           {member && !result && (
             <DialogDescription>
-              Rename <span className="font-medium text-foreground">{member.governor}</span>. Scores
-              recompute from the new identity.
+              <Trans
+                i18nKey="roster.renameDesc"
+                values={{ governor: member.governor }}
+                components={{ 1: <span className="font-medium text-foreground" /> }}
+              />
             </DialogDescription>
           )}
         </DialogHeader>
@@ -470,15 +479,14 @@ function RenameMemberDialog({
               <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
               <div className="flex flex-col gap-0.5">
                 <span>
-                  Renamed to{" "}
-                  <span className="font-semibold">{result.member.governor}</span>.
+                  <Trans
+                    i18nKey="roster.renamedTo"
+                    values={{ governor: result.member.governor }}
+                    components={{ 1: <span className="font-semibold" /> }}
+                  />
                 </span>
-                <span>
-                  {result.addedAlias
-                    ? "Old name kept as an alias — historical rows still resolve."
-                    : "Old name was not kept as an alias."}
-                </span>
-                <span>Scores recomputed.</span>
+                <span>{result.addedAlias ? t("roster.aliasKept") : t("roster.aliasNotKept")}</span>
+                <span>{t("roster.scoresRecomputed")}</span>
               </div>
             </div>
 
@@ -491,7 +499,7 @@ function RenameMemberDialog({
 
             <div className="flex justify-end">
               <Button size="sm" onClick={() => onSuccess(result.member.governor)}>
-                Done
+                {t("common.actions.done")}
               </Button>
             </div>
           </div>
@@ -499,9 +507,9 @@ function RenameMemberDialog({
           <div className="flex flex-col gap-4">
             {error && <ErrorState message={error} />}
 
-            <Field label="New governor">
+            <Field label={t("roster.newGovernor")}>
               <Input
-                placeholder="New name"
+                placeholder={t("roster.newNamePlaceholder")}
                 value={governor}
                 onChange={(e) => setGovernor(e.target.value)}
                 autoFocus
@@ -509,25 +517,22 @@ function RenameMemberDialog({
             </Field>
 
             <Checkbox checked={addAlias} onChange={setAddAlias}>
-              Keep old name as an alias
+              {t("roster.keepAlias")}
             </Checkbox>
 
             {!addAlias && (
               <div className="flex items-start gap-2 rounded-[6px] border border-warn/20 bg-warn/5 p-3 text-[13px] text-warn">
                 <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-                <span>
-                  Historical rows logged under the old name will become unmapped (score to nobody)
-                  after recompute.
-                </span>
+                <span>{t("roster.noAliasWarning")}</span>
               </div>
             )}
 
             <div className="flex items-center justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
               <Button size="sm" onClick={submit} disabled={!canSubmit}>
-                {submitting ? "Renaming…" : "Rename"}
+                {submitting ? t("roster.renaming") : t("roster.rename")}
               </Button>
             </div>
           </div>
@@ -558,6 +563,7 @@ function MergeMemberDialog({
   const [targetId, setTargetId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (member) {
@@ -580,7 +586,7 @@ function MergeMemberDialog({
     try {
       onSuccess(await api.members.merge(member.id, targetId));
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -594,12 +600,14 @@ function MergeMemberDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Merge member</DialogTitle>
+          <DialogTitle>{t("roster.mergeTitle")}</DialogTitle>
           {member && (
             <DialogDescription>
-              Merge duplicate{" "}
-              <span className="font-medium text-foreground">{member.governor}</span> into the
-              member it really is. Use when a rename was mistaken for a new person.
+              <Trans
+                i18nKey="roster.mergeDesc"
+                values={{ governor: member.governor }}
+                components={{ 1: <span className="font-medium text-foreground" /> }}
+              />
             </DialogDescription>
           )}
         </DialogHeader>
@@ -608,7 +616,7 @@ function MergeMemberDialog({
           <div className="flex flex-col gap-4">
             {error && <ErrorState message={error} />}
 
-            <Field label="Merge into">
+            <Field label={t("roster.mergeInto")}>
               <MemberSearchSelect members={candidates} value={targetId} onChange={setTargetId} />
             </Field>
 
@@ -616,19 +624,21 @@ function MergeMemberDialog({
               <div className="flex items-start gap-2 rounded-[6px] border border-warn/20 bg-warn/5 p-3 text-[13px] text-warn">
                 <TriangleAlert className="mt-0.5 size-4 shrink-0" />
                 <span>
-                  “{member.governor}” and its aliases become aliases of{" "}
-                  <span className="font-semibold">{target.governor}</span>; its history and
-                  snapshots move over; the duplicate row is deleted. Cannot be undone.
+                  <Trans
+                    i18nKey="roster.mergeWarning"
+                    values={{ source: member.governor, target: target.governor }}
+                    components={{ 1: <span className="font-semibold" /> }}
+                  />
                 </span>
               </div>
             )}
 
             <div className="flex items-center justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
               <Button variant="danger" size="sm" onClick={submit} disabled={submitting || !target}>
-                {submitting ? "Merging…" : "Merge"}
+                {submitting ? t("roster.merging") : t("roster.merge")}
               </Button>
             </div>
           </div>
@@ -649,6 +659,7 @@ function DeactivateDialog({
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (member) {
@@ -665,7 +676,7 @@ function DeactivateDialog({
       await api.members.update(member.id, { active: 0 });
       onDone(member.governor);
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -679,11 +690,14 @@ function DeactivateDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Deactivate member</DialogTitle>
+          <DialogTitle>{t("roster.deactivateTitle")}</DialogTitle>
           {member && (
             <DialogDescription>
-              Deactivate <span className="font-medium text-foreground">{member.governor}</span>?
-              Keeps history scorable.
+              <Trans
+                i18nKey="roster.deactivateDesc"
+                values={{ governor: member.governor }}
+                components={{ 1: <span className="font-medium text-foreground" /> }}
+              />
             </DialogDescription>
           )}
         </DialogHeader>
@@ -692,10 +706,10 @@ function DeactivateDialog({
 
         <div className="mt-4 flex items-center justify-end gap-2">
           <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-            Cancel
+            {t("common.actions.cancel")}
           </Button>
           <Button variant="danger" size="sm" onClick={confirm} disabled={submitting}>
-            {submitting ? "Deactivating…" : "Deactivate"}
+            {submitting ? t("roster.deactivating") : t("roster.deactivate")}
           </Button>
         </div>
       </DialogContent>
@@ -736,14 +750,9 @@ function todayIso(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-/** "Jul 28, 2026" — UTC-pinned so the label can never shift a day off the capture date. */
+/** "Jul 28, 2026" in the active language — UTC-pinned so the label can never shift a day off the capture date. */
 function fmtCaptureDate(date: string): string {
-  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  return formatDate(date, { month: "short", day: "numeric", year: "numeric" });
 }
 
 /**
@@ -874,7 +883,7 @@ function ImportRosterDialog({
         setAliases(a);
       })
       .catch((e) => {
-        if (!cancelled) setDataError(writeErrorMessage(e));
+        if (!cancelled) setDataError(writeErrorMessage(e, t));
       })
       .finally(() => {
         if (!cancelled) setLoadingData(false);
@@ -1070,7 +1079,7 @@ function ImportRosterDialog({
       setResult(res);
       onApplied();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
     } finally {
       setSubmitting(false);
     }
@@ -1614,6 +1623,7 @@ function DeleteCaptureDialog({
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (date) {
@@ -1630,7 +1640,7 @@ function DeleteCaptureDialog({
       await api.members.deleteCapture(date);
       onDeleted();
     } catch (e) {
-      setError(writeErrorMessage(e));
+      setError(writeErrorMessage(e, t));
       setSubmitting(false);
     }
   };
@@ -1644,21 +1654,23 @@ function DeleteCaptureDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete roster update</DialogTitle>
+          <DialogTitle>{t("roster.deleteCaptureTitle")}</DialogTitle>
           <DialogDescription>
-            Delete the <span className="num">{date && fmtCaptureDate(date)}</span> capture (
-            <span className="num">{count}</span> member{count === 1 ? "" : "s"})? Each member's Rank/Power/
-            Position on the roster keep their current values — only this date's history is removed. This
-            can't be undone.
+            <Trans
+              i18nKey="roster.deleteCaptureDesc"
+              count={count}
+              values={{ date: date ? fmtCaptureDate(date) : "" }}
+              components={{ 1: <span className="num" />, 2: <span className="num" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
         {error && <ErrorState message={error} />}
         <div className="flex items-center justify-end gap-2">
           <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-            Cancel
+            {t("common.actions.cancel")}
           </Button>
           <Button variant="danger" size="sm" onClick={confirm} disabled={submitting}>
-            {submitting ? "Deleting…" : "Delete update"}
+            {submitting ? t("common.actions.deleting") : t("roster.deleteUpdate")}
           </Button>
         </div>
       </DialogContent>
@@ -1667,6 +1679,7 @@ function DeleteCaptureDialog({
 }
 
 export function Roster() {
+  const { t } = useTranslation();
   const { role } = useApiKey();
   const [filter, setFilter] = useState<Filter>("active");
   const [reloadKey, setReloadKey] = useState(0);
@@ -1785,7 +1798,7 @@ export function Roster() {
       setImportInitial({ capturedOn: shownCapture, text: serializeRoster(rows) });
       setImportOpen(true);
     } catch (e) {
-      setRowError(writeErrorMessage(e));
+      setRowError(writeErrorMessage(e, t));
     }
   };
 
@@ -1793,10 +1806,10 @@ export function Roster() {
     setRowError(null);
     try {
       await api.members.update(m.id, { active: 1 });
-      setNote(`Activated ${m.governor}.`);
+      setNote(t("roster.notes.activated", { governor: m.governor }));
       refresh();
     } catch (e) {
-      setRowError(writeErrorMessage(e));
+      setRowError(writeErrorMessage(e, t));
     }
   };
 
@@ -1813,7 +1826,7 @@ export function Roster() {
             className="text-muted hover:text-foreground"
             onClick={() => setNote(null)}
           >
-            Dismiss
+            {t("common.actions.dismiss")}
           </Button>
         </div>
       )}
@@ -1823,10 +1836,15 @@ export function Roster() {
       <Card className="overflow-hidden">
         <CardHeader className="flex-row items-center justify-between gap-3 border-b border-border">
           <div className="flex flex-col gap-0.5">
-            <CardTitle>Roster</CardTitle>
+            <CardTitle>{t("roster.title")}</CardTitle>
             <span className="text-[12px] text-muted">
-              {counts.all} member{counts.all === 1 ? "" : "s"} · {counts.active} active
-              {latestCaptureDate && <> · last import {fmtCaptureDate(latestCaptureDate)}</>}
+              {[
+                t("roster.memberCount", { count: counts.all }),
+                t("roster.activeCount", { n: counts.active }),
+                latestCaptureDate ? t("roster.lastImport", { date: fmtCaptureDate(latestCaptureDate) }) : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -1843,15 +1861,19 @@ export function Roster() {
                 </SelectTrigger>
                 <SelectContent>
                   <div className="px-2 pb-1 pt-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-                    Roster updates
+                    {t("roster.updates")}
                   </div>
                   {captures.map((s) => (
                     // One line, not the mockup's two: SelectItem is fixed h-8 and a stacked child
                     // would clip. "· latest" marks the entry that maps back to the live view.
                     <SelectItem key={s.captured_on} value={s.captured_on} className="num">
-                      {fmtCaptureDate(s.captured_on)}
-                      {s.captured_on === latestCaptureDate ? " · latest" : ""} · {s.members} member
-                      {s.members === 1 ? "" : "s"}
+                      {[
+                        fmtCaptureDate(s.captured_on),
+                        s.captured_on === latestCaptureDate ? t("roster.latest") : null,
+                        t("roster.memberCount", { count: s.members }),
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -1861,11 +1883,11 @@ export function Roster() {
               <>
                 <Button variant="secondary" size="sm" onClick={editCapture}>
                   <Pencil />
-                  Edit update
+                  {t("roster.editUpdate")}
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => setDeleteDate(shownCapture)}>
                   <Trash2 />
-                  Delete update
+                  {t("roster.deleteUpdate")}
                 </Button>
               </>
             )}
@@ -1879,20 +1901,19 @@ export function Roster() {
                 }}
               >
                 <Upload />
-                Import roster (TSV)
+                {t("roster.importTsv")}
               </Button>
             )}
             <Button size="sm" onClick={() => setAddOpen(true)}>
               <Plus />
-              Add member
+              {t("roster.addTitle")}
             </Button>
           </div>
         </CardHeader>
 
         {historical && (
           <div className="border-b border-border bg-muted-surface px-4 py-2 text-[12.5px] text-secondary">
-            Viewing the {fmtCaptureDate(viewDate!)} capture — changes vs each member's own prior
-            observation. Names shown are current.
+            {t("roster.viewingCapture", { date: fmtCaptureDate(viewDate!) })}
           </div>
         )}
 
@@ -1903,8 +1924,12 @@ export function Roster() {
                 {(["active", "inactive", "all"] as const).map((key) => (
                   // inline-flex is load-bearing: TabsTrigger's base classes set no display, so `gap`
                   // on a plain inline button is a no-op and the count would sit flush to the label.
-                  <TabsTrigger key={key} value={key} className="inline-flex items-center gap-1.5 capitalize">
-                    {key}
+                  <TabsTrigger key={key} value={key} className="inline-flex items-center gap-1.5">
+                    {key === "all"
+                      ? t("roster.filterAll")
+                      : key === "active"
+                        ? t("roster.status.active")
+                        : t("roster.status.inactive")}
                     <span className="num rounded-[4px] bg-muted-surface px-1.5 text-[10.5px] font-semibold text-faint">
                       {counts[key]}
                     </span>
@@ -1913,22 +1938,20 @@ export function Roster() {
               </TabsList>
             </Tabs>
           ) : (
-            <span className="text-[12px] text-muted">
-              {rows.length} member{rows.length === 1 ? "" : "s"} observed
-            </span>
+            <span className="text-[12px] text-muted">{t("roster.observed", { count: rows.length })}</span>
           )}
 
           <div className="flex items-center gap-2">
             <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-              Sort
+              {t("roster.sort")}
             </span>
             <Tabs value={sort} onValueChange={(v) => setSort(v as RosterSort)}>
               <TabsList>
-                <TabsTrigger value="power">Power</TabsTrigger>
-                <TabsTrigger value="tier">Rank</TabsTrigger>
-                <TabsTrigger value="movers">Biggest movers</TabsTrigger>
-                <TabsTrigger value="status">Status</TabsTrigger>
-                <TabsTrigger value="name">Name</TabsTrigger>
+                <TabsTrigger value="power">{t("common.power")}</TabsTrigger>
+                <TabsTrigger value="tier">{t("common.rank")}</TabsTrigger>
+                <TabsTrigger value="movers">{t("roster.sortMovers")}</TabsTrigger>
+                <TabsTrigger value="status">{t("roster.sortStatus")}</TabsTrigger>
+                <TabsTrigger value="name">{t("roster.sortName")}</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -1941,25 +1964,23 @@ export function Roster() {
         ) : (historical ? historicalState.loading : membersState.loading) ? (
           <LoadingState />
         ) : rows.length === 0 ? (
-          <EmptyState
-            message={historical ? "No members observed in this capture." : "No members match this filter."}
-          />
+          <EmptyState message={historical ? t("roster.emptyCapture") : t("roster.emptyFilter")} />
         ) : (
           <>
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[52px] text-right">#</TableHead>
-                  <TableHead>Member</TableHead>
-                  <TableHead className="w-16 text-center">Rank</TableHead>
-                  <TableHead className="w-[190px] text-right">Power</TableHead>
+                  <TableHead>{t("common.member")}</TableHead>
+                  <TableHead className="w-16 text-center">{t("common.rank")}</TableHead>
+                  <TableHead className="w-[190px] text-right">{t("common.power")}</TableHead>
                   {/* The two columns the page exists for get a darker header and a group separator. */}
                   <TableHead className="w-[200px] border-l border-muted-surface text-right text-foreground">
-                    Change in power
+                    {t("roster.changeInPower")}
                   </TableHead>
-                  <TableHead className="w-[86px] text-center text-foreground">Move</TableHead>
-                  <TableHead className="w-28 border-l border-muted-surface">Status</TableHead>
-                  {!historical && <TableHead className="w-[104px] text-right">Actions</TableHead>}
+                  <TableHead className="w-[86px] text-center text-foreground">{t("roster.move")}</TableHead>
+                  <TableHead className="w-28 border-l border-muted-surface">{t("roster.sortStatus")}</TableHead>
+                  {!historical && <TableHead className="w-[104px] text-right">{t("roster.actions")}</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -2021,7 +2042,7 @@ export function Roster() {
                               variant="ghost"
                               size="icon"
                               className="text-faint hover:text-foreground"
-                              aria-label={`Edit ${live.governor}`}
+                              aria-label={t("roster.aria.edit", { governor: live.governor })}
                               onClick={() => setEditMember(live)}
                             >
                               <Pencil />
@@ -2030,7 +2051,7 @@ export function Roster() {
                               variant="ghost"
                               size="icon"
                               className="text-faint hover:text-foreground"
-                              aria-label={`Rename ${live.governor}`}
+                              aria-label={t("roster.aria.rename", { governor: live.governor })}
                               onClick={() => setRenameMember(live)}
                             >
                               <Tag />
@@ -2040,7 +2061,7 @@ export function Roster() {
                                 variant="ghost"
                                 size="icon"
                                 className="text-faint hover:text-foreground"
-                                aria-label={`Merge ${live.governor} into another member`}
+                                aria-label={t("roster.aria.merge", { governor: live.governor })}
                                 onClick={() => setMergeMember(live)}
                               >
                                 <Merge />
@@ -2051,7 +2072,7 @@ export function Roster() {
                                 variant="ghost"
                                 size="icon"
                                 className="text-faint hover:text-down"
-                                aria-label={`Deactivate ${live.governor}`}
+                                aria-label={t("roster.aria.deactivate", { governor: live.governor })}
                                 onClick={() => setDeactivateMember(live)}
                               >
                                 <UserMinus />
@@ -2061,7 +2082,7 @@ export function Roster() {
                                 variant="ghost"
                                 size="icon"
                                 className="text-faint hover:text-foreground"
-                                aria-label={`Activate ${live.governor}`}
+                                aria-label={t("roster.aria.activate", { governor: live.governor })}
                                 onClick={() => activate(live)}
                               >
                                 <UserCheck />
@@ -2085,7 +2106,7 @@ export function Roster() {
         onOpenChange={setAddOpen}
         onSuccess={(governor) => {
           setAddOpen(false);
-          setNote(`Added ${governor}.`);
+          setNote(t("roster.notes.added", { governor }));
           refresh();
         }}
       />
@@ -2095,7 +2116,7 @@ export function Roster() {
         onOpenChange={setImportOpen}
         initial={importInitial}
         onApplied={() => {
-          setNote(importInitial ? "Roster update saved." : "Roster imported — scores recomputed.");
+          setNote(importInitial ? t("roster.notes.updateSaved") : t("roster.notes.imported"));
           // A fresh import lands on the live view; an edited backdated capture stays in view.
           setViewDate(
             importInitial && importInitial.capturedOn !== latestCaptureDate ? importInitial.capturedOn : null,
@@ -2109,7 +2130,7 @@ export function Roster() {
         onCancel={() => setDeleteDate(null)}
         onDeleted={() => {
           setDeleteDate(null);
-          setNote(`Deleted the ${deleteDate ? fmtCaptureDate(deleteDate) : ""} roster update.`);
+          setNote(t("roster.notes.deletedUpdate", { date: deleteDate ? fmtCaptureDate(deleteDate) : "" }));
           setViewDate(null);
           refresh();
         }}
@@ -2120,7 +2141,7 @@ export function Roster() {
         onCancel={() => setEditMember(null)}
         onSuccess={(governor) => {
           setEditMember(null);
-          setNote(`Saved changes to ${governor}.`);
+          setNote(t("roster.notes.saved", { governor }));
           refresh();
         }}
       />
@@ -2130,7 +2151,7 @@ export function Roster() {
         onCancel={() => setRenameMember(null)}
         onSuccess={(governor) => {
           setRenameMember(null);
-          setNote(`Renamed to ${governor} — scores recomputed.`);
+          setNote(t("roster.notes.renamed", { governor }));
           refresh();
         }}
       />
@@ -2141,9 +2162,7 @@ export function Roster() {
         onCancel={() => setMergeMember(null)}
         onSuccess={(result) => {
           setMergeMember(null);
-          setNote(
-            `Merged into ${result.member.governor} — history and aliases moved, scores recomputed.`,
-          );
+          setNote(t("roster.notes.merged", { governor: result.member.governor }));
           refresh();
         }}
       />
@@ -2153,7 +2172,7 @@ export function Roster() {
         onCancel={() => setDeactivateMember(null)}
         onDone={(governor) => {
           setDeactivateMember(null);
-          setNote(`Deactivated ${governor}.`);
+          setNote(t("roster.notes.deactivated", { governor }));
           refresh();
         }}
       />

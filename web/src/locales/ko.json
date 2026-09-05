@@ -5,7 +5,8 @@
     "comingSoon": "다음 작업에서 제공됩니다.",
     "actions": {
       "reload": "새로 고침",
-      "cancel": "취소"
+      "cancel": "취소",
+      "close": "닫기"
     }
   },
   "language": {
@@ -39,6 +40,14 @@
     "sections": {
       "dashboard": "대시보드",
       "manage": "관리"
+    },
+    "adminTabs": {
+      "events": "이벤트",
+      "roster": "명단",
+      "aliases": "별칭",
+      "scoring": "점수 및 활동",
+      "rewards": "보상",
+      "backup": "내보내기 / 가져오기"
     },
     "overview": "개요",
     "ranking": "순위",

@@ -17,7 +17,9 @@ export function SidebarNav() {
           <div className="text-[14px] font-semibold tracking-[-0.01em] text-foreground">
             Alliance Tracker
           </div>
-          <div className="truncate text-[11px] text-muted">{t("nav.tagline")}</div>
+          <div className="truncate text-[11px] text-muted" title={t("nav.tagline")}>
+            {t("nav.tagline")}
+          </div>
         </div>
       </div>
 
@@ -43,7 +45,9 @@ export function SidebarNav() {
                 }
               >
                 <item.icon className="size-[17px]" />
-                <span className="truncate">{t(item.label)}</span>
+                <span className="truncate" title={t(item.label)}>
+                  {t(item.label)}
+                </span>
               </NavLink>
             ))}
           </div>

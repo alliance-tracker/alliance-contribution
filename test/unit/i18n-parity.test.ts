@@ -98,13 +98,17 @@ describe("locale parity", () => {
       it("keeps every {{placeholder}} and <n> tag from en", () => {
         for (const [key, enValue] of Object.entries(en)) {
           const { base, suffix } = splitPlural(key);
-          // Compare against any one form of the same base in the target (plural sets differ by language).
-          const target =
-            suffix === null
-              ? flat[key]
-              : Object.entries(flat).find(([k]) => splitPlural(k).base === base)?.[1];
-          expect(target, key).toBeDefined();
-          expect(placeholders(target!), key).toBe(placeholders(enValue));
+          if (suffix === null) {
+            expect(flat[key], key).toBeDefined();
+            expect(placeholders(flat[key]!), key).toBe(placeholders(enValue));
+            continue;
+          }
+          // Compare against every form of the same base in the target (plural sets differ by language).
+          const targets = Object.entries(flat).filter(([k]) => splitPlural(k).base === base);
+          expect(targets.length, key).toBeGreaterThan(0);
+          for (const [targetKey, targetValue] of targets) {
+            expect(placeholders(targetValue), targetKey).toBe(placeholders(enValue));
+          }
         }
       });
     });
@@ -113,15 +117,14 @@ describe("locale parity", () => {
   it("has no dead keys: every en base key (or a dotted ancestor) appears as a literal in web/src", () => {
     const source = walkSources(SRC_DIR).join("\n");
     const isReferenced = (key: string) =>
-      source.includes(`"${key}"`) ||
-      source.includes(`'${key}'`) ||
-      source.includes(`\`${key}\``) ||
-      source.includes(`\`${key}.\${`);
+      source.includes(`"${key}"`) || source.includes(`'${key}'`) || source.includes(`\`${key}\``);
 
     const dead: string[] = [];
     for (const base of enBases.keys()) {
       const parts = base.split(".");
-      const referenced = parts.some((_, i) => isReferenced(parts.slice(0, parts.length - i).join(".")));
+      const referenced =
+        isReferenced(base) ||
+        parts.some((_, i) => source.includes(`\`${parts.slice(0, parts.length - i).join(".")}.\${`));
       if (!referenced) dead.push(base);
     }
     expect(dead).toEqual([]);

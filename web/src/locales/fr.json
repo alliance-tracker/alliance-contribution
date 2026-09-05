@@ -5,7 +5,8 @@
     "comingSoon": "Disponible dans la prochaine tâche.",
     "actions": {
       "reload": "Recharger",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "close": "Fermer"
     }
   },
   "language": {
@@ -39,6 +40,14 @@
     "sections": {
       "dashboard": "Tableau de bord",
       "manage": "Gérer"
+    },
+    "adminTabs": {
+      "events": "Événements",
+      "roster": "Liste",
+      "aliases": "Alias",
+      "scoring": "Score et activités",
+      "rewards": "Récompenses",
+      "backup": "Exporter / Importer"
     },
     "overview": "Vue d'ensemble",
     "ranking": "Classement",

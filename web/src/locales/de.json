@@ -5,7 +5,8 @@
     "comingSoon": "Kommt in der nächsten Aufgabe.",
     "actions": {
       "reload": "Neu laden",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "close": "Schließen"
     }
   },
   "language": {
@@ -39,6 +40,14 @@
     "sections": {
       "dashboard": "Übersicht",
       "manage": "Verwalten"
+    },
+    "adminTabs": {
+      "events": "Events",
+      "roster": "Liste",
+      "aliases": "Aliase",
+      "scoring": "Wertung & Aktivitäten",
+      "rewards": "Belohnungen",
+      "backup": "Export / Import"
     },
     "overview": "Überblick",
     "ranking": "Rangliste",

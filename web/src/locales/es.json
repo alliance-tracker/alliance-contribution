@@ -5,7 +5,8 @@
     "comingSoon": "Disponible en la próxima tarea.",
     "actions": {
       "reload": "Recargar",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "close": "Cerrar"
     }
   },
   "language": {
@@ -39,6 +40,14 @@
     "sections": {
       "dashboard": "Panel",
       "manage": "Gestionar"
+    },
+    "adminTabs": {
+      "events": "Eventos",
+      "roster": "Lista",
+      "aliases": "Alias",
+      "scoring": "Puntuación y actividades",
+      "rewards": "Recompensas",
+      "backup": "Exportar / Importar"
     },
     "overview": "Resumen",
     "ranking": "Clasificación",

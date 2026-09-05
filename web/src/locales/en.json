@@ -5,7 +5,8 @@
     "comingSoon": "Coming in the next task.",
     "actions": {
       "reload": "Reload",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "close": "Close"
     }
   },
   "language": {
@@ -39,6 +40,14 @@
     "sections": {
       "dashboard": "Dashboard",
       "manage": "Manage"
+    },
+    "adminTabs": {
+      "events": "Events",
+      "roster": "Roster",
+      "aliases": "Aliases",
+      "scoring": "Scoring & Activities",
+      "rewards": "Rewards",
+      "backup": "Export / Import"
     },
     "overview": "Overview",
     "ranking": "Ranking",

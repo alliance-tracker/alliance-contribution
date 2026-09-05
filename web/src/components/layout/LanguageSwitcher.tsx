@@ -2,7 +2,8 @@ import { Check, Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { LANGUAGES, getLanguage, setLanguage, type Language } from "@/i18n";
+import { LANGUAGES, setLanguage, type Language } from "@/i18n";
+import { lang } from "@/lib/format";
 
 // Native names read the same in every UI language, so they are literals, not keys.
 const NAMES: Record<Language, string> = {
@@ -16,11 +17,11 @@ const NAMES: Record<Language, string> = {
 /** Globe button → list of the five languages. Picking one persists it and reloads (see i18n.ts). */
 export function LanguageSwitcher() {
   const { t } = useTranslation();
-  const current = getLanguage();
+  const current = lang();
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" title={t("language.label")} aria-label={t("language.label")}>
+        <Button variant="ghost" size="icon" aria-label={t("language.label")}>
           <Languages />
         </Button>
       </PopoverTrigger>
@@ -30,11 +31,12 @@ export function LanguageSwitcher() {
             key={lng}
             type="button"
             lang={lng}
+            aria-current={lng === current || undefined}
             onClick={() => lng !== current && setLanguage(lng)}
             className="flex w-full items-center justify-between rounded-[6px] px-2.5 py-1.5 text-[13px] text-foreground outline-none transition-colors hover:bg-background focus-visible:ring-2 focus-visible:ring-accent/30"
           >
             {NAMES[lng]}
-            {lng === current && <Check className="size-4 text-accent" />}
+            {lng === current && <Check className="size-4 text-accent" aria-hidden />}
           </button>
         ))}
       </PopoverContent>

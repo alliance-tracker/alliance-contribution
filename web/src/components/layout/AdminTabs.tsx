@@ -1,17 +1,20 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useApiKey } from "@/lib/apiKey";
 import { cn } from "@/lib/utils";
+import type { TKey } from "@/i18n";
 
-const TABS = [
-  { to: "/admin/events", label: "Events" },
-  { to: "/admin/roster", label: "Roster" },
-  { to: "/admin/aliases", label: "Aliases" },
-  { to: "/admin/scoring", label: "Scoring & Activities" },
-  { to: "/admin/rewards", label: "Rewards", adminOnly: true },
-  { to: "/admin/backup", label: "Export / Import", adminOnly: true },
+const TABS: { to: string; label: TKey; adminOnly?: boolean }[] = [
+  { to: "/admin/events", label: "nav.adminTabs.events" },
+  { to: "/admin/roster", label: "nav.adminTabs.roster" },
+  { to: "/admin/aliases", label: "nav.adminTabs.aliases" },
+  { to: "/admin/scoring", label: "nav.adminTabs.scoring" },
+  { to: "/admin/rewards", label: "nav.adminTabs.rewards", adminOnly: true },
+  { to: "/admin/backup", label: "nav.adminTabs.backup", adminOnly: true },
 ];
 
 export function AdminTabs() {
+  const { t } = useTranslation();
   const { role } = useApiKey();
   const visibleTabs = TABS.filter((tab) => !tab.adminOnly || role === "admin");
 
@@ -30,7 +33,7 @@ export function AdminTabs() {
             )
           }
         >
-          {tab.label}
+          {t(tab.label)}
         </NavLink>
       ))}
     </div>

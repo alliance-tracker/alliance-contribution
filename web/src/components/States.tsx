@@ -1,11 +1,13 @@
 import { Loader2, TriangleAlert, Inbox } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
-export function LoadingState({ label = "Loading…" }: { label?: string }) {
+export function LoadingState({ label }: { label?: string }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2 p-8 text-[13px] text-muted">
       <Loader2 className="size-4 animate-spin" />
-      {label}
+      {label ?? t("common.loading")}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { Alias, OverallRanking, OverallRankingRow } from "@shared/types";
 import { api } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
@@ -27,6 +28,7 @@ function StatTile({ label, value, sub }: { label: string; value: string; sub: st
 
 /** One member card: rank + at-risk dot, avatar/name/alias count, score + attendance. */
 function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; aliasCount: number; onOpen: () => void }) {
+  const { t } = useTranslation();
   const medal = MEDALS[row.rank]; // top 3 only
   const atRisk = row.attendance < 0.5;
   return (
@@ -41,13 +43,13 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
             background: medal ? medal.badgeBg : "var(--color-muted-surface)",
             color: medal ? medal.badgeFg : "var(--color-muted)",
           }}
-          title="Score rank"
+          title={t("members.scoreRankTitle")}
         >
           #{row.rank}
         </span>
         <div className="flex items-center gap-1.5">
           <AllianceRankBadge rank={row.alliance_rank} />
-          {atRisk && <span className="size-2 rounded-full bg-risk-fg" title="Below 50% attendance" />}
+          {atRisk && <span className="size-2 rounded-full bg-risk-fg" title={t("members.belowHalfTitle")} />}
         </div>
       </div>
 
@@ -59,9 +61,7 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
         />
         <div className="min-w-0">
           <div className="truncate text-[14px] font-semibold text-foreground">{row.governor}</div>
-          <div className="text-[11.5px] text-faint">
-            {aliasCount} alias{aliasCount === 1 ? "" : "es"}
-          </div>
+          <div className="text-[11.5px] text-faint">{t("members.aliasCount", { count: aliasCount })}</div>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
         <div>
           <div className="num text-[26px] font-bold leading-none tracking-[-0.02em]">{row.score}</div>
           <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.04em] text-faint">
-            Score
+            {t("common.score")}
           </div>
         </div>
         <AttendanceBadge pct={row.attendance} />
@@ -79,6 +79,7 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
 }
 
 export function Members() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const rankingState = useApi<OverallRanking>(() => api.rankings.overall(), []);
   const aliasesState = useApi<Alias[]>(() => api.aliases.list(), []);
@@ -122,20 +123,24 @@ export function Members() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
-        <StatTile label="Roster" value={String(stats.roster)} sub="tracked members" />
-        <StatTile label="Avg Attendance" value={`${stats.avgAttendance}%`} sub="across all event-days" />
-        <StatTile label="At Risk" value={String(stats.atRisk)} sub="below 50% attendance" />
+        <StatTile label={t("members.roster")} value={String(stats.roster)} sub={t("members.trackedMembers")} />
+        <StatTile
+          label={t("members.avgAttendance")}
+          value={`${stats.avgAttendance}%`}
+          sub={t("members.acrossAllEventDays")}
+        />
+        <StatTile label={t("members.atRisk")} value={String(stats.atRisk)} sub={t("members.belowHalf")} />
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <Input
-          placeholder="Search by name or alias…"
+          placeholder={t("members.searchPlaceholder")}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           className="max-w-sm"
         />
         <span className="text-[12px] text-faint">
-          {filtered.length} of {rows.length} shown
+          {t("members.shown", { shown: filtered.length, total: rows.length })}
         </span>
       </div>
 
@@ -145,7 +150,7 @@ export function Members() {
         </Card>
       ) : filtered.length === 0 ? (
         <Card className="overflow-hidden">
-          <EmptyState message="No members match." />
+          <EmptyState message={t("members.emptyMatch")} />
         </Card>
       ) : (
         <div className={cn("grid gap-3.5", "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>

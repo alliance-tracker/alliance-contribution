@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { DEFAULT_RANK_BANDS, type RankBands } from "@shared/types";
 import type { ActivityType, Attendance as AttendanceData } from "@shared/types";
@@ -47,6 +48,7 @@ function thresholdColor(pctInt: number): string {
 /** Signed percentage-point change vs the prior event-week. Rendered only when the API sent the
  *  field (weekly view). null / ±0pp both read as "no change" (em dash). */
 function DeltaPct({ delta }: { delta: number | null | undefined }) {
+  const { t } = useTranslation();
   if (delta === undefined) return null;
   const pp = delta === null ? 0 : Math.round(delta * 100);
   if (pp === 0) return <span className="num ml-1.5 text-[11px] text-muted">—</span>;
@@ -57,15 +59,16 @@ function DeltaPct({ delta }: { delta: number | null | undefined }) {
         "num ml-1.5 inline-flex items-center gap-0.5 text-[11px] font-semibold",
         up ? "text-up" : "text-down",
       )}
-      title="Change vs previous event week (percentage points)"
+      title={t("attendance.deltaTitle")}
     >
       {up ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />}
-      {Math.abs(pp)}pp
+      {t("attendance.deltaValue", { value: Math.abs(pp) })}
     </span>
   );
 }
 
 export function Attendance() {
+  const { t } = useTranslation();
   const [scope, setScope] = useState<RankingScope>("overall");
   const [week, setWeek] = useState<string | null>(null);
   const [activity, setActivity] = useState("all"); // "all" | activity.key
@@ -131,7 +134,7 @@ export function Attendance() {
         {weekly ? (
           <Select value={week ?? undefined} onValueChange={setWeek} disabled={(weeksState.data ?? []).length === 0}>
             <SelectTrigger className="w-56">
-              <SelectValue placeholder="Select week" />
+              <SelectValue placeholder={t("common.selectWeek")} />
             </SelectTrigger>
             <SelectContent>
               {(weeksState.data ?? []).map((w) => (
@@ -143,22 +146,24 @@ export function Attendance() {
           </Select>
         ) : (
           <span className="inline-flex items-center rounded-[8px] border border-border bg-muted-surface px-3 py-1.5 text-[13px] font-medium text-secondary">
-            Season · all weeks combined
+            {t("common.seasonAllWeeks")}
           </span>
         )}
         <label className="flex cursor-pointer items-center gap-2 text-[13px] text-secondary">
           <Checkbox checked={hideLeadership} onCheckedChange={(v) => setHideLeadership(v === true)} />
-          Hide R4/R5
+          {t("common.hideLeadership")}
         </label>
       </div>
 
       <div>
-        <RankByActivity value={activity} onChange={setActivity} activities={activities} label="Filter by" />
+        <RankByActivity value={activity} onChange={setActivity} activities={activities} label={t("rankBy.filterLabel")} />
       </div>
 
       {data && (
         <div className="flex justify-end">
-          <span className="num text-[12px] text-muted">{data.total_event_days} event days</span>
+          <span className="num text-[12px] text-muted">
+            {t("attendance.eventDays", { count: data.total_event_days })}
+          </span>
         </div>
       )}
 
@@ -169,7 +174,7 @@ export function Attendance() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Card className="p-[18px]">
             <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-              Avg attendance
+              {t("attendance.avg")}
             </div>
             <div className="num mt-1.5 text-[26px] font-bold tracking-[-0.02em] text-foreground">
               {Math.round(summary.avgPct * 100)}%
@@ -177,7 +182,7 @@ export function Attendance() {
           </Card>
           <Card className="p-[18px]">
             <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-              Perfect (100%)
+              {t("attendance.perfect")}
             </div>
             <div className="num mt-1.5 text-[26px] font-bold tracking-[-0.02em] text-foreground">
               {summary.perfect}
@@ -185,7 +190,7 @@ export function Attendance() {
           </Card>
           <Card className="p-[18px]">
             <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-              At risk (&lt;50%)
+              {t("attendance.atRisk")}
             </div>
             <div className="num mt-1.5 text-[26px] font-bold tracking-[-0.02em] text-risk-fg">
               {summary.atRisk}
@@ -201,15 +206,15 @@ export function Attendance() {
           <div className="flex flex-wrap items-center justify-end gap-4 text-[12px] text-muted">
             <span className="flex items-center gap-1.5">
               <span className="size-3.5 rounded border border-good-border bg-good-bg" />
-              ≥80% Good
+              {t("attendance.legend.good")}
             </span>
             <span className="flex items-center gap-1.5">
               <span className="size-3.5 rounded border border-watch-border bg-watch-bg" />
-              50–79% Watch
+              {t("attendance.legend.watch")}
             </span>
             <span className="flex items-center gap-1.5">
               <span className="size-3.5 rounded border border-risk-border bg-risk-bg" />
-              &lt;50% At risk
+              {t("attendance.legend.risk")}
             </span>
           </div>
           <BandLegend bands={bandsCfg} />
@@ -224,17 +229,17 @@ export function Attendance() {
         ) : busy ? (
           <LoadingState />
         ) : !hasRoster ? (
-          <EmptyState message="No attendance recorded yet." />
+          <EmptyState message={t("attendance.emptyRoster")} />
         ) : !hasEvents ? (
-          <EmptyState message={weekly ? "No events recorded for this week." : "No events recorded yet."} />
+          <EmptyState message={weekly ? t("attendance.emptyWeek") : t("attendance.emptyAll")} />
         ) : (
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead>Governor</TableHead>
-                <TableHead className="w-[110px]">Alliance Rank</TableHead>
-                <TableHead className="w-[45%]">Attendance</TableHead>
-                <TableHead className="text-right">Rate</TableHead>
+                <TableHead>{t("common.governor")}</TableHead>
+                <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
+                <TableHead className="w-[45%]">{t("nav.attendance")}</TableHead>
+                <TableHead className="text-right">{t("attendance.rate")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

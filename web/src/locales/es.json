@@ -9,6 +9,7 @@
     "date": "Fecha",
     "member": "Miembro",
     "allianceRank": "Rango de alianza",
+    "governor": "Gobernador",
     "selectWeek": "Seleccionar semana",
     "seasonAllWeeks": "Temporada · todas las semanas combinadas",
     "hideLeadership": "Ocultar R4/R5",
@@ -24,6 +25,7 @@
   },
   "rankBy": {
     "label": "Ordenar por",
+    "filterLabel": "Filtrar por",
     "all": "Todas las actividades"
   },
   "bands": {
@@ -157,5 +159,40 @@
       "attend": "Asistencia",
       "move": "Movimiento"
     }
+  },
+  "attendance": {
+    "deltaTitle": "Cambio respecto a la semana de evento anterior (puntos porcentuales)",
+    "deltaValue": "{{value}}pp",
+    "eventDays_one": "{{count}} día de evento",
+    "eventDays_many": "{{count}} días de evento",
+    "eventDays_other": "{{count}} días de evento",
+    "avg": "Asistencia media",
+    "perfect": "Perfecto (100%)",
+    "atRisk": "En riesgo (<50%)",
+    "legend": {
+      "good": "≥80% Bien",
+      "watch": "50–79% Vigilar",
+      "risk": "<50% En riesgo"
+    },
+    "emptyRoster": "Aún no se ha registrado asistencia.",
+    "emptyWeek": "No se registraron eventos para esta semana.",
+    "emptyAll": "Aún no se han registrado eventos.",
+    "rate": "Tasa"
+  },
+  "members": {
+    "scoreRankTitle": "Rango de puntuación",
+    "belowHalfTitle": "Por debajo del 50% de asistencia",
+    "aliasCount_one": "{{count}} alias",
+    "aliasCount_many": "{{count}} alias",
+    "aliasCount_other": "{{count}} alias",
+    "roster": "Lista",
+    "trackedMembers": "miembros registrados",
+    "avgAttendance": "Asistencia media",
+    "acrossAllEventDays": "en todos los días de evento",
+    "atRisk": "En riesgo",
+    "belowHalf": "por debajo del 50% de asistencia",
+    "searchPlaceholder": "Buscar por nombre o alias…",
+    "shown": "{{shown}} de {{total}} mostrados",
+    "emptyMatch": "Ningún miembro coincide."
   }
 }

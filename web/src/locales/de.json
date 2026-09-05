@@ -9,6 +9,7 @@
     "date": "Datum",
     "member": "Mitglied",
     "allianceRank": "Allianzrang",
+    "governor": "Gouverneur",
     "selectWeek": "Woche auswählen",
     "seasonAllWeeks": "Saison · alle Wochen kombiniert",
     "hideLeadership": "R4/R5 ausblenden",
@@ -24,6 +25,7 @@
   },
   "rankBy": {
     "label": "Sortieren nach",
+    "filterLabel": "Filtern nach",
     "all": "Alle Aktivitäten"
   },
   "bands": {
@@ -152,5 +154,38 @@
       "attend": "Anwesenheit",
       "move": "Bewegung"
     }
+  },
+  "attendance": {
+    "deltaTitle": "Änderung gegenüber der vorherigen Eventwoche (Prozentpunkte)",
+    "deltaValue": "{{value}}pp",
+    "eventDays_one": "{{count}} Eventtag",
+    "eventDays_other": "{{count}} Eventtage",
+    "avg": "Durchschnittliche Anwesenheit",
+    "perfect": "Perfekt (100 %)",
+    "atRisk": "Gefährdet (<50 %)",
+    "legend": {
+      "good": "≥80 % Gut",
+      "watch": "50–79 % Beobachten",
+      "risk": "<50 % Gefährdet"
+    },
+    "emptyRoster": "Noch keine Anwesenheit erfasst.",
+    "emptyWeek": "Für diese Woche wurden keine Ereignisse erfasst.",
+    "emptyAll": "Noch keine Ereignisse erfasst.",
+    "rate": "Quote"
+  },
+  "members": {
+    "scoreRankTitle": "Punkterang",
+    "belowHalfTitle": "Unter 50 % Anwesenheit",
+    "aliasCount_one": "{{count}} Alias",
+    "aliasCount_other": "{{count}} Aliase",
+    "roster": "Liste",
+    "trackedMembers": "erfasste Mitglieder",
+    "avgAttendance": "Durchschnittliche Anwesenheit",
+    "acrossAllEventDays": "über alle Eventtage",
+    "atRisk": "Gefährdet",
+    "belowHalf": "unter 50 % Anwesenheit",
+    "searchPlaceholder": "Nach Name oder Alias suchen…",
+    "shown": "{{shown}} von {{total}} angezeigt",
+    "emptyMatch": "Keine Mitglieder gefunden."
   }
 }

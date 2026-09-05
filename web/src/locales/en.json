@@ -9,6 +9,7 @@
     "date": "Date",
     "member": "Member",
     "allianceRank": "Alliance Rank",
+    "governor": "Governor",
     "selectWeek": "Select week",
     "seasonAllWeeks": "Season · all weeks combined",
     "hideLeadership": "Hide R4/R5",
@@ -24,6 +25,7 @@
   },
   "rankBy": {
     "label": "Rank by",
+    "filterLabel": "Filter by",
     "all": "All activities"
   },
   "bands": {
@@ -156,5 +158,38 @@
       "attend": "Attend",
       "move": "Move"
     }
+  },
+  "attendance": {
+    "deltaTitle": "Change vs previous event week (percentage points)",
+    "deltaValue": "{{value}}pp",
+    "eventDays_one": "{{count}} event day",
+    "eventDays_other": "{{count}} event days",
+    "avg": "Avg attendance",
+    "perfect": "Perfect (100%)",
+    "atRisk": "At risk (<50%)",
+    "legend": {
+      "good": "≥80% Good",
+      "watch": "50–79% Watch",
+      "risk": "<50% At risk"
+    },
+    "emptyRoster": "No attendance recorded yet.",
+    "emptyWeek": "No events recorded for this week.",
+    "emptyAll": "No events recorded yet.",
+    "rate": "Rate"
+  },
+  "members": {
+    "scoreRankTitle": "Score rank",
+    "belowHalfTitle": "Below 50% attendance",
+    "aliasCount_one": "{{count}} alias",
+    "aliasCount_other": "{{count}} aliases",
+    "roster": "Roster",
+    "trackedMembers": "tracked members",
+    "avgAttendance": "Avg Attendance",
+    "acrossAllEventDays": "across all event-days",
+    "atRisk": "At Risk",
+    "belowHalf": "below 50% attendance",
+    "searchPlaceholder": "Search by name or alias…",
+    "shown": "{{shown}} of {{total}} shown",
+    "emptyMatch": "No members match."
   }
 }

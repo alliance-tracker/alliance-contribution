@@ -1,6 +1,8 @@
+import { useTranslation, Trans } from "react-i18next";
 import { api } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
+import { formatNumber } from "@/lib/format";
 import { LoadingState, ErrorState } from "@/components/States";
 import { StatCard } from "@/components/overview/StatCard";
 import { LeaderboardPanel } from "@/components/overview/LeaderboardPanel";
@@ -15,6 +17,7 @@ const AT_RISK_SHOWN = 4;
 const INGESTS_SHOWN = 5;
 
 export function Overview() {
+  const { t } = useTranslation();
   const { role } = useApiKey();
   // Viewers get 403 on /admin/*, so the links that lead there are hidden for them.
   const canManage = role === "admin" || role === "manager";
@@ -43,9 +46,7 @@ export function Overview() {
   ) {
     // Reachable: api.ts resolves an empty 200/204 body to undefined, so a proxy hiccup lands here.
     // Anything visible beats a blank page the user cannot describe.
-    return (
-      <ErrorState message="The dashboard loaded without data. Reload the page; if it keeps happening, check that /api is reachable." />
-    );
+    return <ErrorState message={t("overview.noData")} />;
   }
 
   // Soft-deleted members stay in /api/attendance at whatever attendance they had when they left, and
@@ -65,50 +66,56 @@ export function Overview() {
     <div className="flex flex-col gap-4">
       {overview.data.latestWeek && (
         <div className="flex justify-end">
-          <span className="num text-[12px] text-muted">Latest week {overview.data.latestWeek}</span>
+          <span className="num text-[12px] text-muted">
+            {t("overview.latestWeek", { week: overview.data.latestWeek })}
+          </span>
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Active members"
-          value={overview.data.activeMembers.toLocaleString()}
+          label={t("overview.activeMembers")}
+          value={formatNumber(overview.data.activeMembers)}
           sub={
-            <>
-              of <span className="num">{overview.data.members.toLocaleString()}</span> tracked
-            </>
+            <Trans
+              i18nKey="overview.ofTracked"
+              values={{ total: formatNumber(overview.data.members) }}
+              components={{ 1: <span className="num" /> }}
+            />
           }
         />
         {/* "(active)" is load-bearing: Attendance.tsx shows the same figure roster-wide, so the two
             pages would otherwise display different numbers under identical labels. */}
         <StatCard
-          label="Avg attendance (active)"
+          label={t("overview.avgAttendanceActive")}
           value={hasEvents ? `${Math.round(summary.avgPct * 100)}%` : "—"}
           sub={
             hasEvents ? (
-              <>
-                <span className="num">{summary.perfect}</span> perfect ·{" "}
-                <span className="num">{summary.atRisk}</span> at risk
-              </>
+              <Trans
+                i18nKey="overview.attendanceSub"
+                values={{ perfect: summary.perfect, atRisk: summary.atRisk }}
+                components={{ 1: <span className="num" />, 2: <span className="num" /> }}
+              />
             ) : (
-              "no events recorded yet"
+              t("overview.noEventsYet")
             )
           }
         />
         <StatCard
-          label="Events logged"
-          value={overview.data.events.toLocaleString()}
+          label={t("overview.eventsLogged")}
+          value={formatNumber(overview.data.events)}
           sub={
-            <>
-              across <span className="num">{overview.data.eventDays.toLocaleString()}</span>{" "}
-              event-days
-            </>
+            <Trans
+              i18nKey="overview.acrossEventDays"
+              count={overview.data.eventDays}
+              components={{ 1: <span className="num" /> }}
+            />
           }
         />
         <StatCard
-          label="Unmapped queue"
-          value={overview.data.unmappedNames.toLocaleString()}
-          sub="names need a decision"
+          label={t("overview.unmappedQueue")}
+          value={formatNumber(overview.data.unmappedNames)}
+          sub={t("overview.namesNeedDecision")}
           tone={overview.data.unmappedNames > 0 ? "warn" : "default"}
         />
       </div>

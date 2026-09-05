@@ -3,11 +3,31 @@
     "loading": "Chargement…",
     "notFound": "Introuvable",
     "comingSoon": "Disponible dans la prochaine tâche.",
+    "rank": "Rang",
+    "score": "Score",
+    "activity": "Activité",
+    "date": "Date",
     "actions": {
       "reload": "Recharger",
       "cancel": "Annuler",
       "close": "Fermer"
     }
+  },
+  "scope": {
+    "overall": "Général",
+    "weekly": "Cette semaine"
+  },
+  "rankBy": {
+    "label": "Classer par",
+    "all": "Toutes les activités"
+  },
+  "bands": {
+    "leadership": "Direction",
+    "top": "Top {{n}}"
+  },
+  "allianceRank": {
+    "title": "Rang d'alliance {{rank}}",
+    "mismatchTitle": "Rang d'alliance {{rank}} — cette section est réservée aux {{expected}}s"
   },
   "language": {
     "label": "Langue"
@@ -64,5 +84,51 @@
       "memberProfile": "Participation et historique individuels"
     }
   },
-  "datePicker": { "placeholder": "Choisir une date", "prevMonth": "Mois précédent", "nextMonth": "Mois suivant" }
+  "datePicker": { "placeholder": "Choisir une date", "prevMonth": "Mois précédent", "nextMonth": "Mois suivant" },
+  "overview": {
+    "noData": "Le tableau de bord s'est chargé sans données. Rechargez la page ; si cela persiste, vérifiez que /api est accessible.",
+    "latestWeek": "Dernière semaine {{week}}",
+    "activeMembers": "Membres actifs",
+    "ofTracked": "sur <1>{{total}}</1> suivis",
+    "avgAttendanceActive": "Présence moyenne (actifs)",
+    "attendanceSub": "<1>{{perfect}}</1> parfaits · <2>{{atRisk}}</2> à risque",
+    "noEventsYet": "aucun événement enregistré pour l'instant",
+    "eventsLogged": "Événements enregistrés",
+    "acrossEventDays_one": "sur <1>{{count}}</1> jour d'événement",
+    "acrossEventDays_many": "sur <1>{{count}}</1> jours d'événement",
+    "acrossEventDays_other": "sur <1>{{count}}</1> jours d'événement",
+    "unmappedQueue": "File d'attente non associée",
+    "namesNeedDecision": "noms nécessitant une décision",
+    "atRisk": {
+      "title": "Présence à risque",
+      "summary_one": "<1>{{count}}</1> membre en dessous de 50 %",
+      "summary_many": "<1>{{count}}</1> membres en dessous de 50 %",
+      "summary_other": "<1>{{count}}</1> membres en dessous de 50 %",
+      "empty": "Personne n'est en dessous de 50 % de présence."
+    },
+    "leaderboard": {
+      "title": "Sommet du classement",
+      "ranked_one": "Cette semaine · <1>{{count}}</1> gouverneur classé",
+      "ranked_many": "Cette semaine · <1>{{count}}</1> gouverneurs classés",
+      "ranked_other": "Cette semaine · <1>{{count}}</1> gouverneurs classés",
+      "viewFull": "Voir le classement complet →",
+      "empty": "Aucune semaine classée pour l'instant — le classement se remplit dès que des événements sont enregistrés."
+    },
+    "ingests": {
+      "title": "Imports récents",
+      "subtitle": "Derniers téléversements d'événements",
+      "viewAll": "Voir tous les événements →",
+      "empty": "Aucun événement importé pour l'instant.",
+      "instance": "Inst.",
+      "rows": "Lignes",
+      "unmapped": "Non associés"
+    },
+    "unmapped": {
+      "summary_one": "<1>{{count}}</1> nom nécessite une association",
+      "summary_many": "<1>{{count}}</1> noms nécessitent une association",
+      "summary_other": "<1>{{count}}</1> noms nécessitent une association",
+      "empty": "Tous les noms correspondent à un membre.",
+      "resolve": "Résoudre dans Alias →"
+    }
+  }
 }

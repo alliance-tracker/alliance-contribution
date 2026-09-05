@@ -1,11 +1,13 @@
+import { useTranslation } from "react-i18next";
 import type { RankBands } from "@shared/types";
 import { cn } from "@/lib/utils";
 
 /** Colour key for the board bands; positions rendered from the configured sizes. */
 export function BandLegend({ bands }: { bands: RankBands }) {
+  const { t } = useTranslation();
   const items: Array<[string, string]> = [
-    ["bg-band-lead", "Leadership"],
-    ["bg-band-top", `Top ${bands.top}`],
+    ["bg-band-lead", t("bands.leadership")],
+    ["bg-band-top", t("bands.top", { n: bands.top })],
     ["bg-band-mid", `${bands.top + 1}–${bands.top + bands.mid}`],
     ["bg-band-rest", `${bands.top + bands.mid + 1}+`],
   ];

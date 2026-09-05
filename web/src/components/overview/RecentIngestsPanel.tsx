@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { ActivityType, EventListRow } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
 import { Card } from "@/components/ui/card";
@@ -30,33 +31,34 @@ export function RecentIngestsPanel({
   activities: ActivityType[];
   canManage: boolean;
 }) {
+  const { t } = useTranslation();
   const byId = new Map(activities.map((a) => [a.id, a]));
 
   return (
     <Card className="p-[18px]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-[15px] font-semibold">Recent ingests</h2>
-          <p className="mt-0.5 text-[12px] text-muted">Latest event uploads</p>
+          <h2 className="text-[15px] font-semibold">{t("overview.ingests.title")}</h2>
+          <p className="mt-0.5 text-[12px] text-muted">{t("overview.ingests.subtitle")}</p>
         </div>
         {canManage && (
           <Button asChild variant="secondary" size="sm">
-            <Link to="/admin/events">View all events →</Link>
+            <Link to="/admin/events">{t("overview.ingests.viewAll")}</Link>
           </Button>
         )}
       </div>
 
       {events.length === 0 ? (
-        <EmptyState message="No events ingested yet." />
+        <EmptyState message={t("overview.ingests.empty")} />
       ) : (
         <Table className="mt-4">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Date</TableHead>
-              <TableHead>Activity</TableHead>
-              <TableHead>Inst.</TableHead>
-              <TableHead className="text-right">Rows</TableHead>
-              <TableHead className="text-right">Unmapped</TableHead>
+              <TableHead>{t("common.date")}</TableHead>
+              <TableHead>{t("common.activity")}</TableHead>
+              <TableHead>{t("overview.ingests.instance")}</TableHead>
+              <TableHead className="text-right">{t("overview.ingests.rows")}</TableHead>
+              <TableHead className="text-right">{t("overview.ingests.unmapped")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

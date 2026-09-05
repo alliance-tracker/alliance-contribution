@@ -3,11 +3,31 @@
     "loading": "Wird geladen…",
     "notFound": "Nicht gefunden",
     "comingSoon": "Kommt in der nächsten Aufgabe.",
+    "rank": "Rang",
+    "score": "Punktzahl",
+    "activity": "Aktivität",
+    "date": "Datum",
     "actions": {
       "reload": "Neu laden",
       "cancel": "Abbrechen",
       "close": "Schließen"
     }
+  },
+  "scope": {
+    "overall": "Gesamt",
+    "weekly": "Diese Woche"
+  },
+  "rankBy": {
+    "label": "Sortieren nach",
+    "all": "Alle Aktivitäten"
+  },
+  "bands": {
+    "leadership": "Führung",
+    "top": "Top {{n}}"
+  },
+  "allianceRank": {
+    "title": "Allianzrang {{rank}}",
+    "mismatchTitle": "Allianzrang {{rank}} — dieser Bereich ist für {{expected}}s"
   },
   "language": {
     "label": "Sprache"
@@ -64,5 +84,47 @@
       "memberProfile": "Individuelle Beteiligung und Verlauf"
     }
   },
-  "datePicker": { "placeholder": "Datum wählen", "prevMonth": "Vormonat", "nextMonth": "Nächster Monat" }
+  "datePicker": { "placeholder": "Datum wählen", "prevMonth": "Vormonat", "nextMonth": "Nächster Monat" },
+  "overview": {
+    "noData": "Das Dashboard wurde ohne Daten geladen. Laden Sie die Seite neu; besteht das Problem weiterhin, prüfen Sie, ob /api erreichbar ist.",
+    "latestWeek": "Letzte Woche {{week}}",
+    "activeMembers": "Aktive Mitglieder",
+    "ofTracked": "von <1>{{total}}</1> erfassten",
+    "avgAttendanceActive": "Durchschnittliche Anwesenheit (aktiv)",
+    "attendanceSub": "<1>{{perfect}}</1> perfekt · <2>{{atRisk}}</2> gefährdet",
+    "noEventsYet": "noch keine Ereignisse erfasst",
+    "eventsLogged": "Erfasste Ereignisse",
+    "acrossEventDays_one": "an <1>{{count}}</1> Ereignistag",
+    "acrossEventDays_other": "an <1>{{count}}</1> Ereignistagen",
+    "unmappedQueue": "Nicht zugeordnete Warteschlange",
+    "namesNeedDecision": "Namen benötigen eine Entscheidung",
+    "atRisk": {
+      "title": "Anwesenheit gefährdet",
+      "summary_one": "<1>{{count}}</1> Mitglied unter 50 %",
+      "summary_other": "<1>{{count}}</1> Mitglieder unter 50 %",
+      "empty": "Niemand liegt unter 50 % Anwesenheit."
+    },
+    "leaderboard": {
+      "title": "Spitze der Rangliste",
+      "ranked_one": "Diese Woche · <1>{{count}}</1> Gouverneur gewertet",
+      "ranked_other": "Diese Woche · <1>{{count}}</1> Gouverneure gewertet",
+      "viewFull": "Vollständige Rangliste ansehen →",
+      "empty": "Noch keine gewertete Woche — die Rangliste füllt sich, sobald Ereignisse erfasst werden."
+    },
+    "ingests": {
+      "title": "Letzte Importe",
+      "subtitle": "Neueste Ereignis-Uploads",
+      "viewAll": "Alle Ereignisse ansehen →",
+      "empty": "Noch keine Ereignisse importiert.",
+      "instance": "Inst.",
+      "rows": "Zeilen",
+      "unmapped": "Nicht zugeordnet"
+    },
+    "unmapped": {
+      "summary_one": "<1>{{count}}</1> Name muss zugeordnet werden",
+      "summary_other": "<1>{{count}}</1> Namen müssen zugeordnet werden",
+      "empty": "Alle Namen sind einem Mitglied zugeordnet.",
+      "resolve": "In Aliase auflösen →"
+    }
+  }
 }

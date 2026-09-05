@@ -1,4 +1,5 @@
 import { ArrowDown, ArrowUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { mismatchDirection, rankTone } from "@/lib/alliance-rank";
 
@@ -22,12 +23,13 @@ export function AllianceRankBadge({
   expected?: string | null;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const tone = rankTone(rank);
   if (!tone) return null;
   const direction = mismatchDirection(rank, expected ?? null);
   const title = direction
-    ? `Alliance rank ${rank} — this section is for ${expected}s`
-    : `Alliance rank ${rank}`;
+    ? t("allianceRank.mismatchTitle", { rank, expected })
+    : t("allianceRank.title", { rank });
   return (
     <span title={title} className="inline-flex items-center gap-1">
       <span

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { AttendanceBadge } from "@/components/AttendanceBadge";
@@ -13,15 +14,20 @@ import type { AttendanceLike } from "@/lib/overview-derive";
  * can never contradict.
  */
 export function AtRiskPanel({ rows, total }: { rows: AttendanceLike[]; total: number }) {
+  const { t } = useTranslation();
   return (
     <Card className="p-[18px]">
-      <h2 className="text-[15px] font-semibold">At-risk attendance</h2>
+      <h2 className="text-[15px] font-semibold">{t("overview.atRisk.title")}</h2>
       <p className="mt-0.5 text-[12px] text-muted">
-        <span className="num">{total}</span> {total === 1 ? "member" : "members"} below 50%
+        <Trans
+          i18nKey="overview.atRisk.summary"
+          count={total}
+          components={{ 1: <span className="num" /> }}
+        />
       </p>
 
       {total === 0 ? (
-        <EmptyState message="Nobody is below 50% attendance." />
+        <EmptyState message={t("overview.atRisk.empty")} />
       ) : (
         <ul className="mt-3 flex flex-col">
           {rows.map((row) => (
@@ -39,7 +45,7 @@ export function AtRiskPanel({ rows, total }: { rows: AttendanceLike[]; total: nu
               </Link>
               {/* AttendanceBadge renders a bare "14%"; without this the row announces the number
                   with nothing saying what it measures. Labelled here, not in the shared badge. */}
-              <span className="sr-only">Attendance</span>
+              <span className="sr-only">{t("nav.attendance")}</span>
               <AttendanceBadge pct={row.pct} />
             </li>
           ))}

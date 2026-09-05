@@ -1,10 +1,12 @@
+import { useTranslation } from "react-i18next";
+import type { TKey } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 export type RankingScope = "overall" | "weekly";
 
-const SCOPES: { value: RankingScope; label: string }[] = [
-  { value: "overall", label: "Overall" },
-  { value: "weekly", label: "This week" },
+const SCOPES: { value: RankingScope; label: TKey }[] = [
+  { value: "overall", label: "scope.overall" },
+  { value: "weekly", label: "scope.weekly" },
 ];
 
 export function RankingScopeToggle({
@@ -14,6 +16,7 @@ export function RankingScopeToggle({
   value: RankingScope;
   onChange: (scope: RankingScope) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="inline-flex items-center gap-1 rounded-[10px] border border-border bg-muted-surface p-1">
       {SCOPES.map((s) => (
@@ -28,7 +31,7 @@ export function RankingScopeToggle({
               : "text-muted hover:text-foreground",
           )}
         >
-          {s.label}
+          {t(s.label)}
         </button>
       ))}
     </div>

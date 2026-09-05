@@ -3,11 +3,31 @@
     "loading": "불러오는 중…",
     "notFound": "찾을 수 없음",
     "comingSoon": "다음 작업에서 제공됩니다.",
+    "rank": "순위",
+    "score": "점수",
+    "activity": "활동",
+    "date": "날짜",
     "actions": {
       "reload": "새로 고침",
       "cancel": "취소",
       "close": "닫기"
     }
+  },
+  "scope": {
+    "overall": "전체",
+    "weekly": "이번 주"
+  },
+  "rankBy": {
+    "label": "정렬 기준",
+    "all": "전체 활동"
+  },
+  "bands": {
+    "leadership": "리더십",
+    "top": "상위 {{n}}"
+  },
+  "allianceRank": {
+    "title": "연맹 순위 {{rank}}",
+    "mismatchTitle": "연맹 순위 {{rank}} — 이 섹션은 {{expected}} 전용입니다"
   },
   "language": {
     "label": "언어"
@@ -64,5 +84,43 @@
       "memberProfile": "개인 참여 및 이력"
     }
   },
-  "datePicker": { "placeholder": "날짜 선택", "prevMonth": "이전 달", "nextMonth": "다음 달" }
+  "datePicker": { "placeholder": "날짜 선택", "prevMonth": "이전 달", "nextMonth": "다음 달" },
+  "overview": {
+    "noData": "대시보드가 데이터 없이 로드되었습니다. 페이지를 새로고침하십시오. 계속 발생하면 /api에 접근할 수 있는지 확인하십시오.",
+    "latestWeek": "최신 주 {{week}}",
+    "activeMembers": "활동 구성원",
+    "ofTracked": "전체 <1>{{total}}</1>명 중",
+    "avgAttendanceActive": "평균 출석률(활동 구성원)",
+    "attendanceSub": "<1>{{perfect}}</1>명 완벽 · <2>{{atRisk}}</2>명 위험",
+    "noEventsYet": "아직 기록된 이벤트가 없습니다",
+    "eventsLogged": "기록된 이벤트",
+    "acrossEventDays_other": "이벤트 <1>{{count}}</1>일 기준",
+    "unmappedQueue": "미매핑 대기열",
+    "namesNeedDecision": "이름에 대한 결정이 필요합니다",
+    "atRisk": {
+      "title": "출석 위험",
+      "summary_other": "<1>{{count}}</1>명이 50% 미만입니다",
+      "empty": "50% 미만인 구성원이 없습니다."
+    },
+    "leaderboard": {
+      "title": "리더보드 상위",
+      "ranked_other": "이번 주 · <1>{{count}}</1>명의 영주 순위 등록",
+      "viewFull": "전체 순위 보기 →",
+      "empty": "아직 순위가 집계된 주가 없습니다 — 이벤트가 기록되면 리더보드가 채워집니다."
+    },
+    "ingests": {
+      "title": "최근 업로드",
+      "subtitle": "최신 이벤트 업로드",
+      "viewAll": "모든 이벤트 보기 →",
+      "empty": "아직 가져온 이벤트가 없습니다.",
+      "instance": "회차",
+      "rows": "행",
+      "unmapped": "미매핑"
+    },
+    "unmapped": {
+      "summary_other": "<1>{{count}}</1>개 이름에 매핑이 필요합니다",
+      "empty": "모든 이름이 구성원과 매칭되었습니다.",
+      "resolve": "별칭에서 해결 →"
+    }
+  }
 }

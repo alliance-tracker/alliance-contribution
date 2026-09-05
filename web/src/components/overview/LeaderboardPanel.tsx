@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import type { WeeklyRankingRow } from "@shared/types";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -31,27 +32,32 @@ export function LeaderboardPanel({
   rankedCount: number;
   hasEvents: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <Card className="p-[18px]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-[15px] font-semibold">Top of the leaderboard</h2>
+          <h2 className="text-[15px] font-semibold">{t("overview.leaderboard.title")}</h2>
           {/* Same roster-seeded trap as the empty state below: rows.length is the full roster even
               in a week with no events, so an ungated subtitle reads "86 governors ranked" directly
               above "No ranked week yet". */}
           {hasEvents && (
             <p className="mt-0.5 text-[12px] text-muted">
-              This week · <span className="num">{rankedCount}</span> governors ranked
+              <Trans
+                i18nKey="overview.leaderboard.ranked"
+                count={rankedCount}
+                components={{ 1: <span className="num" /> }}
+              />
             </p>
           )}
         </div>
         <Button asChild size="sm">
-          <Link to="/rankings">View full ranking →</Link>
+          <Link to="/rankings">{t("overview.leaderboard.viewFull")}</Link>
         </Button>
       </div>
 
       {!hasEvents ? (
-        <EmptyState message="No ranked week yet — the leaderboard fills in once events are logged." />
+        <EmptyState message={t("overview.leaderboard.empty")} />
       ) : (
         <ul className="mt-4 flex flex-col">
           {rows.map((row) => {
@@ -68,7 +74,7 @@ export function LeaderboardPanel({
                     color: medal ? medal.badgeFg : "var(--color-muted)",
                   }}
                 >
-                  <span className="sr-only">Rank</span>
+                  <span className="sr-only">{t("common.rank")}</span>
                   {row.rank}
                 </span>
                 <Avatar name={row.governor} size={28} />
@@ -82,7 +88,7 @@ export function LeaderboardPanel({
                 <AllianceRankBadge rank={row.alliance_rank} className="shrink-0" />
                 <div className="min-w-0 flex-1">
                   {/* ScoreCell renders a bare integer next to a bar — name what the number is. */}
-                  <span className="sr-only">Score</span>
+                  <span className="sr-only">{t("common.score")}</span>
                   <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
                 </div>
                 <span className="w-10 shrink-0 text-right">

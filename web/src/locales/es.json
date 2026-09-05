@@ -3,11 +3,31 @@
     "loading": "Cargando…",
     "notFound": "No encontrado",
     "comingSoon": "Disponible en la próxima tarea.",
+    "rank": "Rango",
+    "score": "Puntuación",
+    "activity": "Actividad",
+    "date": "Fecha",
     "actions": {
       "reload": "Recargar",
       "cancel": "Cancelar",
       "close": "Cerrar"
     }
+  },
+  "scope": {
+    "overall": "General",
+    "weekly": "Esta semana"
+  },
+  "rankBy": {
+    "label": "Ordenar por",
+    "all": "Todas las actividades"
+  },
+  "bands": {
+    "leadership": "Liderazgo",
+    "top": "Top {{n}}"
+  },
+  "allianceRank": {
+    "title": "Rango de alianza {{rank}}",
+    "mismatchTitle": "Rango de alianza {{rank}} — esta sección es para {{expected}}s"
   },
   "language": {
     "label": "Idioma"
@@ -64,5 +84,51 @@
       "memberProfile": "Participación e historial individual"
     }
   },
-  "datePicker": { "placeholder": "Elija una fecha", "prevMonth": "Mes anterior", "nextMonth": "Mes siguiente" }
+  "datePicker": { "placeholder": "Elija una fecha", "prevMonth": "Mes anterior", "nextMonth": "Mes siguiente" },
+  "overview": {
+    "noData": "El panel se cargó sin datos. Recargue la página; si el problema persiste, compruebe que /api sea accesible.",
+    "latestWeek": "Semana más reciente {{week}}",
+    "activeMembers": "Miembros activos",
+    "ofTracked": "de <1>{{total}}</1> registrados",
+    "avgAttendanceActive": "Asistencia media (activos)",
+    "attendanceSub": "<1>{{perfect}}</1> perfectos · <2>{{atRisk}}</2> en riesgo",
+    "noEventsYet": "aún no hay eventos registrados",
+    "eventsLogged": "Eventos registrados",
+    "acrossEventDays_one": "en <1>{{count}}</1> día de evento",
+    "acrossEventDays_many": "en <1>{{count}}</1> días de evento",
+    "acrossEventDays_other": "en <1>{{count}}</1> días de evento",
+    "unmappedQueue": "Cola sin asignar",
+    "namesNeedDecision": "nombres necesitan una decisión",
+    "atRisk": {
+      "title": "Asistencia en riesgo",
+      "summary_one": "<1>{{count}}</1> miembro por debajo del 50%",
+      "summary_many": "<1>{{count}}</1> miembros por debajo del 50%",
+      "summary_other": "<1>{{count}}</1> miembros por debajo del 50%",
+      "empty": "Nadie está por debajo del 50% de asistencia."
+    },
+    "leaderboard": {
+      "title": "Cima de la clasificación",
+      "ranked_one": "Esta semana · <1>{{count}}</1> gobernador clasificado",
+      "ranked_many": "Esta semana · <1>{{count}}</1> gobernadores clasificados",
+      "ranked_other": "Esta semana · <1>{{count}}</1> gobernadores clasificados",
+      "viewFull": "Ver clasificación completa →",
+      "empty": "Aún no hay una semana clasificada — la clasificación se completa en cuanto se registran eventos."
+    },
+    "ingests": {
+      "title": "Cargas recientes",
+      "subtitle": "Últimas cargas de eventos",
+      "viewAll": "Ver todos los eventos →",
+      "empty": "Todavía no se ha cargado ningún evento.",
+      "instance": "Inst.",
+      "rows": "Filas",
+      "unmapped": "Sin asignar"
+    },
+    "unmapped": {
+      "summary_one": "<1>{{count}}</1> nombre necesita asignación",
+      "summary_many": "<1>{{count}}</1> nombres necesitan asignación",
+      "summary_other": "<1>{{count}}</1> nombres necesitan asignación",
+      "empty": "Todos los nombres se resuelven a un miembro.",
+      "resolve": "Resolver en Alias →"
+    }
+  }
 }

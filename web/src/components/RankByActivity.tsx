@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { ActivityType } from "@shared/types";
 import { cn } from "@/lib/utils";
 import { activitySolidClass } from "@/lib/activity";
@@ -13,17 +14,18 @@ export function RankByActivity({
   value,
   onChange,
   activities,
-  label = "Rank by",
+  label,
 }: {
   value: string; // "all" | activity.key
   onChange: (value: string) => void;
   activities: ActivityType[];
   label?: string; // Attendance filters rather than ranks — same control, different verb.
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2">
       <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-faint">
-        {label}
+        {label ?? t("rankBy.label")}
       </span>
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="w-52">
@@ -33,7 +35,7 @@ export function RankByActivity({
           <SelectItem value="all">
             <span className="flex items-center gap-2">
               <span className="size-2 shrink-0 rounded-full bg-badge-slate-fg" />
-              All activities
+              {t("rankBy.all")}
             </span>
           </SelectItem>
           {activities.map((a) => (

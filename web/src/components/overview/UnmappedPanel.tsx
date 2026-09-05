@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { TriangleAlert } from "lucide-react";
+import { Trans, useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/States";
 
@@ -22,18 +23,23 @@ export function UnmappedPanel({
   total: number;
   canManage: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <Card className="border-flag-border bg-flag-bg p-[18px]">
       <div className="flex items-center gap-2">
         <TriangleAlert className="size-4 text-flag-accent" />
-        <h2 className="text-[15px] font-semibold text-flag-fg">Unmapped queue</h2>
+        <h2 className="text-[15px] font-semibold text-flag-fg">{t("overview.unmappedQueue")}</h2>
       </div>
       <p className="mt-0.5 text-[12px] text-flag-accent">
-        <span className="num">{total}</span> {total === 1 ? "name needs" : "names need"} mapping
+        <Trans
+          i18nKey="overview.unmapped.summary"
+          count={total}
+          components={{ 1: <span className="num" /> }}
+        />
       </p>
 
       {total === 0 ? (
-        <EmptyState message="Every name resolves to a member." />
+        <EmptyState message={t("overview.unmapped.empty")} />
       ) : (
         <ul className="mt-3 flex flex-col gap-2">
           {names.map((name) => (
@@ -52,7 +58,7 @@ export function UnmappedPanel({
           to="/admin/aliases"
           className="mt-3 block rounded-[6px] border border-flag-border bg-surface py-2 text-center text-[13px] font-semibold text-foreground transition-colors hover:bg-muted-surface"
         >
-          Resolve in Aliases →
+          {t("overview.unmapped.resolve")}
         </Link>
       )}
     </Card>

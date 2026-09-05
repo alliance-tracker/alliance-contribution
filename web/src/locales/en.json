@@ -3,11 +3,31 @@
     "loading": "Loading…",
     "notFound": "Not found",
     "comingSoon": "Coming in the next task.",
+    "rank": "Rank",
+    "score": "Score",
+    "activity": "Activity",
+    "date": "Date",
     "actions": {
       "reload": "Reload",
       "cancel": "Cancel",
       "close": "Close"
     }
+  },
+  "scope": {
+    "overall": "Overall",
+    "weekly": "This week"
+  },
+  "rankBy": {
+    "label": "Rank by",
+    "all": "All activities"
+  },
+  "bands": {
+    "leadership": "Leadership",
+    "top": "Top {{n}}"
+  },
+  "allianceRank": {
+    "title": "Alliance rank {{rank}}",
+    "mismatchTitle": "Alliance rank {{rank}} — this section is for {{expected}}s"
   },
   "language": {
     "label": "Language"
@@ -68,5 +88,47 @@
     "placeholder": "Pick a date",
     "prevMonth": "Previous month",
     "nextMonth": "Next month"
+  },
+  "overview": {
+    "noData": "The dashboard loaded without data. Reload the page; if it keeps happening, check that /api is reachable.",
+    "latestWeek": "Latest week {{week}}",
+    "activeMembers": "Active members",
+    "ofTracked": "of <1>{{total}}</1> tracked",
+    "avgAttendanceActive": "Avg attendance (active)",
+    "attendanceSub": "<1>{{perfect}}</1> perfect · <2>{{atRisk}}</2> at risk",
+    "noEventsYet": "no events recorded yet",
+    "eventsLogged": "Events logged",
+    "acrossEventDays_one": "across <1>{{count}}</1> event-day",
+    "acrossEventDays_other": "across <1>{{count}}</1> event-days",
+    "unmappedQueue": "Unmapped queue",
+    "namesNeedDecision": "names need a decision",
+    "atRisk": {
+      "title": "At-risk attendance",
+      "summary_one": "<1>{{count}}</1> member below 50%",
+      "summary_other": "<1>{{count}}</1> members below 50%",
+      "empty": "Nobody is below 50% attendance."
+    },
+    "leaderboard": {
+      "title": "Top of the leaderboard",
+      "ranked_one": "This week · <1>{{count}}</1> governor ranked",
+      "ranked_other": "This week · <1>{{count}}</1> governors ranked",
+      "viewFull": "View full ranking →",
+      "empty": "No ranked week yet — the leaderboard fills in once events are logged."
+    },
+    "ingests": {
+      "title": "Recent ingests",
+      "subtitle": "Latest event uploads",
+      "viewAll": "View all events →",
+      "empty": "No events ingested yet.",
+      "instance": "Inst.",
+      "rows": "Rows",
+      "unmapped": "Unmapped"
+    },
+    "unmapped": {
+      "summary_one": "<1>{{count}}</1> name needs mapping",
+      "summary_other": "<1>{{count}}</1> names need mapping",
+      "empty": "Every name resolves to a member.",
+      "resolve": "Resolve in Aliases →"
+    }
   }
 }

@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { StatCard } from "@/components/overview/StatCard";
 import { rankTone } from "@/lib/alliance-rank";
 import { cn } from "@/lib/utils";
+import { formatNumber } from "@/lib/format";
 import { TIER_ORDER, type RosterRow, type RosterStatus, type RosterSummary } from "@/lib/roster-view";
 
 /** U+2212. A hyphen is narrower than a digit and breaks tabular alignment down a numeric column. */
@@ -8,7 +10,7 @@ const MINUS = "−";
 
 /** Signed, thousands-separated, with a real minus sign. */
 function signed(value: number): string {
-  return value < 0 ? `${MINUS}${Math.abs(value).toLocaleString()}` : `+${value.toLocaleString()}`;
+  return value < 0 ? `${MINUS}${formatNumber(Math.abs(value))}` : `+${formatNumber(value)}`;
 }
 
 /** R1–R5 chip on the roster — same per-rank tones as AllianceRankBadge (2026-08-03 spec). */
@@ -62,7 +64,7 @@ export function PowerCell({ power, maxPower, top }: { power: number | null; maxP
   const pct = maxPower > 0 ? Math.min(100, (power / maxPower) * 100) : 0;
   return (
     <div className="flex flex-col items-end gap-[5px]">
-      <span className="num text-[14px] font-bold text-foreground">{power.toLocaleString()}</span>
+      <span className="num text-[14px] font-bold text-foreground">{formatNumber(power)}</span>
       <Bar pct={pct} width="w-[88px]" className={top ? "bg-foreground" : "bg-faint"} />
     </div>
   );
@@ -74,6 +76,7 @@ export function PowerCell({ power, maxPower, top }: { power: number | null; maxP
  * the two can never be confused for one another.
  */
 export function PowerChangeCell({ delta, maxAbsDelta }: { delta: number | null; maxAbsDelta: number }) {
+  const { t } = useTranslation();
   if (delta === null) {
     return (
       <div className="flex flex-col items-end gap-[5px]">
@@ -90,7 +93,7 @@ export function PowerChangeCell({ delta, maxAbsDelta }: { delta: number | null; 
     <div className="flex flex-col items-end gap-[5px]">
       <span className={cn("flex items-center justify-end gap-1.5", tone)}>
         <span className="text-[9px] leading-none">{delta > 0 ? "▲" : delta < 0 ? "▼" : "—"}</span>
-        <span className="num text-[13.5px] font-bold">{delta === 0 ? "no change" : signed(delta)}</span>
+        <span className="num text-[13.5px] font-bold">{delta === 0 ? t("roster.noChange") : signed(delta)}</span>
       </span>
       <Bar pct={pct} width="w-[104px]" className={fill} />
     </div>
@@ -126,12 +129,13 @@ export function MoveCell({ move }: { move: number | null }) {
  * are the only thing shouting. 86 saturated green badges drowned them out before.
  */
 export function StatusCell({ status }: { status: RosterStatus }) {
+  const { t } = useTranslation();
   if (status === "unknown") return <span className="text-[12.5px] text-faint">—</span>;
   if (status === "at-risk") {
     return (
       <span className="inline-flex h-[22px] items-center gap-1.5 rounded-[6px] border border-warn/20 bg-warn/10 py-0 pl-[7px] pr-[9px] text-[11.5px] font-bold text-warn">
         <span className="size-1.5 shrink-0 rounded-full bg-warn" />
-        At risk
+        {t("roster.status.atRisk")}
       </span>
     );
   }
@@ -144,7 +148,7 @@ export function StatusCell({ status }: { status: RosterStatus }) {
       )}
     >
       <span className={cn("size-1.5 shrink-0 rounded-full", inactive ? "bg-faint" : "bg-up")} />
-      {inactive ? "Inactive" : "Active"}
+      {inactive ? t("roster.status.inactive") : t("roster.status.active")}
     </span>
   );
 }
@@ -157,20 +161,21 @@ export function StatusCell({ status }: { status: RosterStatus }) {
  * The at-risk tile only goes orange when there is something to be alarmed about.
  */
 export function RosterStats({ summary }: { summary: RosterSummary }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <StatCard
-        label="Alliance power"
-        value={summary.totalPower.toLocaleString()}
-        sub={`${summary.tracked} active member${summary.tracked === 1 ? "" : "s"}`}
+        label={t("roster.stats.alliancePower")}
+        value={formatNumber(summary.totalPower)}
+        sub={t("roster.stats.activeMembers", { count: summary.tracked })}
       />
       <StatCard
-        label="Δ power"
+        label={t("roster.stats.deltaPower")}
         value={<span className={summary.powerDelta >= 0 ? "text-up" : "text-down"}>{signed(summary.powerDelta)}</span>}
-        sub="vs. each member's last capture"
+        sub={t("roster.stats.deltaSub")}
       />
       <StatCard
-        label="Gained / dropped"
+        label={t("roster.stats.gainedDropped")}
         value={
           <>
             <span className="text-up">{summary.gained}</span>
@@ -178,12 +183,12 @@ export function RosterStats({ summary }: { summary: RosterSummary }) {
             <span className="text-down">{summary.dropped}</span>
           </>
         }
-        sub="members by power change"
+        sub={t("roster.stats.gainedSub")}
       />
       <StatCard
-        label="At risk"
+        label={t("roster.stats.atRisk")}
         value={summary.atRisk}
-        sub="below 50% attendance"
+        sub={t("roster.stats.atRiskSub")}
         tone={summary.atRisk > 0 ? "warn" : "default"}
       />
     </div>
@@ -192,23 +197,24 @@ export function RosterStats({ summary }: { summary: RosterSummary }) {
 
 /** Not decoration — it is what makes the colour coding legible to an admin who visits once a week. */
 export function RosterLegend({ shown }: { shown: number }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-background px-4 py-2.5 text-[11.5px] text-faint">
-      <span>{shown} shown</span>
+      <span>{t("roster.legend.shown", { n: shown })}</span>
       <div className="flex flex-wrap items-center gap-3.5">
         <span className="flex items-center gap-1.5">
           <span className="size-1.5 rounded-full bg-up" />
-          Active
+          {t("roster.status.active")}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="size-1.5 rounded-full bg-warn" />
-          At risk — under 50% attendance
+          {t("roster.legend.atRisk")}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="size-1.5 rounded-full bg-faint" />
-          Inactive
+          {t("roster.status.inactive")}
         </span>
-        <span>MOVE = places gained/lost in power rank</span>
+        <span>{t("roster.legend.move")}</span>
       </div>
     </div>
   );

@@ -505,5 +505,54 @@
     "historyTitle": "History",
     "historyDesc": "Saved hand-outs. Lines are frozen as computed at save time; only the title can change.",
     "noAllocations": "No allocations saved yet."
+  },
+  "roster": {
+    "noChange": "no change",
+    "status": {
+      "active": "Active",
+      "atRisk": "At risk",
+      "inactive": "Inactive"
+    },
+    "stats": {
+      "alliancePower": "Alliance power",
+      "activeMembers_one": "{{count}} active member",
+      "activeMembers_other": "{{count}} active members",
+      "deltaPower": "Δ power",
+      "deltaSub": "vs. each member's last capture",
+      "gainedDropped": "Gained / dropped",
+      "gainedSub": "members by power change",
+      "atRisk": "At risk",
+      "atRiskSub": "below 50% attendance"
+    },
+    "legend": {
+      "shown": "{{n}} shown",
+      "atRisk": "At risk — under 50% attendance",
+      "move": "MOVE = places gained/lost in power rank"
+    },
+    "delta": {
+      "joined": "Joined ({{n}})",
+      "deactivated": "Deactivated ({{n}})",
+      "reactivated": "Reactivated ({{n}})",
+      "leadership": "Leadership (R4 / R5)",
+      "promoted": "Promoted ({{n}})",
+      "demoted": "Demoted ({{n}})",
+      "powerMoves": "Largest power moves ({{n}})",
+      "rankLine": "{{governor}}: <1>{{from}}</1> → <2>{{to}}</2> (since <3>{{since}}</3>)",
+      "powerLine": "{{governor}}: <1>{{delta}}</1>{{move}} over <2>{{days}}d</2>",
+      "moveUp_one": ", up {{count}} place",
+      "moveUp_other": ", up {{count}} places",
+      "moveDown_one": ", down {{count}} place",
+      "moveDown_other": ", down {{count}} places",
+      "noPrevious": "No capture on record before <1>{{date}}</1> — nothing to compare it against yet.",
+      "comparedAgainst": "Compared against each member's last observation (previous capture: <1>{{date}}</1> — individual baselines may be older).",
+      "nothingChanged": "Nothing changed since each member's last observation.",
+      "verify_one": "{{count}} member's power moved far more than the elapsed time explains. Confirm the name in the screenshot belongs to the member it matched.",
+      "verify_other": "{{count}} members' power moved far more than the elapsed time explains. Confirm the name in the screenshot belongs to the member it matched.",
+      "moreNotShown": "and <1>{{n}}</1> more not shown"
+    },
+    "import": {
+      "noR5": "No R5 in this paste — the alliance leader is missing or the paste is partial.",
+      "manyR5": "{{n}} rows claim R5 — an alliance has exactly one leader, so check the paste."
+    }
   }
 }

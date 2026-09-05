@@ -530,5 +530,58 @@
     "historyTitle": "Historial",
     "historyDesc": "Repartos guardados. Las líneas quedan fijadas tal como se calcularon al guardar; solo el título puede cambiar.",
     "noAllocations": "Aún no hay asignaciones guardadas."
+  },
+  "roster": {
+    "noChange": "sin cambios",
+    "status": {
+      "active": "Activo",
+      "atRisk": "En riesgo",
+      "inactive": "Inactivo"
+    },
+    "stats": {
+      "alliancePower": "Poder de la alianza",
+      "activeMembers_one": "{{count}} miembro activo",
+      "activeMembers_many": "{{count}} miembros activos",
+      "activeMembers_other": "{{count}} miembros activos",
+      "deltaPower": "Δ poder",
+      "deltaSub": "frente a la última captura de cada miembro",
+      "gainedDropped": "Ganados / perdidos",
+      "gainedSub": "miembros por cambio de poder",
+      "atRisk": "En riesgo",
+      "atRiskSub": "por debajo del 50% de asistencia"
+    },
+    "legend": {
+      "shown": "{{n}} mostrados",
+      "atRisk": "En riesgo — menos del 50% de asistencia",
+      "move": "MOVE = puestos ganados/perdidos en el ranking de poder"
+    },
+    "delta": {
+      "joined": "Incorporados ({{n}})",
+      "deactivated": "Desactivados ({{n}})",
+      "reactivated": "Reactivados ({{n}})",
+      "leadership": "Liderazgo (R4 / R5)",
+      "promoted": "Ascendidos ({{n}})",
+      "demoted": "Degradados ({{n}})",
+      "powerMoves": "Mayores cambios de poder ({{n}})",
+      "rankLine": "{{governor}}: <1>{{from}}</1> → <2>{{to}}</2> (desde <3>{{since}}</3>)",
+      "powerLine": "{{governor}}: <1>{{delta}}</1>{{move}} en <2>{{days}}d</2>",
+      "moveUp_one": ", sube {{count}} puesto",
+      "moveUp_many": ", sube {{count}} puestos",
+      "moveUp_other": ", sube {{count}} puestos",
+      "moveDown_one": ", baja {{count}} puesto",
+      "moveDown_many": ", baja {{count}} puestos",
+      "moveDown_other": ", baja {{count}} puestos",
+      "noPrevious": "No hay ninguna captura registrada antes de <1>{{date}}</1> — aún no hay nada con qué compararla.",
+      "comparedAgainst": "Comparado con la última observación de cada miembro (captura anterior: <1>{{date}}</1> — las líneas base individuales pueden ser más antiguas).",
+      "nothingChanged": "No hubo cambios desde la última observación de cada miembro.",
+      "verify_one": "El poder de {{count}} miembro cambió mucho más de lo que explica el tiempo transcurrido. Confirme que el nombre de la captura de pantalla pertenece al miembro con el que se emparejó.",
+      "verify_many": "El poder de {{count}} miembros cambió mucho más de lo que explica el tiempo transcurrido. Confirme que el nombre de la captura de pantalla pertenece al miembro con el que se emparejó.",
+      "verify_other": "El poder de {{count}} miembros cambió mucho más de lo que explica el tiempo transcurrido. Confirme que el nombre de la captura de pantalla pertenece al miembro con el que se emparejó.",
+      "moreNotShown": "y <1>{{n}}</1> más sin mostrar"
+    },
+    "import": {
+      "noR5": "No hay ningún R5 en este pegado — falta el líder de la alianza o el pegado está incompleto.",
+      "manyR5": "{{n}} filas indican R5 — una alianza tiene exactamente un líder, así que revise el pegado."
+    }
   }
 }

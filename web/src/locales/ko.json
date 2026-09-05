@@ -480,5 +480,50 @@
     "historyTitle": "기록",
     "historyDesc": "저장된 지급 내역입니다. 항목은 저장 시점에 계산된 대로 고정되며, 제목만 변경할 수 있습니다.",
     "noAllocations": "아직 저장된 배분이 없습니다."
+  },
+  "roster": {
+    "noChange": "변동 없음",
+    "status": {
+      "active": "활성",
+      "atRisk": "위험",
+      "inactive": "비활성"
+    },
+    "stats": {
+      "alliancePower": "연맹 전투력",
+      "activeMembers_other": "활성 구성원 {{count}}명",
+      "deltaPower": "Δ 전투력",
+      "deltaSub": "각 구성원의 마지막 캡처 대비",
+      "gainedDropped": "증가 / 감소",
+      "gainedSub": "전투력 변화 기준 구성원",
+      "atRisk": "위험",
+      "atRiskSub": "참석률 50% 미만"
+    },
+    "legend": {
+      "shown": "{{n}}개 표시",
+      "atRisk": "위험 — 참석률 50% 미만",
+      "move": "MOVE = 전투력 순위에서 상승/하락한 칸 수"
+    },
+    "delta": {
+      "joined": "가입 ({{n}})",
+      "deactivated": "비활성화 ({{n}})",
+      "reactivated": "재활성화 ({{n}})",
+      "leadership": "리더십 (R4 / R5)",
+      "promoted": "승급 ({{n}})",
+      "demoted": "강등 ({{n}})",
+      "powerMoves": "가장 큰 전투력 변화 ({{n}})",
+      "rankLine": "{{governor}}: <1>{{from}}</1> → <2>{{to}}</2> (<3>{{since}}</3> 이후)",
+      "powerLine": "{{governor}}: <1>{{delta}}</1>{{move}} <2>{{days}}일</2> 동안",
+      "moveUp_other": " · {{count}}칸 상승",
+      "moveDown_other": " · {{count}}칸 하락",
+      "noPrevious": "<1>{{date}}</1> 이전의 캡처 기록이 없습니다 — 아직 비교할 대상이 없습니다.",
+      "comparedAgainst": "각 구성원의 마지막 관측치와 비교했습니다 (이전 캡처: <1>{{date}}</1> — 개별 기준값은 더 오래된 것일 수 있습니다).",
+      "nothingChanged": "각 구성원의 마지막 관측 이후 변동이 없습니다.",
+      "verify_other": "{{count}}명의 구성원의 전투력이 경과 시간으로 설명되지 않을 만큼 크게 변동했습니다. 스크린샷의 이름이 일치된 구성원의 것이 맞는지 확인하십시오.",
+      "moreNotShown": "그리고 표시되지 않은 <1>{{n}}</1>개 더"
+    },
+    "import": {
+      "noR5": "붙여넣은 내용에 R5가 없습니다 — 연맹장이 없거나 붙여넣기가 불완전합니다.",
+      "manyR5": "{{n}}개 행이 R5를 표시합니다 — 연맹에는 정확히 한 명의 연맹장만 있으므로 붙여넣기를 확인하십시오."
+    }
   }
 }

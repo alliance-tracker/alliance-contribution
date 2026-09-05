@@ -505,5 +505,54 @@
     "historyTitle": "Verlauf",
     "historyDesc": "Gespeicherte Ausschüttungen. Zeilen sind so eingefroren, wie sie beim Speichern berechnet wurden; nur der Titel kann geändert werden.",
     "noAllocations": "Noch keine Zuteilungen gespeichert."
+  },
+  "roster": {
+    "noChange": "keine Änderung",
+    "status": {
+      "active": "Aktiv",
+      "atRisk": "Gefährdet",
+      "inactive": "Inaktiv"
+    },
+    "stats": {
+      "alliancePower": "Allianzmacht",
+      "activeMembers_one": "{{count}} aktives Mitglied",
+      "activeMembers_other": "{{count}} aktive Mitglieder",
+      "deltaPower": "Δ Macht",
+      "deltaSub": "im Vergleich zur letzten Erfassung jedes Mitglieds",
+      "gainedDropped": "Gewonnen / verloren",
+      "gainedSub": "Mitglieder nach Machtänderung",
+      "atRisk": "Gefährdet",
+      "atRiskSub": "unter 50 % Anwesenheit"
+    },
+    "legend": {
+      "shown": "{{n}} angezeigt",
+      "atRisk": "Gefährdet — unter 50 % Anwesenheit",
+      "move": "MOVE = gewonnene/verlorene Plätze im Machtranking"
+    },
+    "delta": {
+      "joined": "Beigetreten ({{n}})",
+      "deactivated": "Deaktiviert ({{n}})",
+      "reactivated": "Reaktiviert ({{n}})",
+      "leadership": "Führung (R4 / R5)",
+      "promoted": "Befördert ({{n}})",
+      "demoted": "Herabgestuft ({{n}})",
+      "powerMoves": "Größte Machtänderungen ({{n}})",
+      "rankLine": "{{governor}}: <1>{{from}}</1> → <2>{{to}}</2> (seit <3>{{since}}</3>)",
+      "powerLine": "{{governor}}: <1>{{delta}}</1>{{move}} über <2>{{days}}T</2>",
+      "moveUp_one": ", {{count}} Platz aufgestiegen",
+      "moveUp_other": ", {{count}} Plätze aufgestiegen",
+      "moveDown_one": ", {{count}} Platz abgestiegen",
+      "moveDown_other": ", {{count}} Plätze abgestiegen",
+      "noPrevious": "Keine Erfassung vor <1>{{date}}</1> verzeichnet — es gibt noch nichts zum Vergleich.",
+      "comparedAgainst": "Verglichen mit der letzten Beobachtung jedes Mitglieds (vorherige Erfassung: <1>{{date}}</1> — individuelle Ausgangswerte können älter sein).",
+      "nothingChanged": "Seit der letzten Beobachtung jedes Mitglieds hat sich nichts geändert.",
+      "verify_one": "Die Macht von {{count}} Mitglied hat sich weit mehr verändert, als die verstrichene Zeit erklärt. Bestätigen Sie, dass der Name im Screenshot zum zugeordneten Mitglied gehört.",
+      "verify_other": "Die Macht von {{count}} Mitgliedern hat sich weit mehr verändert, als die verstrichene Zeit erklärt. Bestätigen Sie, dass der Name im Screenshot zum zugeordneten Mitglied gehört.",
+      "moreNotShown": "und <1>{{n}}</1> weitere nicht angezeigt"
+    },
+    "import": {
+      "noR5": "Kein R5 in dieser Einfügung — der Allianzführer fehlt oder die Einfügung ist unvollständig.",
+      "manyR5": "{{n}} Zeilen geben R5 an — eine Allianz hat genau einen Anführer, prüfen Sie also die Einfügung."
+    }
   }
 }

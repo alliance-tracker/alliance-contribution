@@ -530,5 +530,58 @@
     "historyTitle": "Historique",
     "historyDesc": "Distributions enregistrées. Les lignes sont figées telles que calculées au moment de l'enregistrement ; seul le titre peut changer.",
     "noAllocations": "Aucune allocation enregistrée pour le moment."
+  },
+  "roster": {
+    "noChange": "sans changement",
+    "status": {
+      "active": "Actif",
+      "atRisk": "À risque",
+      "inactive": "Inactif"
+    },
+    "stats": {
+      "alliancePower": "Puissance de l'alliance",
+      "activeMembers_one": "{{count}} membre actif",
+      "activeMembers_many": "{{count}} membres actifs",
+      "activeMembers_other": "{{count}} membres actifs",
+      "deltaPower": "Δ puissance",
+      "deltaSub": "par rapport à la dernière capture de chaque membre",
+      "gainedDropped": "Gagnés / perdus",
+      "gainedSub": "membres par variation de puissance",
+      "atRisk": "À risque",
+      "atRiskSub": "en dessous de 50 % de présence"
+    },
+    "legend": {
+      "shown": "{{n}} affichés",
+      "atRisk": "À risque — moins de 50 % de présence",
+      "move": "MOVE = places gagnées/perdues au classement de puissance"
+    },
+    "delta": {
+      "joined": "Rejoints ({{n}})",
+      "deactivated": "Désactivés ({{n}})",
+      "reactivated": "Réactivés ({{n}})",
+      "leadership": "Direction (R4 / R5)",
+      "promoted": "Promus ({{n}})",
+      "demoted": "Rétrogradés ({{n}})",
+      "powerMoves": "Plus grands changements de puissance ({{n}})",
+      "rankLine": "{{governor}} : <1>{{from}}</1> → <2>{{to}}</2> (depuis <3>{{since}}</3>)",
+      "powerLine": "{{governor}} : <1>{{delta}}</1>{{move}} sur <2>{{days}}j</2>",
+      "moveUp_one": ", gagne {{count}} place",
+      "moveUp_many": ", gagne {{count}} places",
+      "moveUp_other": ", gagne {{count}} places",
+      "moveDown_one": ", perd {{count}} place",
+      "moveDown_many": ", perd {{count}} places",
+      "moveDown_other": ", perd {{count}} places",
+      "noPrevious": "Aucune capture enregistrée avant <1>{{date}}</1> — il n'y a encore rien pour la comparer.",
+      "comparedAgainst": "Comparé à la dernière observation de chaque membre (capture précédente : <1>{{date}}</1> — les références individuelles peuvent être plus anciennes).",
+      "nothingChanged": "Rien n'a changé depuis la dernière observation de chaque membre.",
+      "verify_one": "La puissance de {{count}} membre a évolué bien plus que ce que le temps écoulé explique. Vérifiez que le nom de la capture d'écran correspond au bon membre.",
+      "verify_many": "La puissance de {{count}} membres a évolué bien plus que ce que le temps écoulé explique. Vérifiez que le nom de la capture d'écran correspond au bon membre.",
+      "verify_other": "La puissance de {{count}} membres a évolué bien plus que ce que le temps écoulé explique. Vérifiez que le nom de la capture d'écran correspond au bon membre.",
+      "moreNotShown": "et <1>{{n}}</1> autres non affichés"
+    },
+    "import": {
+      "noR5": "Aucun R5 dans ce collage — le chef de l'alliance est absent ou le collage est incomplet.",
+      "manyR5": "{{n}} lignes indiquent R5 — une alliance n'a qu'un seul chef, donc vérifiez le collage."
+    }
   }
 }

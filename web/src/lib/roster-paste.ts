@@ -147,7 +147,8 @@ export type Classification = {
   conflicts: ConflictGroup[];
   absent: MemberLike[]; // active members this capture never observed
   returning: MemberLike[]; // inactive members the paste matched
-  leaderWarning: string | null;
+  /** R5 rows after the duplicate collapse; exactly 1 is healthy — the page words the warning. */
+  r5Count: number;
 };
 
 /**
@@ -237,15 +238,9 @@ export function classifyRoster(input: {
   // Counted AFTER the duplicate collapse. The leader is the most likely operator, and the screen
   // pins their own row again at the bottom — counting raw rows would warn on every import.
   const survivors = [...matched.map((m) => m.row), ...unrecognized];
-  const r5 = survivors.filter((r) => r.alliance_rank === "R5").length;
-  const leaderWarning =
-    r5 === 1
-      ? null
-      : r5 === 0
-        ? "No R5 in this paste — the alliance leader is missing or the paste is partial."
-        : `${r5} rows claim R5 — an alliance has exactly one leader, so check the paste.`;
+  const r5Count = survivors.filter((r) => r.alliance_rank === "R5").length;
 
-  return { matched, unrecognized, duplicates, conflicts, absent, returning, leaderWarning };
+  return { matched, unrecognized, duplicates, conflicts, absent, returning, r5Count };
 }
 
 /**

@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { TriangleAlert } from "lucide-react";
+import { Trans, useTranslation } from "react-i18next";
 import type { PowerChange, RankChange, RosterDelta } from "@shared/types";
 import { Alert, AlertContent } from "@/components/ui/alert";
+import { formatNumber } from "@/lib/format";
 
 /** Largest power moves worth listing. The count of what was dropped is always shown. */
 const POWER_MOVE_LIMIT = 10;
@@ -17,10 +19,11 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function RankLine({ c }: { c: RankChange }) {
   return (
-    <>
-      {c.governor}: <span className="num">{c.from ?? "—"}</span> →{" "}
-      <span className="num">{c.to ?? "—"}</span> (since <span className="num">{c.since}</span>)
-    </>
+    <Trans
+      i18nKey="roster.delta.rankLine"
+      values={{ governor: c.governor, from: c.from ?? "—", to: c.to ?? "—", since: c.since }}
+      components={{ 1: <span className="num" />, 2: <span className="num" />, 3: <span className="num" /> }}
+    />
   );
 }
 
@@ -31,26 +34,22 @@ function RankLine({ c }: { c: RankChange }) {
  * tripwire exists to catch) yields no percentage rather than an infinite one.
  */
 function PowerLine({ c }: { c: PowerChange }) {
+  const { t } = useTranslation();
   const sign = c.delta > 0 ? "+" : "";
   const pct = c.from ? ` (${sign}${Math.round((c.delta / c.from) * 100)}%)` : "";
   const positionAbs = c.delta_position === null ? null : Math.abs(c.delta_position);
-
+  const move =
+    positionAbs !== null && positionAbs !== 0
+      ? c.delta_position! < 0
+        ? t("roster.delta.moveUp", { count: positionAbs })
+        : t("roster.delta.moveDown", { count: positionAbs })
+      : "";
   return (
-    <>
-      {c.governor}:{" "}
-      <span className="num">
-        {sign}
-        {c.delta.toLocaleString()}
-        {pct}
-      </span>
-      {positionAbs !== null && positionAbs !== 0 && (
-        <>
-          , {c.delta_position! < 0 ? "up" : "down"} <span className="num">{positionAbs}</span> place
-          {positionAbs === 1 ? "" : "s"}
-        </>
-      )}{" "}
-      over <span className="num">{c.elapsed_days}d</span>
-    </>
+    <Trans
+      i18nKey="roster.delta.powerLine"
+      values={{ governor: c.governor, delta: `${sign}${formatNumber(c.delta)}${pct}`, move, days: c.elapsed_days }}
+      components={{ 1: <span className="num" />, 2: <span className="num" /> }}
+    />
   );
 }
 
@@ -59,6 +58,7 @@ function PowerLine({ c }: { c: PowerChange }) {
  * proposes a promotion or a demotion — every line describes something that already happened.
  */
 export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; capturedOn: string }) {
+  const { t } = useTranslation();
   // `verify` is a subset of `powerMoves` (roster-delta.ts pushes both in the same branch) and both
   // are sorted by magnitude and rendered with the same line formatter, so listing powerMoves whole
   // would show the verify members twice — and with 10+ of them the power-move section would be
@@ -81,7 +81,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
           capture before it — otherwise such an import would silently drop a Deactivated list the
           operator just authored. */}
       {delta.joined.length > 0 && (
-        <Section title={`Joined (${delta.joined.length})`}>
+        <Section title={t("roster.delta.joined", { n: delta.joined.length })}>
           <ul className="flex flex-col gap-0.5">
             {delta.joined.map((m) => (
               <li key={m.member_id} className="text-[12px] text-secondary">
@@ -93,7 +93,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
       )}
 
       {delta.departed.length > 0 && (
-        <Section title={`Deactivated (${delta.departed.length})`}>
+        <Section title={t("roster.delta.deactivated", { n: delta.departed.length })}>
           <ul className="flex flex-col gap-0.5">
             {delta.departed.map((m) => (
               <li key={m.member_id} className="text-[12px] text-secondary">
@@ -105,7 +105,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
       )}
 
       {delta.returned.length > 0 && (
-        <Section title={`Reactivated (${delta.returned.length})`}>
+        <Section title={t("roster.delta.reactivated", { n: delta.returned.length })}>
           <ul className="flex flex-col gap-0.5">
             {delta.returned.map((m) => (
               <li key={m.member_id} className="text-[12px] text-secondary">
@@ -118,32 +118,29 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
 
       {delta.previousCapture === null ? (
         <p className="text-[13px] text-muted">
-          No capture on record before <span className="num">{capturedOn}</span> — nothing to compare
-          it against yet.
+          <Trans
+            i18nKey="roster.delta.noPrevious"
+            values={{ date: capturedOn }}
+            components={{ 1: <span className="num" /> }}
+          />
         </p>
       ) : (
         <>
           <span className="text-[12px] text-muted">
-            Compared against each member's last observation (previous capture:{" "}
-            <span className="num text-secondary">{delta.previousCapture}</span> — individual
-            baselines may be older).
+            <Trans
+              i18nKey="roster.delta.comparedAgainst"
+              values={{ date: delta.previousCapture }}
+              components={{ 1: <span className="num text-secondary" /> }}
+            />
           </span>
 
-          {nothing && (
-            <p className="text-[13px] text-muted">
-              Nothing changed since each member's last observation.
-            </p>
-          )}
+          {nothing && <p className="text-[13px] text-muted">{t("roster.delta.nothingChanged")}</p>}
 
           {delta.verify.length > 0 && (
             <Alert variant="warn">
               <TriangleAlert />
               <AlertContent>
-                <div className="font-medium">
-                  {delta.verify.length} member{delta.verify.length === 1 ? "'s" : "s'"} power moved
-                  far more than the elapsed time explains. Confirm the name in the screenshot belongs
-                  to the member it matched.
-                </div>
+                <div className="font-medium">{t("roster.delta.verify", { count: delta.verify.length })}</div>
                 <ul className="flex flex-col gap-0.5">
                   {delta.verify.map((c) => (
                     <li key={c.member_id} className="text-[12px]">
@@ -156,7 +153,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
           )}
 
           {delta.leadership.length > 0 && (
-            <Section title="Leadership (R4 / R5)">
+            <Section title={t("roster.delta.leadership")}>
               <ul className="flex flex-col gap-0.5">
                 {delta.leadership.map((c) => (
                   <li key={c.member_id} className="text-[12px] text-secondary">
@@ -168,7 +165,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
           )}
 
           {delta.promotions.length > 0 && (
-            <Section title={`Promoted (${delta.promotions.length})`}>
+            <Section title={t("roster.delta.promoted", { n: delta.promotions.length })}>
               <ul className="flex flex-col gap-0.5">
                 {delta.promotions.map((c) => (
                   <li key={c.member_id} className="text-[12px] text-secondary">
@@ -180,7 +177,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
           )}
 
           {delta.demotions.length > 0 && (
-            <Section title={`Demoted (${delta.demotions.length})`}>
+            <Section title={t("roster.delta.demoted", { n: delta.demotions.length })}>
               <ul className="flex flex-col gap-0.5">
                 {delta.demotions.map((c) => (
                   <li key={c.member_id} className="text-[12px] text-secondary">
@@ -192,7 +189,7 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
           )}
 
           {otherMoves.length > 0 && (
-            <Section title={`Largest power moves (${otherMoves.length})`}>
+            <Section title={t("roster.delta.powerMoves", { n: otherMoves.length })}>
               <ul className="flex flex-col gap-0.5">
                 {otherMoves.slice(0, POWER_MOVE_LIMIT).map((c) => (
                   <li key={c.member_id} className="text-[12px] text-secondary">
@@ -202,7 +199,11 @@ export function RosterDeltaPanel({ delta, capturedOn }: { delta: RosterDelta; ca
               </ul>
               {extraMoves > 0 && (
                 <p className="mt-0.5 text-[12px] text-muted">
-                  and <span className="num">{extraMoves}</span> more not shown
+                  <Trans
+                    i18nKey="roster.delta.moreNotShown"
+                    values={{ n: extraMoves }}
+                    components={{ 1: <span className="num" /> }}
+                  />
                 </p>
               )}
             </Section>

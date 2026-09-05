@@ -247,28 +247,24 @@ describe("classifyRoster", () => {
     expect(c.returning.map((m) => m.governor)).toEqual(["Ghost"]);
   });
 
-  it("warns when the paste claims no R5", () => {
-    expect(classify("Aurora\tR4\t10\t1").leaderWarning).toBe(
-      "No R5 in this paste — the alliance leader is missing or the paste is partial.",
-    );
+  it("counts zero R5 rows so the page can warn the leader is missing", () => {
+    expect(classify("Aurora\tR4\t10\t1").r5Count).toBe(0);
   });
 
-  it("warns when two different members claim R5", () => {
-    expect(classify("Aurora\tR5\t10\t1\nBlaze\tR5\t9\t2").leaderWarning).toBe(
-      "2 rows claim R5 — an alliance has exactly one leader, so check the paste.",
-    );
+  it("counts two different members claiming R5", () => {
+    expect(classify("Aurora\tR5\t10\t1\nBlaze\tR5\t9\t2").r5Count).toBe(2);
   });
 
-  it("stays silent when the R5's own row is the pinned duplicate", () => {
+  it("counts one R5 when the R5's own row is the pinned duplicate", () => {
     // The leader is the most likely person to capture the screen, and the screen pins their own
     // row again at the bottom. Counting before the collapse would cry wolf on every single import.
     const c = classify("Aurora\tR5\t10\t1\nBlaze\tR4\t9\t2\nAurora\tR5\t10\t1");
     expect(c.duplicates).toBe(1);
-    expect(c.leaderWarning).toBeNull();
+    expect(c.r5Count).toBe(1);
   });
 
-  it("stays silent on exactly one R5", () => {
-    expect(classify("Aurora\tR5\t10\t1").leaderWarning).toBeNull();
+  it("counts exactly one R5", () => {
+    expect(classify("Aurora\tR5\t10\t1").r5Count).toBe(1);
   });
 });
 

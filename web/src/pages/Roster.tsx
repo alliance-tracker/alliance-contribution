@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Merge,
   Plus,
@@ -821,6 +822,7 @@ function ImportRosterDialog({
    *  original behind) and the overwrite acknowledgement is implied — replacing that date is the point. */
   initial: { capturedOn: string; text: string } | null;
 }) {
+  const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [text, setText] = useState("");
   const [capturedOn, setCapturedOn] = useState(todayIso);
@@ -1184,8 +1186,10 @@ function ImportRosterDialog({
                   <span className="num font-semibold text-foreground">{parsed.noGovernor}</span> line
                   {parsed.noGovernor === 1 ? "" : "s"} skipped (no governor)
                 </div>
-                {classified.leaderWarning && (
-                  <p className="text-[12px] text-warn">{classified.leaderWarning}</p>
+                {classified.r5Count !== 1 && (
+                  <p className="text-[12px] text-warn">
+                    {classified.r5Count === 0 ? t("roster.import.noR5") : t("roster.import.manyR5", { n: classified.r5Count })}
+                  </p>
                 )}
               </div>
             ) : null}

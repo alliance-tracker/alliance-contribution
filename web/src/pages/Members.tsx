@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import type { Alias, OverallRanking, OverallRankingRow } from "@shared/types";
 import { api } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
-import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,12 +15,12 @@ import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 /** A headline stat tile — mono uppercase label over a large tabular value. */
 function StatTile({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <Card className="p-[18px]">
-      <div className="mb-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+    <Card className="p-3 md:p-[18px]">
+      <div className="mb-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.04em] text-faint md:text-[10.5px]">
         {label}
       </div>
-      <div className="num text-[26px] font-bold leading-none tracking-[-0.02em]">{value}</div>
-      <div className="mt-1.5 text-[11.5px] text-faint">{sub}</div>
+      <div className="num text-[22px] font-bold leading-none tracking-[-0.02em] md:text-[26px]">{value}</div>
+      <div className="mt-1.5 text-[11px] text-faint md:text-[11.5px]">{sub}</div>
     </Card>
   );
 }
@@ -34,7 +33,7 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
   return (
     <button
       onClick={onOpen}
-      className="flex flex-col gap-3 rounded-[14px] border border-border bg-surface p-4 text-start transition-transform hover:-translate-y-0.5 hover:shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="flex flex-col gap-2.5 rounded-[14px] border border-border bg-surface p-3.5 text-start transition-transform hover:-translate-y-0.5 hover:shadow-[0_2px_10px_rgba(0,0,0,0.05)] active:bg-background md:gap-3 md:p-4"
     >
       <div className="flex items-center justify-between">
         <span
@@ -67,7 +66,7 @@ function MemberCard({ row, aliasCount, onOpen }: { row: OverallRankingRow; alias
 
       <div className="flex items-end justify-between border-t border-border pt-3">
         <div>
-          <div className="num text-[26px] font-bold leading-none tracking-[-0.02em]">{row.score}</div>
+          <div className="num text-[24px] font-bold leading-none tracking-[-0.02em] md:text-[26px]">{row.score}</div>
           <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.04em] text-faint">
             {t("common.score")}
           </div>
@@ -121,8 +120,8 @@ export function Members() {
   if (error) return <ErrorState message={error} />;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+    <div className="flex flex-col gap-3.5 md:gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
         <StatTile label={t("members.roster")} value={String(stats.roster)} sub={t("members.trackedMembers")} />
         <StatTile
           label={t("members.avgAttendance")}
@@ -132,12 +131,12 @@ export function Members() {
         <StatTile label={t("members.atRisk")} value={String(stats.atRisk)} sub={t("members.belowHalf")} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col gap-1.5 md:flex-row md:flex-wrap md:items-center md:gap-3">
         <Input
           placeholder={t("members.searchPlaceholder")}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          className="max-w-sm"
+          className="h-11 md:h-9 md:max-w-sm"
         />
         <span className="text-[12px] text-faint">
           {t("members.shown", { shown: filtered.length, total: rows.length })}
@@ -153,7 +152,7 @@ export function Members() {
           <EmptyState message={t("members.emptyMatch")} />
         </Card>
       ) : (
-        <div className={cn("grid gap-3.5", "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((row) => (
             <MemberCard
               key={row.member_id}

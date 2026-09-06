@@ -12,6 +12,7 @@ import {
 import type { MemberSnapshotSeries } from "@shared/types";
 import { Card } from "@/components/ui/card";
 import { formatNumber, formatCompact, localeTag } from "@/lib/format";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 /** "2026-07-29" -> "Jul 29". Falls back to the raw value if it is not an ISO date. */
 function dateLabel(d: string): string {
@@ -82,6 +83,7 @@ export function PowerHistoryCard({
   totalMembers?: number;
 }) {
   const { t } = useTranslation();
+  const mobile = useIsMobile();
   const data = useMemo<Point[]>(() => {
     const byDate = new Map(series.rows.map((r) => [r.captured_on, r]));
     return series.captures.map((d) => {
@@ -112,7 +114,7 @@ export function PowerHistoryCard({
     .join(" · ");
 
   return (
-    <Card className="p-5">
+    <Card className="p-4 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <div className="text-[14px] font-semibold">{t("powerHistory.title")}</div>
@@ -135,7 +137,7 @@ export function PowerHistoryCard({
       ) : observed === 0 ? (
         <div className="py-10 text-center text-[13px] text-muted">{t("powerHistory.emptyMember")}</div>
       ) : (
-        <ResponsiveContainer width="100%" height={230} className="mt-3">
+        <ResponsiveContainer width="100%" height={mobile ? 180 : 230} className="mt-3">
           <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
             <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 4" vertical={false} />
             <XAxis

@@ -21,6 +21,7 @@ import type {
 } from "@shared/types";
 import { api, ApiError, type ScoringConfig } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
+import { useIsMobile } from "@/lib/useIsMobile";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -124,7 +125,7 @@ function ActivityRow({
       <Progress
         value={Math.round((stat.points / max) * 100)}
         indicatorClassName={activitySolidClass(activity.color)}
-        className="h-2 min-w-14 flex-1 rounded-full bg-background"
+        className="h-2 w-16 flex-none rounded-full bg-background md:w-auto md:min-w-14 md:flex-1"
       />
       <span className="num shrink-0 text-[13px] font-semibold">
         {stat.points} <span className="text-[11px] font-normal text-faint">{t("profile.pts")}</span>
@@ -159,6 +160,7 @@ export function MemberProfile() {
   const { t } = useTranslation();
   const { id } = useParams();
   const memberId = Number(id);
+  const mobile = useIsMobile();
 
   // A 404 is a legitimate outcome (bad URL / removed member), not a fetch failure — resolve it to
   // null so the not-found copy stays reserved for that case and real errors surface their message.
@@ -247,13 +249,13 @@ export function MemberProfile() {
   }));
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5 md:gap-4">
       <BackLink />
 
       {/* Hero + KPI row */}
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-[1.7fr_1fr_1fr_1fr_1fr]">
-        <Card className="flex items-start gap-3.5 p-[18px] sm:col-span-2 xl:col-span-1">
-          <Avatar name={member.governor} size={48} tone="dark" />
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 xl:grid-cols-[1.7fr_1fr_1fr_1fr_1fr]">
+        <Card className="col-span-2 flex items-start gap-3.5 p-4 md:p-[18px] xl:col-span-1">
+          <Avatar name={member.governor} size={mobile ? 52 : 48} tone="dark" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[18px] font-bold tracking-[-0.01em]">{member.governor}</span>
@@ -313,9 +315,9 @@ export function MemberProfile() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3.5 md:gap-4 lg:grid-cols-2">
         {/* Score composition */}
-        <Card className={snapshotsState.data ? "p-5" : "p-5 lg:col-span-2"}>
+        <Card className={snapshotsState.data ? "p-4 md:p-5" : "p-4 md:p-5 lg:col-span-2"}>
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
               <div className="text-[14px] font-semibold">{t("profile.composition.title")}</div>
@@ -336,7 +338,7 @@ export function MemberProfile() {
           {series.length === 0 ? (
             <div className="py-10 text-center text-[13px] text-muted">{t("profile.composition.empty")}</div>
           ) : (
-            <ResponsiveContainer width="100%" height={230} className="mt-3">
+            <ResponsiveContainer width="100%" height={mobile ? 150 : 230} className="mt-3">
               <BarChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 4" vertical={false} />
                 <XAxis

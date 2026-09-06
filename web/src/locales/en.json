@@ -124,6 +124,65 @@
     "copy": "Copy",
     "copied": "Copied"
   },
+  "screenshots": {
+    "mode": { "paste": "Paste text", "screenshots": "From screenshots" },
+    "meter": {
+      "plenty": "Used <1>{{used}}</1> of <2>{{limit}}</2> today · about <3>{{left}}</3> screenshots left",
+      "low": "<1>About {{left}} screenshots left today.</1> Large batches may not finish.",
+      "usedUp": "<1>Today's reading allowance is used up (or the reading service says so).</1> It resets at {{time}}. You can still paste text.",
+      "resets": "resets {{time}}"
+    },
+    "picker": {
+      "choose": "Choose screenshots",
+      "drop": "Drop screenshots here, or <1>choose files</1>",
+      "hintEvent": "Pick several at once, order doesn't matter. About 2 s each; a normal screenshot gives 5–6 rows.",
+      "hintRoster": "Several at once, any order. About 2 s each. A full roster is 12–15 screenshots.",
+      "addMore": "Add more screenshots"
+    },
+    "progress": {
+      "reading": "Reading {{i}} of {{n}}",
+      "eta": "~{{s}} s left",
+      "cancel": "Cancel",
+      "stopped": "Stopped · {{i}} of {{n}} read",
+      "kept_one": "{{count}} row kept below",
+      "kept_other": "{{count}} rows kept below",
+      "readRest": "Read the rest",
+      "exhaustedTitle": "The reading allowance is used up (or the service says so)",
+      "exhaustedBody": "Try again later or paste text. Your screenshots are still selected.",
+      "tryAgain": "Try again",
+      "pasteText": "Paste text",
+      "offlineTitle": "No connection",
+      "offlineBody": "Paused at {{i}} of {{n}} · nothing lost",
+      "retry": "Retry",
+      "summary_one": "{{k}} of {{n}} screenshots read · {{count}} row",
+      "summary_other": "{{k}} of {{n}} screenshots read · {{count}} rows",
+      "summaryFailed_one": "{{count}} failed",
+      "summaryFailed_other": "{{count}} failed",
+      "details": "Details",
+      "hide": "Hide"
+    },
+    "status": {
+      "waiting": "Waiting",
+      "reading": "Reading…",
+      "done_one": "Done · {{count}} row",
+      "done_other": "Done · {{count}} rows",
+      "failed": "Failed",
+      "not_read": "Not read",
+      "retry_wait": "Waiting to retry",
+      "remove": "Remove"
+    },
+    "reason": {
+      "not_a_screen_event": "Not a ranking screen",
+      "not_a_screen_roster": "Not the Alliance Ranking screen",
+      "read_failed": "Couldn't read this one",
+      "bad_type": "Not a PNG/JPEG screenshot"
+    },
+    "placeholder": "Rows read from screenshots appear here.\nYou can still paste or edit.",
+    "moreArriving": "more arriving",
+    "nudgeEvent": "Check names and values before you save. A misread name is not blocked, it lands in Needs mapping and you link it once. Screenshots are read one at a time — check that no rank numbers are missing.",
+    "nudgeRoster": "Check names, ranks and power before you continue. Unrecognized names are decided one by one in step 2, never guessed.",
+    "rosterBlocked": "Read or remove every screenshot before continuing — unread screenshots would make members look absent."
+  },
   "events": {
     "needKey": "Set your API key (top bar) to save events.",
     "rawName": "Raw name",

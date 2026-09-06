@@ -124,6 +124,69 @@
     "copy": "Copiar",
     "copied": "Copiado"
   },
+  "screenshots": {
+    "mode": { "paste": "Pegar texto", "screenshots": "Desde capturas" },
+    "meter": {
+      "plenty": "Usadas <1>{{used}}</1> de <2>{{limit}}</2> hoy · quedan unas <3>{{left}}</3> capturas",
+      "low": "<1>Quedan unas {{left}} capturas hoy.</1> Es posible que los lotes grandes no terminen.",
+      "usedUp": "<1>Se agotó la cuota de lectura de hoy (o el servicio de lectura dice que sí).</1> Se restablece a las {{time}}. Aún puedes pegar texto.",
+      "resets": "se restablece {{time}}"
+    },
+    "picker": {
+      "choose": "Elegir capturas",
+      "drop": "Suelta las capturas aquí, o <1>elige archivos</1>",
+      "hintEvent": "Elige varias a la vez, el orden no importa. Unos 2 s cada una; una captura normal da 5–6 filas.",
+      "hintRoster": "Varias a la vez, en cualquier orden. Unos 2 s cada una. Un roster completo son 12–15 capturas.",
+      "addMore": "Añadir más capturas"
+    },
+    "progress": {
+      "reading": "Leyendo {{i}} de {{n}}",
+      "eta": "~{{s}} s restantes",
+      "cancel": "Cancelar",
+      "stopped": "Detenido · {{i}} de {{n}} leídas",
+      "kept_one": "{{count}} fila guardada abajo",
+      "kept_many": "{{count}} filas guardadas abajo",
+      "kept_other": "{{count}} filas guardadas abajo",
+      "readRest": "Leer el resto",
+      "exhaustedTitle": "Se agotó la cuota de lectura (o el servicio dice que sí)",
+      "exhaustedBody": "Vuelve a intentarlo más tarde o pega el texto. Tus capturas siguen seleccionadas.",
+      "tryAgain": "Reintentar",
+      "pasteText": "Pegar texto",
+      "offlineTitle": "Sin conexión",
+      "offlineBody": "Pausado en {{i}} de {{n}} · nada se perdió",
+      "retry": "Reintentar",
+      "summary_one": "{{k}} de {{n}} capturas leídas · {{count}} fila",
+      "summary_many": "{{k}} de {{n}} capturas leídas · {{count}} filas",
+      "summary_other": "{{k}} de {{n}} capturas leídas · {{count}} filas",
+      "summaryFailed_one": "{{count}} fallida",
+      "summaryFailed_many": "{{count}} fallidas",
+      "summaryFailed_other": "{{count}} fallidas",
+      "details": "Detalles",
+      "hide": "Ocultar"
+    },
+    "status": {
+      "waiting": "Esperando",
+      "reading": "Leyendo…",
+      "done_one": "Lista · {{count}} fila",
+      "done_many": "Lista · {{count}} filas",
+      "done_other": "Lista · {{count}} filas",
+      "failed": "Fallida",
+      "not_read": "No leída",
+      "retry_wait": "Esperando para reintentar",
+      "remove": "Quitar"
+    },
+    "reason": {
+      "not_a_screen_event": "No es una pantalla de clasificación",
+      "not_a_screen_roster": "No es la pantalla de clasificación de la alianza",
+      "read_failed": "No se pudo leer esta captura",
+      "bad_type": "No es una captura PNG/JPEG"
+    },
+    "placeholder": "Las filas leídas de capturas aparecen aquí.\nAún puedes pegar o editar.",
+    "moreArriving": "llegando más",
+    "nudgeEvent": "Revisa nombres y valores antes de guardar. Un nombre mal leído no se bloquea, va a Pendientes de vincular y lo enlazas una vez. Las capturas se leen de una en una — comprueba que no falte ningún número de rango.",
+    "nudgeRoster": "Revisa nombres, rangos y poder antes de continuar. Los nombres no reconocidos se deciden uno por uno en el paso 2, nunca se adivinan.",
+    "rosterBlocked": "Lee o quita todas las capturas antes de continuar — las capturas sin leer harían parecer ausentes a esos miembros."
+  },
   "events": {
     "needKey": "Configure su clave de API (barra superior) para guardar eventos.",
     "rawName": "Nombre original",

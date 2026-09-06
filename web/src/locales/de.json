@@ -124,6 +124,65 @@
     "copy": "Kopieren",
     "copied": "Kopiert"
   },
+  "screenshots": {
+    "mode": { "paste": "Text einfügen", "screenshots": "Aus Screenshots" },
+    "meter": {
+      "plenty": "Heute <1>{{used}}</1> von <2>{{limit}}</2> verbraucht · noch etwa <3>{{left}}</3> Screenshots übrig",
+      "low": "<1>Noch etwa {{left}} Screenshots heute übrig.</1> Große Stapel werden möglicherweise nicht fertig.",
+      "usedUp": "<1>Das heutige Lesekontingent ist aufgebraucht (oder der Lesedienst meldet das).</1> Es setzt sich um {{time}} zurück. Text einfügen geht weiterhin.",
+      "resets": "setzt sich {{time}} zurück"
+    },
+    "picker": {
+      "choose": "Screenshots auswählen",
+      "drop": "Screenshots hierher ziehen oder <1>Dateien auswählen</1>",
+      "hintEvent": "Mehrere auf einmal wählen, Reihenfolge egal. Etwa 2 s pro Bild; ein normaler Screenshot ergibt 5–6 Zeilen.",
+      "hintRoster": "Mehrere auf einmal, beliebige Reihenfolge. Etwa 2 s pro Bild. Ein vollständiges Roster sind 12–15 Screenshots.",
+      "addMore": "Weitere Screenshots hinzufügen"
+    },
+    "progress": {
+      "reading": "Lese {{i}} von {{n}}",
+      "eta": "~{{s}} s verbleibend",
+      "cancel": "Abbrechen",
+      "stopped": "Gestoppt · {{i}} von {{n}} gelesen",
+      "kept_one": "{{count}} Zeile unten behalten",
+      "kept_other": "{{count}} Zeilen unten behalten",
+      "readRest": "Rest lesen",
+      "exhaustedTitle": "Das Lesekontingent ist aufgebraucht (oder der Dienst meldet das)",
+      "exhaustedBody": "Später erneut versuchen oder Text einfügen. Die Screenshots bleiben ausgewählt.",
+      "tryAgain": "Erneut versuchen",
+      "pasteText": "Text einfügen",
+      "offlineTitle": "Keine Verbindung",
+      "offlineBody": "Pausiert bei {{i}} von {{n}} · nichts ist verloren",
+      "retry": "Erneut versuchen",
+      "summary_one": "{{k}} von {{n}} Screenshots gelesen · {{count}} Zeile",
+      "summary_other": "{{k}} von {{n}} Screenshots gelesen · {{count}} Zeilen",
+      "summaryFailed_one": "{{count}} fehlgeschlagen",
+      "summaryFailed_other": "{{count}} fehlgeschlagen",
+      "details": "Details",
+      "hide": "Ausblenden"
+    },
+    "status": {
+      "waiting": "Wartet",
+      "reading": "Liest…",
+      "done_one": "Fertig · {{count}} Zeile",
+      "done_other": "Fertig · {{count}} Zeilen",
+      "failed": "Fehlgeschlagen",
+      "not_read": "Nicht gelesen",
+      "retry_wait": "Wartet auf erneuten Versuch",
+      "remove": "Entfernen"
+    },
+    "reason": {
+      "not_a_screen_event": "Kein Ranking-Bildschirm",
+      "not_a_screen_roster": "Nicht der Bildschirm „Allianz-Rangliste“",
+      "read_failed": "Konnte diesen Screenshot nicht lesen",
+      "bad_type": "Kein PNG/JPEG-Screenshot"
+    },
+    "placeholder": "Aus Screenshots gelesene Zeilen erscheinen hier.\nDu kannst weiterhin einfügen oder bearbeiten.",
+    "moreArriving": "weitere kommen noch",
+    "nudgeEvent": "Prüfe Namen und Werte, bevor du speicherst. Ein falsch gelesener Name wird nicht blockiert, sondern landet unter Zuordnung nötig, und du verknüpfst ihn einmal. Screenshots werden nacheinander gelesen — prüfe, dass keine Rangnummer fehlt.",
+    "nudgeRoster": "Prüfe Namen, Ränge und Macht, bevor du fortfährst. Unbekannte Namen werden in Schritt 2 einzeln entschieden, nie erraten.",
+    "rosterBlocked": "Lies oder entferne jeden Screenshot, bevor du fortfährst — ungelesene Screenshots würden Mitglieder als abwesend erscheinen lassen."
+  },
   "events": {
     "needKey": "Legen Sie Ihren API-Schlüssel fest (obere Leiste), um Events zu speichern.",
     "rawName": "Rohname",

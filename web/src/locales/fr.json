@@ -124,6 +124,69 @@
     "copy": "Copier",
     "copied": "Copié"
   },
+  "screenshots": {
+    "mode": { "paste": "Coller le texte", "screenshots": "Depuis des captures" },
+    "meter": {
+      "plenty": "<1>{{used}}</1> sur <2>{{limit}}</2> utilisées aujourd'hui · environ <3>{{left}}</3> captures restantes",
+      "low": "<1>Environ {{left}} captures restantes aujourd'hui.</1> Les gros lots pourraient ne pas se terminer.",
+      "usedUp": "<1>Le quota de lecture du jour est épuisé (ou le service de lecture le dit).</1> Il se réinitialise à {{time}}. Vous pouvez toujours coller du texte.",
+      "resets": "réinitialisation {{time}}"
+    },
+    "picker": {
+      "choose": "Choisir des captures",
+      "drop": "Déposez des captures ici, ou <1>choisissez des fichiers</1>",
+      "hintEvent": "Choisissez-en plusieurs à la fois, l'ordre importe peu. Environ 2 s chacune ; une capture normale donne 5 à 6 lignes.",
+      "hintRoster": "Plusieurs à la fois, dans n'importe quel ordre. Environ 2 s chacune. Un roster complet fait 12 à 15 captures.",
+      "addMore": "Ajouter des captures"
+    },
+    "progress": {
+      "reading": "Lecture {{i}} sur {{n}}",
+      "eta": "~{{s}} s restantes",
+      "cancel": "Annuler",
+      "stopped": "Arrêté · {{i}} sur {{n}} lues",
+      "kept_one": "{{count}} ligne conservée ci-dessous",
+      "kept_many": "{{count}} lignes conservées ci-dessous",
+      "kept_other": "{{count}} lignes conservées ci-dessous",
+      "readRest": "Lire le reste",
+      "exhaustedTitle": "Le quota de lecture est épuisé (ou le service le dit)",
+      "exhaustedBody": "Réessayez plus tard ou collez du texte. Vos captures restent sélectionnées.",
+      "tryAgain": "Réessayer",
+      "pasteText": "Coller le texte",
+      "offlineTitle": "Aucune connexion",
+      "offlineBody": "En pause à {{i}} sur {{n}} · rien n'est perdu",
+      "retry": "Réessayer",
+      "summary_one": "{{k}} sur {{n}} captures lues · {{count}} ligne",
+      "summary_many": "{{k}} sur {{n}} captures lues · {{count}} lignes",
+      "summary_other": "{{k}} sur {{n}} captures lues · {{count}} lignes",
+      "summaryFailed_one": "{{count}} en échec",
+      "summaryFailed_many": "{{count}} en échec",
+      "summaryFailed_other": "{{count}} en échec",
+      "details": "Détails",
+      "hide": "Masquer"
+    },
+    "status": {
+      "waiting": "En attente",
+      "reading": "Lecture…",
+      "done_one": "Terminé · {{count}} ligne",
+      "done_many": "Terminé · {{count}} lignes",
+      "done_other": "Terminé · {{count}} lignes",
+      "failed": "Échec",
+      "not_read": "Non lue",
+      "retry_wait": "En attente de nouvelle tentative",
+      "remove": "Retirer"
+    },
+    "reason": {
+      "not_a_screen_event": "Pas un écran de classement",
+      "not_a_screen_roster": "Pas l'écran de classement de l'alliance",
+      "read_failed": "Impossible de lire cette capture",
+      "bad_type": "Pas une capture PNG/JPEG"
+    },
+    "placeholder": "Les lignes lues depuis les captures apparaissent ici.\nVous pouvez toujours coller ou modifier le texte.",
+    "moreArriving": "d'autres arrivent",
+    "nudgeEvent": "Vérifiez les noms et les valeurs avant d'enregistrer. Un nom mal lu n'est pas bloqué, il atterrit dans À rattacher et vous le liez une fois. Les captures sont lues une par une — vérifiez qu'aucun numéro de rang ne manque.",
+    "nudgeRoster": "Vérifiez les noms, rangs et puissance avant de continuer. Les noms non reconnus sont décidés un par un à l'étape 2, jamais devinés.",
+    "rosterBlocked": "Lisez ou retirez chaque capture avant de continuer — des captures non lues feraient paraître ces membres absents."
+  },
   "events": {
     "needKey": "Définissez votre clé API (barre supérieure) pour enregistrer les événements.",
     "rawName": "Nom d'origine",

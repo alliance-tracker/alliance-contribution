@@ -43,7 +43,6 @@ export function titleForPath(pathname: string): TKey | null {
 const subtitles: Record<string, TKey> = {
   "/": "nav.subtitles.overview",
   "/rankings": "nav.subtitles.ranking",
-  "/rankings/overall": "nav.subtitles.ranking",
   "/members": "nav.subtitles.members",
   "/attendance": "nav.subtitles.attendance",
 };

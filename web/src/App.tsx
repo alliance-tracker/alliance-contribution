@@ -33,8 +33,7 @@ export default function App() {
           <Routes>
             <Route element={<AppLayout />}>
               <Route path="/" element={<Overview />} />
-              <Route path="/rankings" element={<Ranking initialScope="overall" />} />
-              <Route path="/rankings/overall" element={<Ranking initialScope="overall" />} />
+              <Route path="/rankings" element={<Ranking />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/members" element={<Members />} />
               <Route path="/members/:id" element={<MemberProfile />} />

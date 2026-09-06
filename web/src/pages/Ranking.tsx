@@ -50,9 +50,9 @@ const PODIUM_ORDER_CLASSES = [
   "hidden md:block md:order-5",
 ];
 
-export function Ranking({ initialScope = "overall" }: { initialScope?: RankingScope }) {
+export function Ranking() {
   const { t } = useTranslation();
-  const [scope, setScope] = useState<RankingScope>(initialScope);
+  const [scope, setScope] = useState<RankingScope>("overall");
   const [week, setWeek] = useState<string | null>(null);
   const [activity, setActivity] = useState("all"); // "all" | activity.key
   const [hideLeadership, setHideLeadership] = useState(false);

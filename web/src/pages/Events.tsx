@@ -834,6 +834,15 @@ export function Events() {
 
       <div className="grid grid-cols-1 gap-3.5 md:gap-6 lg:grid-cols-[1fr_340px]">
         <Card className="overflow-hidden">
+          {/* Outside the state ternary: on a phone this is the only route to the ingest dialog, so it
+              has to be there in the error, loading and empty states too. */}
+          <div className="flex items-center justify-between border-b border-border px-4 py-3 md:hidden">
+            <span className="text-[14px] font-semibold">{t("events.recentTitle")}</span>
+            <Button className="h-9" onClick={openAdd}>
+              <Plus />
+              {t("events.add")}
+            </Button>
+          </div>
           {error ? (
             <div className="p-4">
               <ErrorState message={error} />
@@ -845,56 +854,44 @@ export function Events() {
           ) : (
             <>
               <div className="md:hidden">
-                <div className="flex items-center justify-between border-b border-border px-4 py-3">
-                  <span className="text-[14px] font-semibold">{t("events.recentTitle")}</span>
-                  <Button className="h-9" onClick={openAdd}>
-                    <Plus />
-                    {t("events.add")}
-                  </Button>
-                </div>
                 {events.map((ev) => {
                   const activity = activityById.get(ev.activity_type_id);
-                  const open = () => setViewId(ev.id);
                   return (
-                    <div
-                      key={ev.id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={open}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          open();
-                        }
-                      }}
-                      className="flex cursor-pointer items-center gap-2 border-b border-border py-2.5 ps-4 pe-2 last:border-b-0 active:bg-background"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <Badge className={cn("whitespace-nowrap", activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR))}>
-                            {activity?.name ?? "—"}
-                          </Badge>
-                          <span className="num text-[12px] text-muted">
-                            <span className="sr-only">{t("events.instance")}</span>#{ev.instance}
+                    /* The row is a plain div and the tap target a real <button>, so the Edit/Delete
+                       buttons are siblings rather than nested in a role="button" that hides them. */
+                    <div key={ev.id} className="flex items-center gap-2 border-b border-border pe-2 last:border-b-0">
+                      <button
+                        type="button"
+                        onClick={() => setViewId(ev.id)}
+                        className="flex min-w-0 flex-1 items-center gap-2.5 py-2.5 ps-4 text-start active:bg-background"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <Badge className={cn("whitespace-nowrap", activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR))}>
+                              {activity?.name ?? "—"}
+                            </Badge>
+                            <span className="num text-[12px] text-muted">
+                              <span className="sr-only">{t("events.instance")}</span>#{ev.instance}
+                            </span>
+                          </div>
+                          <div className="num mt-1.5 text-[12px] text-muted">
+                            {ev.date} · {t("events.rowCount", { count: ev.rows })}
+                          </div>
+                        </div>
+                        <div className="flex flex-none flex-col items-end gap-1">
+                          <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+                            {t("common.unmapped")}
                           </span>
+                          {unmappedCell(unmappedCountByEvent.get(ev.id) ?? 0)}
                         </div>
-                        <div className="num mt-1.5 text-[12px] text-muted">
-                          {ev.date} · {t("events.rowCount", { count: ev.rows })}
-                        </div>
-                      </div>
-                      <div className="flex flex-none flex-col items-end gap-1">
-                        <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-                          {t("common.unmapped")}
-                        </span>
-                        {unmappedCell(unmappedCountByEvent.get(ev.id) ?? 0)}
-                      </div>
+                      </button>
                       {/* Edit/delete stay reachable on a phone — the mockup's chevron alone would strand them. */}
                       <Button
                         variant="ghost"
                         size="icon"
                         className="size-9"
                         aria-label={t("common.actions.edit")}
-                        onClick={(e) => { e.stopPropagation(); openEdit(ev.id); }}
+                        onClick={() => openEdit(ev.id)}
                       >
                         <Pencil />
                       </Button>
@@ -904,7 +901,7 @@ export function Events() {
                           size="icon"
                           className="size-9"
                           aria-label={t("common.actions.delete")}
-                          onClick={(e) => { e.stopPropagation(); setDeleteEvent(ev); }}
+                          onClick={() => setDeleteEvent(ev)}
                         >
                           <Trash2 />
                         </Button>

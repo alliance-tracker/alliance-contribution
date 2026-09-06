@@ -1,18 +1,8 @@
-import type { Alias, NewAlias } from "../../shared/types";
-import { all, batchChunked, buildMultiRowInsert, first, run } from "./db";
-
-const COLUMNS = ["alias", "member_id", "note"];
+import type { Alias } from "../../shared/types";
+import { all, first, run } from "./db";
 
 export class AliasRepo {
   constructor(private readonly db: D1Database) {}
-
-  async insertMany(rows: NewAlias[]): Promise<void> {
-    if (rows.length === 0) return;
-
-    const values = rows.map((row) => [row.alias, row.member_id, row.note]);
-    const stmts = buildMultiRowInsert(this.db, "aliases", COLUMNS, values);
-    await batchChunked(this.db, stmts);
-  }
 
   async insert(row: { alias: string; member_id: number; note: string | null }): Promise<Alias> {
     const inserted = await first<Alias>(
@@ -52,10 +42,5 @@ export class AliasRepo {
       return all<Alias>(this.db, "SELECT * FROM aliases WHERE member_id = ? ORDER BY id", opts.member_id);
     }
     return all<Alias>(this.db, "SELECT * FROM aliases ORDER BY id");
-  }
-
-  async count(): Promise<number> {
-    const row = await first<{ count: number }>(this.db, "SELECT COUNT(*) AS count FROM aliases");
-    return row?.count ?? 0;
   }
 }

@@ -14,6 +14,11 @@ const { DB, SEED_STATEMENTS } = env;
 const AUTH = { "X-Api-Key": "test-key" };
 const ADMIN_AUTH = { "X-Api-Key": "test-admin-key" };
 
+async function countRows(table: string): Promise<number> {
+  const row = await DB.prepare(`SELECT COUNT(*) AS n FROM ${table}`).first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
 // Fresh migrated D1 per file; storage NOT reset between `it` blocks — every test uses distinct member
 // governors and aliases so writes from one test never collide with another. Seed default scoring config
 // so the rename/recompute tests can score real participations.
@@ -165,7 +170,7 @@ describe("MemberService", () => {
     );
 
     expect(await new MemberRepo(DB).getByGovernor("[ABC]MergeZeta")).toBeNull();
-    expect(await resolveService.resolve("MergeZeta")).toBe(first.id);
+    expect(await (await resolveService.buildResolver()).resolve("MergeZeta")).toBe(first.id);
   });
 
   it("rejects a create whose governor normalizes onto an existing governor (NFC vs NFD)", async () => {
@@ -180,7 +185,7 @@ describe("MemberService", () => {
     );
 
     expect(await new MemberRepo(DB).getByGovernor(nfd)).toBeNull();
-    expect(await resolveService.resolve(nfd)).toBe(first.id);
+    expect(await (await resolveService.buildResolver()).resolve(nfd)).toBe(first.id);
   });
 
   it("rejects a create whose governor normalizes to an empty name", async () => {
@@ -432,8 +437,8 @@ describe("MemberService.importRoster", () => {
     const owner = await memberService.create({ governor: "ImpShadowOwner" });
     await new AliasRepo(DB).insert({ alias: "ImpShadowAlias", member_id: owner.id, note: null });
 
-    const memberCountBefore = await new MemberRepo(DB).count();
-    const aliasCountBefore = await new AliasRepo(DB).count();
+    const memberCountBefore = await countRows("members");
+    const aliasCountBefore = await countRows("aliases");
 
     await expect(
       memberService.importRoster({
@@ -447,8 +452,8 @@ describe("MemberService.importRoster", () => {
       }),
     ).rejects.toThrow(/rejected/);
 
-    expect(await new MemberRepo(DB).count()).toBe(memberCountBefore);
-    expect(await new AliasRepo(DB).count()).toBe(aliasCountBefore);
+    expect(await countRows("members")).toBe(memberCountBefore);
+    expect(await countRows("aliases")).toBe(aliasCountBefore);
     expect(await new MemberRepo(DB).getByGovernor("ImpShadowUnwritten")).toBeNull();
   });
 
@@ -520,7 +525,7 @@ describe("MemberService.importRoster", () => {
   it("rejects batch-internal collisions (two creates, and a create equal to an alias in the same batch)", async () => {
     const { memberService } = createServices(DB);
 
-    const memberCountBefore = await new MemberRepo(DB).count();
+    const memberCountBefore = await countRows("members");
 
     // Two creates whose governors normalize to the same key (NFC vs NFD form of "ñ").
     await expect(
@@ -533,7 +538,7 @@ describe("MemberService.importRoster", () => {
         reactivate: [],
       }),
     ).rejects.toThrow(/rejected/);
-    expect(await new MemberRepo(DB).count()).toBe(memberCountBefore);
+    expect(await countRows("members")).toBe(memberCountBefore);
 
     // A create governor equal (normalized) to an alias's alias in the SAME batch.
     const target = await memberService.create({ governor: "ImpBatchAliasTarget" });
@@ -554,7 +559,7 @@ describe("MemberService.importRoster", () => {
     const { memberService } = createServices(DB);
 
     const target = await memberService.create({ governor: "ImpEmptyAliasTarget" });
-    const aliasCountBefore = await new AliasRepo(DB).count();
+    const aliasCountBefore = await countRows("aliases");
 
     await expect(
       memberService.importRoster({
@@ -566,7 +571,7 @@ describe("MemberService.importRoster", () => {
         reactivate: [],
       }),
     ).rejects.toThrow(/rejected/);
-    expect(await new AliasRepo(DB).count()).toBe(aliasCountBefore);
+    expect(await countRows("aliases")).toBe(aliasCountBefore);
   });
 
   it("metaFields: an omitted field is left untouched, an explicit null is applied", async () => {
@@ -611,8 +616,9 @@ describe("MemberService.importRoster", () => {
 
     // Both pasted names really do land on one member, which is why name-level dedup in the client
     // cannot catch this: the two lines are different STRINGS.
-    expect(await resolveService.resolve("DupTarget")).toBe(m.id);
-    expect(await resolveService.resolve("DupTargetAlias")).toBe(m.id);
+    const resolver = await resolveService.buildResolver();
+    expect(resolver.resolve("DupTarget")).toBe(m.id);
+    expect(resolver.resolve("DupTargetAlias")).toBe(m.id);
 
     // The classified batch: the governor line and the alias line, both resolved to `m` by the client and
     // therefore both sent as `updates` of the same member.

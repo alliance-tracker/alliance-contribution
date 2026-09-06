@@ -39,17 +39,15 @@ beforeAll(async () => {
   contributionId = contribution.id;
 
   const memberRepo = new MemberRepo(DB);
-  await memberRepo.insertMany([
-    { governor: "Recompute Alice", alliance_rank: null, power: null, power_position: null, active: 1 },
-    { governor: "Recompute Bob", alliance_rank: null, power: null, power_position: null, active: 1 },
-  ]);
+  await memberRepo.insert({ governor: "Recompute Alice", alliance_rank: null, power: null, power_position: null, active: 1 });
+  await memberRepo.insert({ governor: "Recompute Bob", alliance_rank: null, power: null, power_position: null, active: 1 });
   const alice = await memberRepo.getByGovernor("Recompute Alice");
   const bob = await memberRepo.getByGovernor("Recompute Bob");
   if (!alice || !bob) throw new Error("fixture members not found");
   aliceId = alice.id;
   bobId = bob.id;
 
-  await new AliasRepo(DB).insertMany([{ alias: "RC_Alias", member_id: bobId, note: null }]);
+  await new AliasRepo(DB).insert({ alias: "RC_Alias", member_id: bobId, note: null });
 
   const event = await new EventRepo(DB).insert({
     activity_type_id: contributionId,
@@ -66,7 +64,7 @@ beforeAll(async () => {
     { event_id: eventId, raw_name: "Unknown Governor XYZ", member_id: null, value: 150000, points: 0, notes: null },
     { event_id: eventId, raw_name: "Recompute Bob", member_id: null, value: 100, points: 0, notes: null },
   ];
-  await participationRepo.insertMany(rows);
+  await participationRepo.replaceForEvent(eventId, rows);
 });
 
 describe("recompute scores from config", () => {
@@ -118,9 +116,7 @@ describe("editing scoring via ScoringService", () => {
 describe("dynamic alias attaches on recompute", () => {
   it("recompute leaves an unknown rename unmapped, then attaches it once an alias row exists", async () => {
     const memberRepo = new MemberRepo(DB);
-    await memberRepo.insertMany([
-      { governor: "DynMember", alliance_rank: null, power: null, power_position: null, active: 1 },
-    ]);
+    await memberRepo.insert({ governor: "DynMember", alliance_rank: null, power: null, power_position: null, active: 1 });
     const dynMember = await memberRepo.getByGovernor("DynMember");
     if (!dynMember) throw new Error("fixture member DynMember not found");
 
@@ -130,7 +126,7 @@ describe("dynamic alias attaches on recompute", () => {
       week: "2026-W29",
       instance: 1,
     });
-    await participationRepo.insertMany([
+    await participationRepo.replaceForEvent(dynEvent.id, [
       { event_id: dynEvent.id, raw_name: "DynRename", member_id: null, value: 25000, points: 0, notes: null },
     ]);
 
@@ -141,7 +137,7 @@ describe("dynamic alias attaches on recompute", () => {
     expect(before.member_id).toBeNull(); // unknown rename -> unmapped, never guessed
     expect(before.points).toBe(1); // still scored from value (contribution 25000 -> 1)
 
-    await new AliasRepo(DB).insertMany([{ alias: "DynRename", member_id: dynMember.id, note: null }]);
+    await new AliasRepo(DB).insert({ alias: "DynRename", member_id: dynMember.id, note: null });
 
     await recomputeService.run();
     const after = (await participationRepo.listByEvent(dynEvent.id))[0];
@@ -220,9 +216,7 @@ describe("recompute writes only changed rows", () => {
     expect(noop.updated).toBe(0); // ...but writes none of them
 
     const memberRepo = new MemberRepo(DB);
-    await memberRepo.insertMany([
-      { governor: "DeltaMember", alliance_rank: null, power: null, power_position: null, active: 1 },
-    ]);
+    await memberRepo.insert({ governor: "DeltaMember", alliance_rank: null, power: null, power_position: null, active: 1 });
     const deltaMember = await memberRepo.getByGovernor("DeltaMember");
     if (!deltaMember) throw new Error("fixture member DeltaMember not found");
 
@@ -232,7 +226,7 @@ describe("recompute writes only changed rows", () => {
       week: "2026-W30",
       instance: 1,
     });
-    await participationRepo.insertMany([
+    await participationRepo.replaceForEvent(deltaEvent.id, [
       { event_id: deltaEvent.id, raw_name: "DeltaRename", member_id: null, value: 25000, points: 0, notes: null },
     ]);
 
@@ -241,9 +235,7 @@ describe("recompute writes only changed rows", () => {
     expect(afterInsert.updated).toBe(1);
 
     // Adding the alias changes member_id on exactly that one row, and nothing else.
-    await new AliasRepo(DB).insertMany([
-      { alias: "DeltaRename", member_id: deltaMember.id, note: null },
-    ]);
+    await new AliasRepo(DB).insert({ alias: "DeltaRename", member_id: deltaMember.id, note: null });
     const afterAlias = await recomputeService.run();
     expect(afterAlias.updated).toBe(1);
 

@@ -99,11 +99,6 @@ export class EventRepo {
     await run(this.db, "DELETE FROM events WHERE id = ?", id);
   }
 
-  async count(): Promise<number> {
-    const row = await first<{ count: number }>(this.db, "SELECT COUNT(*) AS count FROM events");
-    return row?.count ?? 0;
-  }
-
   // Highest `instance` in use for one activity type; 0 when it has no events (MAX returns NULL).
   async maxInstance(activityTypeId: number): Promise<number> {
     const row = await first<{ max_instance: number | null }>(

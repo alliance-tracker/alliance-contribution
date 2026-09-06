@@ -28,8 +28,4 @@ export class ResolveService {
 
     return { resolve: (raw) => resolveName(raw, aliasMap, govMap) };
   }
-
-  async resolve(rawName: string): Promise<number | null> {
-    return (await this.buildResolver()).resolve(rawName);
-  }
 }

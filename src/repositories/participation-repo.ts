@@ -1,18 +1,10 @@
 import type { NewParticipation, Participation } from "../../shared/types";
-import { all, batchChunked, buildMultiRowInsert, first } from "./db";
+import { all, batchChunked, buildMultiRowInsert } from "./db";
 
 const COLUMNS = ["event_id", "raw_name", "member_id", "value", "points", "notes"];
 
 export class ParticipationRepo {
   constructor(private readonly db: D1Database) {}
-
-  async insertMany(rows: NewParticipation[]): Promise<void> {
-    if (rows.length === 0) return;
-
-    const values = rows.map((row) => [row.event_id, row.raw_name, row.member_id, row.value, row.points, row.notes]);
-    const stmts = buildMultiRowInsert(this.db, "participations", COLUMNS, values);
-    await batchChunked(this.db, stmts);
-  }
 
   async listByEvent(eventId: number): Promise<Participation[]> {
     return all<Participation>(this.db, "SELECT * FROM participations WHERE event_id = ? ORDER BY id", eventId);
@@ -57,11 +49,6 @@ export class ParticipationRepo {
     ]);
     const insertStmts = buildMultiRowInsert(this.db, "participations", COLUMNS, values);
     await batchChunked(this.db, [deleteStmt, ...insertStmts]);
-  }
-
-  async count(): Promise<number> {
-    const row = await first<{ count: number }>(this.db, "SELECT COUNT(*) AS count FROM participations");
-    return row?.count ?? 0;
   }
 
   // Every participation joined to its event's activity_type_id — the input RecomputeService re-scores.

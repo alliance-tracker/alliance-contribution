@@ -17,6 +17,11 @@ const { DB } = env;
 // per table, they run in the FIRST test in this file that touches that table (before any later test adds
 // more rows) — later tests use unique fixture names instead of relying on global counts.
 
+async function countRows(table: string): Promise<number> {
+  const row = await DB.prepare(`SELECT COUNT(*) AS n FROM ${table}`).first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
 describe("ActivityRepo", () => {
   const repo = new ActivityRepo(DB);
 
@@ -49,7 +54,7 @@ describe("ActivityRepo", () => {
 });
 
 describe("ScoringTierRepo", () => {
-  it("inserts many tiers and lists them by activity, ordered by min_value", async () => {
+  it("replaces the tier set for an activity and lists them by activity, ordered by min_value", async () => {
     const activity = await new ActivityRepo(DB).insert({
       key: "contribution",
       name: "Contribution",
@@ -63,10 +68,10 @@ describe("ScoringTierRepo", () => {
     });
 
     const tierRepo = new ScoringTierRepo(DB);
-    await tierRepo.insertMany([
-      { activity_type_id: activity.id, min_value: 500, points: 3 },
-      { activity_type_id: activity.id, min_value: 0, points: 0 },
-      { activity_type_id: activity.id, min_value: 100, points: 1 },
+    await tierRepo.replaceForActivity(activity.id, [
+      { min_value: 500, points: 3 },
+      { min_value: 0, points: 0 },
+      { min_value: 100, points: 1 },
     ]);
 
     const tiers = await tierRepo.listByActivity(activity.id);
@@ -77,12 +82,12 @@ describe("ScoringTierRepo", () => {
 describe("MemberRepo", () => {
   const repo = new MemberRepo(DB);
 
-  it("inserts many members and round-trips them", async () => {
+  it("inserts members one at a time and round-trips them", async () => {
     const rows: NewMember[] = [
       { governor: "RepoTest Alice", alliance_rank: "R4", power: 1000, power_position: 1, active: 1 },
       { governor: "RepoTest Bob", alliance_rank: "R3", power: 900, power_position: 2, active: 1 },
     ];
-    await repo.insertMany(rows);
+    for (const row of rows) await repo.insert(row);
 
     const alice = await repo.getByGovernor("RepoTest Alice");
     expect(alice?.alliance_rank).toBe("R4");
@@ -91,29 +96,29 @@ describe("MemberRepo", () => {
     const all = await repo.list();
     expect(all.map((m) => m.governor)).toEqual(["RepoTest Alice", "RepoTest Bob"]);
 
-    expect(await repo.count()).toBe(2);
+    expect(await countRows("members")).toBe(2);
   });
 });
 
 describe("AliasRepo", () => {
-  it("inserts many aliases, round-trips, and rejects a duplicate alias", async () => {
+  it("inserts an alias, round-trips, and rejects a duplicate alias", async () => {
     const memberRepo = new MemberRepo(DB);
-    await memberRepo.insertMany([
-      { governor: "RepoTest Carol", alliance_rank: null, power: null, power_position: null, active: 1 },
-    ]);
+    await memberRepo.insert({
+      governor: "RepoTest Carol", alliance_rank: null, power: null, power_position: null, active: 1,
+    });
     const carol = await memberRepo.getByGovernor("RepoTest Carol");
     if (!carol) throw new Error("fixture member not found");
 
     const aliasRepo = new AliasRepo(DB);
-    await aliasRepo.insertMany([{ alias: "RepoTest_C", member_id: carol.id, note: null }]);
+    await aliasRepo.insert({ alias: "RepoTest_C", member_id: carol.id, note: null });
 
     const found = await aliasRepo.getByAlias("RepoTest_C");
     expect(found?.member_id).toBe(carol.id);
 
-    expect(await aliasRepo.count()).toBe(1);
+    expect(await countRows("aliases")).toBe(1);
 
     await expect(
-      aliasRepo.insertMany([{ alias: "RepoTest_C", member_id: carol.id, note: "duplicate" }]),
+      aliasRepo.insert({ alias: "RepoTest_C", member_id: carol.id, note: "duplicate" }),
     ).rejects.toThrow(/UNIQUE constraint/i);
   });
 });
@@ -148,12 +153,12 @@ describe("EventRepo", () => {
     const listed = await eventRepo.list();
     expect(listed.map((e) => e.id)).toEqual([inserted.id]);
 
-    expect(await eventRepo.count()).toBe(1);
+    expect(await countRows("events")).toBe(1);
   });
 });
 
 describe("ParticipationRepo", () => {
-  it("insertMany crosses the multi-row-insert chunk boundary for 150+ rows", async () => {
+  it("replaceForEvent crosses the multi-row-insert chunk boundary for 150+ rows", async () => {
     const activity = await new ActivityRepo(DB).insert({
       key: "bear_trap_chunk_test",
       name: "Bear Trap Chunk Test",
@@ -184,7 +189,7 @@ describe("ParticipationRepo", () => {
     }));
 
     const participationRepo = new ParticipationRepo(DB);
-    await participationRepo.insertMany(rows);
+    await participationRepo.replaceForEvent(event.id, rows);
 
     const listed = await participationRepo.listByEvent(event.id);
     expect(listed).toHaveLength(ROW_COUNT);
@@ -194,6 +199,6 @@ describe("ParticipationRepo", () => {
     expect(first?.value).toBe(1);
     expect(last?.value).toBe(ROW_COUNT);
 
-    expect(await participationRepo.count()).toBe(ROW_COUNT);
+    expect(await countRows("participations")).toBe(ROW_COUNT);
   });
 });

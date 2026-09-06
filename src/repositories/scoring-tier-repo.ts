@@ -1,18 +1,10 @@
-import type { NewScoringTier, ScoringTier } from "../../shared/types";
+import type { ScoringTier } from "../../shared/types";
 import { all, batchChunked, buildMultiRowInsert } from "./db";
 
 const COLUMNS = ["activity_type_id", "min_value", "points"];
 
 export class ScoringTierRepo {
   constructor(private readonly db: D1Database) {}
-
-  async insertMany(rows: NewScoringTier[]): Promise<void> {
-    if (rows.length === 0) return;
-
-    const values = rows.map((row) => [row.activity_type_id, row.min_value, row.points]);
-    const stmts = buildMultiRowInsert(this.db, "scoring_tiers", COLUMNS, values);
-    await batchChunked(this.db, stmts);
-  }
 
   async listByActivity(activityTypeId: number): Promise<ScoringTier[]> {
     return all<ScoringTier>(

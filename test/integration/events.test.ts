@@ -26,13 +26,12 @@ beforeAll(async () => {
 // Creates a member + optional aliases, returns the member id.
 async function seedMember(governor: string, aliases: string[] = []): Promise<number> {
   const memberRepo = new MemberRepo(DB);
-  await memberRepo.insertMany([
-    { governor, alliance_rank: null, power: null, power_position: null, active: 1 },
-  ]);
+  await memberRepo.insert({ governor, alliance_rank: null, power: null, power_position: null, active: 1 });
   const member = await memberRepo.getByGovernor(governor);
   if (!member) throw new Error(`seedMember: ${governor} not found`);
-  if (aliases.length > 0) {
-    await new AliasRepo(DB).insertMany(aliases.map((alias) => ({ alias, member_id: member.id, note: null })));
+  const aliasRepo = new AliasRepo(DB);
+  for (const alias of aliases) {
+    await aliasRepo.insert({ alias, member_id: member.id, note: null });
   }
   return member.id;
 }

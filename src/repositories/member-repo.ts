@@ -1,18 +1,8 @@
 import type { Member, NewMember } from "../../shared/types";
-import { all, batchChunked, buildMultiRowInsert, first, run } from "./db";
-
-const COLUMNS = ["governor", "alliance_rank", "power", "power_position", "active"] satisfies (keyof Member)[];
+import { all, first, run } from "./db";
 
 export class MemberRepo {
   constructor(private readonly db: D1Database) {}
-
-  async insertMany(rows: NewMember[]): Promise<void> {
-    if (rows.length === 0) return;
-
-    const values = rows.map((row) => [row.governor, row.alliance_rank, row.power, row.power_position, row.active]);
-    const stmts = buildMultiRowInsert(this.db, "members", COLUMNS, values);
-    await batchChunked(this.db, stmts);
-  }
 
   async insert(row: NewMember): Promise<Member> {
     const inserted = await first<Member>(
@@ -78,10 +68,5 @@ export class MemberRepo {
       return all<Member>(this.db, "SELECT * FROM members WHERE active = ? ORDER BY id", opts.active ? 1 : 0);
     }
     return all<Member>(this.db, "SELECT * FROM members ORDER BY id");
-  }
-
-  async count(): Promise<number> {
-    const row = await first<{ count: number }>(this.db, "SELECT COUNT(*) AS count FROM members");
-    return row?.count ?? 0;
   }
 }

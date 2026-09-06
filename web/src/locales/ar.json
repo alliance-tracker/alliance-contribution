@@ -686,6 +686,7 @@
     "shareOfTop": "الحصة من أعلى قوة",
     "changeVsLargest": "التغيّر مقابل الأكبر",
     "sinceCapture": "منذ {{date}}",
+    "viewProfile": "الملف الشخصي",
     "actions": "الإجراءات",
     "aria": {
       "edit": "تعديل {{governor}}",

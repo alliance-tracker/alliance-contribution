@@ -10,7 +10,7 @@ import {
   type WeeklyRankingRow,
 } from "@shared/types";
 import { api } from "@/lib/api";
-import { assignBands, BAND_EDGE_CLASS, BAND_EXPECTED_RANK, BAND_ROW_CLASS } from "@/lib/alliance-rank";
+import { assignBands, BAND_EDGE_CLASS, BAND_EDGE_ROW_CLASS, BAND_EXPECTED_RANK, BAND_ROW_CLASS } from "@/lib/alliance-rank";
 import { BandLegend } from "@/components/BandLegend";
 import { cn } from "@/lib/utils";
 import { useApi, firstError } from "@/lib/useApi";
@@ -212,7 +212,7 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
                     className={cn(
                       "flex items-center gap-2.5 border-b border-border py-2.5 ps-3 pe-3.5 last:border-b-0 active:brightness-95",
                       BAND_ROW_CLASS[band],
-                      BAND_EDGE_CLASS[band],
+                      BAND_EDGE_ROW_CLASS[band],
                     )}
                   >
                     <Badge

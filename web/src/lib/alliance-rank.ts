@@ -104,3 +104,15 @@ export const BAND_EDGE_CLASS: Record<Band, string> = {
   mid: "[box-shadow:inset_3px_0_0_var(--color-band-mid)]",
   rest: "[box-shadow:inset_3px_0_0_var(--color-band-rest)]",
 };
+
+/**
+ * Band edge for a full-width ROW box (the phone lists). Rows are plain divs/links, not table
+ * cells, so a logical border works and follows the reading direction; BAND_EDGE_CLASS stays a
+ * physical box-shadow because of the collapsing-border caveat above.
+ */
+export const BAND_EDGE_ROW_CLASS: Record<Band, string> = {
+  leadership: "border-s-[3px] border-s-band-lead",
+  top: "border-s-[3px] border-s-band-top",
+  mid: "border-s-[3px] border-s-band-mid",
+  rest: "border-s-[3px] border-s-band-rest",
+};

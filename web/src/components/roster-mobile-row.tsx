@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { ChevronDown, Merge, Pencil, Tag, UserCheck, UserMinus } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronDown, Merge, Pencil, Tag, User, UserCheck, UserMinus } from "lucide-react";
 import type { Member } from "@shared/types";
 import type { RosterMember, RosterRow, RosterStatus } from "@/lib/roster-view";
 import { formatCompact, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Bar, MoveCell, RankChangeChip, RankChip, riskEdgeClass, rowClass } from "@/components/roster-cells";
+import { Bar, MoveCell, RankChangeChip, RankChip, riskEdgeRowClass, rowClass } from "@/components/roster-cells";
 
 /** U+2212 — a hyphen is narrower than a digit and misaligns the column. */
 const MINUS = "−";
@@ -76,7 +77,7 @@ export function RosterMobileRow({
   const deltaFill = d === null || d === 0 ? "bg-faint" : d > 0 ? "bg-up" : "bg-down";
 
   return (
-    <div className={cn("border-b border-border last:border-b-0", rowClass(row), riskEdgeClass(row))}>
+    <div className={cn("border-b border-border last:border-b-0", rowClass(row), riskEdgeRowClass(row))}>
       <button
         type="button"
         onClick={onToggle}
@@ -90,7 +91,7 @@ export function RosterMobileRow({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate text-[13.5px] font-semibold text-foreground">{m.governor}</span>
-            <span className="relative inline-flex shrink-0">
+            <span className={cn("relative inline-flex shrink-0", row.rankChange && "pe-3.5")}>
               <RankChip rank={m.alliance_rank} />
               <RankChangeChip change={row.rankChange} />
             </span>
@@ -133,47 +134,57 @@ export function RosterMobileRow({
             </span>
             {since && <span>{t("roster.sinceCapture", { date: since })}</span>}
           </div>
-          {live && (
-            <div className="flex gap-2">
-              <Button variant="secondary" className="h-9 flex-1" onClick={() => onEdit(live)}>
-                <Pencil />
-                {t("common.actions.edit")}
-              </Button>
-              <Button variant="secondary" className="h-9 flex-1" onClick={() => onRename(live)}>
-                <Tag />
-                {t("roster.rename")}
-              </Button>
-              {isAdmin && (
-                <Button
-                  variant="secondary"
-                  className="h-9 w-11 p-0"
-                  aria-label={t("roster.aria.merge", { governor: live.governor })}
-                  onClick={() => onMerge(live)}
-                >
-                  <Merge />
+          {/* The profile link is the phone's only route to MemberProfile (the desktop name cell is a
+              Link), so it renders in the historical view too — profiles exist regardless. */}
+          <div className="flex gap-2">
+            <Button asChild variant="secondary" className="h-9 flex-1">
+              <Link to={`/members/${m.id}`} state={{ from: "roster" }}>
+                <User />
+                {t("roster.viewProfile")}
+              </Link>
+            </Button>
+            {live && (
+              <>
+                <Button variant="secondary" className="h-9 flex-1" onClick={() => onEdit(live)}>
+                  <Pencil />
+                  {t("common.actions.edit")}
                 </Button>
-              )}
-              {live.active === 1 ? (
-                <Button
-                  variant="secondary"
-                  className="h-9 w-11 border-risk-border p-0 text-down hover:bg-risk-bg"
-                  aria-label={t("roster.aria.deactivate", { governor: live.governor })}
-                  onClick={() => onDeactivate(live)}
-                >
-                  <UserMinus />
+                <Button variant="secondary" className="h-9 flex-1" onClick={() => onRename(live)}>
+                  <Tag />
+                  {t("roster.rename")}
                 </Button>
-              ) : (
-                <Button
-                  variant="secondary"
-                  className="h-9 w-11 p-0"
-                  aria-label={t("roster.aria.activate", { governor: live.governor })}
-                  onClick={() => onActivate(live)}
-                >
-                  <UserCheck />
-                </Button>
-              )}
-            </div>
-          )}
+                {isAdmin && (
+                  <Button
+                    variant="secondary"
+                    className="h-9 w-11 p-0"
+                    aria-label={t("roster.aria.merge", { governor: live.governor })}
+                    onClick={() => onMerge(live)}
+                  >
+                    <Merge />
+                  </Button>
+                )}
+                {live.active === 1 ? (
+                  <Button
+                    variant="secondary"
+                    className="h-9 w-11 border-risk-border p-0 text-down hover:bg-risk-bg"
+                    aria-label={t("roster.aria.deactivate", { governor: live.governor })}
+                    onClick={() => onDeactivate(live)}
+                  >
+                    <UserMinus />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    className="h-9 w-11 p-0"
+                    aria-label={t("roster.aria.activate", { governor: live.governor })}
+                    onClick={() => onActivate(live)}
+                  >
+                    <UserCheck />
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

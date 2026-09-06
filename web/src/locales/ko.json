@@ -541,6 +541,7 @@
     "shareOfTop": "최고 전투력 대비 비율",
     "changeVsLargest": "가장 큰 변동 대비",
     "sinceCapture": "{{date}} 이후",
+    "viewProfile": "프로필",
     "actions": "작업",
     "aria": {
       "edit": "{{governor}} 수정",

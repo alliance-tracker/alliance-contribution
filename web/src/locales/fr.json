@@ -599,6 +599,7 @@
     "shareOfTop": "Part de la puissance max",
     "changeVsLargest": "Variation vs la plus grande",
     "sinceCapture": "Depuis {{date}}",
+    "viewProfile": "Profil",
     "actions": "Actions",
     "aria": {
       "edit": "Modifier {{governor}}",

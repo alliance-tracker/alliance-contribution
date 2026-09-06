@@ -237,3 +237,8 @@ export function rowClass(row: RosterRow): string {
 export function riskEdgeClass(row: RosterRow): string {
   return row.status === "at-risk" ? "[box-shadow:inset_3px_0_0_var(--color-warn)]" : "";
 }
+
+/** At-risk edge for the phone row (a div, so a logical border is fine — see riskEdgeClass). */
+export function riskEdgeRowClass(row: RosterRow): string {
+  return row.status === "at-risk" ? "border-s-[3px] border-s-warn" : "";
+}

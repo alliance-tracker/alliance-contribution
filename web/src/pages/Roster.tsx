@@ -1946,11 +1946,11 @@ export function Roster() {
             )}
             {role === "admin" && shownCapture && (
               <>
-                <Button variant="secondary" size="sm" onClick={editCapture}>
+                <Button variant="secondary" size="sm" className="h-10 md:h-8" onClick={editCapture}>
                   <Pencil />
                   {t("roster.editUpdate")}
                 </Button>
-                <Button variant="secondary" size="sm" onClick={() => setDeleteDate(shownCapture)}>
+                <Button variant="secondary" size="sm" className="h-10 md:h-8" onClick={() => setDeleteDate(shownCapture)}>
                   <Trash2 />
                   {t("roster.deleteUpdate")}
                 </Button>

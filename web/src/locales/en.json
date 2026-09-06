@@ -570,6 +570,7 @@
     "shareOfTop": "Share of top power",
     "changeVsLargest": "Change vs largest",
     "sinceCapture": "Since {{date}}",
+    "viewProfile": "Profile",
     "actions": "Actions",
     "aria": {
       "edit": "Edit {{governor}}",

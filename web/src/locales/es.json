@@ -599,6 +599,7 @@
     "shareOfTop": "Cuota del poder máximo",
     "changeVsLargest": "Cambio vs. el mayor",
     "sinceCapture": "Desde {{date}}",
+    "viewProfile": "Perfil",
     "actions": "Acciones",
     "aria": {
       "edit": "Editar a {{governor}}",

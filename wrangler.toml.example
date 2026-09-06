@@ -42,6 +42,18 @@ namespace_id = "1001"
 binding = "AI"
 remote = true
 
+# Optional tuning for the screenshot reader. Every value below is the default; set a var to override it
+# (in wrangler.toml under [vars], or in .dev.vars for local dev). Anything unset, blank or non-numeric
+# falls back to the default. See docs/guides/events.md → From screenshots.
+# [vars]
+# AI_MODEL = "@cf/google/gemma-4-26b-a4b-it"   # any Workers AI chat model that accepts images
+# AI_DAILY_NEURON_LIMIT = "10000"              # Cloudflare's free allowance per day
+# AI_NEURONS_PER_READ = "5"                    # measured cost of one read; drives "screenshots left"
+# AI_RESERVE_NEURONS = "50"                    # refuse a read when fewer neurons than this remain
+# AI_DAILY_REQUEST_CAP = "400"                 # hard cap on reads per day
+# AI_MAX_TOKENS = "2500"
+# AI_THINKING = "false"                        # "true" = slower, ~7x the neurons, slightly better names
+
 [assets]
 directory = "dist"
 binding = "ASSETS"

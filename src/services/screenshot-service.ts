@@ -1,7 +1,6 @@
 import {
-  AI_DAILY_REQUEST_CAP,
-  AI_NEURONS_PER_READ,
-  AI_RESERVE_NEURONS,
+  DEFAULT_AI_CONFIG,
+  type AiConfig,
   type ScreenshotErrorCode,
   type ScreenshotKind,
   type ScreenshotReadResult,
@@ -48,19 +47,20 @@ export class ScreenshotService {
   constructor(
     private repo: UsageRepo,
     private run: AiRunner,
+    private cfg: AiConfig = DEFAULT_AI_CONFIG,
     private now: () => Date = () => new Date(),
   ) {}
 
   async usage(): Promise<ScreenshotUsage> {
     const now = this.now();
-    return usageSnapshot(await this.repo.get(utcDay(now)), now);
+    return usageSnapshot(await this.repo.get(utcDay(now)), now, this.cfg);
   }
 
   async read(input: ReadInput): Promise<ScreenshotReadResult> {
     const now = this.now();
     const day = utcDay(now);
-    const before = usageSnapshot(await this.repo.get(day), now);
-    if (before.used + AI_RESERVE_NEURONS > before.limit || before.requests >= AI_DAILY_REQUEST_CAP) {
+    const before = usageSnapshot(await this.repo.get(day), now, this.cfg);
+    if (before.used + this.cfg.reserveNeurons > before.limit || before.requests >= this.cfg.dailyRequestCap) {
       throw new ScreenshotError("exhausted", before);
     }
 
@@ -76,9 +76,9 @@ export class ScreenshotService {
 
     // Tally first, parse second: the neurons are spent whatever the answer looks like.
     const reported = Number(out.usage?.neurons);
-    const neurons = Number.isFinite(reported) && reported > 0 ? reported : AI_NEURONS_PER_READ;
+    const neurons = Number.isFinite(reported) && reported > 0 ? reported : this.cfg.neuronsPerRead;
     await this.repo.add(day, neurons);
-    const usage = usageSnapshot(await this.repo.get(day), now);
+    const usage = usageSnapshot(await this.repo.get(day), now, this.cfg);
 
     const choice = out.choices?.[0];
     if (!finishReasonOk(choice?.finish_reason)) throw new ScreenshotError("read_failed", usage);

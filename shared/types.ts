@@ -314,7 +314,7 @@ export type Env = {
   VIEWER_API_KEY: string;
   ASSETS: Fetcher;
   API_RATE_LIMIT: RateLimit;
-};
+} & Partial<Record<AiEnvKey, string>>;
 
 // ---- Settings (2026-08-03 rank-bands spec) ----------------------------------
 
@@ -341,10 +341,46 @@ export const AI_MAX_TOKENS = 2500;
 
 export type ScreenshotUsage = {
   used: number;       // neurons this UTC day (rounded)
-  limit: number;      // AI_DAILY_NEURON_LIMIT
+  limit: number;      // daily neuron allowance (AiConfig.dailyNeuronLimit)
   requests: number;
   resetsAt: string;   // ISO, next 00:00 UTC
+  // The meter's inputs, served so the client follows the Worker's configuration:
+  perRead: number;    // AiConfig.neuronsPerRead
+  reserve: number;    // AiConfig.reserveNeurons
+  requestCap: number; // AiConfig.dailyRequestCap
 };
+
+/** Everything tunable about the screenshot reader. Defaults are the measured/published values above;
+ *  each field can be overridden by a Worker var of the same name in SCREAMING_SNAKE_CASE (see
+ *  `readAiConfig` in src/domain/screenshot.ts and the commented `[vars]` block in wrangler.toml.example). */
+export type AiConfig = {
+  model: string;
+  dailyNeuronLimit: number;
+  neuronsPerRead: number;
+  reserveNeurons: number;
+  dailyRequestCap: number;
+  maxTokens: number;
+  thinking: boolean;
+};
+
+export const DEFAULT_AI_CONFIG: AiConfig = {
+  model: AI_MODEL,
+  dailyNeuronLimit: AI_DAILY_NEURON_LIMIT,
+  neuronsPerRead: AI_NEURONS_PER_READ,
+  reserveNeurons: AI_RESERVE_NEURONS,
+  dailyRequestCap: AI_DAILY_REQUEST_CAP,
+  maxTokens: AI_MAX_TOKENS,
+  thinking: false,
+};
+
+export type AiEnvKey =
+  | "AI_MODEL"
+  | "AI_DAILY_NEURON_LIMIT"
+  | "AI_NEURONS_PER_READ"
+  | "AI_RESERVE_NEURONS"
+  | "AI_DAILY_REQUEST_CAP"
+  | "AI_MAX_TOKENS"
+  | "AI_THINKING";
 
 export type ScreenshotReadResult = {
   lines: string[];    // TSV lines, exactly as the model produced them (trimmed cells)

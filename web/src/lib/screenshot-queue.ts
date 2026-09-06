@@ -1,4 +1,4 @@
-import { AI_DAILY_REQUEST_CAP, AI_NEURONS_PER_READ, AI_RESERVE_NEURONS, type ScreenshotUsage } from "../../../shared/types";
+import type { ScreenshotUsage } from "../../../shared/types";
 
 // Pure state machine for a batch of screenshots read one at a time. The component owns the fetch
 // loop and the AbortController; everything decidable from state lives here so it can be unit-tested.
@@ -123,10 +123,10 @@ export function etaMs(s: QueueState): number {
 }
 
 export const readsLeft = (u: ScreenshotUsage): number =>
-  Math.max(0, Math.min(Math.floor((u.limit - u.used) / AI_NEURONS_PER_READ), AI_DAILY_REQUEST_CAP - u.requests));
+  Math.max(0, Math.min(Math.floor((u.limit - u.used) / u.perRead), u.requestCap - u.requests));
 
 export function meterState(u: ScreenshotUsage, exhausted: boolean): "plenty" | "low" | "used_up" {
-  if (exhausted || u.limit - u.used < AI_RESERVE_NEURONS || u.requests >= AI_DAILY_REQUEST_CAP) return "used_up";
+  if (exhausted || u.limit - u.used < u.reserve || u.requests >= u.requestCap) return "used_up";
   if (readsLeft(u) < 100 || u.used / u.limit >= 0.8) return "low";
   return "plenty";
 }

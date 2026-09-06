@@ -5,6 +5,7 @@ import {
   isAllowanceError,
   nextUtcMidnight,
   parseModelOutput,
+  readAiConfig,
   rosterPrompt,
   toBase64,
   usageSnapshot,
@@ -22,7 +23,45 @@ describe("utc day helpers", () => {
   });
   it("usageSnapshot rounds neurons and carries the limit and reset", () => {
     const s = usageSnapshot({ neurons: 312.4, requests: 60 }, new Date("2026-09-06T10:00:00Z"));
-    expect(s).toEqual({ used: 312, limit: 10_000, requests: 60, resetsAt: "2026-09-07T00:00:00.000Z" });
+    expect(s).toEqual({ used: 312, limit: 10_000, requests: 60, resetsAt: "2026-09-07T00:00:00.000Z", perRead: 5, reserve: 50, requestCap: 400 });
+  });
+});
+
+describe("readAiConfig", () => {
+  it("returns the defaults when no var is set", () => {
+    expect(readAiConfig({})).toEqual({
+      model: "@cf/google/gemma-4-26b-a4b-it",
+      dailyNeuronLimit: 10_000,
+      neuronsPerRead: 5,
+      reserveNeurons: 50,
+      dailyRequestCap: 400,
+      maxTokens: 2500,
+      thinking: false,
+    });
+  });
+  it("applies overrides field by field and ignores garbage", () => {
+    const cfg = readAiConfig({
+      AI_MODEL: " @cf/meta/llama-4-scout-17b-16e-instruct ",
+      AI_DAILY_NEURON_LIMIT: "50000",
+      AI_NEURONS_PER_READ: "abc",
+      AI_RESERVE_NEURONS: "-5",
+      AI_DAILY_REQUEST_CAP: "",
+      AI_MAX_TOKENS: "4000",
+      AI_THINKING: "true",
+    });
+    expect(cfg).toEqual({
+      model: "@cf/meta/llama-4-scout-17b-16e-instruct",
+      dailyNeuronLimit: 50_000,
+      neuronsPerRead: 5,
+      reserveNeurons: 50,
+      dailyRequestCap: 400,
+      maxTokens: 4000,
+      thinking: true,
+    });
+  });
+  it("usageSnapshot follows the config", () => {
+    const cfg = readAiConfig({ AI_DAILY_NEURON_LIMIT: "50000", AI_NEURONS_PER_READ: "8", AI_RESERVE_NEURONS: "100", AI_DAILY_REQUEST_CAP: "900" });
+    expect(usageSnapshot({ neurons: 1, requests: 1 }, new Date("2026-09-06T10:00:00Z"), cfg)).toMatchObject({ limit: 50_000, perRead: 8, reserve: 100, requestCap: 900 });
   });
 });
 

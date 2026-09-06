@@ -62,7 +62,7 @@ switch remembers your last choice. In screenshot mode:
    check** — read the rank numbers yourself to make sure no screenshot was skipped.
 
 The thin bar under the switch is the **daily reading allowance**: Cloudflare gives the tracker a free
-quota of up to 400 screenshot reads a day (well inside the free allowance), resetting at 00:00 UTC (shown
+quota of up to 400 screenshot reads a day by default (well inside the free allowance), resetting at 00:00 UTC (shown
 in your local time). It turns amber when fewer than about 100 reads remain or 80 % of the allowance is
 used, and grey when the day's allowance is gone; paste text still works then. Screenshots are sent to
 Cloudflare Workers AI on the alliance's own account for reading and are not stored anywhere.

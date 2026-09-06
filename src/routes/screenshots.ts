@@ -1,6 +1,7 @@
 import { Hono } from "hono";
-import { AI_MAX_TOKENS, AI_MODEL, type Env, type ScreenshotKind } from "../../shared/types";
+import type { Env, ScreenshotKind } from "../../shared/types";
 import type { AuthVariables } from "../middleware/auth";
+import { readAiConfig } from "../domain/screenshot";
 import { AiUsageRepo } from "../repositories/ai-usage-repo";
 import { ScreenshotError, ScreenshotService, type AiChatOutput, type AiRunner } from "../services/screenshot-service";
 
@@ -15,9 +16,11 @@ const STATUS: Record<ScreenshotError["code"], 422 | 429 | 502> = {
 };
 
 function service(env: Env): ScreenshotService {
+  const cfg = readAiConfig(env);
   const runner: AiRunner = async (prompt, imageDataUri) =>
-    // `usage.neurons` is not in the typed output, hence the widening cast.
-    (await env.AI.run(AI_MODEL, {
+    // `usage.neurons` is not in the typed output, hence the widening cast. The model id is a var, so
+    // it is not statically one of workers-types' known ids either.
+    (await env.AI.run(cfg.model as Parameters<Ai["run"]>[0], {
       messages: [
         {
           role: "user",
@@ -27,10 +30,10 @@ function service(env: Env): ScreenshotService {
           ],
         },
       ],
-      max_tokens: AI_MAX_TOKENS,
-      chat_template_kwargs: { enable_thinking: false },
-    })) as unknown as AiChatOutput;
-  return new ScreenshotService(new AiUsageRepo(env.DB), runner);
+      max_tokens: cfg.maxTokens,
+      chat_template_kwargs: { enable_thinking: cfg.thinking },
+    } as never)) as unknown as AiChatOutput;
+  return new ScreenshotService(new AiUsageRepo(env.DB), runner, cfg);
 }
 
 screenshotsRoutes.get("/usage", async (c) => c.json(await service(c.env).usage()));

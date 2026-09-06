@@ -1,5 +1,5 @@
 import { EVENT_SENTINEL, ROSTER_SENTINEL } from "../../shared/prompts";
-import { AI_DAILY_NEURON_LIMIT, type ScreenshotKind, type ScreenshotUsage } from "../../shared/types";
+import { DEFAULT_AI_CONFIG, type AiConfig, type AiEnvKey, type ScreenshotKind, type ScreenshotUsage } from "../../shared/types";
 
 // Pure helpers for the screenshot-read flow. No DB, no fetch.
 
@@ -11,12 +11,38 @@ export function nextUtcMidnight(now: Date): string {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)).toISOString();
 }
 
-export function usageSnapshot(row: { neurons: number; requests: number }, now: Date): ScreenshotUsage {
+export function usageSnapshot(
+  row: { neurons: number; requests: number },
+  now: Date,
+  cfg: AiConfig = DEFAULT_AI_CONFIG,
+): ScreenshotUsage {
   return {
     used: Math.round(row.neurons),
-    limit: AI_DAILY_NEURON_LIMIT,
+    limit: cfg.dailyNeuronLimit,
     requests: row.requests,
     resetsAt: nextUtcMidnight(now),
+    perRead: cfg.neuronsPerRead,
+    reserve: cfg.reserveNeurons,
+    requestCap: cfg.dailyRequestCap,
+  };
+}
+
+/** Worker vars override the defaults one by one. A var that is unset, blank, or not a positive number
+ *  falls back to the default for that field rather than breaking the reader. */
+export function readAiConfig(env: Partial<Record<AiEnvKey, string>>): AiConfig {
+  const num = (raw: string | undefined, fallback: number): number => {
+    const n = Number(raw);
+    return raw !== undefined && raw.trim() !== "" && Number.isFinite(n) && n > 0 ? n : fallback;
+  };
+  const d = DEFAULT_AI_CONFIG;
+  return {
+    model: env.AI_MODEL?.trim() || d.model,
+    dailyNeuronLimit: num(env.AI_DAILY_NEURON_LIMIT, d.dailyNeuronLimit),
+    neuronsPerRead: num(env.AI_NEURONS_PER_READ, d.neuronsPerRead),
+    reserveNeurons: num(env.AI_RESERVE_NEURONS, d.reserveNeurons),
+    dailyRequestCap: num(env.AI_DAILY_REQUEST_CAP, d.dailyRequestCap),
+    maxTokens: num(env.AI_MAX_TOKENS, d.maxTokens),
+    thinking: /^(1|true|yes|on)$/i.test(env.AI_THINKING?.trim() ?? ""),
   };
 }
 

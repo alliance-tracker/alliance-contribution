@@ -104,7 +104,7 @@ describe("queueReducer", () => {
 });
 
 describe("meter helpers", () => {
-  const usage = (used: number, requests = 0) => ({ used, limit: 10_000, requests, resetsAt: "2026-09-07T00:00:00.000Z" });
+  const usage = (used: number, requests = 0) => ({ used, limit: 10_000, requests, resetsAt: "2026-09-07T00:00:00.000Z", perRead: 5, reserve: 50, requestCap: 400 });
   it("readsLeft divides the remainder by the per-read cost", () => {
     expect(readsLeft(usage(9_800))).toBe(40);
     expect(readsLeft(usage(10_000))).toBe(0);

@@ -35,6 +35,8 @@ npx wrangler d1 create <your-db-name>    # prints the name + id to paste above
 npm run db:migrate:local && npm run seed:local
 ```
 The `[ai]` binding is remote-only, so `npm run dev` needs `npx wrangler login` once. Tests do not.
+The screenshot reader's model and limits are Worker vars with code defaults — see the commented `[vars]`
+block in `wrangler.toml.example`; nothing about the model is hardcoded elsewhere.
 
 Nothing outside `wrangler.toml` names a specific Worker, database, or host — migrations and the
 seed address D1 through the **`DB` binding**, not a database name. Keep it that way.

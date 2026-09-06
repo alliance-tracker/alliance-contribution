@@ -113,11 +113,6 @@
       "memberProfile": "المشاركة والسجل الفردي للعضو"
     }
   },
-  "datePicker": {
-    "placeholder": "اختر تاريخًا",
-    "prevMonth": "الشهر السابق",
-    "nextMonth": "الشهر التالي"
-  },
   "llmPrompt": {
     "title": "موجّه LLM للقطات الشاشة",
     "copy": "نسخ",

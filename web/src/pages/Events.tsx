@@ -26,7 +26,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertTitle, AlertContent } from "@/components/ui/alert";
 import { ScreenshotIngest, type IngestMode } from "@/components/screenshot-ingest";
-import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -373,10 +372,10 @@ function EventFormDialog({
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-[12px] font-medium text-secondary">{t("common.date")}</label>
-                <DatePicker
+                <Input
+                  type="date"
                   value={date}
-                  onChange={setDate}
-                  placeholder={t("datePicker.placeholder")}
+                  onChange={(e) => setDate(e.target.value)}
                   className="w-full"
                 />
               </div>

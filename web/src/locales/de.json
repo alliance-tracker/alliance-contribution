@@ -113,11 +113,6 @@
       "memberProfile": "Individuelle Beteiligung und Verlauf"
     }
   },
-  "datePicker": {
-    "placeholder": "Datum wählen",
-    "prevMonth": "Vormonat",
-    "nextMonth": "Nächster Monat"
-  },
   "llmPrompt": {
     "title": "LLM-Prompt für Screenshots",
     "copy": "Kopieren",

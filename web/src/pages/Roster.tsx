@@ -59,7 +59,6 @@ import {
   riskEdgeClass,
   rowClass,
 } from "@/components/roster-cells";
-import { DatePicker } from "@/components/ui/date-picker";
 import { Field } from "@/components/ui/field";
 import { Alert, AlertContent } from "@/components/ui/alert";
 import { RosterDeltaPanel } from "@/components/roster-delta-panel";
@@ -1134,7 +1133,12 @@ function ImportRosterDialog({
                 <span className="num text-[13px] font-medium">{capturedOn}</span>
               ) : (
                 <>
-                  <DatePicker value={capturedOn} onChange={setCapturedOn} className="w-56" />
+                  <Input
+                    type="date"
+                    value={capturedOn}
+                    onChange={(e) => setCapturedOn(e.target.value)}
+                    className="w-56"
+                  />
                   {!dateValid && (
                     <p className="text-[12px] text-down">{t("roster.import.invalidDate")}</p>
                   )}

@@ -113,11 +113,6 @@
       "memberProfile": "Individual participation & history"
     }
   },
-  "datePicker": {
-    "placeholder": "Pick a date",
-    "prevMonth": "Previous month",
-    "nextMonth": "Next month"
-  },
   "llmPrompt": {
     "title": "LLM prompt for screenshots",
     "copy": "Copy",

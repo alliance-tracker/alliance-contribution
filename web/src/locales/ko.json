@@ -113,11 +113,6 @@
       "memberProfile": "개인 참여 및 이력"
     }
   },
-  "datePicker": {
-    "placeholder": "날짜 선택",
-    "prevMonth": "이전 달",
-    "nextMonth": "다음 달"
-  },
   "llmPrompt": {
     "title": "스크린샷용 LLM 프롬프트",
     "copy": "복사",

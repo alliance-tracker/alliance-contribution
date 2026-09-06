@@ -179,7 +179,8 @@
       "not_a_screen_event": "Pas un écran de classement",
       "not_a_screen_roster": "Pas l'écran de classement de l'alliance",
       "read_failed": "Impossible de lire cette capture",
-      "bad_type": "Pas une capture PNG/JPEG"
+      "bad_type": "Pas une capture PNG/JPEG",
+      "too_large": "Dépasse 8 Mo"
     },
     "placeholder": "Les lignes lues depuis les captures apparaissent ici.\nVous pouvez toujours coller ou modifier le texte.",
     "nudgeEvent": "Vérifiez les noms et les valeurs avant d'enregistrer. Un nom mal lu n'est pas bloqué, il atterrit dans Association requise et vous le liez une fois. Les captures sont lues une par une — vérifiez qu'aucun numéro de rang ne manque.",

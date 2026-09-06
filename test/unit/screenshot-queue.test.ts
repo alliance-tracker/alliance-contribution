@@ -37,7 +37,13 @@ describe("queueReducer", () => {
     s = queueReducer(s, { type: "began", id: b });
     s = queueReducer(s, { type: "failed", id: b, reason: "not_a_screen" });
     expect(s.batch).toBe("done");
-    expect(counts(s)).toEqual({ total: 2, done: 1, failed: 1, unread: 0, rows: 6, settled: true });
+    expect(counts(s)).toEqual({ total: 2, done: 1, failed: 1, unread: 0, rows: 6 });
+  });
+
+  it("rejects a file over 8 MB up front as too_large", () => {
+    const big = new File([new Uint8Array(9 * 1024 * 1024)], "big.png", { type: "image/png" });
+    const s = queueReducer(initialQueue, { type: "add", files: [big] });
+    expect(s.items[0]).toMatchObject({ status: "failed", reason: "too_large" });
   });
 
   it("cancel marks the in-flight and waiting items not_read and stops; resume re-queues them", () => {
@@ -85,10 +91,13 @@ describe("queueReducer", () => {
 });
 
 describe("meter helpers", () => {
-  const usage = (used: number) => ({ used, limit: 10_000, requests: 0, resetsAt: "2026-09-07T00:00:00.000Z" });
+  const usage = (used: number, requests = 0) => ({ used, limit: 10_000, requests, resetsAt: "2026-09-07T00:00:00.000Z" });
   it("readsLeft divides the remainder by the per-read cost", () => {
-    expect(readsLeft(usage(312))).toBe(1937);
+    expect(readsLeft(usage(9_800))).toBe(40);
     expect(readsLeft(usage(10_000))).toBe(0);
+  });
+  it("readsLeft is capped by the daily request quota when that is the binding term", () => {
+    expect(readsLeft(usage(0, 350))).toBe(50);
   });
   it("meterState: plenty, low under 100 reads or 80 % used, used_up on exhausted or inside the reserve", () => {
     expect(meterState(usage(312), false)).toBe("plenty");
@@ -96,6 +105,9 @@ describe("meter helpers", () => {
     expect(meterState(usage(8_000), false)).toBe("low");
     expect(meterState(usage(9_960), false)).toBe("used_up");
     expect(meterState(usage(0), true)).toBe("used_up");
+  });
+  it("meterState: used_up once the daily request cap is hit", () => {
+    expect(meterState(usage(0, 400), false)).toBe("used_up");
   });
   it("isAcceptedType allows png/jpeg/webp only", () => {
     expect(isAcceptedType(file("a.png"))).toBe(true);

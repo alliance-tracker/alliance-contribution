@@ -179,7 +179,8 @@
       "not_a_screen_event": "No es una pantalla de clasificación",
       "not_a_screen_roster": "No es la pantalla de clasificación de la alianza",
       "read_failed": "No se pudo leer esta captura",
-      "bad_type": "No es una captura PNG/JPEG"
+      "bad_type": "No es una captura PNG/JPEG",
+      "too_large": "Supera los 8 MB"
     },
     "placeholder": "Las filas leídas de capturas aparecen aquí.\nAún puedes pegar o editar.",
     "nudgeEvent": "Revisa nombres y valores antes de guardar. Un nombre mal leído no se bloquea, va a Necesita asignación y lo enlazas una vez. Las capturas se leen de una en una — comprueba que no falte ningún número de rango.",

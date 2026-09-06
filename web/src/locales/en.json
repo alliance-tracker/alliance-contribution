@@ -175,7 +175,8 @@
       "not_a_screen_event": "Not a ranking screen",
       "not_a_screen_roster": "Not the Alliance Ranking screen",
       "read_failed": "Couldn't read this one",
-      "bad_type": "Not a PNG/JPEG screenshot"
+      "bad_type": "Not a PNG/JPEG screenshot",
+      "too_large": "Larger than 8 MB"
     },
     "placeholder": "Rows read from screenshots appear here.\nYou can still paste or edit.",
     "nudgeEvent": "Check names and values before you save. A misread name is not blocked, it lands in Needs mapping and you link it once. Screenshots are read one at a time — check that no rank numbers are missing.",

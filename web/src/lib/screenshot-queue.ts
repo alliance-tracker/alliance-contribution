@@ -1,10 +1,10 @@
-import { AI_NEURONS_PER_READ, AI_RESERVE_NEURONS, type ScreenshotUsage } from "../../../shared/types";
+import { AI_DAILY_REQUEST_CAP, AI_NEURONS_PER_READ, AI_RESERVE_NEURONS, type ScreenshotUsage } from "../../../shared/types";
 
 // Pure state machine for a batch of screenshots read one at a time. The component owns the fetch
 // loop and the AbortController; everything decidable from state lives here so it can be unit-tested.
 
 export type ItemStatus = "waiting" | "reading" | "done" | "failed" | "not_read" | "retry_wait";
-export type FailReason = "not_a_screen" | "read_failed" | "bad_type";
+export type FailReason = "not_a_screen" | "read_failed" | "bad_type" | "too_large";
 export type QueueItem = {
   id: string;
   name: string;
@@ -34,6 +34,7 @@ const ACCEPTED = new Set(["image/png", "image/jpeg", "image/webp"]);
 export const isAcceptedType = (file: File): boolean => ACCEPTED.has(file.type);
 
 const SEED_MS = 2000;
+const MAX_FILE_BYTES = 8 * 1024 * 1024;
 let seq = 0;
 
 const isUnread = (i: QueueItem) => i.status === "waiting" || i.status === "retry_wait";
@@ -46,11 +47,11 @@ const settle = (s: QueueState): QueueState =>
 export function queueReducer(s: QueueState, a: QueueAction): QueueState {
   switch (a.type) {
     case "add": {
-      const items = a.files.map<QueueItem>((file) =>
-        isAcceptedType(file)
-          ? { id: `f${++seq}`, name: file.name, file, status: "waiting" }
-          : { id: `f${++seq}`, name: file.name, file, status: "failed", reason: "bad_type" },
-      );
+      const items = a.files.map<QueueItem>((file) => {
+        if (!isAcceptedType(file)) return { id: `f${++seq}`, name: file.name, file, status: "failed", reason: "bad_type" };
+        if (file.size > MAX_FILE_BYTES) return { id: `f${++seq}`, name: file.name, file, status: "failed", reason: "too_large" };
+        return { id: `f${++seq}`, name: file.name, file, status: "waiting" };
+      });
       return { ...s, items: [...s.items, ...items] };
     }
     case "start":
@@ -107,8 +108,7 @@ export function counts(s: QueueState) {
   const failed = s.items.filter((i) => i.status === "failed").length;
   const unread = s.items.filter((i) => isUnread(i) || i.status === "not_read").length;
   const rows = s.items.reduce((n, i) => n + (i.rows ?? 0), 0);
-  const settled = total > 0 && unread === 0 && !s.items.some((i) => i.status === "reading");
-  return { total, done, failed, unread, rows, settled };
+  return { total, done, failed, unread, rows };
 }
 
 export function etaMs(s: QueueState): number {
@@ -118,10 +118,10 @@ export function etaMs(s: QueueState): number {
 }
 
 export const readsLeft = (u: ScreenshotUsage): number =>
-  Math.max(0, Math.floor((u.limit - u.used) / AI_NEURONS_PER_READ));
+  Math.max(0, Math.min(Math.floor((u.limit - u.used) / AI_NEURONS_PER_READ), AI_DAILY_REQUEST_CAP - u.requests));
 
 export function meterState(u: ScreenshotUsage, exhausted: boolean): "plenty" | "low" | "used_up" {
-  if (exhausted || u.limit - u.used < AI_RESERVE_NEURONS) return "used_up";
+  if (exhausted || u.limit - u.used < AI_RESERVE_NEURONS || u.requests >= AI_DAILY_REQUEST_CAP) return "used_up";
   if (readsLeft(u) < 100 || u.used / u.limit >= 0.8) return "low";
   return "plenty";
 }

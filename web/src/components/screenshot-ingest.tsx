@@ -32,6 +32,7 @@ const STATUS_KEY = {
 const REASON_KEY = {
   read_failed: "screenshots.reason.read_failed",
   bad_type: "screenshots.reason.bad_type",
+  too_large: "screenshots.reason.too_large",
   not_a_screen_event: "screenshots.reason.not_a_screen_event",
   not_a_screen_roster: "screenshots.reason.not_a_screen_roster",
 } as const;

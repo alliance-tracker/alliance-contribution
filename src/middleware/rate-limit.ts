@@ -1,5 +1,5 @@
 import type { MiddlewareHandler } from "hono";
-import type { Env } from "../../shared/types";
+import type { Env } from "../env";
 
 /**
  * Per-minute cap on /api/*, mounted in front of auth so key guessing is throttled too.

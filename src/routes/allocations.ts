@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
-import type { AllocationInput, Env } from "../../shared/types";
+import type { AllocationInput } from "../../shared/types";
+import type { Env } from "../env";
 import type { AuthVariables } from "../middleware/auth";
 import { requireAdmin } from "../middleware/auth";
 import { createServices } from "../services";

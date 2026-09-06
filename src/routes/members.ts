@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import type { Env, RosterImportBatch } from "../../shared/types";
+import type { RosterImportBatch } from "../../shared/types";
+import type { Env } from "../env";
 import type { AuthVariables } from "../middleware/auth";
 import { requireAdmin } from "../middleware/auth";
 import { createServices } from "../services";

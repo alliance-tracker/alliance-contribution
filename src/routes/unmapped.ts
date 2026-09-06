@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { Env } from "../../shared/types";
+import type { Env } from "../env";
 import { createServices } from "../services";
 
 const unmappedRoutes = new Hono<{ Bindings: Env }>();

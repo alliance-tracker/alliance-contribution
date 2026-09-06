@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { secureHeaders } from "hono/secure-headers";
-import type { Env } from "../shared/types";
+import type { Env } from "./env";
 import type { AuthVariables } from "./middleware/auth";
 import { apiKeyAuth } from "./middleware/auth";
 import { rateLimit } from "./middleware/rate-limit";

@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import type { Env, ScreenshotKind } from "../../shared/types";
+import type { ScreenshotKind } from "../../shared/types";
+import type { Env } from "../env";
 import type { AuthVariables } from "../middleware/auth";
 import { readAiConfig } from "../domain/screenshot";
 import { AiUsageRepo } from "../repositories/ai-usage-repo";

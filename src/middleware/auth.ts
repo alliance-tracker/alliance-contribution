@@ -1,5 +1,5 @@
 import type { MiddlewareHandler } from "hono";
-import type { Env } from "../../shared/types";
+import type { Env } from "../env";
 
 export type Role = "admin" | "manager" | "viewer";
 export type AuthVariables = { role: Role | null };

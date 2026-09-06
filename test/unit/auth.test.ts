@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolveRole } from "../../src/middleware/auth";
-import type { Env } from "../../shared/types";
+import type { Env } from "../../src/env";
 
 // Only the key bindings matter here; the rest of Env is irrelevant to role resolution.
 function env(keys: Partial<Pick<Env, "API_KEY" | "ADMIN_API_KEY" | "VIEWER_API_KEY">>): Env {

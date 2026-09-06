@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { Env } from "../../shared/types";
+import type { Env } from "../env";
 import type { AuthVariables } from "../middleware/auth";
 import { requireAdmin } from "../middleware/auth";
 import { createServices } from "../services";

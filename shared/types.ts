@@ -305,17 +305,6 @@ export type AllocationInput = {
 
 export type AllocationPreview = { lines: AllocationLine[]; warnings: string[] };
 
-// Worker bindings.
-export type Env = {
-  DB: D1Database;
-  AI: Ai;
-  API_KEY: string;
-  ADMIN_API_KEY: string;
-  VIEWER_API_KEY: string;
-  ASSETS: Fetcher;
-  API_RATE_LIMIT: RateLimit;
-} & Partial<Record<AiEnvKey, string>>;
-
 // ---- Settings (2026-08-03 rank-bands spec) ----------------------------------
 
 /** Rank-band sizes for the boards: first `top` counted members, then `mid`, remainder "rest". */

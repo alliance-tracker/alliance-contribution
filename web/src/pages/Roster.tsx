@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
 import {
+  ArrowUpDown,
   Merge,
   Plus,
   Pencil,
@@ -29,6 +30,7 @@ import { api, ApiError } from "@/lib/api";
 import type { MergeResult, RenameResult } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
+import type { TKey } from "@/i18n";
 import { normalizeName } from "@/lib/normalize";
 import { formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -68,6 +70,7 @@ import {
   type ParsedRosterRow,
 } from "@/lib/roster-paste";
 import { MemberSearchSelect } from "@/components/member-search-select";
+import { RosterMobileRow } from "@/components/roster-mobile-row";
 import { LlmPrompt } from "@/components/llm-prompt";
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1731,6 +1734,14 @@ function DeleteCaptureDialog({
   );
 }
 
+const SORT_OPTIONS: [RosterSort, TKey][] = [
+  ["power", "common.power"],
+  ["tier", "common.rank"],
+  ["movers", "roster.sortMovers"],
+  ["status", "roster.sortStatus"],
+  ["name", "roster.sortName"],
+];
+
 export function Roster() {
   const { t } = useTranslation();
   const { role } = useApiKey();
@@ -1835,6 +1846,7 @@ export function Roster() {
   const [renameMember, setRenameMember] = useState<Member | null>(null);
   const [mergeMember, setMergeMember] = useState<Member | null>(null);
   const [deactivateMember, setDeactivateMember] = useState<Member | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const [rowError, setRowError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
@@ -1867,7 +1879,7 @@ export function Roster() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5 md:gap-4">
       <RosterStats summary={summary} />
 
       {note && (
@@ -1887,7 +1899,7 @@ export function Roster() {
       {rowError && <ErrorState message={rowError} />}
 
       <Card className="overflow-hidden">
-        <CardHeader className="flex-row items-center justify-between gap-3 border-b border-border">
+        <CardHeader className="flex-col items-stretch gap-3 border-b border-border md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-0.5">
             <CardTitle>{t("roster.title")}</CardTitle>
             <span className="text-[12px] text-muted">
@@ -1900,7 +1912,7 @@ export function Roster() {
                 .join(" · ")}
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {captures.length > 0 && (
               <Select
                 value={viewDate ?? latestCaptureDate ?? undefined}
@@ -1948,6 +1960,7 @@ export function Roster() {
               <Button
                 variant="secondary"
                 size="sm"
+                className="h-10 flex-1 md:h-8 md:flex-none"
                 onClick={() => {
                   setImportInitial(null);
                   setImportOpen(true);
@@ -1957,7 +1970,7 @@ export function Roster() {
                 {t("roster.importTsv")}
               </Button>
             )}
-            <Button size="sm" onClick={() => setAddOpen(true)}>
+            <Button size="sm" className="h-10 flex-1 md:h-8 md:flex-none" onClick={() => setAddOpen(true)}>
               <Plus />
               {t("roster.addTitle")}
             </Button>
@@ -1994,17 +2007,35 @@ export function Roster() {
             <span className="text-[12px] text-muted">{t("roster.observed", { count: rows.length })}</span>
           )}
 
-          <div className="flex items-center gap-2">
+          <div className="md:hidden">
+            <Select value={sort} onValueChange={(v) => setSort(v as RosterSort)}>
+              <SelectTrigger
+                className="h-[30px] gap-1.5 px-2.5 text-[12px] font-semibold text-secondary"
+                aria-label={t("roster.sort")}
+              >
+                <ArrowUpDown className="size-3.5 text-muted" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {t(label)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="hidden items-center gap-2 md:flex">
             <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
               {t("roster.sort")}
             </span>
             <Tabs value={sort} onValueChange={(v) => setSort(v as RosterSort)}>
               <TabsList>
-                <TabsTrigger value="power">{t("common.power")}</TabsTrigger>
-                <TabsTrigger value="tier">{t("common.rank")}</TabsTrigger>
-                <TabsTrigger value="movers">{t("roster.sortMovers")}</TabsTrigger>
-                <TabsTrigger value="status">{t("roster.sortStatus")}</TabsTrigger>
-                <TabsTrigger value="name">{t("roster.sortName")}</TabsTrigger>
+                {SORT_OPTIONS.map(([value, label]) => (
+                  <TabsTrigger key={value} value={value}>
+                    {t(label)}
+                  </TabsTrigger>
+                ))}
               </TabsList>
             </Tabs>
           </div>
@@ -2020,135 +2051,164 @@ export function Roster() {
           <EmptyState message={historical ? t("roster.emptyCapture") : t("roster.emptyFilter")} />
         ) : (
           <>
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[52px] text-end">#</TableHead>
-                  <TableHead>{t("common.member")}</TableHead>
-                  <TableHead className="w-16 text-center">{t("common.rank")}</TableHead>
-                  <TableHead className="w-[190px] text-end">{t("common.power")}</TableHead>
-                  {/* The two columns the page exists for get a darker header and a group separator. */}
-                  <TableHead className="w-[200px] border-s border-muted-surface text-end text-foreground">
-                    {t("roster.changeInPower")}
-                  </TableHead>
-                  <TableHead className="w-[86px] text-center text-foreground">{t("roster.move")}</TableHead>
-                  <TableHead className="w-28 border-s border-muted-surface">{t("roster.sortStatus")}</TableHead>
-                  {!historical && <TableHead className="w-[104px] text-end">{t("roster.actions")}</TableHead>}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((r) => {
-                  const m = r.member;
-                  // The full `Member` for the action handlers — rows are widened to the six-field
-                  // shape. Always resolves in live mode; historical hides the actions cell entirely.
-                  const live = historical ? undefined : memberById.get(m.id);
-                  const top = topIds.has(m.id);
-                  return (
-                    <TableRow key={m.id} className={rowClass(r)}>
-                      <TableCell
-                        className={cn(
-                          "num text-end font-bold",
-                          top ? "text-foreground" : "text-faint",
-                          riskEdgeClass(r),
-                        )}
-                      >
-                        {m.power_position === null ? "—" : `#${m.power_position}`}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2.5">
-                          <Avatar name={m.governor} size={28} />
-                          {/* `from` tags the origin so the profile's back link returns here rather
-                              than to the public members list, which would drop an admin mid-review
-                              out of the admin area. See MemberProfile's ORIGINS. */}
-                          <Link
-                            to={`/members/${m.id}`}
-                            state={{ from: "roster" }}
-                            className="text-[13.5px] font-semibold text-foreground transition-colors hover:text-accent"
-                          >
-                            {m.governor}
-                          </Link>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {/* relative anchor for the change badge riding the chip's corner */}
-                        <span className="relative inline-flex">
-                          <RankChip rank={m.alliance_rank} />
-                          <RankChangeChip change={r.rankChange} />
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-end">
-                        <PowerCell power={m.power} maxPower={scales.maxPower} top={top} />
-                      </TableCell>
-                      <TableCell className="border-s border-muted-surface text-end">
-                        <PowerChangeCell delta={r.deltaPower} maxAbsDelta={scales.maxAbsDelta} />
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <MoveCell move={r.move} />
-                      </TableCell>
-                      <TableCell className="border-s border-muted-surface">
-                        <StatusCell status={r.status} />
-                      </TableCell>
-                      {live && (
+            <div className="md:hidden">
+              {rows.map((r) => {
+                const id = r.member.id;
+                const live = historical ? undefined : memberById.get(id);
+                // Live deltas describe the live view only; a past capture has no per-member "since".
+                const since = historical ? null : (deltaByMember.get(id)?.since ?? null);
+                return (
+                  <RosterMobileRow
+                    key={id}
+                    row={r}
+                    live={live}
+                    top={topIds.has(id)}
+                    maxPower={scales.maxPower}
+                    maxAbsDelta={scales.maxAbsDelta}
+                    since={since ? fmtCaptureDate(since) : null}
+                    expanded={expandedId === id}
+                    onToggle={() => setExpandedId((cur) => (cur === id ? null : id))}
+                    isAdmin={role === "admin"}
+                    onEdit={setEditMember}
+                    onRename={setRenameMember}
+                    onMerge={setMergeMember}
+                    onDeactivate={setDeactivateMember}
+                    onActivate={activate}
+                  />
+                );
+              })}
+            </div>
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[52px] text-end">#</TableHead>
+                    <TableHead>{t("common.member")}</TableHead>
+                    <TableHead className="w-16 text-center">{t("common.rank")}</TableHead>
+                    <TableHead className="w-[190px] text-end">{t("common.power")}</TableHead>
+                    {/* The two columns the page exists for get a darker header and a group separator. */}
+                    <TableHead className="w-[200px] border-s border-muted-surface text-end text-foreground">
+                      {t("roster.changeInPower")}
+                    </TableHead>
+                    <TableHead className="w-[86px] text-center text-foreground">{t("roster.move")}</TableHead>
+                    <TableHead className="w-28 border-s border-muted-surface">{t("roster.sortStatus")}</TableHead>
+                    {!historical && <TableHead className="w-[104px] text-end">{t("roster.actions")}</TableHead>}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((r) => {
+                    const m = r.member;
+                    // The full `Member` for the action handlers — rows are widened to the six-field
+                    // shape. Always resolves in live mode; historical hides the actions cell entirely.
+                    const live = historical ? undefined : memberById.get(m.id);
+                    const top = topIds.has(m.id);
+                    return (
+                      <TableRow key={m.id} className={rowClass(r)}>
+                        <TableCell
+                          className={cn(
+                            "num text-end font-bold",
+                            top ? "text-foreground" : "text-faint",
+                            riskEdgeClass(r),
+                          )}
+                        >
+                          {m.power_position === null ? "—" : `#${m.power_position}`}
+                        </TableCell>
                         <TableCell>
-                          <div className="flex items-center justify-end gap-0.5">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="text-faint hover:text-foreground"
-                              aria-label={t("roster.aria.edit", { governor: live.governor })}
-                              onClick={() => setEditMember(live)}
+                          <div className="flex items-center gap-2.5">
+                            <Avatar name={m.governor} size={28} />
+                            {/* `from` tags the origin so the profile's back link returns here rather
+                                than to the public members list, which would drop an admin mid-review
+                                out of the admin area. See MemberProfile's ORIGINS. */}
+                            <Link
+                              to={`/members/${m.id}`}
+                              state={{ from: "roster" }}
+                              className="text-[13.5px] font-semibold text-foreground transition-colors hover:text-accent"
                             >
-                              <Pencil />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="text-faint hover:text-foreground"
-                              aria-label={t("roster.aria.rename", { governor: live.governor })}
-                              onClick={() => setRenameMember(live)}
-                            >
-                              <Tag />
-                            </Button>
-                            {role === "admin" && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-faint hover:text-foreground"
-                                aria-label={t("roster.aria.merge", { governor: live.governor })}
-                                onClick={() => setMergeMember(live)}
-                              >
-                                <Merge />
-                              </Button>
-                            )}
-                            {live.active === 1 ? (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-faint hover:text-down"
-                                aria-label={t("roster.aria.deactivate", { governor: live.governor })}
-                                onClick={() => setDeactivateMember(live)}
-                              >
-                                <UserMinus />
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-faint hover:text-foreground"
-                                aria-label={t("roster.aria.activate", { governor: live.governor })}
-                                onClick={() => activate(live)}
-                              >
-                                <UserCheck />
-                              </Button>
-                            )}
+                              {m.governor}
+                            </Link>
                           </div>
                         </TableCell>
-                      )}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                        <TableCell className="text-center">
+                          {/* relative anchor for the change badge riding the chip's corner */}
+                          <span className="relative inline-flex">
+                            <RankChip rank={m.alliance_rank} />
+                            <RankChangeChip change={r.rankChange} />
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-end">
+                          <PowerCell power={m.power} maxPower={scales.maxPower} top={top} />
+                        </TableCell>
+                        <TableCell className="border-s border-muted-surface text-end">
+                          <PowerChangeCell delta={r.deltaPower} maxAbsDelta={scales.maxAbsDelta} />
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <MoveCell move={r.move} />
+                        </TableCell>
+                        <TableCell className="border-s border-muted-surface">
+                          <StatusCell status={r.status} />
+                        </TableCell>
+                        {live && (
+                          <TableCell>
+                            <div className="flex items-center justify-end gap-0.5">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-faint hover:text-foreground"
+                                aria-label={t("roster.aria.edit", { governor: live.governor })}
+                                onClick={() => setEditMember(live)}
+                              >
+                                <Pencil />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-faint hover:text-foreground"
+                                aria-label={t("roster.aria.rename", { governor: live.governor })}
+                                onClick={() => setRenameMember(live)}
+                              >
+                                <Tag />
+                              </Button>
+                              {role === "admin" && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-faint hover:text-foreground"
+                                  aria-label={t("roster.aria.merge", { governor: live.governor })}
+                                  onClick={() => setMergeMember(live)}
+                                >
+                                  <Merge />
+                                </Button>
+                              )}
+                              {live.active === 1 ? (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-faint hover:text-down"
+                                  aria-label={t("roster.aria.deactivate", { governor: live.governor })}
+                                  onClick={() => setDeactivateMember(live)}
+                                >
+                                  <UserMinus />
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-faint hover:text-foreground"
+                                  aria-label={t("roster.aria.activate", { governor: live.governor })}
+                                  onClick={() => activate(live)}
+                                >
+                                  <UserCheck />
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
             <RosterLegend shown={rows.length} />
           </>
         )}

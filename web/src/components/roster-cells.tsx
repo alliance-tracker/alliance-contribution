@@ -50,7 +50,7 @@ export function RankChangeChip({ change }: { change: { from: string; to: string 
 }
 
 /** An end-filled 3px bar. `pct` is already clamped 0..100 by the callers below. */
-function Bar({ pct, className, width }: { pct: number; className: string; width: string }) {
+export function Bar({ pct, className, width }: { pct: number; className: string; width: string }) {
   return (
     <div className={cn("h-[3px] overflow-hidden rounded-[2px] bg-muted-surface", width)}>
       <div className={cn("ms-auto h-full rounded-[2px]", className)} style={{ width: `${pct}%` }} />
@@ -163,18 +163,21 @@ export function StatusCell({ status }: { status: RosterStatus }) {
 export function RosterStats({ summary }: { summary: RosterSummary }) {
   const { t } = useTranslation();
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2.5 md:gap-3 lg:grid-cols-4">
       <StatCard
+        valueClassName="max-md:text-[20px]"
         label={t("roster.stats.alliancePower")}
         value={formatNumber(summary.totalPower)}
         sub={t("roster.stats.activeMembers", { count: summary.tracked })}
       />
       <StatCard
+        valueClassName="max-md:text-[20px]"
         label={t("roster.stats.deltaPower")}
         value={<span className={summary.powerDelta >= 0 ? "text-up" : "text-down"}>{signed(summary.powerDelta)}</span>}
         sub={t("roster.stats.deltaSub")}
       />
       <StatCard
+        valueClassName="max-md:text-[20px]"
         label={t("roster.stats.gainedDropped")}
         value={
           <>
@@ -186,6 +189,7 @@ export function RosterStats({ summary }: { summary: RosterSummary }) {
         sub={t("roster.stats.gainedSub")}
       />
       <StatCard
+        valueClassName="max-md:text-[20px]"
         label={t("roster.stats.atRisk")}
         value={summary.atRisk}
         sub={t("roster.stats.atRiskSub")}

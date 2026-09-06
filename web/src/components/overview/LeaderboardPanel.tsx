@@ -81,7 +81,7 @@ export function LeaderboardPanel({
                 </span>
                 <Avatar name={row.governor} size={28} />
                 <div className="min-w-0 flex-1 md:flex md:items-center md:gap-3">
-                  <div className="flex min-w-0 items-center gap-2 md:flex-1">
+                  <div className="flex min-w-0 items-center gap-2 md:flex-1 md:gap-3">
                     <Link
                       to={`/members/${row.member_id}`}
                       title={row.governor}
@@ -102,7 +102,10 @@ export function LeaderboardPanel({
                     <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
                   </div>
                 </div>
-                <span className="num text-[15px] font-bold md:hidden">{row.score}</span>
+                <span className="num text-[15px] font-bold md:hidden">
+                  <span className="sr-only">{t("common.score")}</span>
+                  {row.score}
+                </span>
                 <span className="w-10 shrink-0 text-end">
                   <Movement value={row.movement} />
                 </span>

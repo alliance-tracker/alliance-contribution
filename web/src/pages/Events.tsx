@@ -438,6 +438,7 @@ After the closing fence — never inside it — add a short "Coverage check:" no
                 onLines={appendLines}
                 onModeChange={setIngestMode}
                 disabled={submitting}
+                pickerDisabled={!selected}
               />
               {ingestMode === "paste" && (
                 <p className="text-[12px] text-muted">

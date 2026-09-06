@@ -168,8 +168,8 @@
       "remove": "제거"
     },
     "reason": {
-      "not_a_screen_event": "랭킹 화면이 아닙니다",
-      "not_a_screen_roster": "얼라이언스 랭킹 화면이 아닙니다",
+      "not_a_screen_event": "순위 화면이 아닙니다",
+      "not_a_screen_roster": "연맹 순위 화면이 아닙니다",
       "read_failed": "이 스크린샷을 읽지 못했습니다",
       "bad_type": "PNG/JPEG 스크린샷이 아닙니다"
     },

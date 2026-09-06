@@ -179,7 +179,7 @@
     },
     "placeholder": "Aus Screenshots gelesene Zeilen erscheinen hier.\nDu kannst weiterhin einfügen oder bearbeiten.",
     "moreArriving": "weitere kommen noch",
-    "nudgeEvent": "Prüfe Namen und Werte, bevor du speicherst. Ein falsch gelesener Name wird nicht blockiert, sondern landet unter Zuordnung nötig, und du verknüpfst ihn einmal. Screenshots werden nacheinander gelesen — prüfe, dass keine Rangnummer fehlt.",
+    "nudgeEvent": "Prüfe Namen und Werte, bevor du speicherst. Ein falsch gelesener Name wird nicht blockiert, sondern landet unter Zuordnung erforderlich, und du verknüpfst ihn einmal. Screenshots werden nacheinander gelesen — prüfe, dass keine Rangnummer fehlt.",
     "nudgeRoster": "Prüfe Namen, Ränge und Macht, bevor du fortfährst. Unbekannte Namen werden in Schritt 2 einzeln entschieden, nie erraten.",
     "rosterBlocked": "Lies oder entferne jeden Screenshot, bevor du fortfährst — ungelesene Screenshots würden Mitglieder als abwesend erscheinen lassen."
   },

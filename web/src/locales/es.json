@@ -183,7 +183,7 @@
     },
     "placeholder": "Las filas leídas de capturas aparecen aquí.\nAún puedes pegar o editar.",
     "moreArriving": "llegando más",
-    "nudgeEvent": "Revisa nombres y valores antes de guardar. Un nombre mal leído no se bloquea, va a Pendientes de vincular y lo enlazas una vez. Las capturas se leen de una en una — comprueba que no falte ningún número de rango.",
+    "nudgeEvent": "Revisa nombres y valores antes de guardar. Un nombre mal leído no se bloquea, va a Necesita asignación y lo enlazas una vez. Las capturas se leen de una en una — comprueba que no falte ningún número de rango.",
     "nudgeRoster": "Revisa nombres, rangos y poder antes de continuar. Los nombres no reconocidos se deciden uno por uno en el paso 2, nunca se adivinan.",
     "rosterBlocked": "Lee o quita todas las capturas antes de continuar — las capturas sin leer harían parecer ausentes a esos miembros."
   },

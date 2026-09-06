@@ -183,7 +183,7 @@
     },
     "placeholder": "Les lignes lues depuis les captures apparaissent ici.\nVous pouvez toujours coller ou modifier le texte.",
     "moreArriving": "d'autres arrivent",
-    "nudgeEvent": "Vérifiez les noms et les valeurs avant d'enregistrer. Un nom mal lu n'est pas bloqué, il atterrit dans À rattacher et vous le liez une fois. Les captures sont lues une par une — vérifiez qu'aucun numéro de rang ne manque.",
+    "nudgeEvent": "Vérifiez les noms et les valeurs avant d'enregistrer. Un nom mal lu n'est pas bloqué, il atterrit dans Association requise et vous le liez une fois. Les captures sont lues une par une — vérifiez qu'aucun numéro de rang ne manque.",
     "nudgeRoster": "Vérifiez les noms, rangs et puissance avant de continuer. Les noms non reconnus sont décidés un par un à l'étape 2, jamais devinés.",
     "rosterBlocked": "Lisez ou retirez chaque capture avant de continuer — des captures non lues feraient paraître ces membres absents."
   },

@@ -52,8 +52,6 @@ function formatResetTime(iso: string): string {
   return new Intl.DateTimeFormat(localeTag(), { hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
 }
 
-const MIME_OK = "image/png,image/jpeg,image/webp";
-
 export function ScreenshotIngest({
   kind,
   unitLabel,
@@ -239,7 +237,7 @@ export function ScreenshotIngest({
           <input
             ref={inputRef}
             type="file"
-            accept={MIME_OK}
+            accept="image/*"
             multiple
             hidden
             onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }}

@@ -55,11 +55,24 @@ describe("parseModelOutput", () => {
       lines: ["[iCEJkoyoterock cl\t217470843"],
     });
   });
-  it("drops roster lines with fewer than 4 cells", () => {
-    const text = "Aurora\tR5\t164497800\t1\nBlaze\tR4\t120000000\nCorsica\t\t\t3";
+  it("keeps well-formed roster lines and fills a missing position cell", () => {
+    const text = "Aurora\tR5\t164497800\t1\nBlaze\tR4\t120000000\nCorsica\t\t\t3\nJunk";
     expect(parseModelOutput("roster", text)).toEqual({
       kind: "rows",
-      lines: ["Aurora\tR5\t164497800\t1", "Corsica\t\t\t3"],
+      lines: ["Aurora\tR5\t164497800\t1", "Blaze\tR4\t120000000\t"],
+    });
+  });
+  it("reorders roster cells by shape when the model puts the position first or repeats it", () => {
+    const text = "25\tR3\tYouOweMeAFizzy\t59585617\n65\tR1\tQueen Esme\t38403670\t65\nMr Spiklitz\tR4\t73126320\t10";
+    expect(parseModelOutput("roster", text)).toEqual({
+      kind: "rows",
+      lines: ["YouOweMeAFizzy\tR3\t59585617\t25", "Queen Esme\tR1\t38403670\t65", "Mr Spiklitz\tR4\t73126320\t10"],
+    });
+  });
+  it("keeps CJK and spaced governors intact when reordering", () => {
+    expect(parseModelOutput("roster", "56\tR2\t梅利奥达斯 Meliodas\t45790931")).toEqual({
+      kind: "rows",
+      lines: ["梅利奥达斯 Meliodas\tR2\t45790931\t56"],
     });
   });
   it("returns not_a_screen on the sentinel or on zero surviving lines", () => {

@@ -52,6 +52,7 @@ Rules:
 - Rank: the R-level badge on the avatar — one of R5, R4, R3, R2, R1. Leave empty if no badge is visible.
 - Power: digits only, no separators; expand abbreviations (12.5M -> 12500000, 980K -> 980000). Leave empty if not shown.
 - Position: the number shown to the LEFT of the row (1, 2, 3 …). Leave empty if not shown.
+- Governor is ALWAYS the first cell and Position is ALWAYS the last cell. Never repeat a cell.
 - Always output all 4 cells, separated by 3 literal TAB characters, even when some cells are empty.
 - Skip the viewer's own row pinned in a separate panel at the bottom of the screen; only rows in the list itself.
 - No header, no code fence, no explanation — nothing but the rows.
@@ -60,8 +61,32 @@ Rules:
 
 export type ParsedModelOutput = { kind: "rows"; lines: string[] } | { kind: "not_a_screen" };
 
-const MIN_CELLS: Record<ScreenshotKind, number> = { event: 2, roster: 4 };
 const SENTINEL: Record<ScreenshotKind, string> = { event: EVENT_SENTINEL, roster: ROSTER_SENTINEL };
+
+const RANK_RE = /^R[1-5]$/i;
+const POSITION_RE = /^\d{1,3}$/;
+const POWER_RE = /^\d{4,}$/;
+
+/** Reassemble a roster line as `Governor<TAB>Rank<TAB>Power<TAB>Position` whatever order the model
+ *  emitted the cells in (it puts Position first on some screens, and sometimes repeats it). Cells are
+ *  told apart by shape, which is deterministic — no name matching happens here. Returns null when no
+ *  governor or no power/rank could be identified.
+ *  ponytail: a governor that is 1–3 digits or 4+ digits would be mistaken for a position/power. */
+function canonicalRosterLine(cells: string[]): string | null {
+  let rank = "", power = "", position = "";
+  const rest: string[] = [];
+  for (const c of cells) {
+    if (c === "") continue;
+    if (!rank && RANK_RE.test(c)) rank = c.toUpperCase();
+    else if (!position && POSITION_RE.test(c)) position = c;
+    else if (!power && POWER_RE.test(c)) power = c;
+    else if (POSITION_RE.test(c) && c === position) continue; // repeated position cell
+    else rest.push(c);
+  }
+  const governor = rest.join(" ").trim();
+  if (governor === "" || (power === "" && rank === "")) return null;
+  return `${governor}\t${rank}\t${power}\t${position}`;
+}
 
 /** Keep only lines shaped like rows. Cells are trimmed; names and tags are otherwise untouched so a
  *  screenshot row resolves exactly like the same row pasted. Zero rows is the reliable "wrong screen"
@@ -73,7 +98,12 @@ export function parseModelOutput(kind: ScreenshotKind, text: string): ParsedMode
     const line = raw.trim();
     if (line === "" || line.startsWith("```")) continue;
     const cells = line.split("\t").map((c) => c.trim());
-    if (cells.length < MIN_CELLS[kind] || cells[0] === "") continue;
+    if (kind === "roster") {
+      const canonical = cells.length >= 3 ? canonicalRosterLine(cells) : null;
+      if (canonical) lines.push(canonical);
+      continue;
+    }
+    if (cells.length < 2 || cells[0] === "") continue;
     lines.push(cells.join("\t"));
   }
   return lines.length === 0 ? { kind: "not_a_screen" } : { kind: "rows", lines };

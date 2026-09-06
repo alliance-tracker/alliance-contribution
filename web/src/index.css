@@ -216,8 +216,16 @@
   --color-badge-pink-fg: #f9a8d4;
 }
 
-* {
-  border-color: var(--color-border);
+/*
+  Default border colour. Must live in @layer base: Tailwind v4 emits its utilities inside
+  @layer utilities, and an UNLAYERED rule beats every layered one regardless of specificity —
+  left outside a layer this `*` rule silently overrode border-warn, border-gold, border-s-band-*
+  and every other border colour in the app (found 2026-09-06).
+*/
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
 }
 
 /*

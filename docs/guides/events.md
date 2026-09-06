@@ -10,6 +10,8 @@ Above the table: an activity filter and a week filter (`YYYY-Www`, e.g. `2026-W3
 
 Beside the table, a **Needs mapping** panel lists every raw name across *all* events that still has no alias or governor match, with a **Map →** link straight to Aliases. If everything resolves, it says so and stays empty.
 
+On a phone events are rows — tap a row for its detail; the pencil edits it.
+
 ## How to
 
 **1. Capture screenshots.** Take ranking screenshots of the activity as shown in-game — enough of them, scrolling through the full list, to cover every participant with a value above the activity's threshold.

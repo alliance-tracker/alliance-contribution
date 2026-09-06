@@ -22,6 +22,7 @@ Shows how consistently each member shows up to events, over a season or a single
   Alliance Rank badge, an Attendance progress bar, and a Rate column showing the percentage,
   the raw fraction (e.g. 7/9), and — in weekly scope only — a small change indicator versus the
   prior week.
+- On a phone each member is a row with the bar under the name and the rate at the end.
 
 Anyone with API access — viewer, manager, or admin — can open this page and use every control
 on it. There's nothing to save or edit here; it's read-only.

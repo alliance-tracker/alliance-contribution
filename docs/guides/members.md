@@ -19,6 +19,7 @@ Browse the roster's Participation Scores and open any member's full activity, at
   - **Score** — the all-time Participation Score.
   - An attendance percentage pill, colored green (≥80%), amber (≥50%), or red (<50%).
 - Clicking a card opens that member's profile.
+- On a phone the tiles sit three across and cards two across; the search box spans the width.
 
 **Member profile** (`/members/:id`)
 

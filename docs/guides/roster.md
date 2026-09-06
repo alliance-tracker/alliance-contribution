@@ -28,6 +28,9 @@ roster screenshot ever imported.
   - Status is **Active**, **At risk**, **Inactive**, or an em dash (no attendance data at all yet).
 - Row actions (live view only): Edit, Rename, Merge (admin only), and Deactivate/Reactivate.
 - A legend at the bottom of the table explaining the status dots and what "Move" means.
+- On a phone **Sort** is a dropdown and each member is a compact row — tap it to open the
+  power/change bars, MOVE and the Edit / Rename / Merge / Deactivate actions. One row opens at a
+  time.
 
 ## How to
 

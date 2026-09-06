@@ -26,6 +26,7 @@ allocation on top, and a **History** list of everything saved before, below.
   Participation score · Top N (1 each) · 4 weeks"). Click a row to expand its saved lines in
   the same table layout (minus the attendance column — that's preview-only). Each row has a
   pencil (rename) and trash (delete) icon.
+- On a phone the form stacks and the preview keeps the amount pinned at the end of each row.
 
 ## How to
 

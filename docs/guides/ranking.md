@@ -25,6 +25,8 @@ The leaderboard: every active member ordered by Participation Score, for the cur
   - **Attendance** — attendance percentage in the same week/activity scope as the board (hover the
     column header to see exactly what scope it's measuring).
   - **Move** — "This week" scope only: change in rank versus the prior week that had events.
+- On a phone the podium shows the top three only (ranks 4–5 fall into the list) and the standings
+  become tappable rows; the band legend scrolls sideways.
 
 ## How to
 

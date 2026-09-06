@@ -32,6 +32,7 @@ See [Ranking](ranking.md), [Attendance](attendance.md), [Members](members.md), [
 - **Unmapped queue** panel — up to 5 of the unresolved raw names, shown exactly as captured (no truncation — the alliance uses deliberate near-identical decoy names, so every character matters). Manager and admin see a "Resolve in Aliases" link; viewers do not.
 - **At-risk attendance** panel — up to 4 active members below 50% attendance, worst first, each with their attendance badge.
 - **Recent ingests** table — the 5 newest events (date, activity, instance number, how many rows, how many of those are still unmapped). Manager and admin see a "View all events" link into Admin; viewers do not.
+- On a phone the KPI tiles sit two across and the leaderboard / recent-ingest tables become two-line rows.
 
 ## How to
 

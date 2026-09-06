@@ -24,6 +24,8 @@ import type {
   RankBands,
   RosterImportBatch,
   RosterImportResult,
+  ScreenshotReadResult,
+  ScreenshotUsage,
   WeeklyRanking,
 } from "@shared/types";
 
@@ -98,26 +100,31 @@ export type AuthMe = { role: "admin" | "manager" | null };
 
 // ---- Error + transport ------------------------------------------------------
 
-/** Thrown on any non-2xx response, carrying the server's `{ error }` message + status. */
+/** Thrown on any non-2xx response, carrying the server's `{ error }` message + status. `body` is the
+ *  parsed JSON when there was one, for callers that need more than the message (screenshot usage). */
 export class ApiError extends Error {
   status: number;
-  constructor(message: string, status: number) {
+  body?: unknown;
+  constructor(message: string, status: number, body?: unknown) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.body = body;
   }
 }
 
 async function parse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let message = res.statusText || `Request failed (${res.status})`;
+    let body: unknown;
     try {
-      const body = (await res.json()) as { error?: string };
-      if (body?.error) message = body.error;
+      body = await res.json();
+      const err = (body as { error?: string })?.error;
+      if (err) message = err;
     } catch {
       // Non-JSON error body — keep the status-derived message.
     }
-    throw new ApiError(message, res.status);
+    throw new ApiError(message, res.status, body);
   }
   // 204 / empty bodies resolve to undefined-as-T.
   const text = await res.text();
@@ -148,6 +155,17 @@ async function write<T>(method: WriteMethod, path: string, body?: unknown): Prom
       ...authHeaders(),
     },
     body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  return parse<T>(res);
+}
+
+/** Multipart POST. No Content-Type header: the browser sets it with the boundary. */
+async function writeForm<T>(path: string, form: FormData, signal?: AbortSignal): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    method: "POST",
+    headers: { Accept: "application/json", ...authHeaders() },
+    body: form,
+    signal,
   });
   return parse<T>(res);
 }
@@ -208,6 +226,11 @@ export const api = {
   },
 
   unmapped: () => get<UnmappedRow[]>("/unmapped"),
+
+  screenshots: {
+    usage: () => get<ScreenshotUsage>("/screenshots/usage"),
+    read: (form: FormData, signal?: AbortSignal) => writeForm<ScreenshotReadResult>("/screenshots/read", form, signal),
+  },
 
   // Path is /ingests, not /events: ad-block filter lists treat `/api/event(s)` as an analytics
   // endpoint and cancel the request client-side (ERR_BLOCKED_BY_CLIENT), which broke the Events

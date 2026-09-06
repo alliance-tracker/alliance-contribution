@@ -176,7 +176,7 @@
     "deleteDesc": "هل تريد حذف حدث <1>{{activity}}</1> بتاريخ <2>⁦{{date}}⁩</2> (الجولة <3>{{instance}}</3>)؟ يُعاد احتساب النقاط فورًا. لا يمكن التراجع عن هذا الإجراء.",
     "eventFallback": "حدث",
     "needsMapping": "يحتاج إلى مطابقة",
-    "recentTitle": "أحدث الفعاليات",
+    "recentTitle": "آخر الأحداث",
     "rowCount_zero": "{{count}} صفوف",
     "rowCount_one": "{{count}} صف",
     "rowCount_two": "{{count}} صفان",

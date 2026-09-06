@@ -126,6 +126,11 @@ export function PodiumCard({
   );
 }
 
+/** Progress indicator class for a rank: medal fill for the top 3, neutral foreground below. */
+export function medalBarClass(rank: number): string {
+  return rank === 1 ? "bg-gold" : rank === 2 ? "bg-silver" : rank === 3 ? "bg-bronze" : "bg-foreground";
+}
+
 /** Score cell: raw integer score with a bar filling score/possible. Bar color from medal, else neutral. */
 export function ScoreCell({
   score,
@@ -139,12 +144,12 @@ export function ScoreCell({
   const pct = possible > 0 ? Math.min(100, Math.round((score / possible) * 100)) : 0;
   const indicatorClassName =
     barColor === "var(--color-gold)"
-      ? "bg-gold"
+      ? medalBarClass(1)
       : barColor === "var(--color-silver)"
-        ? "bg-silver"
+        ? medalBarClass(2)
         : barColor === "var(--color-bronze)"
-          ? "bg-bronze"
-          : "bg-foreground";
+          ? medalBarClass(3)
+          : medalBarClass(0);
   return (
     <div className="flex items-center gap-3">
       <span className="num w-8 text-[15px] font-bold">{score}</span>

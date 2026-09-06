@@ -63,7 +63,7 @@ export function Overview() {
   const ingests = recentEvents(events.data, INGESTS_SHOWN);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5 md:gap-4">
       {overview.data.latestWeek && (
         <div className="flex justify-end">
           <span className="num text-[12px] text-muted">
@@ -72,7 +72,7 @@ export function Overview() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 md:gap-3 lg:grid-cols-4">
         <StatCard
           label={t("overview.activeMembers")}
           value={formatNumber(overview.data.activeMembers)}
@@ -87,7 +87,12 @@ export function Overview() {
         {/* "(active)" is load-bearing: Attendance.tsx shows the same figure roster-wide, so the two
             pages would otherwise display different numbers under identical labels. */}
         <StatCard
-          label={t("overview.avgAttendanceActive")}
+          label={
+            <>
+              <span className="md:hidden">{t("overview.avgAttendanceActiveShort")}</span>
+              <span className="hidden md:inline">{t("overview.avgAttendanceActive")}</span>
+            </>
+          }
           value={hasEvents ? `${Math.round(summary.avgPct * 100)}%` : "—"}
           sub={
             hasEvents ? (
@@ -120,14 +125,14 @@ export function Overview() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
+      <div className="grid grid-cols-1 gap-3.5 md:gap-4 lg:grid-cols-[1.6fr_1fr]">
         <LeaderboardPanel
           rows={leaders}
           possible={ranking.data.possible}
           rankedCount={ranking.data.rows.length}
           hasEvents={ranking.data.hasEvents}
         />
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3.5 md:gap-4">
           {/* Both props come off the same /api/unmapped response so the slice can never outrun the
               total — mixing in overview.data.unmappedNames would let a concurrent ingest render
               "0 names need mapping" over a populated list. */}

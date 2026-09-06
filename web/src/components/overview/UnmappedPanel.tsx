@@ -56,7 +56,7 @@ export function UnmappedPanel({
       {canManage && total > 0 && (
         <Link
           to="/admin/aliases"
-          className="mt-3 block rounded-[6px] border border-flag-border bg-surface py-2 text-center text-[13px] font-semibold text-foreground transition-colors hover:bg-muted-surface"
+          className="mt-3 flex h-[38px] items-center justify-center rounded-[6px] border border-flag-border bg-surface text-[13px] font-semibold text-foreground transition-colors hover:bg-muted-surface active:bg-muted-surface"
         >
           {t("overview.unmapped.resolve")}
         </Link>

@@ -51,48 +51,79 @@ export function RecentIngestsPanel({
       {events.length === 0 ? (
         <EmptyState message={t("overview.ingests.empty")} />
       ) : (
-        <Table className="mt-4">
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead>{t("common.date")}</TableHead>
-              <TableHead>{t("common.activity")}</TableHead>
-              <TableHead>{t("overview.ingests.instance")}</TableHead>
-              <TableHead className="text-end">{t("overview.ingests.rows")}</TableHead>
-              <TableHead className="text-end">{t("overview.ingests.unmapped")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <>
+          <ul className="mt-3 flex flex-col md:hidden">
             {events.map((event) => {
               const activity = byId.get(event.activity_type_id);
               return (
-                <TableRow key={event.id}>
-                  <TableCell className="num whitespace-nowrap">{event.date}</TableCell>
-                  <TableCell>
-                    <Badge
-                      className={cn(
-                        "whitespace-nowrap",
-                        activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR),
-                      )}
-                    >
-                      {activity?.name ?? "—"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="num">#{event.instance}</TableCell>
-                  <TableCell className="num text-end">{event.rows}</TableCell>
-                  <TableCell className="num text-end">
-                    {event.unmapped > 0 ? (
-                      <span className="rounded-[4px] bg-warn/10 px-1.5 py-0.5 font-semibold text-warn">
-                        {event.unmapped}
-                      </span>
-                    ) : (
-                      <span className="text-muted">0</span>
-                    )}
-                  </TableCell>
-                </TableRow>
+                <li key={event.id} className="flex items-center gap-2.5 border-t border-border py-2.5 first:border-t-0">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Badge className={cn("whitespace-nowrap", activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR))}>
+                        {activity?.name ?? "—"}
+                      </Badge>
+                      <span className="num text-[12px] text-muted">#{event.instance}</span>
+                    </div>
+                    <div className="num mt-1 text-[12px] text-muted">
+                      {event.date} · {t("events.rowCount", { count: event.rows })}
+                    </div>
+                  </div>
+                  {event.unmapped > 0 ? (
+                    <span className="num rounded-[4px] bg-warn/10 px-1.5 py-0.5 text-[12px] font-semibold text-warn">
+                      {event.unmapped}
+                    </span>
+                  ) : (
+                    <span className="num text-[12px] text-muted">0</span>
+                  )}
+                </li>
               );
             })}
-          </TableBody>
-        </Table>
+          </ul>
+          <div className="hidden md:block">
+            <Table className="mt-4">
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>{t("common.date")}</TableHead>
+                  <TableHead>{t("common.activity")}</TableHead>
+                  <TableHead>{t("overview.ingests.instance")}</TableHead>
+                  <TableHead className="text-end">{t("overview.ingests.rows")}</TableHead>
+                  <TableHead className="text-end">{t("overview.ingests.unmapped")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {events.map((event) => {
+                  const activity = byId.get(event.activity_type_id);
+                  return (
+                    <TableRow key={event.id}>
+                      <TableCell className="num whitespace-nowrap">{event.date}</TableCell>
+                      <TableCell>
+                        <Badge
+                          className={cn(
+                            "whitespace-nowrap",
+                            activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR),
+                          )}
+                        >
+                          {activity?.name ?? "—"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="num">#{event.instance}</TableCell>
+                      <TableCell className="num text-end">{event.rows}</TableCell>
+                      <TableCell className="num text-end">
+                        {event.unmapped > 0 ? (
+                          <span className="rounded-[4px] bg-warn/10 px-1.5 py-0.5 font-semibold text-warn">
+                            {event.unmapped}
+                          </span>
+                        ) : (
+                          <span className="text-muted">0</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </>
       )}
     </Card>
   );

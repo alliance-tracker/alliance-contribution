@@ -4,8 +4,9 @@ import type { WeeklyRankingRow } from "@shared/types";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/States";
-import { MEDALS, Movement, ScoreCell } from "@/components/ranking-parts";
+import { MEDALS, Movement, ScoreCell, medalBarClass } from "@/components/ranking-parts";
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
 
 /**
@@ -62,10 +63,11 @@ export function LeaderboardPanel({
         <ul className="mt-4 flex flex-col">
           {rows.map((row) => {
             const medal = MEDALS[row.rank];
+            const pct = possible > 0 ? Math.min(100, Math.round((row.score / possible) * 100)) : 0;
             return (
               <li
                 key={row.member_id}
-                className="flex items-center gap-3 border-t border-border py-3 first:border-t-0"
+                className="flex items-center gap-2.5 border-t border-border py-2.5 first:border-t-0 md:gap-3 md:py-3"
               >
                 <span
                   className="num flex size-6 shrink-0 items-center justify-center rounded-full text-[12px] font-bold"
@@ -78,19 +80,29 @@ export function LeaderboardPanel({
                   {row.rank}
                 </span>
                 <Avatar name={row.governor} size={28} />
-                <Link
-                  to={`/members/${row.member_id}`}
-                  title={row.governor}
-                  className="min-w-0 flex-1 truncate text-[14px] font-semibold hover:underline"
-                >
-                  {row.governor}
-                </Link>
-                <AllianceRankBadge rank={row.alliance_rank} className="shrink-0" />
-                <div className="min-w-0 flex-1">
-                  {/* ScoreCell renders a bare integer next to a bar — name what the number is. */}
-                  <span className="sr-only">{t("common.score")}</span>
-                  <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
+                <div className="min-w-0 flex-1 md:flex md:items-center md:gap-3">
+                  <div className="flex min-w-0 items-center gap-2 md:flex-1">
+                    <Link
+                      to={`/members/${row.member_id}`}
+                      title={row.governor}
+                      className="min-w-0 truncate text-[13.5px] font-semibold hover:underline md:text-[14px]"
+                    >
+                      {row.governor}
+                    </Link>
+                    <AllianceRankBadge rank={row.alliance_rank} className="shrink-0" />
+                  </div>
+                  <Progress
+                    value={pct}
+                    className="mt-1.5 h-[5px] md:hidden"
+                    indicatorClassName={medalBarClass(row.rank)}
+                  />
+                  <div className="hidden min-w-0 flex-1 md:block">
+                    {/* ScoreCell renders a bare integer next to a bar — name what the number is. */}
+                    <span className="sr-only">{t("common.score")}</span>
+                    <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
+                  </div>
                 </div>
+                <span className="num text-[15px] font-bold md:hidden">{row.score}</span>
                 <span className="w-10 shrink-0 text-end">
                   <Movement value={row.movement} />
                 </span>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
@@ -72,6 +72,7 @@ import {
 import { MemberSearchSelect } from "@/components/member-search-select";
 import { RosterMobileRow } from "@/components/roster-mobile-row";
 import { LlmPrompt } from "@/components/llm-prompt";
+import { ScreenshotIngest, type IngestMode } from "@/components/screenshot-ingest";
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox as ShadcnCheckbox } from "@/components/ui/checkbox";
@@ -838,6 +839,14 @@ function ImportRosterDialog({
   const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [text, setText] = useState("");
+  const [ingestMode, setIngestMode] = useState<IngestMode>("screenshots");
+  const [screenshotRead, setScreenshotRead] = useState(false);
+  const [screenshotBlocking, setScreenshotBlocking] = useState(false);
+  const appendLines = useCallback((lines: string[]) => {
+    setText((prev) => (prev.trim() === "" ? lines.join("\n") : `${prev.replace(/\s+$/, "")}\n${lines.join("\n")}`));
+    setScreenshotRead(true);
+  }, []);
+  const onBatchChange = useCallback((s: { blocking: boolean }) => setScreenshotBlocking(s.blocking), []);
   const [capturedOn, setCapturedOn] = useState(todayIso);
   const [existingCount, setExistingCount] = useState<number | null>(null);
   const [latestCapture, setLatestCapture] = useState<string | null>(null);
@@ -871,6 +880,8 @@ function ImportRosterDialog({
     let cancelled = false;
     setStep(1);
     setText(initial?.text ?? "");
+    setScreenshotRead(false);
+    setScreenshotBlocking(false);
     setCapturedOn(initial?.capturedOn ?? todayIso());
     setDecisions({});
     setDeactivateIds({});
@@ -1037,7 +1048,8 @@ function ImportRosterDialog({
     !needsOverwriteAck &&
     !captureChecking &&
     parsed.invalid.length === 0 &&
-    classified.conflicts.length === 0;
+    classified.conflicts.length === 0 &&
+    !screenshotBlocking;
   const canApply = canAdvance && !aliasMissingMember;
 
   const buildBatch = (): RosterImportBatch => {
@@ -1169,21 +1181,32 @@ function ImportRosterDialog({
 
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-medium text-secondary">{t("roster.title")}</label>
-              <p className="text-[12px] text-muted">
-                <Trans
-                  i18nKey="roster.import.rosterHelp"
-                  components={{
-                    1: <span className="num text-secondary" />,
-                    2: <span className="num text-secondary" />,
-                    3: <span className="num text-secondary" />,
-                    4: <span className="num text-secondary" />,
-                  }}
+              {!initial && (
+                <ScreenshotIngest
+                  kind="roster"
+                  onLines={appendLines}
+                  onModeChange={setIngestMode}
+                  onBatchChange={onBatchChange}
+                  disabled={submitting}
                 />
-              </p>
+              )}
+              {(ingestMode === "paste" || initial) && (
+                <p className="text-[12px] text-muted">
+                  <Trans
+                    i18nKey="roster.import.rosterHelp"
+                    components={{
+                      1: <span className="num text-secondary" />,
+                      2: <span className="num text-secondary" />,
+                      3: <span className="num text-secondary" />,
+                      4: <span className="num text-secondary" />,
+                    }}
+                  />
+                </p>
+              )}
               <LlmPrompt prompt={ROSTER_PROMPT} />
               <Textarea
                 className="min-h-40 resize-y font-mono"
-                placeholder={"Aurora\tR5\t164,497,800\t1\nBlaze\tR4\t120,000,000\t2"}
+                placeholder={ingestMode === "screenshots" && !initial ? t("screenshots.placeholder") : "Aurora\tR5\t164,497,800\t1\nBlaze\tR4\t120,000,000\t2"}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 spellCheck={false}
@@ -1334,6 +1357,13 @@ function ImportRosterDialog({
                   </Checkbox>
                 </AlertContent>
               </Alert>
+            )}
+
+            {ingestMode === "screenshots" && screenshotRead && !screenshotBlocking && (
+              <p className="text-[12px] leading-relaxed text-muted">{t("screenshots.nudgeRoster")}</p>
+            )}
+            {screenshotBlocking && (
+              <p className="text-[12px] leading-relaxed text-warn">{t("screenshots.rosterBlocked")}</p>
             )}
 
             <div className="flex items-center justify-end gap-2">

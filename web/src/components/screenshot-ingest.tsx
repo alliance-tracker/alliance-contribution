@@ -22,10 +22,6 @@ import { Progress } from "@/components/ui/progress";
 export type IngestMode = "paste" | "screenshots";
 export const INGEST_MODE_STORAGE = "ic_ingest_mode";
 
-// Literal keys so test/unit/i18n-parity.test.ts can find every base key in source.
-// TODO(task 8): "screenshots.placeholder" "screenshots.moreArriving" "screenshots.nudgeEvent"
-// "screenshots.nudgeRoster" "screenshots.rosterBlocked" — used by Task 8, not yet referenced here.
-// Remove this comment once Task 8 wires them in.
 const STATUS_KEY = {
   waiting: "screenshots.status.waiting",
   reading: "screenshots.status.reading",

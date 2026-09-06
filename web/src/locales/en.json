@@ -178,7 +178,6 @@
       "bad_type": "Not a PNG/JPEG screenshot"
     },
     "placeholder": "Rows read from screenshots appear here.\nYou can still paste or edit.",
-    "moreArriving": "more arriving",
     "nudgeEvent": "Check names and values before you save. A misread name is not blocked, it lands in Needs mapping and you link it once. Screenshots are read one at a time — check that no rank numbers are missing.",
     "nudgeRoster": "Check names, ranks and power before you continue. Unrecognized names are decided one by one in step 2, never guessed.",
     "rosterBlocked": "Read or remove every screenshot before continuing — unread screenshots would make members look absent."

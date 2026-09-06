@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertTitle, AlertContent } from "@/components/ui/alert";
+import { ScreenshotIngest, type IngestMode } from "@/components/screenshot-ingest";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
@@ -241,6 +242,13 @@ function EventFormDialog({
   const [date, setDate] = useState("");
   const [instance, setInstance] = useState(1);
   const [rowsText, setRowsText] = useState("");
+  const [ingestMode, setIngestMode] = useState<IngestMode>("screenshots");
+  const [screenshotRead, setScreenshotRead] = useState(false);
+  // Appends per file. Stable identity: the reader effect depends on it.
+  const appendLines = useCallback((lines: string[]) => {
+    setRowsText((prev) => (prev.trim() === "" ? lines.join("\n") : `${prev.replace(/\s+$/, "")}\n${lines.join("\n")}`));
+    setScreenshotRead(true);
+  }, []);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<IngestResult | null>(null);
@@ -251,6 +259,7 @@ function EventFormDialog({
     setError(null);
     setResult(null);
     setSubmitting(false);
+    setScreenshotRead(false);
     if (detail) {
       const at = activityTypes.find((a) => a.id === detail.event.activity_type_id);
       setActivityKey(at?.key ?? "");
@@ -423,20 +432,29 @@ After the closing fence — never inside it — add a short "Coverage check:" no
 
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-medium text-secondary">{t("events.participants")}</label>
-              <p className="text-[12px] text-muted">
-                <Trans
-                  i18nKey="events.participantsHelp"
-                  components={{
-                    1: <span className="num text-secondary" />,
-                    2: <span className="num text-secondary" />,
-                    3: <span className="num text-secondary" />,
-                  }}
-                />
-              </p>
+              <ScreenshotIngest
+                kind="event"
+                unitLabel={selected?.unit_label ?? undefined}
+                onLines={appendLines}
+                onModeChange={setIngestMode}
+                disabled={submitting}
+              />
+              {ingestMode === "paste" && (
+                <p className="text-[12px] text-muted">
+                  <Trans
+                    i18nKey="events.participantsHelp"
+                    components={{
+                      1: <span className="num text-secondary" />,
+                      2: <span className="num text-secondary" />,
+                      3: <span className="num text-secondary" />,
+                    }}
+                  />
+                </p>
+              )}
               <LlmPrompt prompt={eventPrompt} />
               <Textarea
                 className="min-h-40 resize-y font-mono text-[13px]"
-                placeholder={"Aurora\t120000\nBlaze\t95000\tsub"}
+                placeholder={ingestMode === "screenshots" ? t("screenshots.placeholder") : "Aurora\t120000\nBlaze\t95000\tsub"}
                 value={rowsText}
                 onChange={(e) => setRowsText(e.target.value)}
                 spellCheck={false}
@@ -469,6 +487,9 @@ After the closing fence — never inside it — add a short "Coverage check:" no
                   </span>
                 )}
               </div>
+              {ingestMode === "screenshots" && screenshotRead && (
+                <p className="text-[12px] leading-relaxed text-muted">{t("screenshots.nudgeEvent")}</p>
+              )}
             </div>
 
             <div className="flex items-center justify-end gap-2">

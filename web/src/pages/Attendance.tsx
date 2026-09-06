@@ -257,9 +257,11 @@ export function Attendance() {
                           <span className="truncate text-[14px] font-medium text-foreground">{row.governor}</span>
                           <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} className="shrink-0" />
                         </div>
-                        <span className="num shrink-0 whitespace-nowrap text-[13px]">
+                        {/* Flex gap, not margins: the numeric runs reorder under bidi in Arabic and a
+                            margin lands on the wrong side, gluing "100%" to "17/17". */}
+                        <span className="num inline-flex shrink-0 items-baseline gap-1.5 whitespace-nowrap text-[13px] [&>*]:ms-0">
                           <span className="font-semibold" style={{ color }}>{pctInt}%</span>
-                          <span className="ms-1.5 text-muted">{row.attended}/{row.total}</span>
+                          <span className="text-muted">{row.attended}/{row.total}</span>
                           <DeltaPct delta={row.delta} />
                         </span>
                       </div>

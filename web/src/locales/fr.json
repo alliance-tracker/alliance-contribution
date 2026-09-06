@@ -569,6 +569,7 @@
     "deactivateDesc": "Désactiver <1>{{governor}}</1> ? L'historique reste pris en compte dans les scores.",
     "deactivating": "Désactivation…",
     "deactivate": "Désactiver",
+    "activate": "Activer",
     "deleteCaptureTitle": "Supprimer la mise à jour de la liste",
     "deleteCaptureDesc_one": "Supprimer la capture du <1>{{date}}</1> (<2>{{count}}</2> membre) ? Le rang, la puissance et la position de chaque membre sur la liste conservent leurs valeurs actuelles — seul l'historique de cette date est supprimé. Cette action est irréversible.",
     "deleteCaptureDesc_many": "Supprimer la capture du <1>{{date}}</1> (<2>{{count}}</2> membres) ? Le rang, la puissance et la position de chaque membre sur la liste conservent leurs valeurs actuelles — seul l'historique de cette date est supprimé. Cette action est irréversible.",

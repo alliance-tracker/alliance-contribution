@@ -543,6 +543,7 @@
     "deactivateDesc": "<1>{{governor}}</1> deaktivieren? Der Verlauf bleibt auswertbar.",
     "deactivating": "Wird deaktiviert…",
     "deactivate": "Deaktivieren",
+    "activate": "Aktivieren",
     "deleteCaptureTitle": "Listen-Update löschen",
     "deleteCaptureDesc_one": "Die Erfassung vom <1>{{date}}</1> (<2>{{count}}</2> Mitglied) löschen? Rang, Macht und Position jedes Mitglieds in der Liste behalten ihre aktuellen Werte — nur der Verlauf dieses Datums wird entfernt. Dies kann nicht rückgängig gemacht werden.",
     "deleteCaptureDesc_other": "Die Erfassung vom <1>{{date}}</1> (<2>{{count}}</2> Mitglieder) löschen? Rang, Macht und Position jedes Mitglieds in der Liste behalten ihre aktuellen Werte — nur der Verlauf dieses Datums wird entfernt. Dies kann nicht rückgängig gemacht werden.",

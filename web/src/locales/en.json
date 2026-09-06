@@ -543,6 +543,7 @@
     "deactivateDesc": "Deactivate <1>{{governor}}</1>? Keeps history scorable.",
     "deactivating": "Deactivating…",
     "deactivate": "Deactivate",
+    "activate": "Activate",
     "deleteCaptureTitle": "Delete roster update",
     "deleteCaptureDesc_one": "Delete the <1>{{date}}</1> capture (<2>{{count}}</2> member)? Each member's Rank/Power/Position on the roster keep their current values — only this date's history is removed. This can't be undone.",
     "deleteCaptureDesc_other": "Delete the <1>{{date}}</1> capture (<2>{{count}}</2> members)? Each member's Rank/Power/Position on the roster keep their current values — only this date's history is removed. This can't be undone.",

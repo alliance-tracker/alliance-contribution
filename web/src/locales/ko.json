@@ -517,6 +517,7 @@
     "deactivateDesc": "<1>{{governor}}</1>을(를) 비활성화하시겠습니까? 기록은 계속 점수화됩니다.",
     "deactivating": "비활성화하는 중…",
     "deactivate": "비활성화",
+    "activate": "활성화",
     "deleteCaptureTitle": "명단 업데이트 삭제",
     "deleteCaptureDesc_other": "<1>{{date}}</1> 캡처(<2>{{count}}</2>명)를 삭제하시겠습니까? 각 구성원의 명단상 순위/전투력/전투력 순위는 현재 값을 유지합니다 — 이 날짜의 기록만 제거됩니다. 이 작업은 되돌릴 수 없습니다.",
     "deleteUpdate": "업데이트 삭제",

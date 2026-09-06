@@ -569,6 +569,7 @@
     "deactivateDesc": "¿Desactivar a <1>{{governor}}</1>? El historial sigue siendo puntuable.",
     "deactivating": "Desactivando…",
     "deactivate": "Desactivar",
+    "activate": "Activar",
     "deleteCaptureTitle": "Eliminar actualización de la lista",
     "deleteCaptureDesc_one": "¿Eliminar la captura del <1>{{date}}</1> (<2>{{count}}</2> miembro)? El rango, el poder y la posición de cada miembro en la lista conservan sus valores actuales — solo se elimina el historial de esta fecha. Esta acción no se puede deshacer.",
     "deleteCaptureDesc_many": "¿Eliminar la captura del <1>{{date}}</1> (<2>{{count}}</2> miembros)? El rango, el poder y la posición de cada miembro en la lista conservan sus valores actuales — solo se elimina el historial de esta fecha. Esta acción no se puede deshacer.",

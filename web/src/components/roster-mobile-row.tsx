@@ -135,8 +135,9 @@ export function RosterMobileRow({
             {since && <span>{t("roster.sinceCapture", { date: since })}</span>}
           </div>
           {/* The profile link is the phone's only route to MemberProfile (the desktop name cell is a
-              Link), so it renders in the historical view too — profiles exist regardless. */}
-          <div className="flex gap-2">
+              Link), so it renders in the historical view too — profiles exist regardless. Two rows:
+              five flex-1 buttons do not fit 338px, and icon-only Merge/Deactivate read as mystery meat. */}
+          <div className="flex flex-wrap gap-2">
             <Button asChild variant="secondary" className="h-9 flex-1">
               <Link to={`/members/${m.id}`} state={{ from: "roster" }}>
                 <User />
@@ -153,38 +154,34 @@ export function RosterMobileRow({
                   <Tag />
                   {t("roster.rename")}
                 </Button>
-                {isAdmin && (
-                  <Button
-                    variant="secondary"
-                    className="h-9 w-11 p-0"
-                    aria-label={t("roster.aria.merge", { governor: live.governor })}
-                    onClick={() => onMerge(live)}
-                  >
-                    <Merge />
-                  </Button>
-                )}
-                {live.active === 1 ? (
-                  <Button
-                    variant="secondary"
-                    className="h-9 w-11 border-risk-border p-0 text-down hover:bg-risk-bg"
-                    aria-label={t("roster.aria.deactivate", { governor: live.governor })}
-                    onClick={() => onDeactivate(live)}
-                  >
-                    <UserMinus />
-                  </Button>
-                ) : (
-                  <Button
-                    variant="secondary"
-                    className="h-9 w-11 p-0"
-                    aria-label={t("roster.aria.activate", { governor: live.governor })}
-                    onClick={() => onActivate(live)}
-                  >
-                    <UserCheck />
-                  </Button>
-                )}
               </>
             )}
           </div>
+          {live && (
+            <div className="flex flex-wrap gap-2">
+              {isAdmin && (
+                <Button variant="secondary" className="h-9 flex-1" onClick={() => onMerge(live)}>
+                  <Merge />
+                  {t("roster.merge")}
+                </Button>
+              )}
+              {live.active === 1 ? (
+                <Button
+                  variant="secondary"
+                  className="h-9 flex-1 border-risk-border text-down hover:bg-risk-bg"
+                  onClick={() => onDeactivate(live)}
+                >
+                  <UserMinus />
+                  {t("roster.deactivate")}
+                </Button>
+              ) : (
+                <Button variant="secondary" className="h-9 flex-1" onClick={() => onActivate(live)}>
+                  <UserCheck />
+                  {t("roster.activate")}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -9,7 +9,6 @@ import { Overview } from "@/pages/Overview";
 import { Ranking } from "@/pages/Ranking";
 import { Attendance } from "@/pages/Attendance";
 import { Members } from "@/pages/Members";
-import { Placeholder } from "@/pages/Placeholder";
 
 // Route-split so the initial load stays small. MemberProfile is the only page that pulls in recharts
 // (~107 kB gzip), and the admin pages are irrelevant to most viewers. The layouts render these behind a
@@ -46,7 +45,10 @@ export default function App() {
                 <Route path="rewards" element={<Rewards />} />
                 <Route path="backup" element={<Backup />} />
               </Route>
-              <Route path="*" element={<Placeholder title={t("common.notFound")} />} />
+              <Route
+                path="*"
+                element={<p className="mx-auto max-w-3xl text-[13px] text-muted">{t("common.notFound")}</p>}
+              />
             </Route>
           </Routes>
         </BrowserRouter>

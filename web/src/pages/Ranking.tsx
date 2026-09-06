@@ -18,11 +18,12 @@ import { RankingScopeToggle, type RankingScope } from "@/components/RankingScope
 import { RankByActivity } from "@/components/RankByActivity";
 import { AttendanceBadge } from "@/components/AttendanceBadge";
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
-import { MEDALS, Movement, PodiumCard, ScoreCell } from "@/components/ranking-parts";
+import { MEDALS, Movement, PodiumCard, ScoreCell, medalBarClass } from "@/components/ranking-parts";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -40,9 +41,14 @@ import {
 } from "@/components/ui/table";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 
-// CSS order classes for responsive podium: at md+ restores desktop arrangement (4th, 2nd, 1st, 3rd, 5th).
-// Below md uses DOM order (rank 1 first).
-const PODIUM_ORDER_CLASSES = ["md:order-3", "md:order-2", "md:order-4", "md:order-1", "md:order-5"];
+// Mobile: top 3 only, laid out 2nd · 1st · 3rd. md+: all five as 4th · 2nd · 1st · 3rd · 5th.
+const PODIUM_ORDER_CLASSES = [
+  "order-2 md:order-3",
+  "order-1 md:order-2",
+  "order-3 md:order-4",
+  "hidden md:block md:order-1",
+  "hidden md:block md:order-5",
+];
 
 export function Ranking({ initialScope = "overall" }: { initialScope?: RankingScope }) {
   const { t } = useTranslation();
@@ -119,32 +125,35 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
   const busy = rankingState.loading || activitiesState.loading;
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-col gap-3.5 md:gap-5">
+      <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:gap-3">
         <RankingScopeToggle value={scope} onChange={setScope} />
-        {weekly ? (
-          <Select value={week ?? undefined} onValueChange={setWeek} disabled={(weeksState.data ?? []).length === 0}>
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder={t("common.selectWeek")} />
-            </SelectTrigger>
-            <SelectContent>
-              {(weeksState.data ?? []).map((w) => (
-                <SelectItem key={w} value={w} className="num">
-                  {w}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        ) : (
-          <span className="inline-flex items-center rounded-[8px] border border-border bg-muted-surface px-3 py-1.5 text-[13px] font-medium text-secondary">
-            {t("common.seasonAllWeeks")}
-          </span>
-        )}
-        <label className="flex cursor-pointer items-center gap-2 text-[13px] text-secondary">
-          <Checkbox checked={hideLeadership} onCheckedChange={(v) => setHideLeadership(v === true)} />
-          {t("common.hideLeadership")}
-        </label>
-        <span className="text-[12.5px] text-muted">{weekly ? t("ranking.movementHint") : ""}</span>
+        {/* md:contents dissolves this wrapper on desktop so the row wraps exactly as before. */}
+        <div className="flex items-center gap-2 md:contents">
+          {weekly ? (
+            <Select value={week ?? undefined} onValueChange={setWeek} disabled={(weeksState.data ?? []).length === 0}>
+              <SelectTrigger className="h-10 flex-1 md:h-9 md:w-56 md:flex-none">
+                <SelectValue placeholder={t("common.selectWeek")} />
+              </SelectTrigger>
+              <SelectContent>
+                {(weeksState.data ?? []).map((w) => (
+                  <SelectItem key={w} value={w} className="num">
+                    {w}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="inline-flex h-10 flex-1 items-center truncate rounded-[8px] border border-border bg-muted-surface px-3 text-[13px] font-medium text-secondary md:h-auto md:flex-none md:py-1.5">
+              {t("common.seasonAllWeeks")}
+            </span>
+          )}
+          <label className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[8px] border border-border bg-surface px-3 text-[13px] text-secondary md:h-auto md:border-0 md:bg-transparent md:px-0">
+            <Checkbox checked={hideLeadership} onCheckedChange={(v) => setHideLeadership(v === true)} />
+            {t("common.hideLeadership")}
+          </label>
+        </div>
+        {weekly && <span className="hidden text-[12.5px] text-muted md:inline">{t("ranking.movementHint")}</span>}
       </div>
 
       <div>
@@ -164,7 +173,7 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
       ) : (
         <>
           {showPodium && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 items-end gap-4">
+            <div className="grid grid-cols-[1fr_1.15fr_1fr] items-end gap-2 md:grid-cols-5 md:gap-4">
               {top5.map((row, i) => (
                 <div key={row.member_id} className={PODIUM_ORDER_CLASSES[i]}>
                   <PodiumCard row={row} scoreLabel={scoreLabel} showMovement={weekly} />
@@ -188,64 +197,112 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
                   />
                 </div>
               </div>
-              <Badge variant="neutral">{t("ranking.clickRowHint")}</Badge>
+              <Badge variant="neutral" className="hidden md:inline-flex">
+                {t("ranking.clickRowHint")}
+              </Badge>
             </div>
-            <Table className="min-w-[800px]">
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[70px]">{t("common.rank")}</TableHead>
-                  <TableHead>{t("common.member")}</TableHead>
-                  <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
-                  <TableHead className="w-[240px]">{t("common.score")}</TableHead>
-                  <TableHead className="w-28 text-end" title={attendanceScope}>
-                    {t("nav.attendance")}
-                  </TableHead>
-                  {weekly && <TableHead className="w-24 text-end">{t("ranking.move")}</TableHead>}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {visible.map(({ row, band }) => {
-                  const medal = MEDALS[row.rank];
-                  return (
-                    <TableRow key={row.member_id} className={cn("cursor-pointer", BAND_ROW_CLASS[band])}>
-                      <TableCell className={BAND_EDGE_CLASS[band]}>
-                        <Link to={`/members/${row.member_id}`} className="block">
-                          <Badge
-                            className="num h-6 min-w-[26px] justify-center rounded-[6px] border-0 px-1.5 text-[13px] font-bold"
-                            style={{
-                              background: medal ? medal.badgeBg : "transparent",
-                              color: medal ? medal.badgeFg : "var(--color-muted)",
-                            }}
-                          >
-                            {row.rank}
-                          </Badge>
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Link to={`/members/${row.member_id}`} className="flex items-center gap-2.5">
-                          <Avatar name={row.governor} size={30} />
-                          <span className="font-semibold text-foreground">{row.governor}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} />
-                      </TableCell>
-                      <TableCell>
-                        <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
-                      </TableCell>
-                      <TableCell className="text-end">
+            <div className="md:hidden">
+              {visible.map(({ row, band }) => {
+                const medal = MEDALS[row.rank];
+                const pct = possible > 0 ? Math.min(100, Math.round((row.score / possible) * 100)) : 0;
+                return (
+                  <Link
+                    key={row.member_id}
+                    to={`/members/${row.member_id}`}
+                    className={cn(
+                      "flex items-center gap-2.5 border-b border-border py-2.5 ps-3 pe-3.5 last:border-b-0 active:brightness-95",
+                      BAND_ROW_CLASS[band],
+                      BAND_EDGE_CLASS[band],
+                    )}
+                  >
+                    <Badge
+                      className="num h-6 min-w-[26px] justify-center rounded-[6px] border-0 px-1.5 text-[13px] font-bold"
+                      style={{ background: medal ? medal.badgeBg : "transparent", color: medal ? medal.badgeFg : "var(--color-muted)" }}
+                    >
+                      <span className="sr-only">{t("common.rank")}</span>
+                      {row.rank}
+                    </Badge>
+                    <Avatar name={row.governor} size={30} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="truncate text-[14px] font-semibold text-foreground">{row.governor}</span>
+                        <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} className="shrink-0" />
+                      </div>
+                      <div className="mt-1.5 flex items-center gap-2">
+                        <Progress value={pct} className="h-[5px] flex-1" indicatorClassName={medalBarClass(row.rank)} />
+                        <span className="sr-only">{t("nav.attendance")}</span>
                         <AttendanceBadge pct={row.attendance} />
-                      </TableCell>
-                      {weekly && (
-                        <TableCell className="text-end">
-                          <Movement value={row.movement} />
+                      </div>
+                    </div>
+                    <div className="flex flex-none flex-col items-end gap-0.5">
+                      <span className="num text-[16px] font-bold leading-none">
+                        <span className="sr-only">{t("common.score")}</span>
+                        {row.score}
+                      </span>
+                      {weekly && <span className="text-[12px]"><Movement value={row.movement} /></span>}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="hidden md:block">
+              <Table className="min-w-[800px]">
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[70px]">{t("common.rank")}</TableHead>
+                    <TableHead>{t("common.member")}</TableHead>
+                    <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
+                    <TableHead className="w-[240px]">{t("common.score")}</TableHead>
+                    <TableHead className="w-28 text-end" title={attendanceScope}>
+                      {t("nav.attendance")}
+                    </TableHead>
+                    {weekly && <TableHead className="w-24 text-end">{t("ranking.move")}</TableHead>}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {visible.map(({ row, band }) => {
+                    const medal = MEDALS[row.rank];
+                    return (
+                      <TableRow key={row.member_id} className={cn("cursor-pointer", BAND_ROW_CLASS[band])}>
+                        <TableCell className={BAND_EDGE_CLASS[band]}>
+                          <Link to={`/members/${row.member_id}`} className="block">
+                            <Badge
+                              className="num h-6 min-w-[26px] justify-center rounded-[6px] border-0 px-1.5 text-[13px] font-bold"
+                              style={{
+                                background: medal ? medal.badgeBg : "transparent",
+                                color: medal ? medal.badgeFg : "var(--color-muted)",
+                              }}
+                            >
+                              {row.rank}
+                            </Badge>
+                          </Link>
                         </TableCell>
-                      )}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                        <TableCell>
+                          <Link to={`/members/${row.member_id}`} className="flex items-center gap-2.5">
+                            <Avatar name={row.governor} size={30} />
+                            <span className="font-semibold text-foreground">{row.governor}</span>
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} />
+                        </TableCell>
+                        <TableCell>
+                          <ScoreCell score={row.score} possible={possible} barColor={medal?.bar} />
+                        </TableCell>
+                        <TableCell className="text-end">
+                          <AttendanceBadge pct={row.attendance} />
+                        </TableCell>
+                        {weekly && (
+                          <TableCell className="text-end">
+                            <Movement value={row.movement} />
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </Card>
         </>
       )}

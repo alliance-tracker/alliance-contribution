@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import type { WeeklyRankingRow } from "@shared/types";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/lib/useIsMobile";
 import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { AttendanceBadge } from "@/components/AttendanceBadge";
@@ -67,46 +68,47 @@ export function PodiumCard({
   showMovement: boolean;
 }) {
   const { t } = useTranslation();
+  const mobile = useIsMobile();
   const m = MEDALS[row.rank]; // undefined for ranks 4 & 5
   const first = row.rank === 1;
   return (
     <Link
       to={`/members/${row.member_id}`}
       className={cn(
-        "flex flex-col items-center rounded-[14px] border p-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-transform hover:-translate-y-0.5",
+        "flex flex-col items-center rounded-[14px] border px-2 py-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-transform hover:-translate-y-0.5 md:p-4",
         m ? m.card : "border-border bg-surface",
-        first && "-translate-y-1.5 p-5",
+        first && "-translate-y-1.5 py-3.5 md:p-5",
       )}
     >
       <div
-        className="flex size-[26px] items-center justify-center rounded-full font-mono text-[13px] font-bold"
-        style={{
-          background: m ? m.bar : "var(--color-muted-surface)",
-          color: m ? "#fff" : "var(--color-muted)",
-        }}
+        className="flex size-6 items-center justify-center rounded-full font-mono text-[12px] font-bold md:size-[26px] md:text-[13px]"
+        style={{ background: m ? m.bar : "var(--color-muted-surface)", color: m ? "#fff" : "var(--color-muted)" }}
       >
         {row.rank}
       </div>
       <Avatar
         name={row.governor}
-        size={first ? 64 : 52}
-        className="mt-2.5"
+        size={mobile ? (first ? 52 : 42) : first ? 64 : 52}
+        className="mt-2 md:mt-2.5"
         style={m ? { boxShadow: `0 0 0 2px ${m.bar}` } : undefined}
       />
-      <div className={cn("mt-2.5 text-center font-semibold", first ? "text-[17px]" : "text-[15px]")}>
+      <div
+        className={cn(
+          "mt-2 w-full truncate text-center font-semibold md:mt-2.5",
+          first ? "text-[14px] md:text-[17px]" : "text-[12.5px] md:text-[15px]",
+        )}
+      >
         {row.governor}
       </div>
       <AllianceRankBadge rank={row.alliance_rank} className="mt-1" />
-      <div
-        className={cn(
-          "num text-center font-bold tracking-[-0.04em]",
-          first ? "text-[40px]" : "text-[30px]",
-        )}
-      >
+      <div className={cn("num text-center font-bold tracking-[-0.04em]", first ? "text-[30px] md:text-[40px]" : "text-[24px] md:text-[30px]")}>
         {row.score}
       </div>
-      <div className="text-center text-[11px] text-muted">{scoreLabel}</div>
-      <div className="mt-3 flex items-center gap-5">
+      <div className="text-center text-[10px] text-muted md:text-[11px]">{scoreLabel}</div>
+      {/* AttendanceBadge renders a bare "83%" on a phone; the ATTEND label below is md-only. */}
+      <span className="sr-only md:hidden">{t("ranking.podium.attend")}</span>
+      <AttendanceBadge pct={row.attendance} className="mt-2 md:hidden" />
+      <div className="mt-3 hidden items-center gap-5 md:flex">
         <div className="flex flex-col items-center gap-1">
           <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.06em] text-faint">
             {t("ranking.podium.attend")}

@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
 import { Download, Upload, CheckCircle2, TriangleAlert } from "lucide-react";
-import { api, ApiError, type ImportResult } from "@/lib/api";
+import { api, type ImportResult } from "@/lib/api";
+import { writeErrorMessage } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -19,16 +19,6 @@ type ParsedBackup = {
   exported_at?: string;
   tables?: Record<string, unknown[]>;
 };
-
-/** Map a thrown error to a clear, actionable message. 401 → API-key hint; 403 → admin-key hint. */
-function writeErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError) {
-    if (e.status === 401) return t("backup.needKey");
-    if (e.status === 403) return t("common.errors.adminKey");
-    return e.message;
-  }
-  return e instanceof Error ? e.message : t("common.errors.generic");
-}
 
 /**
  * Trigger a browser download of `text` as `filename`. The anchor has to be in the document and the
@@ -88,7 +78,7 @@ export function Backup() {
       const text = await api.admin.export();
       downloadText(`alliance-backup-${new Date().toISOString().slice(0, 10)}.json`, text);
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "backup.needKey", true));
     } finally {
       setBusy(false);
     }
@@ -121,7 +111,7 @@ export function Backup() {
       setResult(res);
       setPending(null);
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "backup.needKey", true));
     } finally {
       setBusy(false);
     }

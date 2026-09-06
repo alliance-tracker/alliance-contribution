@@ -5,10 +5,11 @@ import type { TFunction } from "i18next";
 import { Plus, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
 import type { ActivityType, Alias, Member } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import type { AliasChangeResult, AliasConflict, UnmappedRow } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
+import { writeErrorMessage } from "@/lib/errors";
 import { normalizeName } from "@/lib/normalize";
 import { activityBadgeClass } from "@/lib/activity";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertTitle, AlertContent } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Field } from "@/components/ui/field";
 import {
   Dialog,
   DialogClose,
@@ -29,28 +31,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
-
-/** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError) {
-    if (e.status === 401) return t("aliases.needKey");
-    return e.message;
-  }
-  return e instanceof Error ? e.message : t("common.errors.generic");
-}
-
-/** Shared labeled field wrapper. */
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-[12px] font-medium text-secondary">
-        {label}
-        {hint && <span className="ms-1 text-muted">{hint}</span>}
-      </label>
-      {children}
-    </div>
-  );
-}
 
 /** One conflict rendered as a plain, unambiguous sentence keyed to its type. */
 function conflictText(c: AliasConflict, t: TFunction): string {
@@ -169,7 +149,7 @@ function AddAliasDialog({
           // The member exists now and there is no member-delete API to roll it back. Re-running this
           // dialog would also fail on the duplicate governor, so name the partial state instead.
           setError(
-            t("aliases.partialError", { governor: gov, error: writeErrorMessage(e, t), alias: rawName }),
+            t("aliases.partialError", { governor: gov, error: writeErrorMessage(e, t, "aliases.needKey"), alias: rawName }),
           );
           onSuccess();
           return;
@@ -177,7 +157,7 @@ function AddAliasDialog({
       }
       onSuccess();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "aliases.needKey"));
     } finally {
       setSubmitting(false);
     }
@@ -307,7 +287,7 @@ function RemoveAliasDialog({
       setResult(res);
       onDone();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "aliases.needKey"));
       setSubmitting(false);
     }
   };

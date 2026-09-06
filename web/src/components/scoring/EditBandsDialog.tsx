@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
-import type { TFunction } from "i18next";
-import { Plus, Trash2, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import type { ActivityType } from "@shared/types";
 import type { TKey } from "@/i18n";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import type { ScoringConfig, ScoringTierInput } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
+import { writeErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { activityBadgeClass } from "@/lib/activity";
+import { SuccessNote } from "@/components/scoring/SuccessNote";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertContent } from "@/components/ui/alert";
+import { Field } from "@/components/ui/field";
 import {
   Table,
   TableBody,
@@ -30,50 +31,12 @@ import {
 } from "@/components/ui/dialog";
 import { LoadingState, ErrorState } from "@/components/States";
 
-/** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError) {
-    if (e.status === 401) return t("scoring.needKey");
-    return e.message;
-  }
-  return e instanceof Error ? e.message : t("common.errors.generic");
-}
-
 /** Parse a numeric field: blank/non-numeric → null (invalid), else the finite number. */
 function toNumber(text: string): number | null {
   const t = text.trim();
   if (t === "") return null;
   const n = Number(t);
   return Number.isFinite(n) ? n : null;
-}
-
-/** Shared labeled field wrapper. */
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-[12px] font-medium text-secondary">
-        {label}
-        {hint && <span className="ms-1 text-muted">{hint}</span>}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-/** Dismissible success banner (matches roster/aliases note style). */
-function SuccessNote({ message, onDismiss }: { message: string; onDismiss: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <Alert variant="success">
-      <CheckCircle2 />
-      <AlertContent className="flex-row items-center justify-between gap-3">
-        <span>{message}</span>
-        <Button variant="ghost" size="sm" onClick={onDismiss}>
-          {t("common.actions.dismiss")}
-        </Button>
-      </AlertContent>
-    </Alert>
-  );
 }
 
 type TierDraft = { min_value: string; points: string };
@@ -164,7 +127,7 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
       setTiers(toDrafts(next.tiers));
       setSaved(true);
     } catch (e) {
-      setSaveError(writeErrorMessage(e, t));
+      setSaveError(writeErrorMessage(e, t, "scoring.needKey"));
     } finally {
       setSaving(false);
     }

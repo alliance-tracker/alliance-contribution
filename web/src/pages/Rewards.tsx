@@ -11,8 +11,9 @@ import type {
   AllocationWithLines,
   TierBand,
 } from "@shared/types";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
+import { writeErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { formatNumber, formatCompact } from "@/lib/format";
 import type { TKey } from "@/i18n";
@@ -34,16 +35,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
 import { MEDALS } from "@/components/ranking-parts";
 import { EmptyState, ErrorState, LoadingState } from "@/components/States";
-
-/** Map a thrown error to a clear, actionable message. 401 → API-key hint; 403 → admin-key hint. */
-function writeErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError) {
-    if (e.status === 401) return t("rewards.needKey");
-    if (e.status === 403) return t("common.errors.adminKey");
-    return e.message;
-  }
-  return e instanceof Error ? e.message : t("common.errors.generic");
-}
 
 /** Uppercase mono micro-label above a field (design: fldLbl), hint in sentence case. */
 function Field({
@@ -329,7 +320,7 @@ function HistoryRow({
         setDetail(await api.allocations.get(allocation.id));
       } catch (e) {
         // Collapse again so re-expanding retries instead of spinning forever under a stale banner.
-        setError(writeErrorMessage(e, t));
+        setError(writeErrorMessage(e, t, "rewards.needKey", true));
         setExpanded(false);
       }
     }
@@ -349,7 +340,7 @@ function HistoryRow({
       setEditing(false);
       onChanged();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "rewards.needKey", true));
     } finally {
       setBusy(false);
     }
@@ -363,7 +354,7 @@ function HistoryRow({
       setConfirming(false);
       onChanged();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "rewards.needKey", true));
       setConfirming(false);
     } finally {
       setBusy(false);
@@ -522,7 +513,7 @@ export function Rewards() {
       setPreview(await api.allocations.preview(buildInput()));
     } catch (e) {
       setPreview(null);
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "rewards.needKey", true));
     } finally {
       setBusy(false);
     }
@@ -539,7 +530,7 @@ export function Rewards() {
       setQuantity("");
       setHistoryVersion((v) => v + 1);
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "rewards.needKey", true));
     } finally {
       setBusy(false);
     }

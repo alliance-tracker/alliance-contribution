@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
-import type { TFunction } from "i18next";
 import {
   ArrowUpDown,
   Merge,
@@ -27,11 +26,12 @@ import type {
   RosterImportResult,
 } from "@shared/types";
 import { rosterChatPrompt } from "@shared/prompts";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import type { MergeResult, RenameResult } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
 import type { TKey } from "@/i18n";
+import { writeErrorMessage } from "@/lib/errors";
 import { normalizeName } from "@/lib/normalize";
 import { formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -60,6 +60,7 @@ import {
   rowClass,
 } from "@/components/roster-cells";
 import { DatePicker } from "@/components/ui/date-picker";
+import { Field } from "@/components/ui/field";
 import { Alert, AlertContent } from "@/components/ui/alert";
 import { RosterDeltaPanel } from "@/components/roster-delta-panel";
 import {
@@ -106,15 +107,6 @@ import {
 } from "@/components/ui/dialog";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 
-/** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError) {
-    if (e.status === 401) return t("roster.needKey");
-    return e.message;
-  }
-  return e instanceof Error ? e.message : t("common.errors.generic");
-}
-
 /** Blank → null, unreadable → undefined (invalid). Same digit-only rule the paste enforces, so a
  *  hand-typed power cannot be negative — a negative stored power silently disarms the delta's
  *  identity tripwire (src/domain/roster-delta.ts). */
@@ -140,19 +132,6 @@ function Checkbox({
       <ShadcnCheckbox checked={checked} onCheckedChange={(next) => onChange(next === true)} />
       {children}
     </label>
-  );
-}
-
-/** Shared labeled field wrapper. */
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-[12px] font-medium text-secondary">
-        {label}
-        {hint && <span className="ms-1 text-muted">{hint}</span>}
-      </label>
-      {children}
-    </div>
   );
 }
 
@@ -229,7 +208,7 @@ function AddMemberDialog({
       });
       onSuccess(governor.trim());
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
       setSubmitting(false);
     }
   };
@@ -341,7 +320,7 @@ function EditMemberDialog({
       });
       onSuccess(member.governor);
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
       setSubmitting(false);
     }
   };
@@ -452,7 +431,7 @@ function RenameMemberDialog({
       const res = await api.members.rename(member.id, trimmed, { addAlias });
       setResult(res);
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
       setSubmitting(false);
     }
   };
@@ -591,7 +570,7 @@ function MergeMemberDialog({
     try {
       onSuccess(await api.members.merge(member.id, targetId));
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
       setSubmitting(false);
     }
   };
@@ -681,7 +660,7 @@ function DeactivateDialog({
       await api.members.update(member.id, { active: 0 });
       onDone(member.governor);
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
       setSubmitting(false);
     }
   };
@@ -882,7 +861,7 @@ function ImportRosterDialog({
         setAliases(a);
       })
       .catch((e) => {
-        if (!cancelled) setDataError(writeErrorMessage(e, t));
+        if (!cancelled) setDataError(writeErrorMessage(e, t, "roster.needKey"));
       })
       .finally(() => {
         if (!cancelled) setLoadingData(false);
@@ -1079,7 +1058,7 @@ function ImportRosterDialog({
       setResult(res);
       onApplied();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
     } finally {
       setSubmitting(false);
     }
@@ -1710,7 +1689,7 @@ function DeleteCaptureDialog({
       await api.members.deleteCapture(date);
       onDeleted();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "roster.needKey"));
       setSubmitting(false);
     }
   };
@@ -1877,7 +1856,7 @@ export function Roster() {
       setImportInitial({ capturedOn: shownCapture, text: serializeRoster(rows) });
       setImportOpen(true);
     } catch (e) {
-      setRowError(writeErrorMessage(e, t));
+      setRowError(writeErrorMessage(e, t, "roster.needKey"));
     }
   };
 
@@ -1888,7 +1867,7 @@ export function Roster() {
       setNote(t("roster.notes.activated", { governor: m.governor }));
       refresh();
     } catch (e) {
-      setRowError(writeErrorMessage(e, t));
+      setRowError(writeErrorMessage(e, t, "roster.needKey"));
     }
   };
 

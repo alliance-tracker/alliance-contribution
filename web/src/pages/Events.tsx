@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
-import type { TFunction } from "i18next";
 import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
 import { eventChatPrompt } from "@shared/prompts";
 import type { ActivityType, Event, EventListRow } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import type {
   EventDetail,
   EventParticipationRow,
@@ -16,6 +15,7 @@ import type {
 } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
+import { writeErrorMessage } from "@/lib/errors";
 import { activityBadgeClass, activitySolidClass } from "@/lib/activity";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
@@ -55,15 +55,6 @@ import { LlmPrompt } from "@/components/llm-prompt";
 import { normalizeName } from "@/lib/normalize";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-/** Map a thrown error to a clear, actionable message. 401 → API-key hint; 409/400 → server text. */
-function writeErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError) {
-    if (e.status === 401) return t("events.needKey");
-    return e.message;
-  }
-  return e instanceof Error ? e.message : t("common.errors.generic");
-}
 
 type ParsedRow = {
   lineNo: number;
@@ -330,7 +321,7 @@ function EventFormDialog({
       setResult(res);
       onSuccess();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "events.needKey"));
     } finally {
       setSubmitting(false);
     }
@@ -594,7 +585,7 @@ function DeleteEventDialog({
       await api.events.delete(event.id);
       onDeleted();
     } catch (e) {
-      setError(writeErrorMessage(e, t));
+      setError(writeErrorMessage(e, t, "events.needKey"));
       setSubmitting(false);
     }
   };
@@ -778,7 +769,7 @@ export function Events() {
       setFormDetail(detail);
       setFormOpen(true);
     } catch (e) {
-      setRowError(writeErrorMessage(e, t));
+      setRowError(writeErrorMessage(e, t, "events.needKey"));
     }
   };
 

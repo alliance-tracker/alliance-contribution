@@ -556,8 +556,8 @@ export function Rewards() {
           <span className="text-[12.5px] text-muted">{t("rewards.newDesc")}</span>
         </div>
 
-        <div className="grid grid-cols-[1fr_1.4fr] gap-2.5 sm:gap-3.5 lg:grid-cols-4">
-          <div className="col-span-2 min-w-0 lg:col-span-1">
+        <div className="grid grid-cols-[1fr_1.4fr] gap-2.5 sm:gap-3.5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="col-span-2 min-w-0 md:col-span-1">
             <Field label={t("rewards.title")} hint={t("rewards.titleHint")}>
               <Input
                 className="h-11 md:h-9"
@@ -592,7 +592,7 @@ export function Rewards() {
               </SelectContent>
             </Select>
           </Field>
-          <div className="col-span-2 min-w-0 lg:col-span-1">
+          <div className="col-span-2 min-w-0 md:col-span-1">
             <Field label={t("rewards.strategy")}>
               <Select value={strategy} onValueChange={(v) => setStrategyT(v as AllocationStrategy)}>
                 <SelectTrigger className="h-11 md:h-9">
@@ -726,8 +726,8 @@ export function Rewards() {
           </Field>
         )}
 
-        <div className="flex flex-col gap-2.5">
-          <div className="grid grid-cols-2 gap-2 md:flex md:items-center md:gap-2.5">
+        <div className="flex flex-col gap-2.5 md:flex-row md:flex-wrap md:items-center">
+          <div className="grid grid-cols-2 gap-2 md:contents">
             <Button className="h-11 md:h-8 md:px-3" onClick={runPreview} disabled={!canPreview}>
               {t("rewards.preview")}
             </Button>

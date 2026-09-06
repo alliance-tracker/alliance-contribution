@@ -46,6 +46,27 @@ Read the Coverage check before trusting the paste — it is the LLM's own sanity
 
 **7. Delete.** Click the trash icon to remove an event entirely, after confirming. **Delete is admin-only** — managers can add and edit events but won't see the delete action.
 
+### From screenshots
+
+Above the participants box a switch offers **Paste text** (the flow above) and **From screenshots**. The
+switch remembers your last choice. In screenshot mode:
+
+1. **Choose screenshots** (several at once, any order; on a phone this is the photo picker). Each is read
+   one at a time, about two seconds each, and its rows are added to the same text box as they arrive —
+   you can still paste or edit.
+2. The card shows one line per screenshot: Waiting, Reading…, Done · N rows, or Failed with a reason
+   ("Not a ranking screen" means the image was something else — remove it). Cancel keeps what has been
+   read; Read the rest continues.
+3. When everything has settled the card collapses to a summary. Check the rows before you save: a misread
+   name is not blocked, it lands in Needs mapping and you link it once. **Screenshot mode has no Coverage
+   check** — read the rank numbers yourself to make sure no screenshot was skipped.
+
+The thin bar under the switch is the **daily reading allowance**: Cloudflare gives the tracker a free
+quota of roughly 2,000 screenshot reads a day, resetting at 00:00 UTC (shown in your local time). It turns
+amber when fewer than about 100 reads remain and grey when the day's allowance is gone; paste text still
+works then. Screenshots are sent to Cloudflare Workers AI on the alliance's own account for reading and are
+not stored anywhere.
+
 ## How it works
 
 - **Value threshold.** Each activity type has a minimum value; a row at or below it is **skipped** — recorded in the result as skipped, not silently dropped, since it can still matter for attendance. Only rows with value strictly greater than the threshold are logged and scored.
@@ -66,5 +87,7 @@ Read the Coverage check before trusting the paste — it is the LLM's own sanity
 - **Unknown activity** can't happen through the dialog itself (you pick from a list), but re-pasting the same activity/date/instance as an existing event **replaces that event's rows** rather than creating a duplicate — this is how corrections work, not an error.
 - **An alias added later doesn't retroactively re-check old events.** If a new alias mapping would have caused a two-trap or duplicate conflict in an already-saved event, that conflict won't block anything or self-repair — watch the Needs mapping panel and event unmapped counts after alias changes.
 - Deleting or editing an event recomputes scores immediately across the board — there's no draft/preview state once you click Add event or Save changes.
+- **Screenshot reads share one daily allowance** across everyone using the tracker. If the card says the
+  allowance is used up (or the reading service says so), paste text or wait for the reset.
 
 See also [Aliases](aliases.md) for resolving unmapped names, [Roster](roster.md) for governor identity, and [Scoring](scoring.md) for how value becomes points.

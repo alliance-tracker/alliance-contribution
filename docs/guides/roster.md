@@ -70,6 +70,12 @@ wizard driven off a screenshot of the in-game Alliance Ranking (Power) screen:
    cells. If the chosen date already has an update on file, you must explicitly acknowledge that
    importing replaces it wholesale. A future-dated capture is flagged as likely a mistake (it can't
    be deleted from the picker later without going to Delete update).
+
+   Or switch to **From screenshots** and pick the Alliance Ranking screenshots; each is read into the
+   four-column format for you (see [Events → From screenshots](events.md#from-screenshots) for the card
+   and the daily allowance). **Next is disabled while any screenshot is failed or unread** — an unread
+   screenshot would make its members look absent in step 3. Remove it or read it first. Reading works with
+   the same allowance and the same "no guessing" rule: unrecognized names are decided in step 2.
 2. **Unrecognized names** (only if any). For each name that didn't match an existing member or
    alias, choose **New member**, **Alias of…** an existing member, or **Skip**. Checking "Make
    this the primary name" on an alias decision turns it into a rename (old name kept as alias) —

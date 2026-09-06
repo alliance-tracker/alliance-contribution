@@ -34,6 +34,8 @@ cp .dev.vars.example .dev.vars           # then set the three API keys
 npx wrangler d1 create <your-db-name>    # prints the name + id to paste above
 npm run db:migrate:local && npm run seed:local
 ```
+The `[ai]` binding is remote-only, so `npm run dev` needs `npx wrangler login` once. Tests do not.
+
 Nothing outside `wrangler.toml` names a specific Worker, database, or host — migrations and the
 seed address D1 through the **`DB` binding**, not a database name. Keep it that way.
 

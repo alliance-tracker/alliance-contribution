@@ -349,6 +349,11 @@ export function ScreenshotIngest({
                         <span className="flex items-center gap-1 text-[12px] font-semibold text-down"><X className="size-3.5" />{t(STATUS_KEY.failed)}</span>
                         <button type="button" className="text-[12px] font-semibold underline" onClick={() => dispatch({ type: "remove", id: item.id })}>{t("screenshots.status.remove")}</button>
                       </span>
+                    ) : item.status === "not_read" || item.status === "retry_wait" ? (
+                      <span className="flex items-center gap-2 whitespace-nowrap">
+                        <span className="text-[12px] font-medium text-muted">{t(STATUS_KEY[item.status])}</span>
+                        <button type="button" className="text-[12px] font-semibold underline" onClick={() => dispatch({ type: "remove", id: item.id })}>{t("screenshots.status.remove")}</button>
+                      </span>
                     ) : (
                       <span className="whitespace-nowrap text-[12px] font-medium text-muted">{t(STATUS_KEY[item.status])}</span>
                     )}

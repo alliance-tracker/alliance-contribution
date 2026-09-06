@@ -1050,7 +1050,7 @@ function ImportRosterDialog({
     parsed.invalid.length === 0 &&
     classified.conflicts.length === 0 &&
     !screenshotBlocking;
-  const canApply = canAdvance && !aliasMissingMember;
+  const canApply = canAdvance && !aliasMissingMember && !screenshotBlocking;
 
   const buildBatch = (): RosterImportBatch => {
     const updates = classified.matched.map(({ row, memberId }) => ({

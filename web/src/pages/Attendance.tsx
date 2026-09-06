@@ -128,71 +128,66 @@ export function Attendance() {
   const busy = attendanceState.loading || activitiesState.loading;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-col gap-3.5 md:gap-4">
+      <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:gap-3">
         <RankingScopeToggle value={scope} onChange={setScope} />
-        {weekly ? (
-          <Select value={week ?? undefined} onValueChange={setWeek} disabled={(weeksState.data ?? []).length === 0}>
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder={t("common.selectWeek")} />
-            </SelectTrigger>
-            <SelectContent>
-              {(weeksState.data ?? []).map((w) => (
-                <SelectItem key={w} value={w} className="num">
-                  {w}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        ) : (
-          <span className="inline-flex items-center rounded-[8px] border border-border bg-muted-surface px-3 py-1.5 text-[13px] font-medium text-secondary">
-            {t("common.seasonAllWeeks")}
-          </span>
-        )}
-        <label className="flex cursor-pointer items-center gap-2 text-[13px] text-secondary">
-          <Checkbox checked={hideLeadership} onCheckedChange={(v) => setHideLeadership(v === true)} />
-          {t("common.hideLeadership")}
-        </label>
+        {/* md:contents dissolves this wrapper on desktop so the row wraps exactly as before. */}
+        <div className="flex items-center gap-2 md:contents">
+          {weekly ? (
+            <Select value={week ?? undefined} onValueChange={setWeek} disabled={(weeksState.data ?? []).length === 0}>
+              <SelectTrigger className="h-10 flex-1 md:h-9 md:w-56 md:flex-none">
+                <SelectValue placeholder={t("common.selectWeek")} />
+              </SelectTrigger>
+              <SelectContent>
+                {(weeksState.data ?? []).map((w) => (
+                  <SelectItem key={w} value={w} className="num">
+                    {w}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="inline-flex h-10 flex-1 items-center truncate rounded-[8px] border border-border bg-muted-surface px-3 text-[13px] font-medium text-secondary md:h-auto md:flex-none md:py-1.5">
+              {t("common.seasonAllWeeks")}
+            </span>
+          )}
+          <label className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[8px] border border-border bg-surface px-3 text-[13px] text-secondary md:h-auto md:border-0 md:bg-transparent md:px-0">
+            <Checkbox checked={hideLeadership} onCheckedChange={(v) => setHideLeadership(v === true)} />
+            {t("common.hideLeadership")}
+          </label>
+        </div>
       </div>
 
       <div>
         <RankByActivity value={activity} onChange={setActivity} activities={activities} label={t("rankBy.filterLabel")} />
       </div>
 
-      {data && (
-        <div className="flex justify-end">
-          <span className="num text-[12px] text-muted">
-            {t("attendance.eventDays", { count: data.total_event_days })}
-          </span>
-        </div>
-      )}
-
       {/* Both conditions are load-bearing: events with an all-unmapped ingest gives rows: [] at
           total_event_days > 0, which would stack "Avg 0% / Perfect 0 / At risk 0" on top of an
           empty table. */}
       {hasEvents && hasRoster && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Card className="p-[18px]">
-            <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+        <div className="grid grid-cols-3 gap-2 md:gap-3">
+          <Card className="p-3 md:p-[18px]">
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.04em] text-faint md:text-[10.5px]">
               {t("attendance.avg")}
             </div>
-            <div className="num mt-1.5 text-[26px] font-bold tracking-[-0.02em] text-foreground">
+            <div className="num mt-1.5 text-[22px] font-bold tracking-[-0.02em] text-foreground md:text-[26px]">
               {Math.round(summary.avgPct * 100)}%
             </div>
           </Card>
-          <Card className="p-[18px]">
-            <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+          <Card className="p-3 md:p-[18px]">
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.04em] text-faint md:text-[10.5px]">
               {t("attendance.perfect")}
             </div>
-            <div className="num mt-1.5 text-[26px] font-bold tracking-[-0.02em] text-foreground">
+            <div className="num mt-1.5 text-[22px] font-bold tracking-[-0.02em] text-foreground md:text-[26px]">
               {summary.perfect}
             </div>
           </Card>
-          <Card className="p-[18px]">
-            <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+          <Card className="p-3 md:p-[18px]">
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.04em] text-faint md:text-[10.5px]">
               {t("attendance.atRisk")}
             </div>
-            <div className="num mt-1.5 text-[26px] font-bold tracking-[-0.02em] text-risk-fg">
+            <div className="num mt-1.5 text-[22px] font-bold tracking-[-0.02em] text-risk-fg md:text-[26px]">
               {summary.atRisk}
             </div>
           </Card>
@@ -203,19 +198,22 @@ export function Attendance() {
           populated roster with zero events in scope, and the table renders an empty state then too. */}
       {hasEvents && hasRoster && (
         <>
-          <div className="flex flex-wrap items-center justify-end gap-4 text-[12px] text-muted">
-            <span className="flex items-center gap-1.5">
-              <span className="size-3.5 rounded border border-good-border bg-good-bg" />
-              {t("attendance.legend.good")}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="size-3.5 rounded border border-watch-border bg-watch-bg" />
-              {t("attendance.legend.watch")}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="size-3.5 rounded border border-risk-border bg-risk-bg" />
-              {t("attendance.legend.risk")}
-            </span>
+          <div className="flex items-center justify-between gap-2.5 text-[12px] text-muted">
+            <span className="num shrink-0">{t("attendance.eventDays", { count: data!.total_event_days })}</span>
+            <div className="flex items-center gap-2.5 md:gap-4">
+              <span className="flex items-center gap-1.5">
+                <span className="size-3 rounded border border-good-border bg-good-bg md:size-3.5" />
+                {t("attendance.legend.good")}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-3 rounded border border-watch-border bg-watch-bg md:size-3.5" />
+                {t("attendance.legend.watch")}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-3 rounded border border-risk-border bg-risk-bg md:size-3.5" />
+                {t("attendance.legend.risk")}
+              </span>
+            </div>
           </div>
           <BandLegend bands={bandsCfg} />
         </>
@@ -233,57 +231,103 @@ export function Attendance() {
         ) : !hasEvents ? (
           <EmptyState message={weekly ? t("attendance.emptyWeek") : t("attendance.emptyAll")} />
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead>{t("common.governor")}</TableHead>
-                <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
-                <TableHead className="w-[45%]">{t("nav.attendance")}</TableHead>
-                <TableHead className="text-end">{t("attendance.rate")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <>
+            <div className="md:hidden">
+              <div className="flex justify-between border-b border-border bg-background px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
+                <span>{t("common.governor")}</span>
+                <span>{t("attendance.rate")}</span>
+              </div>
               {visible.map(({ row, band }) => {
                 const pctInt = row.total > 0 ? Math.round(row.pct * 100) : 0;
                 const color = thresholdColor(pctInt);
                 return (
-                  <TableRow key={row.member_id} className={BAND_ROW_CLASS[band]}>
-                    <TableCell className={BAND_EDGE_CLASS[band]}>
-                      <div className="flex items-center gap-2.5">
-                        <Avatar name={row.governor} size={24} />
-                        <Link
-                          to={`/members/${row.member_id}`}
-                          className="font-medium text-foreground transition-colors hover:text-accent"
-                        >
-                          {row.governor}
-                        </Link>
+                  <Link
+                    key={row.member_id}
+                    to={`/members/${row.member_id}`}
+                    className={cn(
+                      "flex items-center gap-2.5 border-b border-border py-2.5 ps-3 pe-3.5 last:border-b-0 active:brightness-95",
+                      BAND_ROW_CLASS[band],
+                      BAND_EDGE_CLASS[band],
+                    )}
+                  >
+                    <Avatar name={row.governor} size={28} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex min-w-0 items-center gap-1.5">
+                          <span className="truncate text-[14px] font-medium text-foreground">{row.governor}</span>
+                          <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} className="shrink-0" />
+                        </div>
+                        <span className="num shrink-0 whitespace-nowrap text-[13px]">
+                          <span className="font-semibold" style={{ color }}>{pctInt}%</span>
+                          <span className="ms-1.5 text-muted">{row.attended}/{row.total}</span>
+                          <DeltaPct delta={row.delta} />
+                        </span>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} />
-                    </TableCell>
-                    <TableCell>
                       <Progress
                         value={pctInt}
                         indicatorClassName="rounded-full"
                         indicatorStyle={{ backgroundColor: color }}
-                        className="h-1.5 w-full"
+                        className="mt-1.5 h-1.5 w-full"
                       />
-                    </TableCell>
-                    <TableCell className="num text-end">
-                      <span className="font-semibold" style={{ color }}>
-                        {pctInt}%
-                      </span>
-                      <span className="ms-1.5 text-muted">
-                        {row.attended}/{row.total}
-                      </span>
-                      <DeltaPct delta={row.delta} />
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </Link>
                 );
               })}
-            </TableBody>
-          </Table>
+            </div>
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>{t("common.governor")}</TableHead>
+                    <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
+                    <TableHead className="w-[45%]">{t("nav.attendance")}</TableHead>
+                    <TableHead className="text-end">{t("attendance.rate")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {visible.map(({ row, band }) => {
+                    const pctInt = row.total > 0 ? Math.round(row.pct * 100) : 0;
+                    const color = thresholdColor(pctInt);
+                    return (
+                      <TableRow key={row.member_id} className={BAND_ROW_CLASS[band]}>
+                        <TableCell className={BAND_EDGE_CLASS[band]}>
+                          <div className="flex items-center gap-2.5">
+                            <Avatar name={row.governor} size={24} />
+                            <Link
+                              to={`/members/${row.member_id}`}
+                              className="font-medium text-foreground transition-colors hover:text-accent"
+                            >
+                              {row.governor}
+                            </Link>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <AllianceRankBadge rank={row.alliance_rank} expected={BAND_EXPECTED_RANK[band]} />
+                        </TableCell>
+                        <TableCell>
+                          <Progress
+                            value={pctInt}
+                            indicatorClassName="rounded-full"
+                            indicatorStyle={{ backgroundColor: color }}
+                            className="h-1.5 w-full"
+                          />
+                        </TableCell>
+                        <TableCell className="num text-end">
+                          <span className="font-semibold" style={{ color }}>
+                            {pctInt}%
+                          </span>
+                          <span className="ms-1.5 text-muted">
+                            {row.attended}/{row.total}
+                          </span>
+                          <DeltaPct delta={row.delta} />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </Card>
     </div>

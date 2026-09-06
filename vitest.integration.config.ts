@@ -6,8 +6,17 @@ import { buildSeedSql } from "./seed/sql";
 export default defineProject({
   plugins: [
     cloudflareTest(async () => ({
-      wrangler: { configPath: "./wrangler.toml" },
+      // No `wrangler.toml` here on purpose: that file is per-deployment and gitignored, and its
+      // `[ai] remote = true` makes the pool authenticate to Cloudflare at boot. Tests never call AI
+      // (the service is unit-tested with a fake runner; the route's AI-reaching paths are covered by
+      // pre-seeded ai_usage rows), so declare only what the Worker touches under test.
+      main: "./src/index.ts",
       miniflare: {
+        compatibilityDate: "2026-07-22",
+        d1Databases: ["DB"],
+        ratelimits: {
+          API_RATE_LIMIT: { namespace_id: "1001", simple: { limit: 120, period: 60 } },
+        },
         bindings: {
           API_KEY: "test-key",
           ADMIN_API_KEY: "test-admin-key",

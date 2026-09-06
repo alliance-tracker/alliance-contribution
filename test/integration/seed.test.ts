@@ -18,13 +18,14 @@ describe("seed pipeline", () => {
     const tierRepo = new ScoringTierRepo(DB);
 
     const activities = await activityRepo.list();
-    expect(activities.map((a) => ({ key: a.key, weight: a.weight, max_instance: a.max_instance }))).toEqual([
-      { key: "bear_trap", weight: 1, max_instance: 2 },
-      { key: "contribution", weight: 1, max_instance: 1 },
-      { key: "mobilization", weight: 2, max_instance: 1 },
-    ]);
+    expect(activities).toHaveLength(10);
+    const byKey = activities.map((a) => ({ key: a.key, weight: a.weight, max_instance: a.max_instance }));
+    expect(byKey).toContainEqual({ key: "bear_trap", weight: 1, max_instance: 2 });
+    expect(byKey).toContainEqual({ key: "contribution", weight: 1, max_instance: 1 });
+    expect(byKey).toContainEqual({ key: "mobilization", weight: 2, max_instance: 1 });
 
-    // Exact tier bands per activity, not just a count — catches a min_value/points column swap.
+    // Exact tier bands for the three core activities, not just a count — catches a min_value/points
+    // column swap. The other seven types (snapshotted from the live DB) are covered by the total.
     const expectedTiers = [
       { key: "bear_trap", tiers: [{ min_value: 0, points: 1 }] },
       {
@@ -47,16 +48,15 @@ describe("seed pipeline", () => {
       },
     ];
 
-    let tierCount = 0;
     for (const expected of expectedTiers) {
       const activity = await activityRepo.getByKey(expected.key);
       if (!activity) throw new Error(`expected activity_types row for "${expected.key}"`);
 
       const tiers = await tierRepo.listByActivity(activity.id);
       expect(tiers.map((t) => ({ min_value: t.min_value, points: t.points }))).toEqual(expected.tiers);
-      tierCount += tiers.length;
     }
-    expect(tierCount).toBe(9);
+    const tierTotal = await DB.prepare("SELECT COUNT(*) AS n FROM scoring_tiers").first<{ n: number }>();
+    expect(tierTotal?.n).toBe(22);
 
     // Config-only seed: roster, aliases, events, and participations are entered in-app, not seeded.
     for (const table of ["members", "aliases", "events", "participations"]) {

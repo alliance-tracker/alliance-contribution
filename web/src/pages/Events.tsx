@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
 import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
-import type { ActivityType, Event } from "@shared/types";
+import type { ActivityType, Event, EventListRow } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
 import { api, ApiError } from "@/lib/api";
 import type {
@@ -690,7 +690,7 @@ function NeedsMappingPanel({
               </div>
               <Link
                 to="/admin/aliases"
-                className="shrink-0 rounded-[7px] border border-border bg-surface px-2.5 py-1.5 text-[12.5px] font-medium text-foreground transition-colors hover:bg-muted-surface"
+                className="flex h-8 shrink-0 items-center rounded-[7px] border border-border bg-surface px-2.5 text-[12.5px] font-medium text-foreground transition-colors hover:bg-muted-surface active:bg-muted-surface"
               >
                 {t("events.map")}
               </Link>
@@ -715,7 +715,7 @@ export function Events() {
   const [reloadKey, setReloadKey] = useState(0);
 
   const week = weekFilter.trim();
-  const eventsState = useApi<Event[]>(
+  const eventsState = useApi<EventListRow[]>(
     () =>
       api.events.list({
         activity: activityFilter === "all" ? undefined : activityFilter,
@@ -778,12 +778,21 @@ export function Events() {
     }
   };
 
+  const unmappedCell = (count: number) =>
+    unmappedState.loading || unmappedState.error ? (
+      <span className="num text-faint">—</span>
+    ) : count > 0 ? (
+      <Badge variant="warn"><span className="num">{count}</span></Badge>
+    ) : (
+      <span className="num text-faint">0</span>
+    );
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5 md:gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-1 items-center gap-2 md:flex-none">
           <Select value={activityFilter} onValueChange={setActivityFilter}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="h-10 flex-1 md:h-9 md:w-44 md:flex-none">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -800,13 +809,13 @@ export function Events() {
             </SelectContent>
           </Select>
           <Input
-            className="num w-40"
+            className="num h-10 w-28 md:h-9 md:w-40"
             placeholder="YYYY-Www"
             value={weekFilter}
             onChange={(e) => setWeekFilter(e.target.value)}
           />
         </div>
-        <Button size="sm" onClick={openAdd}>
+        <Button size="sm" className="hidden md:inline-flex" onClick={openAdd}>
           <Plus />
           {t("events.add")}
         </Button>
@@ -823,7 +832,7 @@ export function Events() {
 
       {rowError && <ErrorState message={rowError} />}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid grid-cols-1 gap-3.5 md:gap-6 lg:grid-cols-[1fr_340px]">
         <Card className="overflow-hidden">
           {error ? (
             <div className="p-4">
@@ -834,91 +843,154 @@ export function Events() {
           ) : events.length === 0 ? (
             <EmptyState message={t("events.emptyFilter")} />
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead>{t("common.date")}</TableHead>
-                  <TableHead>{t("common.week")}</TableHead>
-                  <TableHead>{t("common.activity")}</TableHead>
-                  <TableHead className="text-end">{t("events.instance")}</TableHead>
-                  <TableHead className="text-end">{t("common.unmapped")}</TableHead>
-                  <TableHead>{t("events.status")}</TableHead>
-                  <TableHead className="w-32 text-end">{t("events.actions")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              <div className="md:hidden">
+                <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                  <span className="text-[14px] font-semibold">{t("events.recentTitle")}</span>
+                  <Button className="h-9" onClick={openAdd}>
+                    <Plus />
+                    {t("events.add")}
+                  </Button>
+                </div>
                 {events.map((ev) => {
-                  const unmappedCount = unmappedCountByEvent.get(ev.id) ?? 0;
+                  const activity = activityById.get(ev.activity_type_id);
+                  const open = () => setViewId(ev.id);
                   return (
-                    <TableRow key={ev.id}>
-                      <TableCell className="num text-foreground">{ev.date}</TableCell>
-                      <TableCell className="num text-secondary">{ev.week}</TableCell>
-                      <TableCell>
-                        {(() => {
-                          const activity = activityById.get(ev.activity_type_id);
-                          const name = activity?.name ?? "—";
-                          return (
-                            <Badge
-                              className={`whitespace-nowrap ${activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR)}`}
-                            >
-                              {name}
-                            </Badge>
-                          );
-                        })()}
-                      </TableCell>
-                      <TableCell className="num text-end text-secondary">{ev.instance}</TableCell>
-                      <TableCell className="text-end">
-                        {unmappedState.loading || unmappedState.error ? (
-                          <span className="num text-faint">—</span>
-                        ) : unmappedCount > 0 ? (
-                          <Badge variant="warn">
-                            <span className="num">{unmappedCount}</span>
+                    <div
+                      key={ev.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={open}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          open();
+                        }
+                      }}
+                      className="flex cursor-pointer items-center gap-2 border-b border-border py-2.5 ps-4 pe-2 last:border-b-0 active:bg-background"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <Badge className={cn("whitespace-nowrap", activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR))}>
+                            {activity?.name ?? "—"}
                           </Badge>
-                        ) : (
-                          <span className="num text-faint">0</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {/* No stored `status` field exists yet — every persisted event renders
-                            "Ingested". An "In review" state can be added here if/when a real
-                            status field is introduced; unmapped>0 is not a valid stand-in for it. */}
-                        <span className="text-[12.5px] text-muted">{t("events.ingested")}</span>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label={t("common.actions.view")}
-                            onClick={() => setViewId(ev.id)}
-                          >
-                            <Eye />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label={t("common.actions.edit")}
-                            onClick={() => openEdit(ev.id)}
-                          >
-                            <Pencil />
-                          </Button>
-                          {role === "admin" && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label={t("common.actions.delete")}
-                              onClick={() => setDeleteEvent(ev)}
-                            >
-                              <Trash2 />
-                            </Button>
-                          )}
+                          <span className="num text-[12px] text-muted">
+                            <span className="sr-only">{t("events.instance")}</span>#{ev.instance}
+                          </span>
                         </div>
-                      </TableCell>
-                    </TableRow>
+                        <div className="num mt-1.5 text-[12px] text-muted">
+                          {ev.date} · {t("events.rowCount", { count: ev.rows })}
+                        </div>
+                      </div>
+                      <div className="flex flex-none flex-col items-end gap-1">
+                        <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+                          {t("common.unmapped")}
+                        </span>
+                        {unmappedCell(unmappedCountByEvent.get(ev.id) ?? 0)}
+                      </div>
+                      {/* Edit/delete stay reachable on a phone — the mockup's chevron alone would strand them. */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-9"
+                        aria-label={t("common.actions.edit")}
+                        onClick={(e) => { e.stopPropagation(); openEdit(ev.id); }}
+                      >
+                        <Pencil />
+                      </Button>
+                      {role === "admin" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-9"
+                          aria-label={t("common.actions.delete")}
+                          onClick={(e) => { e.stopPropagation(); setDeleteEvent(ev); }}
+                        >
+                          <Trash2 />
+                        </Button>
+                      )}
+                    </div>
                   );
                 })}
-              </TableBody>
-            </Table>
+              </div>
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead>{t("common.date")}</TableHead>
+                      <TableHead>{t("common.week")}</TableHead>
+                      <TableHead>{t("common.activity")}</TableHead>
+                      <TableHead className="text-end">{t("events.instance")}</TableHead>
+                      <TableHead className="text-end">{t("common.unmapped")}</TableHead>
+                      <TableHead>{t("events.status")}</TableHead>
+                      <TableHead className="w-32 text-end">{t("events.actions")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {events.map((ev) => {
+                      const unmappedCount = unmappedCountByEvent.get(ev.id) ?? 0;
+                      return (
+                        <TableRow key={ev.id}>
+                          <TableCell className="num text-foreground">{ev.date}</TableCell>
+                          <TableCell className="num text-secondary">{ev.week}</TableCell>
+                          <TableCell>
+                            {(() => {
+                              const activity = activityById.get(ev.activity_type_id);
+                              const name = activity?.name ?? "—";
+                              return (
+                                <Badge
+                                  className={`whitespace-nowrap ${activityBadgeClass(activity?.color ?? DEFAULT_ACTIVITY_COLOR)}`}
+                                >
+                                  {name}
+                                </Badge>
+                              );
+                            })()}
+                          </TableCell>
+                          <TableCell className="num text-end text-secondary">{ev.instance}</TableCell>
+                          <TableCell className="text-end">{unmappedCell(unmappedCount)}</TableCell>
+                          <TableCell>
+                            {/* No stored `status` field exists yet — every persisted event renders
+                                "Ingested". An "In review" state can be added here if/when a real
+                                status field is introduced; unmapped>0 is not a valid stand-in for it. */}
+                            <span className="text-[12.5px] text-muted">{t("events.ingested")}</span>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label={t("common.actions.view")}
+                                onClick={() => setViewId(ev.id)}
+                              >
+                                <Eye />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label={t("common.actions.edit")}
+                                onClick={() => openEdit(ev.id)}
+                              >
+                                <Pencil />
+                              </Button>
+                              {role === "admin" && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label={t("common.actions.delete")}
+                                  onClick={() => setDeleteEvent(ev)}
+                                >
+                                  <Trash2 />
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </Card>
 

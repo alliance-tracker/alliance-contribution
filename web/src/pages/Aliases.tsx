@@ -104,12 +104,14 @@ function AddAliasDialog({
   onOpenChange,
   members,
   prefillAlias,
+  prefillMode = "existing",
   onSuccess,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   members: Member[];
   prefillAlias: string;
+  prefillMode?: MemberMode;
   onSuccess: () => void;
 }) {
   const { t } = useTranslation();
@@ -125,14 +127,14 @@ function AddAliasDialog({
   useEffect(() => {
     if (!open) return;
     setAlias(prefillAlias);
-    setMode("existing");
+    setMode(prefillMode);
     setMemberId(null);
     setGovernor(prefillAlias);
     setNote("");
     setSubmitting(false);
     setError(null);
     setResult(null);
-  }, [open, prefillAlias]);
+  }, [open, prefillAlias, prefillMode]);
 
   const canSubmit =
     !submitting &&
@@ -440,6 +442,7 @@ export function Aliases() {
 
   const [addOpen, setAddOpen] = useState(false);
   const [prefillAlias, setPrefillAlias] = useState("");
+  const [prefillMode, setPrefillMode] = useState<MemberMode>("existing");
   const [removeAlias, setRemoveAlias] = useState<Alias | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -455,8 +458,9 @@ export function Aliases() {
 
   const refresh = () => setReloadKey((k) => k + 1);
 
-  const openAdd = (prefill: string) => {
+  const openAdd = (prefill: string, mode: MemberMode = "existing") => {
     setPrefillAlias(prefill);
+    setPrefillMode(mode);
     setAddOpen(true);
   };
 
@@ -469,7 +473,7 @@ export function Aliases() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3.5 md:gap-6">
       {note && (
         <Alert variant="success" className="items-center">
           <AlertContent>{note}</AlertContent>
@@ -479,7 +483,7 @@ export function Aliases() {
         </Alert>
       )}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3.5 md:gap-6 lg:grid-cols-2">
         {/* Alias directory — member → aliases, grouped and searchable. */}
         <Card className="overflow-hidden">
           <div className="flex flex-col gap-3 border-b border-border p-4">
@@ -496,7 +500,7 @@ export function Aliases() {
                 onChange={(e) => setSearch(e.target.value)}
                 className="flex-1"
               />
-              <Button size="sm" onClick={() => openAdd("")}>
+              <Button size="sm" className="h-10 md:h-8" onClick={() => openAdd("")}>
                 <Plus />
                 {t("aliases.addTitle")}
               </Button>
@@ -552,7 +556,7 @@ export function Aliases() {
         </Card>
 
         {/* Unmapped queue — the primary operator task. */}
-        <Card className="overflow-hidden border-flag-border bg-flag-bg">
+        <Card className="order-first overflow-hidden border-flag-border bg-flag-bg lg:order-none">
           <div className="flex items-center justify-between gap-2 border-b border-flag-border p-3">
             <div className="flex items-center gap-2">
               <TriangleAlert className="size-[17px] text-flag-accent" />
@@ -581,7 +585,7 @@ export function Aliases() {
               unmapped.map((row) => (
                 <div
                   key={row.raw_name}
-                  className="mb-2 flex flex-wrap items-center justify-between gap-3 rounded-[9px] border border-flag-border bg-surface p-3"
+                  className="mb-2 flex flex-col gap-2.5 rounded-[9px] border border-flag-border bg-surface p-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-3"
                 >
                   <div className="flex min-w-0 flex-col gap-1.5">
                     <span className="num text-[13px] font-semibold text-foreground">
@@ -601,9 +605,19 @@ export function Aliases() {
                       ))}
                     </div>
                   </div>
-                  <Button size="sm" variant="secondary" onClick={() => openAdd(row.raw_name)}>
-                    {t("aliases.mapToMember")}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="h-9 flex-1 max-md:border-transparent max-md:bg-accent max-md:text-accent-foreground max-md:hover:bg-accent-hover md:h-8 md:flex-none"
+                      onClick={() => openAdd(row.raw_name)}
+                    >
+                      {t("aliases.mapToMember")}
+                    </Button>
+                    <Button size="sm" variant="secondary" className="h-9 md:hidden" onClick={() => openAdd(row.raw_name, "new")}>
+                      {t("aliases.newMember")}
+                    </Button>
+                  </div>
                 </div>
               ))
             )}
@@ -616,6 +630,7 @@ export function Aliases() {
         onOpenChange={setAddOpen}
         members={members}
         prefillAlias={prefillAlias}
+        prefillMode={prefillMode}
         onSuccess={refresh}
       />
 

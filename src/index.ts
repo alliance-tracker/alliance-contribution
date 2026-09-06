@@ -11,6 +11,7 @@ import allocationsRoutes from "./routes/allocations";
 import analyticsRoutes from "./routes/analytics";
 import eventsRoutes from "./routes/events";
 import membersRoutes from "./routes/members";
+import screenshotsRoutes from "./routes/screenshots";
 import settingsRoutes from "./routes/settings";
 import unmappedRoutes from "./routes/unmapped";
 
@@ -33,6 +34,7 @@ app.route("/api/aliases", aliasesRoutes);
 // (a common analytics path), so the browser cancelled the request before it left the client.
 app.route("/api/ingests", eventsRoutes);
 app.route("/api/members", membersRoutes);
+app.route("/api/screenshots", screenshotsRoutes);
 app.route("/api/settings", settingsRoutes);
 app.route("/api/unmapped", unmappedRoutes);
 app.route("/api", analyticsRoutes);

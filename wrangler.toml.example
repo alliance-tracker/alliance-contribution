@@ -36,6 +36,12 @@ namespace_id = "1001"
   period = 60
 
 # Serves the built SPA from dist/. `npm run deploy` builds the SPA before deploying.
+# Workers AI: reads ranking/roster screenshots (Add Event, Import Roster). Free tier: 10k neurons/day,
+# hard stop past that on the Free plan. `remote = true` so `wrangler dev` uses the real model.
+[ai]
+binding = "AI"
+remote = true
+
 [assets]
 directory = "dist"
 binding = "ASSETS"

@@ -286,97 +286,97 @@ export function ScreenshotIngest({
 
       {state.items.length > 0 && (
         <div className="overflow-hidden rounded-[12px] border border-border">
-            {/* Header: one of reading / stopped / exhausted / offline / summary */}
-            {state.batch === "reading" && (
-              <div className="flex items-center justify-between gap-2.5 px-3.5 py-3">
+          {/* Header: one of reading / stopped / exhausted / offline / summary */}
+          {state.batch === "reading" && (
+            <div className="flex items-center justify-between gap-2.5 px-3.5 py-3">
+              <div className="leading-tight">
+                <div className="text-[13.5px] font-semibold">{t("screenshots.progress.reading", { i: c.done + c.failed + 1, n: c.total })}</div>
+                <div className="num mt-0.5 text-[11.5px] text-muted">{t("screenshots.progress.eta", { s: Math.max(1, Math.round(etaMs(state) / 1000)) })}</div>
+              </div>
+              <Button type="button" variant="secondary" size="sm" onClick={cancel}>{t("screenshots.progress.cancel")}</Button>
+            </div>
+          )}
+          {state.batch === "stopped" && (
+            <div className="flex items-center justify-between gap-2.5 px-3.5 py-3">
+              <div className="leading-tight">
+                <div className="text-[13.5px] font-semibold">{t("screenshots.progress.stopped", { i: c.done + c.failed, n: c.total })}</div>
+                <div className="mt-0.5 text-[11.5px] text-muted">{t("screenshots.progress.kept", { count: c.rows })}</div>
+              </div>
+              <Button type="button" variant="secondary" size="sm" onClick={resume}>{t("screenshots.progress.readRest")}</Button>
+            </div>
+          )}
+          {state.batch === "exhausted" && (
+            <div className="flex gap-2.5 border-b border-border bg-background p-3.5">
+              <Clock className="mt-0.5 size-4 flex-none text-muted" />
+              <div className="min-w-0 flex-1 leading-snug">
+                <div className="text-[13.5px] font-semibold">{t("screenshots.progress.exhaustedTitle")}</div>
+                <div className="mt-0.5 text-[12px] text-muted">{t("screenshots.progress.exhaustedBody")}</div>
+                <div className="mt-2.5 flex gap-2">
+                  <Button type="button" size="sm" onClick={resume}>{t("screenshots.progress.tryAgain")}</Button>
+                  <Button type="button" variant="secondary" size="sm" onClick={() => setMode("paste")}>{t("screenshots.progress.pasteText")}</Button>
+                </div>
+              </div>
+            </div>
+          )}
+          {state.batch === "offline" && (
+            <div className="flex items-center justify-between gap-2.5 px-3.5 py-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <WifiOff className="size-4 flex-none text-muted" />
                 <div className="leading-tight">
-                  <div className="text-[13.5px] font-semibold">{t("screenshots.progress.reading", { i: c.done + c.failed + 1, n: c.total })}</div>
-                  <div className="num mt-0.5 text-[11.5px] text-muted">{t("screenshots.progress.eta", { s: Math.max(1, Math.round(etaMs(state) / 1000)) })}</div>
-                </div>
-                <Button type="button" variant="secondary" size="sm" onClick={cancel}>{t("screenshots.progress.cancel")}</Button>
-              </div>
-            )}
-            {state.batch === "stopped" && (
-              <div className="flex items-center justify-between gap-2.5 px-3.5 py-3">
-                <div className="leading-tight">
-                  <div className="text-[13.5px] font-semibold">{t("screenshots.progress.stopped", { i: c.done + c.failed, n: c.total })}</div>
-                  <div className="mt-0.5 text-[11.5px] text-muted">{t("screenshots.progress.kept", { count: c.rows })}</div>
-                </div>
-                <Button type="button" variant="secondary" size="sm" onClick={resume}>{t("screenshots.progress.readRest")}</Button>
-              </div>
-            )}
-            {state.batch === "exhausted" && (
-              <div className="flex gap-2.5 border-b border-border bg-background p-3.5">
-                <Clock className="mt-0.5 size-4 flex-none text-muted" />
-                <div className="min-w-0 flex-1 leading-snug">
-                  <div className="text-[13.5px] font-semibold">{t("screenshots.progress.exhaustedTitle")}</div>
-                  <div className="mt-0.5 text-[12px] text-muted">{t("screenshots.progress.exhaustedBody")}</div>
-                  <div className="mt-2.5 flex gap-2">
-                    <Button type="button" size="sm" onClick={resume}>{t("screenshots.progress.tryAgain")}</Button>
-                    <Button type="button" variant="secondary" size="sm" onClick={() => setMode("paste")}>{t("screenshots.progress.pasteText")}</Button>
-                  </div>
+                  <div className="text-[13.5px] font-semibold">{t("screenshots.progress.offlineTitle")}</div>
+                  <div className="mt-0.5 text-[11.5px] text-muted">{t("screenshots.progress.offlineBody", { i: c.done + c.failed, n: c.total })}</div>
                 </div>
               </div>
-            )}
-            {state.batch === "offline" && (
-              <div className="flex items-center justify-between gap-2.5 px-3.5 py-3">
-                <div className="flex min-w-0 items-center gap-2">
-                  <WifiOff className="size-4 flex-none text-muted" />
-                  <div className="leading-tight">
-                    <div className="text-[13.5px] font-semibold">{t("screenshots.progress.offlineTitle")}</div>
-                    <div className="mt-0.5 text-[11.5px] text-muted">{t("screenshots.progress.offlineBody", { i: c.done + c.failed, n: c.total })}</div>
-                  </div>
-                </div>
-                <Button type="button" size="sm" onClick={resume}>{t("screenshots.progress.retry")}</Button>
+              <Button type="button" size="sm" onClick={resume}>{t("screenshots.progress.retry")}</Button>
+            </div>
+          )}
+          {state.batch === "done" && (
+            <div className="flex items-center gap-3 px-3.5 py-3">
+              <div className="flex">
+                {state.items.slice(0, 3).map((item, idx) => (
+                  <img key={item.id} src={thumb(item)} alt="" className={cn("h-9 w-[26px] rounded-[4px] border border-border object-cover", idx > 0 && "-ms-3.5")} />
+                ))}
               </div>
-            )}
-            {state.batch === "done" && (
-              <div className="flex items-center gap-3 px-3.5 py-3">
-                <div className="flex">
-                  {state.items.slice(0, 3).map((item, idx) => (
-                    <img key={item.id} src={thumb(item)} alt="" className={cn("h-9 w-[26px] rounded-[4px] border border-border object-cover", idx > 0 && "-ms-3.5")} />
-                  ))}
-                </div>
+              <div className="min-w-0 flex-1 leading-tight">
+                <div className="text-[13.5px] font-semibold">{t("screenshots.progress.summary", { k: c.done, n: c.total, count: c.rows })}</div>
+                {c.failed > 0 && <div className="mt-0.5 text-[11.5px] text-down">{t("screenshots.progress.summaryFailed", { count: c.failed })}</div>}
+              </div>
+              <button type="button" className="text-[12.5px] font-semibold underline" onClick={() => setShowDetails((v) => !v)}>
+                {showDetails ? t("screenshots.progress.hide") : t("screenshots.progress.details")}
+              </button>
+            </div>
+          )}
+
+          {state.batch === "reading" && <Progress value={((c.done + c.failed) / c.total) * 100} className="h-1 rounded-none" indicatorClassName="bg-foreground" />}
+          {state.batch === "stopped" && <Progress value={((c.done + c.failed) / c.total) * 100} className="h-1 rounded-none" indicatorClassName="bg-muted" />}
+
+          {(state.batch !== "done" || showDetails) &&
+            state.items.map((item) => (
+              <div key={item.id} className={cn("flex items-center gap-3 border-t border-border/60 px-3.5 py-2.5", item.status === "reading" && "bg-background")}>
+                <img src={thumb(item)} alt="" className={cn("h-11 w-8 flex-none rounded-[5px] border border-border object-cover", item.status === "not_read" && "opacity-60")} />
                 <div className="min-w-0 flex-1 leading-tight">
-                  <div className="text-[13.5px] font-semibold">{t("screenshots.progress.summary", { k: c.done, n: c.total, count: c.rows })}</div>
-                  {c.failed > 0 && <div className="mt-0.5 text-[11.5px] text-down">{t("screenshots.progress.summaryFailed", { count: c.failed })}</div>}
+                  <div className={cn("num truncate text-[12px] font-medium", item.status === "waiting" || item.status === "not_read" ? "text-muted" : "text-secondary")}>{item.name}</div>
+                  {item.status === "failed" && <div className="mt-0.5 text-[11.5px] text-down">{reason(item.reason)}</div>}
                 </div>
-                <button type="button" className="text-[12.5px] font-semibold underline" onClick={() => setShowDetails((v) => !v)}>
-                  {showDetails ? t("screenshots.progress.hide") : t("screenshots.progress.details")}
-                </button>
+                {item.status === "done" ? (
+                  <span className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-up"><Check className="size-3.5" />{t("screenshots.status.done", { count: item.rows ?? 0 })}</span>
+                ) : item.status === "reading" ? (
+                  <span className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold"><Loader2 className="size-3.5 animate-spin" />{t(STATUS_KEY.reading)}</span>
+                ) : item.status === "failed" ? (
+                  <span className="flex items-center gap-2 whitespace-nowrap">
+                    <span className="flex items-center gap-1 text-[12px] font-semibold text-down"><X className="size-3.5" />{t(STATUS_KEY.failed)}</span>
+                    <button type="button" className="text-[12px] font-semibold underline" onClick={() => dispatch({ type: "remove", id: item.id })}>{t("screenshots.status.remove")}</button>
+                  </span>
+                ) : item.status === "not_read" || item.status === "retry_wait" ? (
+                  <span className="flex items-center gap-2 whitespace-nowrap">
+                    <span className="text-[12px] font-medium text-muted">{t(STATUS_KEY[item.status])}</span>
+                    <button type="button" className="text-[12px] font-semibold underline" onClick={() => dispatch({ type: "remove", id: item.id })}>{t("screenshots.status.remove")}</button>
+                  </span>
+                ) : (
+                  <span className="whitespace-nowrap text-[12px] font-medium text-muted">{t(STATUS_KEY[item.status])}</span>
+                )}
               </div>
-            )}
-
-            {state.batch === "reading" && <Progress value={((c.done + c.failed) / c.total) * 100} className="h-1 rounded-none" indicatorClassName="bg-foreground" />}
-            {state.batch === "stopped" && <Progress value={((c.done + c.failed) / c.total) * 100} className="h-1 rounded-none" indicatorClassName="bg-muted" />}
-
-            {(state.batch !== "done" || showDetails) &&
-              state.items.map((item) => (
-                <div key={item.id} className={cn("flex items-center gap-3 border-t border-border/60 px-3.5 py-2.5", item.status === "reading" && "bg-background")}>
-                  <img src={thumb(item)} alt="" className={cn("h-11 w-8 flex-none rounded-[5px] border border-border object-cover", item.status === "not_read" && "opacity-60")} />
-                  <div className="min-w-0 flex-1 leading-tight">
-                    <div className={cn("num truncate text-[12px] font-medium", item.status === "waiting" || item.status === "not_read" ? "text-muted" : "text-secondary")}>{item.name}</div>
-                    {item.status === "failed" && <div className="mt-0.5 text-[11.5px] text-down">{reason(item.reason)}</div>}
-                  </div>
-                  {item.status === "done" ? (
-                    <span className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-up"><Check className="size-3.5" />{t("screenshots.status.done", { count: item.rows ?? 0 })}</span>
-                  ) : item.status === "reading" ? (
-                    <span className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold"><Loader2 className="size-3.5 animate-spin" />{t(STATUS_KEY.reading)}</span>
-                  ) : item.status === "failed" ? (
-                    <span className="flex items-center gap-2 whitespace-nowrap">
-                      <span className="flex items-center gap-1 text-[12px] font-semibold text-down"><X className="size-3.5" />{t(STATUS_KEY.failed)}</span>
-                      <button type="button" className="text-[12px] font-semibold underline" onClick={() => dispatch({ type: "remove", id: item.id })}>{t("screenshots.status.remove")}</button>
-                    </span>
-                  ) : item.status === "not_read" || item.status === "retry_wait" ? (
-                    <span className="flex items-center gap-2 whitespace-nowrap">
-                      <span className="text-[12px] font-medium text-muted">{t(STATUS_KEY[item.status])}</span>
-                      <button type="button" className="text-[12px] font-semibold underline" onClick={() => dispatch({ type: "remove", id: item.id })}>{t("screenshots.status.remove")}</button>
-                    </span>
-                  ) : (
-                    <span className="whitespace-nowrap text-[12px] font-medium text-muted">{t(STATUS_KEY[item.status])}</span>
-                  )}
-                </div>
-              ))}
+            ))}
         </div>
       )}
 

@@ -81,6 +81,19 @@ describe("queueReducer", () => {
     expect(queueReducer(s, { type: "remove", id: s.items[0].id }).batch).toBe("idle");
   });
 
+  it("remove keeps an exhausted/stopped/offline batch alive while a not_read row remains", () => {
+    let s = queueReducer(add(initialQueue, "a.png", "b.png"), { type: "start" });
+    s = queueReducer(s, { type: "began", id: s.items[0].id });
+    s = queueReducer(s, { type: "exhausted" });
+    expect(s.items.map((i) => i.status)).toEqual(["not_read", "not_read"]);
+    s = queueReducer(s, { type: "remove", id: s.items[0].id });
+    expect(s.batch).toBe("exhausted");
+    expect(s.items.map((i) => i.status)).toEqual(["not_read"]);
+    s = queueReducer(s, { type: "remove", id: s.items[0].id });
+    expect(s.batch).toBe("idle");
+    expect(s.items).toHaveLength(0);
+  });
+
   it("eta uses the rolling mean of completed reads, seeded at 2 s", () => {
     let s = queueReducer(add(initialQueue, "a.png", "b.png", "c.png"), { type: "start" });
     expect(etaMs(s)).toBe(6000);

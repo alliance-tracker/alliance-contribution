@@ -91,7 +91,12 @@ export function queueReducer(s: QueueState, a: QueueAction): QueueState {
     case "remove": {
       const items = s.items.filter((i) => i.id !== a.id);
       if (items.length === 0) return { ...s, items, batch: "idle" };
-      return s.batch === "reading" ? settle({ ...s, items }) : hasUnread(items) ? { ...s, items } : { ...s, items, batch: "done" };
+      if (s.batch === "reading") return settle({ ...s, items });
+      // stopped/exhausted/offline items include not_read/retry_wait, which hasUnread doesn't count —
+      // without this check removing one row would wrongly collapse the card to "done" while others
+      // are still unread, hiding them behind Details and dropping the retry affordance.
+      const stillToRead = items.some((i) => isUnread(i) || i.status === "not_read");
+      return stillToRead ? { ...s, items } : { ...s, items, batch: "done" };
     }
   }
 }

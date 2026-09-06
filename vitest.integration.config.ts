@@ -1,7 +1,10 @@
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { defineProject } from "vitest/config";
 import { cloudflareTest, readD1Migrations } from "@cloudflare/vitest-pool-workers";
-import { buildSeedSql } from "./seed/sql";
+
+const seedSql = readFileSync(path.join(import.meta.dirname, "seed/seed.sql"), "utf8");
+const SEED_STATEMENTS = seedSql.match(/INSERT INTO[\s\S]*?;/g) ?? [];
 
 export default defineProject({
   plugins: [
@@ -22,9 +25,9 @@ export default defineProject({
           ADMIN_API_KEY: "test-admin-key",
           VIEWER_API_KEY: "test-viewer-key",
           TEST_MIGRATIONS: await readD1Migrations(path.join(import.meta.dirname, "migrations")),
-          // Built here, in node (integration tests run in workerd), then handed to the test as a
+          // Read here, in node (integration tests run in workerd), then handed to the test as a
           // binding — same pattern as TEST_MIGRATIONS above.
-          SEED_STATEMENTS: buildSeedSql(),
+          SEED_STATEMENTS: SEED_STATEMENTS,
         },
       },
     })),

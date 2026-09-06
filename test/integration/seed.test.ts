@@ -5,8 +5,8 @@ import { ScoringTierRepo } from "../../src/repositories/scoring-tier-repo";
 
 const { DB, SEED_STATEMENTS } = env;
 
-// SEED_STATEMENTS is built once, at vitest config time, by the same buildSeedSql() seed/run.ts uses
-// (see vitest.integration.config.ts) — this file runs it against a fresh, migrated D1 and asserts on
+// SEED_STATEMENTS is parsed once, at vitest config time, from seed/seed.sql (see
+// vitest.integration.config.ts) — this file runs it against a fresh, migrated D1 and asserts on
 // the result via the repos, the same way application code would read it back.
 describe("seed pipeline", () => {
   it("seeds the default config and nothing else", async () => {

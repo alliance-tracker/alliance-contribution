@@ -5,7 +5,6 @@ dist/*
 .dev.vars
 # Per-deployment config: names your Worker and your D1 database. Copy wrangler.toml.example.
 wrangler.toml
-seed/out
 .serena/
 .DS_Store
 # Operator-private domain data (real roster/aliases, raw ranking TSVs) and dev planning notes.

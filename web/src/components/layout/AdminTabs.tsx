@@ -19,17 +19,17 @@ export function AdminTabs() {
   const visibleTabs = TABS.filter((tab) => !tab.adminOnly || role === "admin");
 
   return (
-    <div className="inline-flex flex-wrap items-center gap-1 rounded-[10px] border border-border bg-muted-surface p-1">
+    <div className="no-scrollbar flex w-full items-center gap-1 overflow-x-auto whitespace-nowrap rounded-[10px] border border-border bg-muted-surface p-1 md:inline-flex md:w-auto md:flex-wrap md:overflow-visible">
       {visibleTabs.map((tab) => (
         <NavLink
           key={tab.to}
           to={tab.to}
           className={({ isActive }) =>
             cn(
-              "rounded-[7px] px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-150",
+              "flex-none rounded-[7px] px-3.5 py-2 text-[13px] font-medium transition-colors duration-150 md:py-1.5",
               isActive
                 ? "bg-surface font-semibold text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
-                : "text-muted hover:text-foreground",
+                : "text-muted hover:text-foreground active:text-foreground",
             )
           }
         >

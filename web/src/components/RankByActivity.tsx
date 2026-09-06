@@ -23,12 +23,12 @@ export function RankByActivity({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center gap-2">
-      <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-faint">
+    <div className="flex items-center gap-2 max-md:h-10 max-md:rounded-[8px] max-md:border max-md:border-border max-md:bg-surface max-md:ps-3">
+      <span className="shrink-0 font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-faint">
         {label ?? t("rankBy.label")}
       </span>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-52">
+        <SelectTrigger className="w-52 max-md:h-full max-md:w-auto max-md:flex-1 max-md:border-0 max-md:bg-transparent max-md:ps-1 max-md:hover:bg-transparent">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

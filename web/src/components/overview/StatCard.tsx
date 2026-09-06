@@ -15,26 +15,30 @@ export function StatCard({
   value,
   sub,
   tone = "default",
+  valueClassName,
 }: {
-  label: string;
+  label: ReactNode;
   value: ReactNode;
   sub: ReactNode;
   tone?: "default" | "warn";
+  /** Per-surface value size override (the roster strip runs 20px on a phone). */
+  valueClassName?: string;
 }) {
   return (
-    <Card className={cn("p-[18px]", tone === "warn" && "border-warn/30 bg-warn/5")}>
+    <Card className={cn("p-3.5 md:p-[18px]", tone === "warn" && "border-warn/30 bg-warn/5")}>
       <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
         {label}
       </div>
       <div
         className={cn(
-          "num mt-1.5 text-[26px] font-bold tracking-[-0.02em]",
+          "num mt-1.5 text-[24px] font-bold tracking-[-0.02em] md:text-[26px]",
           tone === "warn" ? "text-warn" : "text-foreground",
+          valueClassName,
         )}
       >
         {value}
       </div>
-      <div className="mt-1 text-[12px] text-muted">{sub}</div>
+      <div className="mt-1 text-[11.5px] text-muted md:text-[12px]">{sub}</div>
     </Card>
   );
 }

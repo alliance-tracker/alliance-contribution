@@ -288,6 +288,14 @@ body {
   border: 3px solid var(--color-surface);
 }
 
+/* Horizontal chip rows on mobile (band legend, admin tabs) scroll with momentum, no visible bar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;

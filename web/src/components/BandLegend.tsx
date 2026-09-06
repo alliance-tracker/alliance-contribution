@@ -12,9 +12,9 @@ export function BandLegend({ bands }: { bands: RankBands }) {
     ["bg-band-rest", `${bands.top + bands.mid + 1}+`],
   ];
   return (
-    <div className="flex flex-wrap items-center justify-end gap-4 text-[12px] text-muted">
+    <div className="no-scrollbar flex items-center gap-3 overflow-x-auto whitespace-nowrap text-[12px] text-muted md:flex-wrap md:justify-end md:gap-4 md:overflow-visible">
       {items.map(([cls, label]) => (
-        <span key={label} className="flex items-center gap-1.5">
+        <span key={label} className="flex flex-none items-center gap-1.5">
           <span className={cn("size-3.5 rounded", cls)} />
           {label}
         </span>

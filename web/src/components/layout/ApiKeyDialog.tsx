@@ -2,6 +2,7 @@ import { useState } from "react";
 import { KeyRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useApiKey } from "@/lib/apiKey";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,11 +36,20 @@ export function ApiKeyDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
+        <Button
+          variant="secondary"
+          size="sm"
+          className="relative max-md:size-9 max-md:p-0"
+          aria-label={apiKey ? t("apiKey.set") : t("apiKey.unset")}
+        >
           <KeyRound />
-          {apiKey ? t("apiKey.set") : t("apiKey.unset")}
+          <span className="hidden md:inline">{apiKey ? t("apiKey.set") : t("apiKey.unset")}</span>
+          {/* Status dot: inline after the label on desktop, pinned to the top-end corner on a phone. */}
           <span
-            className={apiKey ? "size-1.5 rounded-full bg-up" : "size-1.5 rounded-full bg-faint"}
+            className={cn(
+              "size-1.5 rounded-full max-md:absolute max-md:end-1.5 max-md:top-1.5",
+              apiKey ? "bg-up" : "bg-faint",
+            )}
             aria-hidden
           />
         </Button>

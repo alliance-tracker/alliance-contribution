@@ -205,7 +205,7 @@
     "activeMembers": "الأعضاء النشطون",
     "ofTracked": "من أصل <1>{{total}}</1> متابَع",
     "avgAttendanceActive": "متوسط الحضور (النشطون)",
-    "avgAttendanceActiveShort": "متوسط الحضور (النشطون)",
+    "avgAttendanceActiveShort": "متوسط الحضور (نشط)",
     "attendanceSub": "<1>{{perfect}}</1> كامل · <2>{{atRisk}}</2> معرَّض للخطر",
     "noEventsYet": "لا توجد أحداث مسجَّلة بعد",
     "eventsLogged": "الأحداث المسجَّلة",

@@ -6,7 +6,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/States";
-import { MEDALS, Movement, ScoreCell, medalBarClass } from "@/components/ranking-parts";
+import { MEDALS, Movement, ScoreCell, medalBarClass, scorePct } from "@/components/ranking-parts";
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
 
 /**
@@ -63,7 +63,7 @@ export function LeaderboardPanel({
         <ul className="mt-4 flex flex-col">
           {rows.map((row) => {
             const medal = MEDALS[row.rank];
-            const pct = possible > 0 ? Math.min(100, Math.round((row.score / possible) * 100)) : 0;
+            const pct = scorePct(row.score, possible);
             return (
               <li
                 key={row.member_id}

@@ -233,7 +233,7 @@ export function Attendance() {
         ) : (
           <>
             <div className="md:hidden">
-              <div className="flex justify-between border-b border-border bg-background px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
+              <div className="flex justify-between border-b border-border bg-background py-2 ps-3 pe-3.5 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
                 <span>{t("common.governor")}</span>
                 <span>{t("attendance.rate")}</span>
               </div>

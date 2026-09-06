@@ -133,6 +133,11 @@ export function medalBarClass(rank: number): string {
   return rank === 1 ? "bg-gold" : rank === 2 ? "bg-silver" : rank === 3 ? "bg-bronze" : "bg-foreground";
 }
 
+/** Bar fill for a score against the shared denominator; 0 when nothing was possible. */
+export function scorePct(score: number, possible: number): number {
+  return possible > 0 ? Math.min(100, Math.round((score / possible) * 100)) : 0;
+}
+
 /** Score cell: raw integer score with a bar filling score/possible. Bar color from medal, else neutral. */
 export function ScoreCell({
   score,
@@ -143,19 +148,18 @@ export function ScoreCell({
   possible: number;
   barColor?: MedalBar;
 }) {
-  const pct = possible > 0 ? Math.min(100, Math.round((score / possible) * 100)) : 0;
   const indicatorClassName =
     barColor === "var(--color-gold)"
-      ? medalBarClass(1)
+      ? "bg-gold"
       : barColor === "var(--color-silver)"
-        ? medalBarClass(2)
+        ? "bg-silver"
         : barColor === "var(--color-bronze)"
-          ? medalBarClass(3)
-          : medalBarClass(0);
+          ? "bg-bronze"
+          : "bg-foreground";
   return (
     <div className="flex items-center gap-3">
       <span className="num w-8 text-[15px] font-bold">{score}</span>
-      <Progress value={pct} className="h-1.5 flex-1" indicatorClassName={indicatorClassName} />
+      <Progress value={scorePct(score, possible)} className="h-1.5 flex-1" indicatorClassName={indicatorClassName} />
     </div>
   );
 }

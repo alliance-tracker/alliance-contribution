@@ -5,7 +5,7 @@ import { AdminTabs } from "./AdminTabs";
 
 export function AdminLayout() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3.5 md:gap-6">
       <AdminTabs />
       {/* Inner boundary so switching admin tabs doesn't tear down the tab bar with them. */}
       <Suspense fallback={<LoadingState />}>

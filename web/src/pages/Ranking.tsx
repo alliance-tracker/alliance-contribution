@@ -18,7 +18,7 @@ import { RankingScopeToggle, type RankingScope } from "@/components/RankingScope
 import { RankByActivity } from "@/components/RankByActivity";
 import { AttendanceBadge } from "@/components/AttendanceBadge";
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
-import { MEDALS, Movement, PodiumCard, ScoreCell, medalBarClass } from "@/components/ranking-parts";
+import { MEDALS, Movement, PodiumCard, ScoreCell, medalBarClass, scorePct } from "@/components/ranking-parts";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -204,7 +204,7 @@ export function Ranking({ initialScope = "overall" }: { initialScope?: RankingSc
             <div className="md:hidden">
               {visible.map(({ row, band }) => {
                 const medal = MEDALS[row.rank];
-                const pct = possible > 0 ? Math.min(100, Math.round((row.score / possible) * 100)) : 0;
+                const pct = scorePct(row.score, possible);
                 return (
                   <Link
                     key={row.member_id}

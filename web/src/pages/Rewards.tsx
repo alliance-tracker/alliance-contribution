@@ -170,6 +170,9 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
               />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-[13.5px] font-semibold text-foreground">{l.governor}</div>
+                {l.last_alias && (
+                  <div className="truncate text-[11px] text-muted">{t("rewards.aka", { alias: l.last_alias })}</div>
+                )}
                 <div className="mt-1 flex items-center gap-2">
                   {l.attendance !== undefined && <AttendanceBadge pct={l.attendance} className="text-[11px]" />}
                   <Progress
@@ -547,10 +550,10 @@ export function Rewards() {
   const canSave = !busy && preview !== null && preview.lines.length > 0 && title.trim() !== "";
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3.5 md:gap-6">
       {error && <ErrorState message={error} />}
 
-      <Card className="flex flex-col gap-4 p-5">
+      <Card className="flex flex-col gap-4 p-4 md:p-5">
         <div className="flex flex-col gap-0.5">
           <span className="text-[14px] font-semibold text-foreground">{t("rewards.newTitle")}</span>
           <span className="text-[12.5px] text-muted">{t("rewards.newDesc")}</span>
@@ -783,7 +786,7 @@ export function Rewards() {
         )}
       </Card>
 
-      <Card className="flex flex-col gap-2 p-5">
+      <Card className="flex flex-col gap-2 p-4 md:p-5">
         <div className="flex flex-col gap-0.5">
           <span className="text-[14px] font-semibold text-foreground">{t("rewards.historyTitle")}</span>
           <span className="text-[12.5px] text-muted">{t("rewards.historyDesc")}</span>

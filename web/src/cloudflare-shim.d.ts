@@ -6,6 +6,7 @@ declare global {
   type D1Database = unknown;
   type Fetcher = unknown;
   type RateLimit = unknown;
+  type Ai = unknown;
 }
 
 export {};

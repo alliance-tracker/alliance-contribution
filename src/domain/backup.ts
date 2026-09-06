@@ -18,9 +18,11 @@ export type TableName =
   | "allocation_lines";
 
 /** Tables deliberately NOT in the backup format. `settings` (migration 0005) holds cosmetic
- *  presentation config with code defaults — nothing here needs to survive a restore. Adding a
- *  table to the schema means adding it either to INSERT_ORDER or, deliberately, to this set. */
-export const BACKUP_EXCLUDED_TABLES = new Set<string>(["settings"]);
+ *  presentation config with code defaults — nothing here needs to survive a restore. `ai_usage`
+ *  (migration 0007) is Cloudflare's daily neuron tally: it has no `id` column, resets at 00:00 UTC
+ *  and means nothing on another account. Adding a table to the schema means adding it either to
+ *  INSERT_ORDER or, deliberately, to this set. */
+export const BACKUP_EXCLUDED_TABLES = new Set<string>(["settings", "ai_usage"]);
 
 // FK dependency order for inserts; reverse for deletes. NEVER trust row order from the file.
 export const INSERT_ORDER: TableName[] = [

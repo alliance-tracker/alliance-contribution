@@ -308,6 +308,7 @@ export type AllocationPreview = { lines: AllocationLine[]; warnings: string[] };
 // Worker bindings.
 export type Env = {
   DB: D1Database;
+  AI: Ai;
   API_KEY: string;
   ADMIN_API_KEY: string;
   VIEWER_API_KEY: string;
@@ -322,3 +323,34 @@ export type RankBands = { top: number; mid: number };
 
 /** Served whenever a settings row is missing or unparseable; never seeded into the DB. */
 export const DEFAULT_RANK_BANDS: RankBands = { top: 30, mid: 20 };
+
+// ---- Screenshot ingest (2026-09-06 spec) ---------------------------------------
+
+export type ScreenshotKind = "event" | "roster";
+
+/** Workers AI free allowance accounting. Cloudflare's numbers, not alliance config — constants on purpose. */
+export const AI_MODEL = "@cf/google/gemma-4-26b-a4b-it";
+export const AI_DAILY_NEURON_LIMIT = 10_000;
+/** Measured cost of one gemma-4 read with thinking off (spike, 2026-09-06). Also the tally fallback. */
+export const AI_NEURONS_PER_READ = 5;
+/** Don't start a read when fewer than this many neurons remain in our own tally. */
+export const AI_RESERVE_NEURONS = 50;
+/** One manager key on one IP must not be able to burn the whole account allowance in minutes. */
+export const AI_DAILY_REQUEST_CAP = 400;
+export const AI_MAX_TOKENS = 2500;
+
+export type ScreenshotUsage = {
+  used: number;       // neurons this UTC day (rounded)
+  limit: number;      // AI_DAILY_NEURON_LIMIT
+  requests: number;
+  resetsAt: string;   // ISO, next 00:00 UTC
+};
+
+export type ScreenshotReadResult = {
+  lines: string[];    // TSV lines, exactly as the model produced them (trimmed cells)
+  rowCount: number;
+  neurons: number;
+  usage: ScreenshotUsage;
+};
+
+export type ScreenshotErrorCode = "exhausted" | "not_a_screen" | "read_failed";

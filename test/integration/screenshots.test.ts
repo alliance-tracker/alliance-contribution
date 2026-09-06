@@ -53,6 +53,17 @@ describe("POST /api/screenshots/read validation (never calls the model)", () => 
     const big = new Blob([new Uint8Array(9 * 1024 * 1024)], { type: "image/png" });
     expect((await SELF.fetch(URL_READ, { method: "POST", headers: ADMIN, body: form({ kind: "event", image: big }) })).status).toBe(413);
   });
+  // Exercises the pre-parse content-length branch directly: a small body but a declared length over
+  // the limit. If workerd's fetch recalculates content-length from the real body instead of sending
+  // ours, this degrades to the same case as the large-body test above rather than failing.
+  it("413 from a declared content-length over 8 MB even with a small body (pre-parse branch)", async () => {
+    const res = await SELF.fetch(URL_READ, {
+      method: "POST",
+      headers: { ...ADMIN, "content-length": String(9 * 1024 * 1024) },
+      body: form({ kind: "event", image: png() }),
+    });
+    expect(res.status).toBe(413);
+  });
   it("429 with usage when today's tally is at the limit", async () => {
     await DB.prepare("INSERT INTO ai_usage (day, neurons, requests) VALUES (?, ?, 1)").bind(utcDay(new Date()), AI_DAILY_NEURON_LIMIT).run();
     const res = await SELF.fetch(URL_READ, { method: "POST", headers: MANAGER, body: form({ kind: "roster", image: png() }) });

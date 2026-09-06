@@ -592,14 +592,19 @@ function ActivityCard({
 
       <div className="mt-auto flex flex-col gap-2 pt-2">
         <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" className="flex-1" onClick={() => onEdit(activity)}>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="h-[38px] flex-1 md:h-8"
+            onClick={() => onEdit(activity)}
+          >
             <Pencil />
             {t("common.actions.edit")}
           </Button>
           <Button
             variant="secondary"
             size="sm"
-            className="flex-1"
+            className="h-[38px] flex-1 md:h-8"
             onClick={() => onEditBands(activity)}
           >
             {t("scoring.editBands")}
@@ -657,7 +662,7 @@ export function Scoring() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3.5 md:gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <h2 className="text-[18px] font-semibold tracking-[-0.01em] text-foreground">
@@ -697,7 +702,7 @@ export function Scoring() {
           <EmptyState message={t("scoring.emptyTypes")} />
         </Card>
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3.5 md:gap-6 md:grid-cols-2 xl:grid-cols-3">
           {activities.map((a) => (
             <ActivityCard
               key={a.id}

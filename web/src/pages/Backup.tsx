@@ -134,7 +134,7 @@ export function Backup() {
     : "";
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3.5 md:gap-6">
       {error && <ErrorState message={error} />}
       {result && <ImportResultPanel result={result} />}
 
@@ -144,7 +144,7 @@ export function Backup() {
           <span className="text-[12px] text-muted">{t("backup.exportDesc")}</span>
         </div>
         <div>
-          <Button size="sm" onClick={handleExport} disabled={busy}>
+          <Button size="sm" className="h-11 w-full md:h-8 md:w-auto" onClick={handleExport} disabled={busy}>
             <Download />
             {t("backup.exportButton")}
           </Button>
@@ -164,7 +164,13 @@ export function Backup() {
             className="hidden"
             onChange={handleFile}
           />
-          <Button variant="secondary" size="sm" onClick={() => fileInput.current?.click()} disabled={busy}>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="h-11 w-full md:h-8 md:w-auto"
+            onClick={() => fileInput.current?.click()}
+            disabled={busy}
+          >
             <Upload />
             {t("backup.chooseFile")}
           </Button>

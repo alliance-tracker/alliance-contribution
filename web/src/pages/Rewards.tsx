@@ -46,13 +46,26 @@ function writeErrorMessage(e: unknown, t: TFunction): string {
 }
 
 /** Uppercase mono micro-label above a field (design: fldLbl), hint in sentence case. */
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  hint,
+  trailing,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  trailing?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
-      <label className="truncate font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
-        {label}
-        {hint && <span className="ms-1 font-sans font-medium normal-case tracking-normal text-muted">· {hint}</span>}
-      </label>
+      <div className="flex items-center justify-between gap-2">
+        <label className="truncate font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
+          {label}
+          {hint && <span className="ms-1 font-sans font-medium normal-case tracking-normal text-muted">· {hint}</span>}
+        </label>
+        {trailing}
+      </div>
       {children}
     </div>
   );
@@ -100,6 +113,8 @@ const AMOUNT_SCALE: [string, string][] = [
 ];
 
 function amountColors(amount: number, maxAmount: number): [string, string] {
+  // Zero is "nothing handed out", not the palest step of the scale (handoff §1.3).
+  if (amount <= 0) return ["var(--color-muted-surface)", "var(--color-faint)"];
   const i = Math.min(5, Math.floor((1 - amount / maxAmount) * 6));
   return AMOUNT_SCALE[Math.max(0, i)];
 }
@@ -131,96 +146,157 @@ function LinesTable({ lines, metric }: { lines: AllocationWithLines["lines"]; me
   const maxAmount = Math.max(...lines.map((l) => l.amount), 1);
   const showAttendance = lines.some((l) => l.attendance !== undefined);
   return (
-    <div className="max-h-[480px] overflow-auto rounded-[10px] border border-border">
-      <table className="w-full table-fixed border-collapse text-[13px]">
-        <colgroup>
-          <col className="w-14" />
-          <col />
-          <col className="w-16" />
-          <col className="w-[110px]" />
-          {showAttendance && <col className="w-[88px]" />}
-          <col className="w-[190px]" />
-          <col className="w-20" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th className={TH}>#</th>
-            <th className={TH}>{t("common.member")}</th>
-            <th className={cn(TH, "px-2 text-center")}>{t("common.rank")}</th>
-            <th className={cn(TH, "text-end")}>{t("common.power")}</th>
-            {showAttendance && <th className={cn(TH, "px-2 text-center")}>{t("rewards.att")}</th>}
-            <th className={cn(TH, "text-end")}>{metric === "points" ? t("common.score") : t("rewards.eventDays")}</th>
-            <th className={cn(TH, "pe-4 text-end")}>{t("rewards.amount")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lines.map((l, i) => {
-            const medal = MEDALS[l.rank];
-            const [amountBg, amountFg] = amountColors(l.amount, maxAmount);
-            return (
-              <tr key={`${l.member_id}-${i}`} className="transition-colors hover:bg-background">
-                <td className={TD}>
-                  <RankBadge rank={l.rank} />
-                </td>
-                <td className={TD}>
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <Avatar
-                      name={l.governor}
-                      size={28}
-                      style={medal ? { background: medal.bar, borderColor: medal.bar, color: "#fff" } : undefined}
-                    />
-                    <div className="flex min-w-0 flex-col leading-tight">
-                      <span className="truncate text-[13.5px] font-semibold text-foreground">{l.governor}</span>
-                      {l.last_alias && (
-                        <span className="truncate text-[11px] text-muted">
-                          {t("rewards.aka", { alias: l.last_alias })}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </td>
-                <td className={cn(TD, "px-2 text-center")}>
-                  <AllianceRankBadge rank={l.alliance_rank ?? null} />
-                </td>
-                <td className={cn(TD, "text-end")}>
-                  <span
-                    className="num text-[13px] text-secondary"
-                    title={l.power != null ? formatNumber(l.power) : undefined}
-                  >
-                    {l.power != null ? formatCompact(l.power) : "—"}
+    <>
+      <div className="overflow-hidden rounded-[10px] border border-border md:hidden">
+        <div className="flex justify-between border-b border-border bg-background px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] text-muted">
+          <span>
+            {t("common.rank")} · {t("common.member")}
+          </span>
+          <span>{t("rewards.amount")}</span>
+        </div>
+        {lines.map((l, i) => {
+          const medal = MEDALS[l.rank];
+          const [amountBg, amountFg] = amountColors(l.amount, maxAmount);
+          return (
+            <div
+              key={`${l.member_id}-${i}`}
+              className="flex items-center gap-2.5 border-b border-border/50 px-3 py-2 last:border-b-0"
+            >
+              <RankBadge rank={l.rank} />
+              <Avatar
+                name={l.governor}
+                size={28}
+                style={medal ? { background: medal.bar, borderColor: medal.bar, color: "#fff" } : undefined}
+              />
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[13.5px] font-semibold text-foreground">{l.governor}</div>
+                <div className="mt-1 flex items-center gap-2">
+                  {l.attendance !== undefined && <AttendanceBadge pct={l.attendance} className="text-[11px]" />}
+                  <Progress
+                    value={Math.max(2, Math.round((l.metric_value / maxValue) * 100))}
+                    className="h-[5px] w-20"
+                    indicatorClassName="bg-foreground"
+                  />
+                  <span className="num text-[12px] font-semibold text-secondary">
+                    <span className="sr-only">
+                      {t(metric === "points" ? "common.score" : "rewards.eventDays")}
+                    </span>
+                    {l.metric_value}
                   </span>
-                </td>
-                {showAttendance && (
-                  <td className={cn(TD, "px-2 text-center")}>
-                    <AttendanceBadge pct={l.attendance ?? 0} />
-                  </td>
-                )}
-                <td className={TD}>
-                  <div className="flex items-center justify-end gap-2.5">
-                    <div className="w-[110px] shrink-0">
-                      <Progress
-                        value={Math.max(2, Math.round((l.metric_value / maxValue) * 100))}
-                        className="h-1.5"
-                        indicatorClassName="bg-foreground"
-                      />
-                    </div>
-                    <span className="num min-w-[34px] text-end text-[13px] font-semibold">{l.metric_value}</span>
-                  </div>
-                </td>
-                <td className={cn(TD, "pe-4 text-end")}>
-                  <span
-                    className="num inline-flex h-[26px] min-w-[34px] items-center justify-center rounded-[7px] px-2 font-mono text-[14px] font-bold"
-                    style={{ background: amountBg, color: amountFg }}
-                  >
-                    {l.amount}
-                  </span>
-                </td>
+                </div>
+              </div>
+              <span
+                className="num inline-flex h-7 min-w-[38px] flex-none items-center justify-center rounded-[7px] px-2 font-mono text-[14px] font-bold"
+                style={{ background: amountBg, color: amountFg }}
+              >
+                <span className="sr-only">{t("rewards.amount")}</span>
+                {l.amount}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="hidden md:block">
+        <div className="max-h-[480px] overflow-auto rounded-[10px] border border-border">
+          <table className="w-full table-fixed border-collapse text-[13px]">
+            <colgroup>
+              <col className="w-14" />
+              <col />
+              <col className="w-16" />
+              <col className="w-[110px]" />
+              {showAttendance && <col className="w-[88px]" />}
+              <col className="w-[190px]" />
+              <col className="w-20" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th className={TH}>#</th>
+                <th className={TH}>{t("common.member")}</th>
+                <th className={cn(TH, "px-2 text-center")}>{t("common.rank")}</th>
+                <th className={cn(TH, "text-end")}>{t("common.power")}</th>
+                {showAttendance && <th className={cn(TH, "px-2 text-center")}>{t("rewards.att")}</th>}
+                <th className={cn(TH, "text-end")}>
+                  {metric === "points" ? t("common.score") : t("rewards.eventDays")}
+                </th>
+                <th className={cn(TH, "pe-4 text-end")}>{t("rewards.amount")}</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+            </thead>
+            <tbody>
+              {lines.map((l, i) => {
+                const medal = MEDALS[l.rank];
+                const [amountBg, amountFg] = amountColors(l.amount, maxAmount);
+                return (
+                  <tr key={`${l.member_id}-${i}`} className="transition-colors hover:bg-background">
+                    <td className={TD}>
+                      <RankBadge rank={l.rank} />
+                    </td>
+                    <td className={TD}>
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <Avatar
+                          name={l.governor}
+                          size={28}
+                          style={
+                            medal ? { background: medal.bar, borderColor: medal.bar, color: "#fff" } : undefined
+                          }
+                        />
+                        <div className="flex min-w-0 flex-col leading-tight">
+                          <span className="truncate text-[13.5px] font-semibold text-foreground">
+                            {l.governor}
+                          </span>
+                          {l.last_alias && (
+                            <span className="truncate text-[11px] text-muted">
+                              {t("rewards.aka", { alias: l.last_alias })}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className={cn(TD, "px-2 text-center")}>
+                      <AllianceRankBadge rank={l.alliance_rank ?? null} />
+                    </td>
+                    <td className={cn(TD, "text-end")}>
+                      <span
+                        className="num text-[13px] text-secondary"
+                        title={l.power != null ? formatNumber(l.power) : undefined}
+                      >
+                        {l.power != null ? formatCompact(l.power) : "—"}
+                      </span>
+                    </td>
+                    {showAttendance && (
+                      <td className={cn(TD, "px-2 text-center")}>
+                        <AttendanceBadge pct={l.attendance ?? 0} />
+                      </td>
+                    )}
+                    <td className={TD}>
+                      <div className="flex items-center justify-end gap-2.5">
+                        <div className="w-[110px] shrink-0">
+                          <Progress
+                            value={Math.max(2, Math.round((l.metric_value / maxValue) * 100))}
+                            className="h-1.5"
+                            indicatorClassName="bg-foreground"
+                          />
+                        </div>
+                        <span className="num min-w-[34px] text-end text-[13px] font-semibold">
+                          {l.metric_value}
+                        </span>
+                      </div>
+                    </td>
+                    <td className={cn(TD, "pe-4 text-end")}>
+                      <span
+                        className="num inline-flex h-[26px] min-w-[34px] items-center justify-center rounded-[7px] px-2 font-mono text-[14px] font-bold"
+                        style={{ background: amountBg, color: amountFg }}
+                      >
+                        {l.amount}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -353,7 +429,7 @@ function HistoryRow({
       </div>
 
       {expanded && (
-        <div className="pb-3 ps-6">
+        <div className="pb-3 md:ps-6">
           {detail ? <LinesTable lines={detail.lines} metric={allocation.metric} /> : <LoadingState />}
         </div>
       )}
@@ -480,16 +556,20 @@ export function Rewards() {
           <span className="text-[12.5px] text-muted">{t("rewards.newDesc")}</span>
         </div>
 
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-          <Field label={t("rewards.title")} hint={t("rewards.titleHint")}>
-            <Input
-              placeholder={t("rewards.titlePlaceholder")}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </Field>
+        <div className="grid grid-cols-[1fr_1.4fr] gap-2.5 sm:gap-3.5 lg:grid-cols-4">
+          <div className="col-span-2 min-w-0 lg:col-span-1">
+            <Field label={t("rewards.title")} hint={t("rewards.titleHint")}>
+              <Input
+                className="h-11 md:h-9"
+                placeholder={t("rewards.titlePlaceholder")}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </Field>
+          </div>
           <Field label={t("rewards.quantity")}>
             <Input
+              className="h-11 md:h-9"
               type="number"
               min={1}
               step={1}
@@ -500,7 +580,7 @@ export function Rewards() {
           </Field>
           <Field label={t("rewards.metric")}>
             <Select value={metric} onValueChange={(v) => setMetricT(v as AllocationMetric)}>
-              <SelectTrigger>
+              <SelectTrigger className="h-11 md:h-9">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -512,23 +592,33 @@ export function Rewards() {
               </SelectContent>
             </Select>
           </Field>
-          <Field label={t("rewards.strategy")}>
-            <Select value={strategy} onValueChange={(v) => setStrategyT(v as AllocationStrategy)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {(Object.keys(STRATEGY_LABELS) as AllocationStrategy[]).map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {t(STRATEGY_LABELS[s])}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
+          <div className="col-span-2 min-w-0 lg:col-span-1">
+            <Field label={t("rewards.strategy")}>
+              <Select value={strategy} onValueChange={(v) => setStrategyT(v as AllocationStrategy)}>
+                <SelectTrigger className="h-11 md:h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(STRATEGY_LABELS) as AllocationStrategy[]).map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {t(STRATEGY_LABELS[s])}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          </div>
         </div>
 
-        <Field label={t("rewards.weeksLabel")} hint={t("rewards.weeksHint")}>
+        <Field
+          label={t("rewards.weeksLabel")}
+          hint={t("rewards.weeksHint")}
+          trailing={
+            <span className="text-[12px] text-faint md:hidden">
+              {t("rewards.selected", { picked: picked.length, total: weeks.length })}
+            </span>
+          }
+        >
           {weeksState.loading ? (
             <LoadingState label={t("rewards.loadingWeeks")} />
           ) : weeksState.error ? (
@@ -540,11 +630,11 @@ export function Rewards() {
               <button
                 type="button"
                 onClick={() => setSelectedWeeksT(picked.length === weeks.length ? [] : [...weeks])}
-                className="h-[30px] w-[92px] rounded-full border border-dashed border-faint bg-surface text-[12px] font-semibold text-secondary transition-colors hover:bg-background"
+                className="h-[34px] rounded-full border border-dashed border-faint bg-surface px-3 text-[12px] font-semibold text-secondary transition-colors hover:bg-background md:h-[30px] md:w-[92px] md:px-0"
               >
                 {picked.length === weeks.length ? t("rewards.clearAll") : t("rewards.selectAll")}
               </button>
-              <span className="me-2 text-[12px] text-muted">
+              <span className="me-2 hidden text-[12px] text-muted md:inline">
                 {t("rewards.selected", { picked: picked.length, total: weeks.length })}
               </span>
               {weeks.map((week) => {
@@ -557,7 +647,7 @@ export function Rewards() {
                       setSelectedWeeksT(checked ? picked.filter((w) => w !== week) : [...picked, week])
                     }
                     className={cn(
-                      "inline-flex h-[30px] items-center rounded-full border px-3 font-mono text-[12px] font-semibold transition-all",
+                      "inline-flex h-[34px] items-center rounded-full border px-3 font-mono text-[12px] font-semibold transition-all md:h-[30px]",
                       checked
                         ? "border-foreground bg-foreground text-accent-foreground"
                         : "border-border bg-surface text-muted hover:border-faint",
@@ -580,7 +670,7 @@ export function Rewards() {
               placeholder={t("rewards.topCountPlaceholder")}
               value={topCount}
               onChange={(e) => setTopCountT(e.target.value)}
-              className="w-40"
+              className="h-11 w-40 md:h-9"
             />
           </Field>
         )}
@@ -596,7 +686,7 @@ export function Rewards() {
                     placeholder={t("rewards.fromRank")}
                     value={band.fromRank}
                     onChange={(e) => setTiersT(tiers.map((b, j) => (j === i ? { ...b, fromRank: e.target.value } : b)))}
-                    className="w-28"
+                    className="h-11 w-28 md:h-9"
                   />
                   <span className="text-[12px] text-muted">–</span>
                   <Input
@@ -605,7 +695,7 @@ export function Rewards() {
                     placeholder={t("rewards.toRank")}
                     value={band.toRank}
                     onChange={(e) => setTiersT(tiers.map((b, j) => (j === i ? { ...b, toRank: e.target.value } : b)))}
-                    className="w-28"
+                    className="h-11 w-28 md:h-9"
                   />
                   <Input
                     type="number"
@@ -613,7 +703,7 @@ export function Rewards() {
                     placeholder={t("rewards.eachGets")}
                     value={band.amountEach}
                     onChange={(e) => setTiersT(tiers.map((b, j) => (j === i ? { ...b, amountEach: e.target.value } : b)))}
-                    className="w-28"
+                    className="h-11 w-28 md:h-9"
                   />
                   <Button
                     variant="ghost"
@@ -636,13 +726,20 @@ export function Rewards() {
           </Field>
         )}
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Button size="sm" onClick={runPreview} disabled={!canPreview}>
-            {t("rewards.preview")}
-          </Button>
-          <Button size="sm" variant="secondary" onClick={save} disabled={!canSave}>
-            {t("rewards.saveAllocation")}
-          </Button>
+        <div className="flex flex-col gap-2.5">
+          <div className="grid grid-cols-2 gap-2 md:flex md:items-center md:gap-2.5">
+            <Button className="h-11 md:h-8 md:px-3" onClick={runPreview} disabled={!canPreview}>
+              {t("rewards.preview")}
+            </Button>
+            <Button
+              className="h-11 md:h-8 md:px-3"
+              variant="secondary"
+              onClick={save}
+              disabled={!canSave}
+            >
+              {t("rewards.saveAllocation")}
+            </Button>
+          </div>
           {saved && (
             <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-up">
               <Check className="size-3.5" strokeWidth={2.4} />

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
 import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
+import { eventChatPrompt } from "@shared/prompts";
 import type { ActivityType, Event, EventListRow } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
 import { api, ApiError } from "@/lib/api";
@@ -288,29 +289,10 @@ function EventFormDialog({
   const options = activityTypes.filter((a) => a.active === 1 || a.key === activityKey);
   const maxInstance = selected?.max_instance ?? 1;
   const parsed = useMemo(() => parseRows(rowsText), [rowsText]);
-  const eventPrompt = useMemo(() => {
-    const activityName = selected?.name ?? "the activity";
-    const unitLabel = selected?.unit_label ?? "value shown";
-    return `You will be given screenshots of a ${activityName} ranking. For EVERY participant whose value is greater than 0, output one line of tab-separated values with EXACTLY these columns, and NO header row:
-
-Name<TAB>Value<TAB>Notes
-
-Rules:
-- Name: the participant's name. Remove any leading alliance tag (e.g. \`[ABC]\`).
-- Value: the ${unitLabel} as digits only — strip commas.
-- Notes: optional short note (e.g. mission count like "47/48"); leave empty if none.
-- Skip anyone whose value is 0 or shown as "Unranked".
-- Output each participant exactly ONCE. Screenshots overlap when scrolling, and the screen pins the viewer's own row in a separate panel below the list on every capture — repeating that player's rank badge and value. So the same name appears repeatedly across the images: emit its first occurrence and drop every later repeat of the same Name.
-- Separate columns with a literal TAB character, not spaces. One participant per line.
-- Put ONLY the tab-separated rows inside a single fenced code block (\`\`\`), with no header and nothing else inside the fence.
-
-After the closing fence — never inside it — add a short "Coverage check:" note in plain prose:
-- Use the rank numbers shown beside each row (they are NOT part of the output) to verify coverage: they must run 1, 2, 3 … with no gaps. List every missing rank number. Ignore the pinned viewer panel below the list — its rank number is a repeat, not a position in the sequence.
-- State the highest rank number you saw in the list itself and how many unique participants you output. If those two numbers differ, the screenshots are missing people.
-- Call out any screenshot that is a duplicate of another, and any point where consecutive screenshots neither overlap nor continue the ranking (a jump means rows were skipped between captures).
-- Values should descend down the ranking. Flag anywhere they do not — that means rows are out of order or missing.
-- If everything lines up, say "Coverage check: ranks 1-N complete, no gaps."`;
-  }, [selected]);
+  const eventPrompt = useMemo(
+    () => eventChatPrompt(selected?.name ?? "the activity", selected?.unit_label ?? "value shown"),
+    [selected],
+  );
   const invalid = parsed.filter((p) => !p.valid);
   const duplicates = parsed.filter((p) => p.valid && p.duplicate).length;
   const validCount = parsed.length - invalid.length - duplicates;

@@ -26,6 +26,7 @@ import type {
   RosterImportBatch,
   RosterImportResult,
 } from "@shared/types";
+import { rosterChatPrompt } from "@shared/prompts";
 import { api, ApiError } from "@/lib/api";
 import type { MergeResult, RenameResult } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
@@ -723,25 +724,8 @@ function DeactivateDialog({
 
 // ---- Roster TSV import wizard ----------------------------------------------
 
-/** Prompt the operator pastes into an LLM alongside an Alliance Ranking screenshot. */
-const ROSTER_PROMPT = `You will be given screenshots of the in-game Alliance Ranking screen (the Power tab). For EVERY member row, output one line of tab-separated values with EXACTLY these 4 columns, in this order, and NO header row:
-
-Governor<TAB>Rank<TAB>Power<TAB>Position
-
-Rules:
-- Governor: the member's name. Remove any leading alliance tag (e.g. \`[ABC]\`).
-- Rank: the R-level badge on the member's avatar — one of R5, R4, R3, R2, R1. Leave the cell empty if no badge is visible.
-- Power: the power value as digits only — strip the thousand separators (e.g. 164,497,800 -> 164497800). Leave empty if not shown.
-- Position: the leaderboard number shown to the LEFT of the row (1, 2, 3 …). This is the member's place on the power ranking, not their R-level. Leave empty if not shown.
-- Output each member exactly ONCE. Screenshots overlap when scrolling, and the screen pins the viewer's own row at the bottom of every capture, so the same row appears repeatedly across the images — emit its first occurrence and drop every later repeat of the same Governor.
-- Separate columns with a literal TAB character, not spaces. Keep all four column positions on every line even when a value is empty (empty cell, still tab-separated).
-- One member per line. Put ONLY the tab-separated rows inside a single fenced code block (\`\`\`), with no header and nothing else inside the fence.
-
-After the closing fence — never inside it — add a short "Coverage check:" note in plain prose:
-- The Position numbers must run 1, 2, 3 … with no gaps. List every missing Position number.
-- State the highest Position you saw and how many unique members you output. If those two numbers differ, the screenshots are missing people.
-- Call out any screenshot that is a duplicate of another, and any point where consecutive screenshots neither overlap nor continue the sequence (a jump means rows were skipped between captures).
-- If everything lines up, say "Coverage check: positions 1-N complete, no gaps."`;
+/** Prompt the operator pastes into an LLM alongside the Alliance Ranking screenshots (shared/prompts.ts). */
+const ROSTER_PROMPT = rosterChatPrompt();
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 

@@ -1,3 +1,4 @@
+import { EVENT_SENTINEL, ROSTER_SENTINEL } from "../../shared/prompts";
 import { AI_DAILY_NEURON_LIMIT, type ScreenshotKind, type ScreenshotUsage } from "../../shared/types";
 
 // Pure helpers for the screenshot-read flow. No DB, no fetch.
@@ -19,45 +20,9 @@ export function usageSnapshot(row: { neurons: number; requests: number }, now: D
   };
 }
 
-const EVENT_SENTINEL = "NOT_A_RANKING_SCREEN";
-const ROSTER_SENTINEL = "NOT_A_ROSTER_SCREEN";
-
-/** Per-image variant of the paste prompt (web/src/pages/Events.tsx): no fence, no coverage check,
- *  a sentinel for the wrong screen. Notes stay a third cell so Mobilization mission counts survive. */
-export function eventPrompt(unitLabel: string): string {
-  return `You are reading ONE screenshot of a ranking screen from a mobile game. Output one line per player row visible in the image, tab-separated, with EXACTLY these cells:
-
-Name<TAB>Value<TAB>Notes
-
-Rules:
-- Name: the player's name exactly as written, in any script. Remove a leading alliance tag in square brackets such as [ABC].
-- Value: the ${unitLabel} shown for that row, digits only, no thousands separators.
-- Notes: optional, e.g. a mission count like 47/48 when one is shown; otherwise leave the cell empty.
-- Include the highlighted row pinned at the bottom of the screen if it shows a value above 0.
-- Skip rows whose value is 0 or shown as Unranked. Do not output the rank numbers.
-- Separate cells with a literal TAB character. One row per line.
-- No header, no code fence, no explanation — nothing but the rows.
-- If the image is not a ranking screen of this kind, output exactly: ${EVENT_SENTINEL}`;
-}
-
-/** Per-image variant of ROSTER_PROMPT (web/src/pages/Roster.tsx). The pinned own-row panel is skipped:
- *  its position is a repeat and often missing, and the client keeps the first occurrence of a name. */
-export function rosterPrompt(): string {
-  return `You are reading ONE screenshot of the in-game Alliance Ranking screen (the Power tab). Output one line per member row in the scrolling list, tab-separated, with EXACTLY these 4 cells in this order:
-
-Governor<TAB>Rank<TAB>Power<TAB>Position
-
-Rules:
-- Governor: the member's name exactly as written, in any script. Remove a leading alliance tag in square brackets such as [ABC].
-- Rank: the R-level badge on the avatar — one of R5, R4, R3, R2, R1. Leave empty if no badge is visible.
-- Power: digits only, no separators; expand abbreviations (12.5M -> 12500000, 980K -> 980000). Leave empty if not shown.
-- Position: the number shown to the LEFT of the row (1, 2, 3 …). Leave empty if not shown.
-- Governor is ALWAYS the first cell and Position is ALWAYS the last cell. Never repeat a cell.
-- Always output all 4 cells, separated by 3 literal TAB characters, even when some cells are empty.
-- Skip the viewer's own row pinned in a separate panel at the bottom of the screen; only rows in the list itself.
-- No header, no code fence, no explanation — nothing but the rows.
-- If the image is not the Alliance Ranking screen, output exactly: ${ROSTER_SENTINEL}`;
-}
+// Prompts live in shared/prompts.ts so the copyable chat prompt and this per-image one share their
+// column rules. Kept under the old names for the service and tests.
+export { eventReadPrompt as eventPrompt, rosterReadPrompt as rosterPrompt } from "../../shared/prompts";
 
 export type ParsedModelOutput = { kind: "rows"; lines: string[] } | { kind: "not_a_screen" };
 

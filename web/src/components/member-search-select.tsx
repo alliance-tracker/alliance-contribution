@@ -103,7 +103,7 @@ export function MemberSearchSelect({
           }}
           onKeyDown={handleKeyDown}
         />
-        <div className="mt-2 max-h-64 overflow-y-auto overflow-x-hidden">
+        <div className="mt-2 max-h-64 overflow-y-auto overflow-x-hidden" role="listbox">
           {filtered.length === 0 ? (
             <div className="py-6 text-center text-[13px] text-muted">{t("memberSearch.empty")}</div>
           ) : (
@@ -111,6 +111,11 @@ export function MemberSearchSelect({
               <button
                 key={m.id}
                 type="button"
+                role="option"
+                aria-selected={i === highlighted}
+                ref={(el) => {
+                  if (i === highlighted) el?.scrollIntoView({ block: "nearest" });
+                }}
                 onClick={() => pick(m.id)}
                 onMouseEnter={() => setHighlighted(i)}
                 className={cn(

@@ -81,7 +81,6 @@ export type Participation = {
 
 // Insert inputs: row type minus DB-generated columns.
 export type NewActivityType = Omit<ActivityType, "id">;
-export type NewScoringTier = Omit<ScoringTier, "id">;
 export type NewMember = Omit<Member, "id" | "created_at" | "updated_at">;
 export type NewAlias = Omit<Alias, "id" | "created_at">;
 export type NewEvent = Omit<Event, "id" | "created_at" | "updated_at">;

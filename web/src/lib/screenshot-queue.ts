@@ -1,4 +1,5 @@
 import type { ScreenshotUsage } from "../../../shared/types";
+import { normalizeName } from "./normalize";
 
 // Pure state machine for a batch of screenshots read one at a time. The component owns the fetch
 // loop and the AbortController; everything decidable from state lives here so it can be unit-tested.
@@ -129,4 +130,21 @@ export function meterState(u: ScreenshotUsage, exhausted: boolean): "plenty" | "
   if (exhausted || u.limit - u.used < u.reserve || u.requests >= u.requestCap) return "used_up";
   if (readsLeft(u) < 100 || u.used / u.limit >= 0.8) return "low";
   return "plenty";
+}
+
+/** Append read rows to the textarea, keeping the first occurrence of each name (first cell, tag
+ *  stripped). The Worker reads one image at a time, so the pinned own-row panel and scroll overlap
+ *  would otherwise repeat a member once per screenshot. */
+export function mergeLines(prev: string, lines: string[]): string {
+  const seen = new Set<string>();
+  const key = (line: string) => normalizeName(line.split("\t")[0] ?? "");
+  const kept = prev.split("\n").filter((l) => l.trim() !== "");
+  for (const l of kept) seen.add(key(l));
+  for (const l of lines) {
+    const k = key(l);
+    if (k === "" || seen.has(k)) continue;
+    seen.add(k);
+    kept.push(l);
+  }
+  return kept.join("\n");
 }

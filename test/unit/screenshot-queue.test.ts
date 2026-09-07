@@ -7,6 +7,7 @@ import {
   meterState,
   nextToRead,
   queueReducer,
+  mergeLines,
   readsLeft,
   type QueueState,
 } from "../../web/src/lib/screenshot-queue";
@@ -126,5 +127,18 @@ describe("meter helpers", () => {
     expect(isAcceptedType(file("a.png"))).toBe(true);
     expect(isAcceptedType(file("a.jpg", "image/jpeg"))).toBe(true);
     expect(isAcceptedType(file("a.heic", "image/heic"))).toBe(false);
+  });
+});
+
+describe("mergeLines", () => {
+  it("keeps the first occurrence of a name across screenshots and ignores the alliance tag", () => {
+    const first = mergeLines("", ["Alice\t100\t", "Mr Spiklitz\t50\t"]);
+    expect(first).toBe("Alice\t100\t\nMr Spiklitz\t50\t");
+    const second = mergeLines(first, ["Bob\t90\t", "[ABC]Mr Spiklitz\t50\t", "alice\t1\t"]);
+    expect(second.split("\n")).toEqual(["Alice\t100\t", "Mr Spiklitz\t50\t", "Bob\t90\t", "alice\t1\t"]);
+  });
+
+  it("respects rows the operator already typed and drops blank lines", () => {
+    expect(mergeLines("Alice\t1\n\n", ["Alice\t2", "\t3", "Cara\t4"])).toBe("Alice\t1\nCara\t4");
   });
 });

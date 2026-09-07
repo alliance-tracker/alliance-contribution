@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertTitle, AlertContent } from "@/components/ui/alert";
 import { ScreenshotIngest, type IngestMode } from "@/components/screenshot-ingest";
+import { mergeLines } from "@/lib/screenshot-queue";
 import {
   Select,
   SelectContent,
@@ -237,7 +238,7 @@ function EventFormDialog({
   const [screenshotRead, setScreenshotRead] = useState(false);
   // Appends per file. Stable identity: the reader effect depends on it.
   const appendLines = useCallback((lines: string[]) => {
-    setRowsText((prev) => (prev.trim() === "" ? lines.join("\n") : `${prev.replace(/\s+$/, "")}\n${lines.join("\n")}`));
+    setRowsText((prev) => mergeLines(prev, lines));
     setScreenshotRead(true);
   }, []);
   const [submitting, setSubmitting] = useState(false);

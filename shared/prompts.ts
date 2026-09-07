@@ -72,7 +72,7 @@ After the closing fence — never inside it — add a short "Coverage check:" no
 }
 
 /** Notes stay a third cell so Mobilization mission counts survive; the pinned row is included because
- *  its value is right and the client parser keeps the first occurrence of a name. */
+ *  its value is right and the client merges rows keeping the first occurrence of a name. */
 export function eventReadPrompt(unitLabel: string): string {
   return `You are reading ONE screenshot of a ranking screen from a mobile game. Output one line per player row visible in the image, tab-separated, with EXACTLY these cells:
 
@@ -86,7 +86,8 @@ ${NO_PROSE_RULE}
 }
 
 /** The pinned own-row panel is asked to be skipped (its position is a repeat and sometimes missing);
- *  the model does not always comply, which is harmless — the client keeps the first occurrence. */
+ *  the model does not always comply, which is harmless — the client merges rows keeping the first
+ *  occurrence of a name. */
 export function rosterReadPrompt(): string {
   return `You are reading ONE screenshot of the in-game Alliance Ranking screen (the Power tab). Output one line per member row in the scrolling list, tab-separated, with EXACTLY these 4 cells in this order:
 

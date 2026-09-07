@@ -74,6 +74,7 @@ import { MemberSearchSelect } from "@/components/member-search-select";
 import { RosterMobileRow } from "@/components/roster-mobile-row";
 import { LlmPrompt } from "@/components/llm-prompt";
 import { ScreenshotIngest, type IngestMode } from "@/components/screenshot-ingest";
+import { mergeLines } from "@/lib/screenshot-queue";
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox as ShadcnCheckbox } from "@/components/ui/checkbox";
@@ -805,7 +806,7 @@ function ImportRosterDialog({
   const [screenshotRead, setScreenshotRead] = useState(false);
   const [screenshotBlocking, setScreenshotBlocking] = useState(false);
   const appendLines = useCallback((lines: string[]) => {
-    setText((prev) => (prev.trim() === "" ? lines.join("\n") : `${prev.replace(/\s+$/, "")}\n${lines.join("\n")}`));
+    setText((prev) => mergeLines(prev, lines));
     setScreenshotRead(true);
   }, []);
   const onBatchChange = useCallback((s: { blocking: boolean }) => setScreenshotBlocking(s.blocking), []);

@@ -76,6 +76,7 @@ export function MemberSearchSelect({
 
   return (
     <Popover
+      modal
       open={open}
       onOpenChange={(next) => {
         setOpen(next);

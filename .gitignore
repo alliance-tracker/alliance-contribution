@@ -13,3 +13,5 @@ docs/data/
 docs/fixtures/
 docs/plans/
 docs/specs/
+.idea/
+.mcp.json

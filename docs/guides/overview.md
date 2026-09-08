@@ -6,7 +6,7 @@ The home dashboard — a daily-glance summary of alliance participation, who nee
 
 The app tracks recurring in-game activities (things like Bear Trap, Contribution, and Mobilization). Each time you upload a ranking screenshot's data, that becomes an **event**; every governor's row in it becomes a **participation** with a raw name and a value. Each participation is resolved to a **member** (by exact name, or by an alias you've mapped) and scored using that activity's rules; a name that doesn't resolve sits in the **unmapped queue** until an officer maps it. A member's **Participation Score** is the sum of their scored participations, which feeds the weekly and all-time rankings and the attendance figures shown throughout the app.
 
-Three pages cover day-to-day use: this Overview, **Ranking** (weekly and all-time leaderboards), and **Attendance** (event-day coverage per member), plus a **Members** directory where every governor has a profile page with their history. Everything else — uploading events, editing the roster, mapping aliases, tuning scoring, allocating rewards, and backing up the database — lives behind **Admin**.
+Four pages cover day-to-day use: this Overview, **Ranking** (weekly and all-time leaderboards), **Attendance** (event-day coverage per member), and **Activities** (one activity's history by day, instance, and member), plus a **Members** directory where every governor has a profile page with their history. Everything else — uploading events, editing the roster, mapping aliases, tuning scoring, allocating rewards, and backing up the database — lives behind **Admin**.
 
 Access comes from a key with one of three tiers:
 
@@ -18,7 +18,7 @@ The app is unusable without a valid key — the first thing you see on load is a
 
 The interface is available in English, Spanish, French, German, Korean, and Arabic. Use the globe button — in the top bar once you're in, or on the access-key prompt before you unlock — to pick a language; the page reloads in it and the choice sticks in this browser. On a first visit the app follows your browser's language when it is one of the six, otherwise English. Names, activity names, unit labels, and any text an officer typed into the app are shown exactly as entered, in whatever language they were written. Arabic flips the whole layout to right-to-left; numbers keep Western digits.
 
-See [Ranking](ranking.md), [Attendance](attendance.md), [Members](members.md), [Events](events.md), [Roster](roster.md), [Aliases](aliases.md), [Scoring](scoring.md), [Rewards](rewards.md), and [Backup](backup.md) for the rest.
+See [Ranking](ranking.md), [Attendance](attendance.md), [Activities](activities.md), [Members](members.md), [Events](events.md), [Roster](roster.md), [Aliases](aliases.md), [Scoring](scoring.md), [Rewards](rewards.md), and [Backup](backup.md) for the rest.
 
 ## What you see
 

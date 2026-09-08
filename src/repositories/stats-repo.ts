@@ -350,7 +350,8 @@ export class StatsRepo {
        FROM participations p
        JOIN events  e ON e.id = p.event_id
        JOIN members m ON m.id = p.member_id
-       WHERE e.activity_type_id = ?
+       -- active = 1: unmapped rows and departed members still count in event totals; only this table hides them.
+       WHERE e.activity_type_id = ? AND m.active = 1
        GROUP BY m.id
        ORDER BY total_value DESC, m.governor`,
       activityTypeId,

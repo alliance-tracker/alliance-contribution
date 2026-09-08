@@ -1,4 +1,4 @@
-import type { ActivityDetail, ActivityEventRow, ActivityMemberRow } from "@shared/types";
+import type { ActivityDetail, ActivityEventRow, ActivityMemberRow } from "../../../shared/types";
 
 // Pure derivations for the Activity page. The API returns flat per-event and per-member rows; the
 // date grouping, per-instance stats, and chart series live here so they are unit-tested without D1.

@@ -975,6 +975,7 @@ describe("StatsService.activityDetail", () => {
     const alice = detail!.members.find((m) => m.governor === "Act_Alice")!;
     expect(alice).toMatchObject({ appearances: 1, total_value: 5_000_000 });
     expect(detail!.event_days).toBeGreaterThanOrEqual(1);
+    expect(new Set(detail!.events.map((e) => e.date)).size).toBe(detail!.event_days);
   });
 
   it("returns null for an unknown activity key", async () => {

@@ -14,8 +14,9 @@ anything added later under Admin → Scoring & Activities — across its whole h
   and total value. Averages are over the events actually logged, not over every event day.
 - **Total value over time** — one line per instance plus a heavier total line. A gap in an instance
   line means that instance was not logged that day.
-- **By day** — one row per date, newest first, with participants per instance, total value, points,
-  and an unmapped count when some names in that event have not been resolved to a member yet.
+- **By day** — one row per date, newest first, with the week, participants per instance (only for
+  multi-instance activities), a participants total, total value, points, and an unmapped count when
+  some names in that event have not been resolved to a member yet.
 - **By member** — every mapped member who appeared, sorted by total value: appearances out of event
   days, attendance badge, total value, average per appearance, and points. Names open the profile.
 
@@ -36,6 +37,8 @@ scoring config — changing tiers or weights and recomputing changes the points 
 
 - **Unmapped rows count in totals but not in the member table.** The damage happened, so event
   totals include it; there is no member to attribute it to until the alias is mapped.
+- **Departed (deactivated) members are hidden from the By member table**, like every other board;
+  their values stay in the day and total figures.
 - **"—" is not zero.** A dash in a per-instance column means that instance was never logged for that
   date. A logged event with nobody over the minimum value would show 0.
 - **Instance count comes from the activity.** Raising `max_instance` on the activity (e.g. four traps)

@@ -6,7 +6,7 @@ import type { ActivityDetail, ActivityType } from "@shared/types";
 import { api, ApiError } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
 import { instanceStats, valueSeries, dayRows, memberRows, type SeriesPoint } from "@/lib/activity-derive";
-import { formatCompact, formatNumber, localeTag } from "@/lib/format";
+import { formatCompact, formatDate, formatNumber } from "@/lib/format";
 import { activityFillVar } from "@/lib/activity";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { RankByActivity } from "@/components/RankByActivity";
@@ -27,10 +27,8 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** "2026-07-29" -> "Jul 29" in the UI locale. */
-function dateLabel(d: string): string {
-  return new Date(`${d}T00:00:00Z`).toLocaleDateString(localeTag(), { month: "short", day: "numeric", timeZone: "UTC" });
-}
+// Full-history view needs the year: "2026-07-29" -> "Jul 29, 2026" in the UI locale.
+const DATE_OPTS: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric" };
 
 function valueLabel(v: number): string {
   return v >= 1_000_000 ? formatCompact(v) : formatNumber(v);
@@ -53,7 +51,7 @@ function ValueTooltip({
   const point = payload[0].payload;
   return (
     <div className="rounded-[6px] border border-border bg-surface px-2.5 py-2 text-[12px] shadow-sm">
-      <div className="mb-1 font-semibold">{dateLabel(point.date)}</div>
+      <div className="mb-1 font-semibold">{formatDate(point.date, DATE_OPTS)}</div>
       {payload
         .filter((p) => p.value !== null && p.value !== undefined)
         .map((p) => (
@@ -106,6 +104,9 @@ export function Activity() {
   const busy = activitiesState.loading || detailState.loading;
   const unit = detail?.activity.unit_label ?? t("common.value");
   const instances = detail ? instanceStats(detail) : [];
+  // Tiles still show every instance (including never-logged ones); the legend and chart lines only
+  // cover instances actually logged, so there's no dead legend entry or flat empty line to explain.
+  const logged = instances.filter((s) => s.events > 0);
   const totalParticipants = detail?.events.reduce((s, e) => s + e.participants, 0) ?? 0;
   const totalValue = detail?.events.reduce((s, e) => s + e.total_value, 0) ?? 0;
   const totalPoints = detail?.events.reduce((s, e) => s + e.total_points, 0) ?? 0;
@@ -115,7 +116,7 @@ export function Activity() {
       <div className="flex flex-wrap items-center gap-3">
         <RankByActivity
           value={key ?? ""}
-          onChange={(k) => navigate(`/activities/${k}`)}
+          onChange={(k) => navigate(`/activities/${encodeURIComponent(k)}`)}
           activities={activities}
           label={t("common.activity")}
           allowAll={false}
@@ -133,8 +134,8 @@ export function Activity() {
       ) : (
         <>
           <Card className="flex flex-wrap gap-x-8 gap-y-3 p-3 md:p-[18px]">
-            <Stat label={t("attendance.eventDays", { count: detail.event_days })} value={formatNumber(detail.event_days)} />
-            <Stat label={t("activity.participants")} value={formatNumber(totalParticipants)} />
+            <Stat label={t("activity.eventDays")} value={formatNumber(detail.event_days)} />
+            <Stat label={t("activity.participations")} value={formatNumber(totalParticipants)} />
             <Stat label={`${t("activity.total")} ${unit}`} value={formatNumber(totalValue)} />
             <Stat label={t("common.points")} value={formatNumber(totalPoints)} />
           </Card>
@@ -145,7 +146,7 @@ export function Activity() {
                 <Card key={s.instance} className="flex flex-col gap-3 p-3 md:p-[18px]">
                   <div className="text-[14px] font-semibold">{t("activity.instance", { n: s.instance })}</div>
                   <div className="grid grid-cols-2 gap-3">
-                    <Stat label={t("activity.events", { count: s.events })} value={formatNumber(s.events)} />
+                    <Stat label={t("activity.events")} value={formatNumber(s.events)} />
                     <Stat label={t("activity.avgParticipants")} value={formatNumber(Math.round(s.avg_participants))} />
                     <Stat label={`${t("activity.avg")} ${unit}`} value={formatNumber(Math.round(s.avg_value))} />
                     <Stat label={`${t("activity.total")} ${unit}`} value={formatNumber(s.total_value)} />
@@ -159,9 +160,19 @@ export function Activity() {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="text-[14px] font-semibold">{t("activity.chartTitle", { unit })}</div>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                {instances.map((s) => (
+                {logged.map((s) => (
                   <span key={s.instance} className="flex items-center gap-1.5 text-[11px] text-muted">
-                    <span className="size-2 rounded-full" style={{ background: activityFillVar(detail.activity.color) }} />
+                    <svg width="16" height="6" aria-hidden="true">
+                      <line
+                        x1="0"
+                        y1="3"
+                        x2="16"
+                        y2="3"
+                        stroke={activityFillVar(detail.activity.color)}
+                        strokeWidth="2"
+                        strokeDasharray={instanceDash(s.instance)}
+                      />
+                    </svg>
                     {t("activity.instance", { n: s.instance })}
                   </span>
                 ))}
@@ -178,7 +189,7 @@ export function Activity() {
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 4" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  tickFormatter={dateLabel}
+                  tickFormatter={(d: string) => formatDate(d, DATE_OPTS)}
                   stroke="var(--color-border)"
                   tickLine={false}
                   tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
@@ -192,7 +203,7 @@ export function Activity() {
                 />
                 <Tooltip content={<ValueTooltip />} cursor={{ stroke: "var(--color-border)" }} />
                 {/* connectNulls false: an instance not logged that day is a gap, not a straight line. */}
-                {instances.map((s) => (
+                {logged.map((s) => (
                   <Line
                     key={s.instance}
                     type="monotone"
@@ -226,7 +237,7 @@ export function Activity() {
               {days.map((d) => (
                 <div key={d.date} className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 last:border-b-0">
                   <div className="min-w-0">
-                    <div className="text-[14px] font-semibold">{dateLabel(d.date)}</div>
+                    <div className="text-[14px] font-semibold">{formatDate(d.date, DATE_OPTS)}</div>
                     <div className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] text-muted">
                       <span className="font-mono">{d.week}</span>
                       {detail.activity.max_instance > 1 &&
@@ -264,7 +275,7 @@ export function Activity() {
                 <TableBody>
                   {days.map((d) => (
                     <TableRow key={d.date}>
-                      <TableCell className="font-semibold">{dateLabel(d.date)}</TableCell>
+                      <TableCell className="font-semibold">{formatDate(d.date, DATE_OPTS)}</TableCell>
                       <TableCell className="font-mono text-[12px] text-muted">{d.week}</TableCell>
                       {detail.activity.max_instance > 1 &&
                         d.byInstance.map((e, i) => (

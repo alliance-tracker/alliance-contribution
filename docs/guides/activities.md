@@ -12,6 +12,8 @@ anything added later under Admin → Scoring & Activities — across its whole h
 - **Instance tiles** — only for activities with more than one instance per day (Bear Trap's two traps).
   Each tile shows how many times that instance was logged, its average participants, average value,
   and total value. Averages are over the events actually logged, not over every event day.
+- **Participants over time** — same layout as the value chart below it: one line per instance plus a
+  total, so you can see whether Trap 2 attendance is catching up with Trap 1.
 - **Total value over time** — one line per instance plus a heavier total line. A gap in an instance
   line means that instance was not logged that day.
 - **By day** — one row per date, newest first, with the week, participants per instance (only for

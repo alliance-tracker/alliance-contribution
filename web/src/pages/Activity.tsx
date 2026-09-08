@@ -6,7 +6,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 import type { ActivityDetail, ActivityType } from "@shared/types";
 import { api, ApiError, type EventDetail } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
-import { instanceStats, valueSeries, dayRows, memberRows, type DayRow, type SeriesPoint } from "@/lib/activity-derive";
+import { instanceStats, metricSeries, dayRows, memberRows, type DayRow, type InstanceStat, type SeriesPoint } from "@/lib/activity-derive";
 import { formatCompact, formatDate, formatNumber } from "@/lib/format";
 import { activityFillVar } from "@/lib/activity";
 import { useIsMobile } from "@/lib/useIsMobile";
@@ -66,6 +66,89 @@ function ValueTooltip({
           </div>
         ))}
     </div>
+  );
+}
+
+// One per-instance line chart over event dates (participants, total value). Same legend, dash and
+// gap rules for every metric so the two charts read as a pair.
+function SeriesChart({
+  title,
+  series,
+  logged,
+  color,
+  showTotal,
+  yFormatter,
+  mobile,
+}: {
+  title: string;
+  series: SeriesPoint[];
+  logged: InstanceStat[];
+  color: string;
+  showTotal: boolean;
+  yFormatter: (v: number) => string;
+  mobile: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <Card className="p-3 md:p-[18px]">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="text-[14px] font-semibold">{title}</div>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {logged.map((s) => (
+            <span key={s.instance} className="flex items-center gap-1.5 text-[11px] text-muted">
+              <svg width="16" height="6" aria-hidden="true">
+                <line x1="0" y1="3" x2="16" y2="3" stroke={activityFillVar(color)} strokeWidth="2" strokeDasharray={instanceDash(s.instance)} />
+              </svg>
+              {t("activity.instance", { n: s.instance })}
+            </span>
+          ))}
+          {showTotal && (
+            <span className="flex items-center gap-1.5 text-[11px] text-muted">
+              <span className="size-2 rounded-full bg-accent" />
+              {t("activity.total")}
+            </span>
+          )}
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={mobile ? 180 : 240} className="mt-3">
+        <LineChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
+          <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 4" vertical={false} />
+          <XAxis
+            dataKey="date"
+            tickFormatter={(d: string) => formatDate(d, { month: "short", day: "numeric" })}
+            stroke="var(--color-border)"
+            tickLine={false}
+            tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
+          />
+          <YAxis
+            stroke="var(--color-border)"
+            tickLine={false}
+            width={72}
+            allowDecimals={false}
+            tickFormatter={yFormatter}
+            tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
+          />
+          <Tooltip content={<ValueTooltip />} cursor={{ stroke: "var(--color-border)" }} />
+          {/* connectNulls false: an instance not logged that day is a gap, not a straight line. */}
+          {logged.map((s) => (
+            <Line
+              key={s.instance}
+              type="monotone"
+              dataKey={`i${s.instance}`}
+              name={t("activity.instance", { n: s.instance })}
+              stroke={activityFillVar(color)}
+              strokeWidth={1.5}
+              strokeDasharray={instanceDash(s.instance)}
+              dot={{ r: 2 }}
+              connectNulls={false}
+            />
+          ))}
+          {showTotal && (
+            <Line type="monotone" dataKey="total" name={t("activity.total")} stroke="var(--color-accent)" strokeWidth={2} dot={{ r: 2 }} />
+          )}
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
   );
 }
 
@@ -142,7 +225,8 @@ export function Activity() {
 
   const detail = detailState.data;
   const mobile = useIsMobile();
-  const series = useMemo(() => (detail ? valueSeries(detail) : []), [detail]);
+  const series = useMemo(() => (detail ? metricSeries(detail, "total_value") : []), [detail]);
+  const participantSeries = useMemo(() => (detail ? metricSeries(detail, "participants") : []), [detail]);
   const days = useMemo(() => (detail ? dayRows(detail) : []), [detail]);
   const members = useMemo(() => (detail ? memberRows(detail) : []), [detail]);
   const [openDate, setOpenDate] = useState<string | null>(null);
@@ -209,79 +293,25 @@ export function Activity() {
             </div>
           )}
 
-          <Card className="p-3 md:p-[18px]">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="text-[14px] font-semibold">{t("activity.chartTitle", { unit })}</div>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                {logged.map((s) => (
-                  <span key={s.instance} className="flex items-center gap-1.5 text-[11px] text-muted">
-                    <svg width="16" height="6" aria-hidden="true">
-                      <line
-                        x1="0"
-                        y1="3"
-                        x2="16"
-                        y2="3"
-                        stroke={activityFillVar(detail.activity.color)}
-                        strokeWidth="2"
-                        strokeDasharray={instanceDash(s.instance)}
-                      />
-                    </svg>
-                    {t("activity.instance", { n: s.instance })}
-                  </span>
-                ))}
-                {detail.activity.max_instance > 1 && (
-                  <span className="flex items-center gap-1.5 text-[11px] text-muted">
-                    <span className="size-2 rounded-full bg-accent" />
-                    {t("activity.total")}
-                  </span>
-                )}
-              </div>
-            </div>
-            <ResponsiveContainer width="100%" height={mobile ? 180 : 240} className="mt-3">
-              <LineChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 4" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tickFormatter={(d: string) => formatDate(d, { month: "short", day: "numeric" })}
-                  stroke="var(--color-border)"
-                  tickLine={false}
-                  tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
-                />
-                <YAxis
-                  stroke="var(--color-border)"
-                  tickLine={false}
-                  width={72}
-                  tickFormatter={valueLabel}
-                  tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
-                />
-                <Tooltip content={<ValueTooltip />} cursor={{ stroke: "var(--color-border)" }} />
-                {/* connectNulls false: an instance not logged that day is a gap, not a straight line. */}
-                {logged.map((s) => (
-                  <Line
-                    key={s.instance}
-                    type="monotone"
-                    dataKey={`i${s.instance}`}
-                    name={t("activity.instance", { n: s.instance })}
-                    stroke={activityFillVar(detail.activity.color)}
-                    strokeWidth={1.5}
-                    strokeDasharray={instanceDash(s.instance)}
-                    dot={{ r: 2 }}
-                    connectNulls={false}
-                  />
-                ))}
-                {detail.activity.max_instance > 1 && (
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    name={t("activity.total")}
-                    stroke="var(--color-accent)"
-                    strokeWidth={2}
-                    dot={{ r: 2 }}
-                  />
-                )}
-              </LineChart>
-            </ResponsiveContainer>
-          </Card>
+          <SeriesChart
+            title={t("activity.chartParticipants")}
+            series={participantSeries}
+            logged={logged}
+            color={detail.activity.color}
+            showTotal={detail.activity.max_instance > 1}
+            yFormatter={formatNumber}
+            mobile={mobile}
+          />
+
+          <SeriesChart
+            title={t("activity.chartTitle", { unit })}
+            series={series}
+            logged={logged}
+            color={detail.activity.color}
+            showTotal={detail.activity.max_instance > 1}
+            yFormatter={valueLabel}
+            mobile={mobile}
+          />
 
           <Card className="overflow-hidden p-0">
             <div className="border-b border-border px-3 py-2.5 text-[14px] font-semibold md:px-[18px]">{t("activity.byDay")}</div>

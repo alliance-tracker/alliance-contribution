@@ -380,6 +380,7 @@
     "unknown": "لا يوجد نشاط بالمفتاح {{key}}.",
     "empty": "لم تُسجَّل أحداث لهذا النشاط بعد.",
     "chartTitle": "إجمالي {{unit}} عبر الزمن",
+    "chartParticipants": "المشاركون عبر الزمن",
     "eventDays": "أيام الحدث",
     "participants": "المشاركون",
     "participations": "المشاركات",

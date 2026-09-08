@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ActivityDetail, ActivityEventRow, ActivityType } from "../../shared/types";
-import { dayRows, instanceStats, memberRows, valueSeries } from "../../web/src/lib/activity-derive";
+import { dayRows, instanceStats, memberRows, metricSeries } from "../../web/src/lib/activity-derive";
 
 const bear: ActivityType = {
   id: 1, key: "bear_trap", name: "Bear Trap", unit_label: "damage", weight: 1,
@@ -59,12 +59,18 @@ describe("instanceStats", () => {
   });
 });
 
-describe("valueSeries", () => {
+describe("metricSeries", () => {
   it("is ascending by date with null for an instance not logged that day", () => {
-    const series = valueSeries(detail);
+    const series = metricSeries(detail, "total_value");
     expect(series.map((p) => p.date)).toEqual(["2028-03-01", "2028-03-03"]);
     expect(series[0]).toMatchObject({ total: 180, i1: 100, i2: 80, i3: null, i4: null });
     expect(series[1]).toMatchObject({ total: 60, i1: null, i2: 60 });
+  });
+
+  it("builds the participants series from the same rows", () => {
+    const series = metricSeries(detail, "participants");
+    expect(series[0]).toMatchObject({ total: 18, i1: 10, i2: 8, i3: null, i4: null });
+    expect(series[1]).toMatchObject({ total: 6, i1: null, i2: 6 });
   });
 });
 

@@ -74,16 +74,21 @@ export function instanceStats(detail: ActivityDetail): InstanceStat[] {
   });
 }
 
-/** Chart input, ascending by date. `i<n>` is null when instance n wasn't logged that day (chart gap). */
-export function valueSeries(detail: ActivityDetail): SeriesPoint[] {
+export type SeriesMetric = "total_value" | "participants";
+
+/**
+ * Chart input for one per-event metric (value or participants), ascending by date. `i<n>` is null when
+ * instance n wasn't logged that day (chart gap); `total` sums the instances that were.
+ */
+export function metricSeries(detail: ActivityDetail, metric: SeriesMetric): SeriesPoint[] {
   const max = detail.activity.max_instance;
   const out: SeriesPoint[] = [];
   for (const [date, events] of groupByDate(detail)) {
     const point = { date, total: 0 } as SeriesPoint;
     for (let n = 1; n <= max; n++) point[`i${n}`] = null;
     for (const e of events) {
-      point[`i${e.instance}`] = e.total_value;
-      point.total += e.total_value;
+      point[`i${e.instance}`] = e[metric];
+      point.total += e[metric];
     }
     out.push(point);
   }

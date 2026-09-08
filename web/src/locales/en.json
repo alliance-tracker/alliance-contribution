@@ -312,6 +312,7 @@
     "unknown": "No activity with key {{key}}.",
     "empty": "No events logged for this activity yet.",
     "chartTitle": "Total {{unit}} over time",
+    "chartParticipants": "Participants over time",
     "eventDays": "Event days",
     "participants": "Participants",
     "participations": "Participations",

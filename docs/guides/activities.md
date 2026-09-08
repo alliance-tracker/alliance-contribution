@@ -16,9 +16,12 @@ anything added later under Admin → Scoring & Activities — across its whole h
   line means that instance was not logged that day.
 - **By day** — one row per date, newest first, with the week, participants per instance (only for
   multi-instance activities), a participants total, total value, points, and an unmapped count when
-  some names in that event have not been resolved to a member yet.
+  some names in that event have not been resolved to a member yet. Click a row to expand it and see
+  who took part in each instance that day — names link to profiles, unresolved names carry an
+  **Unmapped** badge.
 - **By member** — every mapped member who appeared, sorted by total value: appearances out of event
-  days, attendance badge, total value, average per appearance, and points. Names open the profile.
+  days, attendance badge, total value, average per appearance, and points. Names open the profile. For
+  multi-instance activities, one column per instance shows how many times the member appeared in it.
 
 ## How to
 
@@ -31,7 +34,9 @@ anything added later under Admin → Scoring & Activities — across its whole h
 The page asks `/api/activities/<key>` once. The server returns every event of that activity with its
 participation sums, plus every member's totals; grouping by date and the chart series are computed
 in the browser. Points are the scored values from `participations.points`, so they follow the current
-scoring config — changing tiers or weights and recomputing changes the points shown here.
+scoring config — changing tiers or weights and recomputing changes the points shown here. Expanding a
+day fetches that day's events through the same endpoint the admin Events page uses; nothing is loaded
+until you open a row.
 
 ## Gotchas
 

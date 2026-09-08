@@ -201,8 +201,8 @@ export function Activity() {
                   <div className="grid grid-cols-2 gap-3">
                     <Stat label={t("activity.events")} value={formatNumber(s.events)} />
                     <Stat label={t("activity.avgParticipants")} value={formatNumber(Math.round(s.avg_participants))} />
-                    <Stat label={`${t("activity.avg")} ${unit}`} value={formatNumber(Math.round(s.avg_value))} />
-                    <Stat label={`${t("activity.total")} ${unit}`} value={formatNumber(s.total_value)} />
+                    <Stat label={`${t("activity.avg")} ${unit}`} value={valueLabel(Math.round(s.avg_value))} />
+                    <Stat label={`${t("activity.total")} ${unit}`} value={valueLabel(s.total_value)} />
                   </div>
                 </Card>
               ))}

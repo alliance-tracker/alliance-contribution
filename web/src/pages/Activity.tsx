@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "lucide-react";
@@ -146,6 +146,7 @@ export function Activity() {
   const days = useMemo(() => (detail ? dayRows(detail) : []), [detail]);
   const members = useMemo(() => (detail ? memberRows(detail) : []), [detail]);
   const [openDate, setOpenDate] = useState<string | null>(null);
+  useEffect(() => setOpenDate(null), [key]); // a new activity starts collapsed; avoids showing another activity's names on a shared date
   const dayColumns = 6 + (detail && detail.activity.max_instance > 1 ? detail.activity.max_instance : 0);
 
   if (!key && activities.length > 0) {
@@ -293,7 +294,7 @@ export function Activity() {
                     <button
                       type="button"
                       aria-expanded={open}
-                      aria-label={t("activity.toggleParticipants")}
+                      title={t("activity.toggleParticipants")}
                       onClick={() => setOpenDate(open ? null : d.date)}
                       className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-start active:brightness-95"
                     >
@@ -347,6 +348,7 @@ export function Activity() {
                         <TableRow
                           className="cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                           aria-expanded={open}
+                          title={t("activity.toggleParticipants")}
                           tabIndex={0}
                           onClick={() => setOpenDate(open ? null : d.date)}
                           onKeyDown={(e) => {
@@ -374,7 +376,7 @@ export function Activity() {
                         </TableRow>
                         {open && !mobile && (
                           <TableRow className="hover:bg-transparent">
-                            <TableCell colSpan={dayColumns} className="bg-surface px-4">
+                            <TableCell colSpan={dayColumns} className="bg-subtle px-4">
                               <DayParticipants day={d} maxInstance={detail.activity.max_instance} />
                             </TableCell>
                           </TableRow>
@@ -409,7 +411,7 @@ export function Activity() {
                       {detail.activity.max_instance > 1 &&
                         m.byInstance.map((n, i) => (
                           <span key={i}>
-                            {t("activity.instance", { n: i + 1 })}: <span className="num">{n > 0 ? formatNumber(n) : "—"}</span>
+                            {t("activity.instance", { n: i + 1 })}: <span className="num">{formatNumber(n)}</span>
                           </span>
                         ))}
                     </div>
@@ -451,7 +453,7 @@ export function Activity() {
                       <TableCell className="num text-end">{m.appearances}/{detail.event_days}</TableCell>
                       {detail.activity.max_instance > 1 &&
                         m.byInstance.map((n, i) => (
-                          <TableCell key={i} className="num text-end text-muted">{n > 0 ? formatNumber(n) : "—"}</TableCell>
+                          <TableCell key={i} className="num text-end text-muted">{formatNumber(n)}</TableCell>
                         ))}
                       <TableCell className="text-end"><AttendanceBadge pct={m.pct} /></TableCell>
                       <TableCell className="num text-end font-semibold">{formatNumber(m.total_value)}</TableCell>

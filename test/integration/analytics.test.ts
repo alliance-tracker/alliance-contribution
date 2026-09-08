@@ -983,7 +983,8 @@ describe("StatsService.activityDetail", () => {
         { member_id: bobId, instance: 2, appearances: 1 },
       ]),
     );
-    expect(detail!.member_instances.some((r) => r.member_id === null)).toBe(false);
+    const memberIds = new Set(detail!.members.map((m) => m.member_id));
+    expect(detail!.member_instances.every((r) => memberIds.has(r.member_id))).toBe(true);
     expect(detail!.event_days).toBeGreaterThanOrEqual(1);
     expect(new Set(detail!.events.map((e) => e.date)).size).toBe(detail!.event_days);
   });

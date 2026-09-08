@@ -43,7 +43,8 @@ until you open a row.
 - **Unmapped rows count in totals but not in the member table.** The damage happened, so event
   totals include it; there is no member to attribute it to until the alias is mapped.
 - **Departed (deactivated) members are hidden from the By member table**, like every other board;
-  their values stay in the day and total figures.
+  their values stay in the day and total figures. They still appear by name when you expand a day,
+  because that list is the event as it was logged.
 - **"—" is not zero.** A dash in a per-instance column means that instance was never logged for that
   date. A logged event with nobody over the minimum value would show 0.
 - **Instance count comes from the activity.** Raising `max_instance` on the activity (e.g. four traps)

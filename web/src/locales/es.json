@@ -340,7 +340,8 @@
     "byDay": "Por día",
     "byMember": "Por miembro",
     "appearances": "Apariciones",
-    "avgPerAppearance": "Prom. / aparición"
+    "avgPerAppearance": "Prom. / aparición",
+    "toggleParticipants": "Mostrar participantes"
   },
   "members": {
     "scoreRankTitle": "Rango de puntuación",

@@ -391,7 +391,8 @@
     "byDay": "حسب اليوم",
     "byMember": "حسب العضو",
     "appearances": "مرات الظهور",
-    "avgPerAppearance": "المتوسط لكل ظهور"
+    "avgPerAppearance": "المتوسط لكل ظهور",
+    "toggleParticipants": "عرض المشاركين"
   },
   "members": {
     "scoreRankTitle": "ترتيب النقاط",

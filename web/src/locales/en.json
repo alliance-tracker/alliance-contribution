@@ -323,7 +323,8 @@
     "byDay": "By day",
     "byMember": "By member",
     "appearances": "Appearances",
-    "avgPerAppearance": "Avg / appearance"
+    "avgPerAppearance": "Avg / appearance",
+    "toggleParticipants": "Show participants"
   },
   "members": {
     "scoreRankTitle": "Score rank",

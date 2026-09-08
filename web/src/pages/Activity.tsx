@@ -1,14 +1,16 @@
-import { useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ChevronRight } from "lucide-react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import type { ActivityDetail, ActivityType } from "@shared/types";
-import { api, ApiError } from "@/lib/api";
+import { api, ApiError, type EventDetail } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
-import { instanceStats, valueSeries, dayRows, memberRows, type SeriesPoint } from "@/lib/activity-derive";
+import { instanceStats, valueSeries, dayRows, memberRows, type DayRow, type SeriesPoint } from "@/lib/activity-derive";
 import { formatCompact, formatDate, formatNumber } from "@/lib/format";
 import { activityFillVar } from "@/lib/activity";
 import { useIsMobile } from "@/lib/useIsMobile";
+import { cn } from "@/lib/utils";
 import { RankByActivity } from "@/components/RankByActivity";
 import { AttendanceBadge } from "@/components/AttendanceBadge";
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
@@ -67,6 +69,54 @@ function ValueTooltip({
   );
 }
 
+// Names behind one by-day row: one list per logged instance, fetched on expand through the existing
+// event-detail endpoint (ids come with the day row), so the page payload stays flat.
+function DayParticipants({ day, maxInstance }: { day: DayRow; maxInstance: number }) {
+  const { t } = useTranslation();
+  const ids = day.byInstance.map((e) => e?.id ?? null);
+  const state = useApi<(EventDetail | null)[]>(
+    () => Promise.all(ids.map((id) => (id === null ? Promise.resolve(null) : api.events.get(id)))),
+    [day.date],
+  );
+  if (state.error) return <ErrorState message={state.error} />;
+  if (state.loading || !state.data) return <LoadingState />;
+  return (
+    <div className="grid gap-4 py-2 md:grid-cols-2 lg:grid-cols-4">
+      {state.data.map((ev, i) =>
+        ev === null ? null : (
+          <div key={i} className="min-w-0">
+            {maxInstance > 1 && (
+              <div className="mb-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-faint">
+                {t("activity.instance", { n: i + 1 })}
+              </div>
+            )}
+            <ul className="flex flex-col gap-1">
+              {ev.participations
+                .slice()
+                .sort((a, b) => b.value - a.value)
+                .map((p) => (
+                  <li key={p.id} className="flex items-center justify-between gap-2 text-[13px]">
+                    {p.member_id !== null ? (
+                      <Link to={`/members/${p.member_id}`} className="truncate font-semibold hover:underline">
+                        {p.governor ?? p.raw_name}
+                      </Link>
+                    ) : (
+                      <span className="flex min-w-0 items-center gap-1.5">
+                        <span className="truncate text-muted">{p.raw_name}</span>
+                        <Badge variant="neutral">{t("common.unmapped")}</Badge>
+                      </span>
+                    )}
+                    <span className="num shrink-0">{formatNumber(p.value)}</span>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ),
+      )}
+    </div>
+  );
+}
+
 export function Activity() {
   const { t } = useTranslation();
   const { key } = useParams<{ key: string }>();
@@ -95,6 +145,8 @@ export function Activity() {
   const series = useMemo(() => (detail ? valueSeries(detail) : []), [detail]);
   const days = useMemo(() => (detail ? dayRows(detail) : []), [detail]);
   const members = useMemo(() => (detail ? memberRows(detail) : []), [detail]);
+  const [openDate, setOpenDate] = useState<string | null>(null);
+  const dayColumns = 6 + (detail && detail.activity.max_instance > 1 ? detail.activity.max_instance : 0);
 
   if (!key && activities.length > 0) {
     return <Navigate to={`/activities/${activities[0].key}`} replace />;
@@ -234,27 +286,42 @@ export function Activity() {
             <div className="border-b border-border px-3 py-2.5 text-[14px] font-semibold md:px-[18px]">{t("activity.byDay")}</div>
             {/* Mobile: one card per day. */}
             <div className="md:hidden">
-              {days.map((d) => (
-                <div key={d.date} className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 last:border-b-0">
-                  <div className="min-w-0">
-                    <div className="text-[14px] font-semibold">{formatDate(d.date, DATE_OPTS)}</div>
-                    <div className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] text-muted">
-                      <span className="font-mono">{d.week}</span>
-                      {detail.activity.max_instance > 1 &&
-                        d.byInstance.map((e, i) => (
-                          <span key={i}>
-                            {t("activity.instance", { n: i + 1 })}: <span className="num">{e ? formatNumber(e.participants) : "—"}</span>
-                          </span>
-                        ))}
-                      {d.unmapped > 0 && <Badge variant="neutral">{t("common.unmapped")} {d.unmapped}</Badge>}
-                    </div>
+              {days.map((d) => {
+                const open = openDate === d.date;
+                return (
+                  <div key={d.date} className="border-b border-border last:border-b-0">
+                    <button
+                      type="button"
+                      aria-expanded={open}
+                      aria-label={t("activity.toggleParticipants")}
+                      onClick={() => setOpenDate(open ? null : d.date)}
+                      className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-start active:brightness-95"
+                    >
+                      <div className="flex min-w-0 items-center gap-2">
+                        <ChevronRight className={cn("size-4 shrink-0 text-faint transition-transform rtl:rotate-180", open && "rotate-90 rtl:rotate-90")} />
+                        <div className="min-w-0">
+                          <div className="text-[14px] font-semibold">{formatDate(d.date, DATE_OPTS)}</div>
+                          <div className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] text-muted">
+                            <span className="font-mono">{d.week}</span>
+                            {detail.activity.max_instance > 1 &&
+                              d.byInstance.map((e, i) => (
+                                <span key={i}>
+                                  {t("activity.instance", { n: i + 1 })}: <span className="num">{e ? formatNumber(e.participants) : "—"}</span>
+                                </span>
+                              ))}
+                            {d.unmapped > 0 && <Badge variant="neutral">{t("common.unmapped")} {d.unmapped}</Badge>}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-none flex-col items-end">
+                        <span className="num text-[15px] font-bold leading-none">{formatNumber(d.total_value)}</span>
+                        <span className="num text-[11px] text-muted">{formatNumber(d.total_points)} {t("common.points")}</span>
+                      </div>
+                    </button>
+                    {open && <div className="px-3 pb-3"><DayParticipants day={d} maxInstance={detail.activity.max_instance} /></div>}
                   </div>
-                  <div className="flex flex-none flex-col items-end">
-                    <span className="num text-[15px] font-bold leading-none">{formatNumber(d.total_value)}</span>
-                    <span className="num text-[11px] text-muted">{formatNumber(d.total_points)} {t("common.points")}</span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div className="hidden md:block">
               <Table className="min-w-[720px]">
@@ -273,20 +340,41 @@ export function Activity() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {days.map((d) => (
-                    <TableRow key={d.date}>
-                      <TableCell className="font-semibold">{formatDate(d.date, DATE_OPTS)}</TableCell>
-                      <TableCell className="font-mono text-[12px] text-muted">{d.week}</TableCell>
-                      {detail.activity.max_instance > 1 &&
-                        d.byInstance.map((e, i) => (
-                          <TableCell key={i} className="num text-end">{e ? formatNumber(e.participants) : "—"}</TableCell>
-                        ))}
-                      <TableCell className="num text-end">{formatNumber(d.participants)}</TableCell>
-                      <TableCell className="num text-end font-semibold">{formatNumber(d.total_value)}</TableCell>
-                      <TableCell className="num text-end">{formatNumber(d.total_points)}</TableCell>
-                      <TableCell className="text-end">{d.unmapped > 0 ? <Badge variant="neutral">{d.unmapped}</Badge> : null}</TableCell>
-                    </TableRow>
-                  ))}
+                  {days.map((d) => {
+                    const open = openDate === d.date;
+                    return (
+                      <Fragment key={d.date}>
+                        <TableRow
+                          className="cursor-pointer"
+                          aria-expanded={open}
+                          onClick={() => setOpenDate(open ? null : d.date)}
+                        >
+                          <TableCell className="font-semibold">
+                            <span className="flex items-center gap-1.5">
+                              <ChevronRight className={cn("size-4 shrink-0 text-faint transition-transform rtl:rotate-180", open && "rotate-90 rtl:rotate-90")} />
+                              {formatDate(d.date, DATE_OPTS)}
+                            </span>
+                          </TableCell>
+                          <TableCell className="font-mono text-[12px] text-muted">{d.week}</TableCell>
+                          {detail.activity.max_instance > 1 &&
+                            d.byInstance.map((e, i) => (
+                              <TableCell key={i} className="num text-end">{e ? formatNumber(e.participants) : "—"}</TableCell>
+                            ))}
+                          <TableCell className="num text-end">{formatNumber(d.participants)}</TableCell>
+                          <TableCell className="num text-end font-semibold">{formatNumber(d.total_value)}</TableCell>
+                          <TableCell className="num text-end">{formatNumber(d.total_points)}</TableCell>
+                          <TableCell className="text-end">{d.unmapped > 0 ? <Badge variant="neutral">{d.unmapped}</Badge> : null}</TableCell>
+                        </TableRow>
+                        {open && (
+                          <TableRow className="hover:bg-transparent">
+                            <TableCell colSpan={dayColumns} className="bg-surface px-4">
+                              <DayParticipants day={d} maxInstance={detail.activity.max_instance} />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </Fragment>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>

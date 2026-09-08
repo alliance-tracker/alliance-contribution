@@ -323,7 +323,8 @@
     "byDay": "Nach Tag",
     "byMember": "Nach Mitglied",
     "appearances": "Teilnahmen",
-    "avgPerAppearance": "Ø / Teilnahme"
+    "avgPerAppearance": "Ø / Teilnahme",
+    "toggleParticipants": "Teilnehmer anzeigen"
   },
   "members": {
     "scoreRankTitle": "Punkterang",

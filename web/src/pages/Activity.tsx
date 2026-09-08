@@ -347,7 +347,6 @@ export function Activity() {
                         <TableRow
                           className="cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                           aria-expanded={open}
-                          role="button"
                           tabIndex={0}
                           onClick={() => setOpenDate(open ? null : d.date)}
                           onKeyDown={(e) => {

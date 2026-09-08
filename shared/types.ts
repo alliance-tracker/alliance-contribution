@@ -149,6 +149,34 @@ export type Overview = {
   unmappedNames: number; // distinct raw_name with member_id NULL
 };
 
+// One event of one activity type with its participation aggregates (2026-09-08 activity page).
+export type ActivityEventRow = {
+  id: number;
+  date: string;
+  week: string;
+  instance: number;
+  participants: number; // all rows, mapped or not
+  unmapped: number; // rows with member_id NULL
+  total_value: number; // SUM(value) over all rows — unmapped included, the damage happened
+  total_points: number; // SUM(points) over all rows
+};
+
+export type ActivityMemberRow = {
+  member_id: number;
+  governor: string;
+  alliance_rank: string | null;
+  appearances: number; // distinct event dates the member appeared on
+  total_value: number;
+  total_points: number;
+};
+
+export type ActivityDetail = {
+  activity: ActivityType;
+  event_days: number; // distinct dates for this activity — attendance denominator
+  events: ActivityEventRow[]; // ascending date, then instance
+  members: ActivityMemberRow[]; // mapped members only, total_value desc then governor
+};
+
 // Roster bulk import (Phase 4). The frontend classifies a pasted roster TSV whose columns are
 // Governor·Rank·Power·Position — note those are the screenshot's labels; they map to governor /
 // alliance_rank / power / power_position here. It classifies against the current members + aliases

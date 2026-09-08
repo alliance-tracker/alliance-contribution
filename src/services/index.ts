@@ -53,7 +53,7 @@ export function createServices(db: D1Database) {
     ),
     resolveService,
     recomputeService,
-    statsService: new StatsService(statsRepo),
+    statsService: new StatsService(statsRepo, activityRepo),
     settingsService: new SettingsService(new SettingsRepo(db)),
     backupService: new BackupService(backupRepo, recomputeService),
     allocationService: new AllocationService(allocationRepo, statsRepo),

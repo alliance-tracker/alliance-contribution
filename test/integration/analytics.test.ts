@@ -934,3 +934,62 @@ describe("alliance_rank on attendance rows", () => {
     expect(attendance.rows.find((r) => r.governor === "AttRank_None")?.alliance_rank).toBeNull();
   });
 });
+
+describe("StatsService.activityDetail", () => {
+  it("returns per-event and per-member aggregates for one activity, two traps on one date", async () => {
+    const { eventService, statsService } = createServices(DB);
+    await seedMember("Act_Alice");
+    await seedMember("Act_Bob");
+
+    const date = "2028-03-02";
+    await eventService.create({
+      activity: "bear_trap",
+      date,
+      instance: 1,
+      rows: [
+        { raw_name: "Act_Alice", value: 5_000_000 },
+        { raw_name: "Act_Ghost", value: 1_000_000 }, // unmapped
+      ],
+    });
+    await eventService.create({
+      activity: "bear_trap",
+      date,
+      instance: 2,
+      rows: [{ raw_name: "Act_Bob", value: 3_000_000 }],
+    });
+
+    const detail = await statsService.activityDetail("bear_trap");
+    expect(detail).not.toBeNull();
+    expect(detail!.activity.key).toBe("bear_trap");
+
+    const events = detail!.events.filter((e) => e.date === date);
+    expect(events.map((e) => e.instance)).toEqual([1, 2]);
+    expect(events[0]).toMatchObject({ participants: 2, unmapped: 1, total_value: 6_000_000 });
+    expect(events[1]).toMatchObject({ participants: 1, unmapped: 0, total_value: 3_000_000 });
+    expect(events[0].total_points).toBeGreaterThan(0); // seeded bear tiers score every appearance
+
+    const names = detail!.members.map((m) => m.governor);
+    expect(names).toContain("Act_Alice");
+    expect(names).toContain("Act_Bob");
+    expect(names).not.toContain("Act_Ghost");
+    const alice = detail!.members.find((m) => m.governor === "Act_Alice")!;
+    expect(alice).toMatchObject({ appearances: 1, total_value: 5_000_000 });
+    expect(detail!.event_days).toBeGreaterThanOrEqual(1);
+  });
+
+  it("returns null for an unknown activity key", async () => {
+    const { statsService } = createServices(DB);
+    expect(await statsService.activityDetail("nope")).toBeNull();
+  });
+
+  it("GET /api/activities/:key returns 200 for viewer, 404 for unknown key", async () => {
+    const ok = await SELF.fetch("https://example.com/api/activities/bear_trap", { headers: VIEWER });
+    expect(ok.status).toBe(200);
+    const body = (await ok.json()) as { activity: { key: string }; events: unknown[]; members: unknown[] };
+    expect(body.activity.key).toBe("bear_trap");
+    expect(Array.isArray(body.events)).toBe(true);
+
+    const missing = await SELF.fetch("https://example.com/api/activities/nope", { headers: VIEWER });
+    expect(missing.status).toBe(404);
+  });
+});

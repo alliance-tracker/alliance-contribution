@@ -1,3 +1,4 @@
+import type { ActivityEventRow, ActivityMemberRow } from "../../shared/types";
 import { all, first } from "./db";
 
 // One reward-allocation metric row: the member's total plus current display context
@@ -315,6 +316,45 @@ export class StatsRepo {
       "SELECT COUNT(*) AS count FROM (SELECT DISTINCT raw_name FROM participations WHERE member_id IS NULL)",
     );
     return row?.count ?? 0;
+  }
+
+  // Every event of one activity type with its participation aggregates. Unlike the other aggregates
+  // here, totals INCLUDE unmapped rows — the damage happened even if the name is unresolved; the
+  // `unmapped` count flags it. COALESCE covers events with zero participations (LEFT JOIN → NULL sums).
+  async activityEvents(activityTypeId: number): Promise<ActivityEventRow[]> {
+    return all<ActivityEventRow>(
+      this.db,
+      `SELECT e.id, e.date, e.week, e.instance,
+              COUNT(p.id)                              AS participants,
+              COALESCE(SUM(p.member_id IS NULL), 0)    AS unmapped,
+              COALESCE(SUM(p.value), 0)                AS total_value,
+              COALESCE(SUM(p.points), 0)               AS total_points
+       FROM events e
+       LEFT JOIN participations p ON p.event_id = e.id
+       WHERE e.activity_type_id = ?
+       GROUP BY e.id
+       ORDER BY e.date, e.instance`,
+      activityTypeId,
+    );
+  }
+
+  // Mapped members' totals over one activity type. appearances = distinct dates (two traps on one
+  // date can't share a member, so this equals row count for Bear; still counted by date for safety).
+  async activityMembers(activityTypeId: number): Promise<ActivityMemberRow[]> {
+    return all<ActivityMemberRow>(
+      this.db,
+      `SELECT m.id AS member_id, m.governor, m.alliance_rank,
+              COUNT(DISTINCT e.date) AS appearances,
+              SUM(p.value)           AS total_value,
+              SUM(p.points)          AS total_points
+       FROM participations p
+       JOIN events  e ON e.id = p.event_id
+       JOIN members m ON m.id = p.member_id
+       WHERE e.activity_type_id = ?
+       GROUP BY m.id
+       ORDER BY total_value DESC, m.governor`,
+      activityTypeId,
+    );
   }
 }
 

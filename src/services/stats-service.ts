@@ -1,4 +1,5 @@
 import type {
+  ActivityDetail,
   Attendance,
   AttendanceRow,
   MemberProfile,
@@ -7,12 +8,16 @@ import type {
   Overview,
   WeeklyRanking,
 } from "../../shared/types";
+import type { ActivityRepo } from "../repositories/activity-repo";
 import type { StatsRepo } from "../repositories/stats-repo";
 
 // Read-side temporal views, composed from StatsRepo's SQL and shaped to shared/types. No cache — every
 // read is current the moment the last recompute committed.
 export class StatsService {
-  constructor(private readonly statsRepo: StatsRepo) {}
+  constructor(
+    private readonly statsRepo: StatsRepo,
+    private readonly activityRepo: ActivityRepo,
+  ) {}
 
   // Members ranked by Participation Score for a week (default: latest with events). Tie-break: score desc,
   // then governor asc — deterministic, so recompute idempotency is verifiable. Movement = prevRank - rank
@@ -108,6 +113,20 @@ export class StatsService {
         possible: possibleByWeek.get(s.week) ?? 0,
       })),
     };
+  }
+
+  // One activity type end to end: every event with aggregates, per-member totals, and the distinct
+  // event-day count. Flat rows only — grouping by date and the chart series are client derivations
+  // (web/src/lib/activity-derive.ts) so they stay unit-testable without D1. null = unknown key.
+  async activityDetail(key: string): Promise<ActivityDetail | null> {
+    const activity = await this.activityRepo.getByKey(key);
+    if (!activity) return null;
+    const [events, members, event_days] = await Promise.all([
+      this.statsRepo.activityEvents(activity.id),
+      this.statsRepo.activityMembers(activity.id),
+      this.statsRepo.totalEventDays(undefined, key),
+    ]);
+    return { activity, event_days, events, members };
   }
 
   // Y = total distinct event-days in scope (all-time by default; accepted simplification: mid-season

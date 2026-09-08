@@ -36,4 +36,13 @@ analyticsRoutes.get("/overview", async (c) => {
   return c.json(await statsService.overview());
 });
 
+// One activity type's full history. Path segment is "activities", not "events"/"analytics" — both
+// are on ad-blocker lists (see src/index.ts comment on /api/ingests).
+analyticsRoutes.get("/activities/:key", async (c) => {
+  const { statsService } = createServices(c.env.DB);
+  const detail = await statsService.activityDetail(c.req.param("key"));
+  if (!detail) return c.json({ error: "unknown activity" }, 404);
+  return c.json(detail);
+});
+
 export default analyticsRoutes;

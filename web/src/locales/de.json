@@ -318,7 +318,11 @@
     "avg": "Ø",
     "events_one": "{{count}} Event",
     "events_other": "{{count}} Events",
-    "avgParticipants": "Ø Teilnehmer"
+    "avgParticipants": "Ø Teilnehmer",
+    "byDay": "Nach Tag",
+    "byMember": "Nach Mitglied",
+    "appearances": "Teilnahmen",
+    "avgPerAppearance": "Ø / Teilnahme"
   },
   "members": {
     "scoreRankTitle": "Punkterang",

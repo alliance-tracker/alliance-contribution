@@ -1,16 +1,21 @@
 import { useMemo } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import type { ActivityDetail, ActivityType } from "@shared/types";
 import { api, ApiError } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
-import { instanceStats, valueSeries, type SeriesPoint } from "@/lib/activity-derive";
+import { instanceStats, valueSeries, dayRows, memberRows, type SeriesPoint } from "@/lib/activity-derive";
 import { formatCompact, formatNumber, localeTag } from "@/lib/format";
 import { activityFillVar } from "@/lib/activity";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { RankByActivity } from "@/components/RankByActivity";
+import { AttendanceBadge } from "@/components/AttendanceBadge";
+import { AllianceRankBadge } from "@/components/AllianceRankBadge";
+import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -90,6 +95,8 @@ export function Activity() {
   const detail = detailState.data;
   const mobile = useIsMobile();
   const series = useMemo(() => (detail ? valueSeries(detail) : []), [detail]);
+  const days = useMemo(() => (detail ? dayRows(detail) : []), [detail]);
+  const members = useMemo(() => (detail ? memberRows(detail) : []), [detail]);
 
   if (!key && activities.length > 0) {
     return <Navigate to={`/activities/${activities[0].key}`} replace />;
@@ -212,7 +219,128 @@ export function Activity() {
             </ResponsiveContainer>
           </Card>
 
-          {/* Task 5: by-day and by-member tables */}
+          <Card className="overflow-hidden p-0">
+            <div className="border-b border-border px-3 py-2.5 text-[14px] font-semibold md:px-[18px]">{t("activity.byDay")}</div>
+            {/* Mobile: one card per day. */}
+            <div className="md:hidden">
+              {days.map((d) => (
+                <div key={d.date} className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 last:border-b-0">
+                  <div className="min-w-0">
+                    <div className="text-[14px] font-semibold">{dateLabel(d.date)}</div>
+                    <div className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] text-muted">
+                      <span className="font-mono">{d.week}</span>
+                      {d.byInstance.map((e, i) => (
+                        <span key={i}>
+                          {t("activity.instance", { n: i + 1 })}: <span className="num">{e ? formatNumber(e.participants) : "—"}</span>
+                        </span>
+                      ))}
+                      {d.unmapped > 0 && <Badge variant="neutral">{t("common.unmapped")} {d.unmapped}</Badge>}
+                    </div>
+                  </div>
+                  <div className="flex flex-none flex-col items-end">
+                    <span className="num text-[15px] font-bold leading-none">{formatNumber(d.total_value)}</span>
+                    <span className="num text-[11px] text-muted">{formatNumber(d.total_points)} {t("common.points")}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden md:block">
+              <Table className="min-w-[720px]">
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>{t("common.date")}</TableHead>
+                    <TableHead className="w-24">{t("common.week")}</TableHead>
+                    {detail.activity.max_instance > 1 &&
+                      instances.map((s) => (
+                        <TableHead key={s.instance} className="w-28 text-end">{t("activity.instance", { n: s.instance })}</TableHead>
+                      ))}
+                    <TableHead className="w-28 text-end">{t("activity.participants")}</TableHead>
+                    <TableHead className="w-32 text-end">{`${t("activity.total")} ${unit}`}</TableHead>
+                    <TableHead className="w-24 text-end">{t("common.points")}</TableHead>
+                    <TableHead className="w-24 text-end">{t("common.unmapped")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {days.map((d) => (
+                    <TableRow key={d.date}>
+                      <TableCell className="font-semibold">{dateLabel(d.date)}</TableCell>
+                      <TableCell className="font-mono text-[12px] text-muted">{d.week}</TableCell>
+                      {detail.activity.max_instance > 1 &&
+                        d.byInstance.map((e, i) => (
+                          <TableCell key={i} className="num text-end">{e ? formatNumber(e.participants) : "—"}</TableCell>
+                        ))}
+                      <TableCell className="num text-end">{formatNumber(d.participants)}</TableCell>
+                      <TableCell className="num text-end font-semibold">{formatNumber(d.total_value)}</TableCell>
+                      <TableCell className="num text-end">{formatNumber(d.total_points)}</TableCell>
+                      <TableCell className="text-end">{d.unmapped > 0 ? <Badge variant="neutral">{d.unmapped}</Badge> : null}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Card>
+
+          <Card className="overflow-hidden p-0">
+            <div className="border-b border-border px-3 py-2.5 text-[14px] font-semibold md:px-[18px]">{t("activity.byMember")}</div>
+            <div className="md:hidden">
+              {members.map((m) => (
+                <Link
+                  key={m.member_id}
+                  to={`/members/${m.member_id}`}
+                  className="flex items-center gap-2.5 border-b border-border py-2.5 ps-3 pe-3.5 last:border-b-0 active:brightness-95"
+                >
+                  <Avatar name={m.governor} size={30} />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="truncate text-[14px] font-semibold text-foreground">{m.governor}</span>
+                      <AllianceRankBadge rank={m.alliance_rank} className="shrink-0" />
+                    </div>
+                    <div className="mt-1 flex items-center gap-2 text-[11px] text-muted">
+                      <span className="num">{m.appearances}/{detail.event_days}</span>
+                      <AttendanceBadge pct={m.pct} />
+                    </div>
+                  </div>
+                  <div className="flex flex-none flex-col items-end">
+                    <span className="num text-[15px] font-bold leading-none">{formatNumber(m.total_value)}</span>
+                    <span className="num text-[11px] text-muted">{formatNumber(m.total_points)} {t("common.points")}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="hidden md:block">
+              <Table className="min-w-[720px]">
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>{t("common.member")}</TableHead>
+                    <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
+                    <TableHead className="w-32 text-end">{t("activity.appearances")}</TableHead>
+                    <TableHead className="w-24 text-end">{t("nav.attendance")}</TableHead>
+                    <TableHead className="w-32 text-end">{`${t("activity.total")} ${unit}`}</TableHead>
+                    <TableHead className="w-32 text-end">{t("activity.avgPerAppearance")}</TableHead>
+                    <TableHead className="w-24 text-end">{t("common.points")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {members.map((m) => (
+                    <TableRow key={m.member_id}>
+                      <TableCell>
+                        <Link to={`/members/${m.member_id}`} className="flex items-center gap-2 font-semibold hover:underline">
+                          <Avatar name={m.governor} size={24} />
+                          {m.governor}
+                        </Link>
+                      </TableCell>
+                      <TableCell><AllianceRankBadge rank={m.alliance_rank} /></TableCell>
+                      <TableCell className="num text-end">{m.appearances}/{detail.event_days}</TableCell>
+                      <TableCell className="text-end"><AttendanceBadge pct={m.pct} /></TableCell>
+                      <TableCell className="num text-end font-semibold">{formatNumber(m.total_value)}</TableCell>
+                      <TableCell className="num text-end">{formatNumber(Math.round(m.avg_value))}</TableCell>
+                      <TableCell className="num text-end">{formatNumber(m.total_points)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Card>
         </>
       )}
     </div>

@@ -336,7 +336,11 @@
     "events_one": "{{count}} evento",
     "events_many": "{{count}} eventos",
     "events_other": "{{count}} eventos",
-    "avgParticipants": "Participantes prom."
+    "avgParticipants": "Participantes prom.",
+    "byDay": "Por día",
+    "byMember": "Por miembro",
+    "appearances": "Apariciones",
+    "avgPerAppearance": "Prom. / aparición"
   },
   "members": {
     "scoreRankTitle": "Rango de puntuación",

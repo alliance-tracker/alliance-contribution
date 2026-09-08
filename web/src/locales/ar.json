@@ -390,7 +390,11 @@
     "events_few": "{{count}} أحداث",
     "events_many": "{{count}} حدثًا",
     "events_other": "{{count}} حدث",
-    "avgParticipants": "متوسط المشاركين"
+    "avgParticipants": "متوسط المشاركين",
+    "byDay": "حسب اليوم",
+    "byMember": "حسب العضو",
+    "appearances": "مرات الظهور",
+    "avgPerAppearance": "المتوسط لكل ظهور"
   },
   "members": {
     "scoreRankTitle": "ترتيب النقاط",

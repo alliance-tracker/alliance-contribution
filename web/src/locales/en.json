@@ -318,7 +318,11 @@
     "avg": "Avg",
     "events_one": "{{count}} event",
     "events_other": "{{count}} events",
-    "avgParticipants": "Avg participants"
+    "avgParticipants": "Avg participants",
+    "byDay": "By day",
+    "byMember": "By member",
+    "appearances": "Appearances",
+    "avgPerAppearance": "Avg / appearance"
   },
   "members": {
     "scoreRankTitle": "Score rank",

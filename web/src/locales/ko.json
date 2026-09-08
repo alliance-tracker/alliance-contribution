@@ -300,7 +300,11 @@
     "total": "합계",
     "avg": "평균",
     "events_other": "이벤트 {{count}}회",
-    "avgParticipants": "평균 참가자"
+    "avgParticipants": "평균 참가자",
+    "byDay": "일자별",
+    "byMember": "멤버별",
+    "appearances": "참가 횟수",
+    "avgPerAppearance": "참가당 평균"
   },
   "members": {
     "scoreRankTitle": "점수 순위",

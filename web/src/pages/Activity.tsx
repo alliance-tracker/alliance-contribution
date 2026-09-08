@@ -98,7 +98,7 @@ function DayParticipants({ day, maxInstance }: { day: DayRow; maxInstance: numbe
                   <li key={p.id} className="flex items-center justify-between gap-2 text-[13px]">
                     {p.member_id !== null ? (
                       <Link to={`/members/${p.member_id}`} className="truncate font-semibold hover:underline">
-                        {p.governor ?? p.raw_name}
+                        {p.governor}
                       </Link>
                     ) : (
                       <span className="flex min-w-0 items-center gap-1.5">
@@ -318,7 +318,7 @@ export function Activity() {
                         <span className="num text-[11px] text-muted">{formatNumber(d.total_points)} {t("common.points")}</span>
                       </div>
                     </button>
-                    {open && <div className="px-3 pb-3"><DayParticipants day={d} maxInstance={detail.activity.max_instance} /></div>}
+                    {open && mobile && <div className="px-3 pb-3"><DayParticipants day={d} maxInstance={detail.activity.max_instance} /></div>}
                   </div>
                 );
               })}
@@ -345,9 +345,17 @@ export function Activity() {
                     return (
                       <Fragment key={d.date}>
                         <TableRow
-                          className="cursor-pointer"
+                          className="cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                           aria-expanded={open}
+                          role="button"
+                          tabIndex={0}
                           onClick={() => setOpenDate(open ? null : d.date)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              setOpenDate(open ? null : d.date);
+                            }
+                          }}
                         >
                           <TableCell className="font-semibold">
                             <span className="flex items-center gap-1.5">
@@ -365,7 +373,7 @@ export function Activity() {
                           <TableCell className="num text-end">{formatNumber(d.total_points)}</TableCell>
                           <TableCell className="text-end">{d.unmapped > 0 ? <Badge variant="neutral">{d.unmapped}</Badge> : null}</TableCell>
                         </TableRow>
-                        {open && (
+                        {open && !mobile && (
                           <TableRow className="hover:bg-transparent">
                             <TableCell colSpan={dayColumns} className="bg-surface px-4">
                               <DayParticipants day={d} maxInstance={detail.activity.max_instance} />

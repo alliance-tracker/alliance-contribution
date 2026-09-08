@@ -102,6 +102,7 @@
     "ranking": "Clasificación",
     "members": "Miembros",
     "attendance": "Asistencia",
+    "activities": "Actividades",
     "admin": "Administración",
     "memberProfile": "Perfil del miembro",
     "subtitles": {
@@ -109,6 +110,7 @@
       "ranking": "Clasificación por semana de evento y total",
       "members": "Lista de la alianza — elija a alguien para abrir su perfil",
       "attendance": "Cobertura de los días de evento en toda la lista",
+      "activities": "Eventos, instancias y totales de una actividad a lo largo del tiempo",
       "admin": "Gestione eventos, lista, alias y puntuación",
       "memberProfile": "Participación e historial individual"
     }
@@ -322,6 +324,18 @@
     "emptyWeek": "No se registraron eventos para esta semana.",
     "emptyAll": "Aún no se han registrado eventos.",
     "rate": "Tasa"
+  },
+  "activity": {
+    "unknown": "No hay ninguna actividad con la clave {{key}}.",
+    "empty": "Aún no hay eventos registrados para esta actividad.",
+    "participants": "Participantes",
+    "instance": "Instancia {{n}}",
+    "total": "Total",
+    "avg": "Prom.",
+    "events_one": "{{count}} evento",
+    "events_many": "{{count}} eventos",
+    "events_other": "{{count}} eventos",
+    "avgParticipants": "Participantes prom."
   },
   "members": {
     "scoreRankTitle": "Rango de puntuación",

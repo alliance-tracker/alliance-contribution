@@ -16,6 +16,7 @@ import { Members } from "@/pages/Members";
 const MemberProfile = lazy(() =>
   import("@/pages/MemberProfile").then((m) => ({ default: m.MemberProfile })),
 );
+const Activity = lazy(() => import("@/pages/Activity").then((m) => ({ default: m.Activity })));
 const Events = lazy(() => import("@/pages/Events").then((m) => ({ default: m.Events })));
 const Roster = lazy(() => import("@/pages/Roster").then((m) => ({ default: m.Roster })));
 const Aliases = lazy(() => import("@/pages/Aliases").then((m) => ({ default: m.Aliases })));
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/members" element={<Members />} />
               <Route path="/members/:id" element={<MemberProfile />} />
+              <Route path="/activities/:key?" element={<Activity />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Navigate to="/admin/events" replace />} />
                 <Route path="events" element={<Events />} />

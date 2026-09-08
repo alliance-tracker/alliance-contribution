@@ -2,6 +2,7 @@
 // uses (shared/types.ts) — no codegen. Every request attaches the API key: reads need the
 // viewer tier or better, writes need manager/admin.
 import type {
+  ActivityDetail,
   ActivityType,
   Alias,
   Allocation,
@@ -253,6 +254,10 @@ export const api = {
     getScoring: (id: number) => get<ScoringConfig>(`/activity-types/${id}/scoring`),
     putScoring: (id: number, body: ScoringConfig) =>
       write<ScoringConfig>("PUT", `/activity-types/${id}/scoring`, body),
+  },
+
+  activities: {
+    detail: (key: string) => get<ActivityDetail>(`/activities/${encodeURIComponent(key)}`),
   },
 
   // Admin-key only (requireAdmin on every route).

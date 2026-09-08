@@ -102,6 +102,7 @@
     "ranking": "Rangliste",
     "members": "Mitglieder",
     "attendance": "Anwesenheit",
+    "activities": "Aktivitäten",
     "admin": "Verwaltung",
     "memberProfile": "Mitgliedsprofil",
     "subtitles": {
@@ -109,6 +110,7 @@
       "ranking": "Rangliste nach Eventwoche und gesamt",
       "members": "Allianzliste — Mitglied wählen, um das Profil zu öffnen",
       "attendance": "Abdeckung der Eventtage über die gesamte Liste",
+      "activities": "Events, Instanzen und Summen einer Aktivität im Zeitverlauf",
       "admin": "Events, Liste, Aliase und Wertung verwalten",
       "memberProfile": "Individuelle Beteiligung und Verlauf"
     }
@@ -305,6 +307,17 @@
     "emptyWeek": "Für diese Woche wurden keine Events erfasst.",
     "emptyAll": "Noch keine Events erfasst.",
     "rate": "Quote"
+  },
+  "activity": {
+    "unknown": "Keine Aktivität mit dem Schlüssel {{key}}.",
+    "empty": "Für diese Aktivität sind noch keine Events erfasst.",
+    "participants": "Teilnehmer",
+    "instance": "Instanz {{n}}",
+    "total": "Gesamt",
+    "avg": "Ø",
+    "events_one": "{{count}} Event",
+    "events_other": "{{count}} Events",
+    "avgParticipants": "Ø Teilnehmer"
   },
   "members": {
     "scoreRankTitle": "Punkterang",

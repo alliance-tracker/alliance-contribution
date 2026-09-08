@@ -4,6 +4,7 @@ import {
   User,
   CalendarCheck,
   SlidersHorizontal,
+  Swords,
   type LucideIcon,
 } from "lucide-react";
 import type { TKey } from "@/i18n";
@@ -19,6 +20,7 @@ export const navSections: NavSection[] = [
       { to: "/rankings", label: "nav.ranking", icon: Trophy },
       { to: "/members", label: "nav.members", icon: User },
       { to: "/attendance", label: "nav.attendance", icon: CalendarCheck },
+      { to: "/activities", label: "nav.activities", icon: Swords },
     ],
   },
   {
@@ -32,6 +34,7 @@ export function titleForPath(pathname: string): TKey | null {
   if (pathname.startsWith("/admin")) return "nav.admin";
   if (pathname.startsWith("/rankings")) return "nav.ranking";
   if (pathname.startsWith("/members/")) return "nav.memberProfile";
+  if (pathname.startsWith("/activities")) return "nav.activities";
   for (const section of navSections) {
     for (const item of section.items) {
       if (item.to === pathname) return item.label;
@@ -51,5 +54,6 @@ const subtitles: Record<string, TKey> = {
 export function subtitleForPath(pathname: string): TKey | null {
   if (pathname.startsWith("/admin")) return "nav.subtitles.admin";
   if (pathname.startsWith("/members/")) return "nav.subtitles.memberProfile";
+  if (pathname.startsWith("/activities")) return "nav.subtitles.activities";
   return subtitles[pathname] ?? null;
 }

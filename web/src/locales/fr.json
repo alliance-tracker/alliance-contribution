@@ -102,6 +102,7 @@
     "ranking": "Classement",
     "members": "Membres",
     "attendance": "Présence",
+    "activities": "Activités",
     "admin": "Administration",
     "memberProfile": "Profil du membre",
     "subtitles": {
@@ -109,6 +110,7 @@
       "ranking": "Classement par semaine d'événement et global",
       "members": "Liste de l'alliance — choisissez un membre pour ouvrir son profil",
       "attendance": "Couverture des jours d'événement sur l'ensemble de la liste",
+      "activities": "Événements, instances et totaux d'une activité dans le temps",
       "admin": "Gérez les événements, la liste, les alias et le score",
       "memberProfile": "Participation et historique individuels"
     }
@@ -322,6 +324,18 @@
     "emptyWeek": "Aucun événement enregistré pour cette semaine.",
     "emptyAll": "Aucun événement enregistré pour le moment.",
     "rate": "Taux"
+  },
+  "activity": {
+    "unknown": "Aucune activité avec la clé {{key}}.",
+    "empty": "Aucun événement enregistré pour cette activité.",
+    "participants": "Participants",
+    "instance": "Instance {{n}}",
+    "total": "Total",
+    "avg": "Moy.",
+    "events_one": "{{count}} événement",
+    "events_many": "{{count}} événements",
+    "events_other": "{{count}} événements",
+    "avgParticipants": "Participants moy."
   },
   "members": {
     "scoreRankTitle": "Rang de score",

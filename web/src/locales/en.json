@@ -102,6 +102,7 @@
     "ranking": "Ranking",
     "members": "Members",
     "attendance": "Attendance",
+    "activities": "Activities",
     "admin": "Admin",
     "memberProfile": "Member Profile",
     "subtitles": {
@@ -109,6 +110,7 @@
       "ranking": "Leaderboard by event week and all-time",
       "members": "Alliance roster — pick anyone to open their profile",
       "attendance": "Event-day coverage across the roster",
+      "activities": "One activity's events, instances, and totals over time",
       "admin": "Manage events, roster, aliases & scoring",
       "memberProfile": "Individual participation & history"
     }
@@ -305,6 +307,17 @@
     "emptyWeek": "No events recorded for this week.",
     "emptyAll": "No events recorded yet.",
     "rate": "Rate"
+  },
+  "activity": {
+    "unknown": "No activity with key {{key}}.",
+    "empty": "No events logged for this activity yet.",
+    "participants": "Participants",
+    "instance": "Instance {{n}}",
+    "total": "Total",
+    "avg": "Avg",
+    "events_one": "{{count}} event",
+    "events_other": "{{count}} events",
+    "avgParticipants": "Avg participants"
   },
   "members": {
     "scoreRankTitle": "Score rank",

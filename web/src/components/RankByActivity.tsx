@@ -15,11 +15,13 @@ export function RankByActivity({
   onChange,
   activities,
   label,
+  allowAll = true,
 }: {
   value: string; // "all" | activity.key
   onChange: (value: string) => void;
   activities: ActivityType[];
   label?: string; // Attendance filters rather than ranks — same control, different verb.
+  allowAll?: boolean; // Activity page: the key IS the page, so there is no "all".
 }) {
   const { t } = useTranslation();
   return (
@@ -32,12 +34,14 @@ export function RankByActivity({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">
-            <span className="flex items-center gap-2">
-              <span className="size-2 shrink-0 rounded-full bg-badge-slate-fg" />
-              {t("rankBy.all")}
-            </span>
-          </SelectItem>
+          {allowAll && (
+            <SelectItem value="all">
+              <span className="flex items-center gap-2">
+                <span className="size-2 shrink-0 rounded-full bg-badge-slate-fg" />
+                {t("rankBy.all")}
+              </span>
+            </SelectItem>
+          )}
           {activities.map((a) => (
             <SelectItem key={a.key} value={a.key}>
               <span className="flex items-center gap-2">

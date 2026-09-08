@@ -229,11 +229,12 @@ export function Activity() {
                     <div className="text-[14px] font-semibold">{dateLabel(d.date)}</div>
                     <div className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] text-muted">
                       <span className="font-mono">{d.week}</span>
-                      {d.byInstance.map((e, i) => (
-                        <span key={i}>
-                          {t("activity.instance", { n: i + 1 })}: <span className="num">{e ? formatNumber(e.participants) : "—"}</span>
-                        </span>
-                      ))}
+                      {detail.activity.max_instance > 1 &&
+                        d.byInstance.map((e, i) => (
+                          <span key={i}>
+                            {t("activity.instance", { n: i + 1 })}: <span className="num">{e ? formatNumber(e.participants) : "—"}</span>
+                          </span>
+                        ))}
                       {d.unmapped > 0 && <Badge variant="neutral">{t("common.unmapped")} {d.unmapped}</Badge>}
                     </div>
                   </div>
@@ -297,6 +298,7 @@ export function Activity() {
                     </div>
                     <div className="mt-1 flex items-center gap-2 text-[11px] text-muted">
                       <span className="num">{m.appearances}/{detail.event_days}</span>
+                      <span className="sr-only">{t("nav.attendance")}</span>
                       <AttendanceBadge pct={m.pct} />
                     </div>
                   </div>

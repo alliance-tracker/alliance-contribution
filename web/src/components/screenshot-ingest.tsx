@@ -166,13 +166,27 @@ export function ScreenshotIngest({
     return () => { for (const u of urls.values()) URL.revokeObjectURL(u); };
   }, []);
 
-  const addFiles = (files: FileList | File[]) => {
+  const addFiles = useCallback((files: FileList | File[]) => {
     const list = Array.from(files);
     if (list.length === 0) return;
     dispatch({ type: "add", files: list });
     dispatch({ type: "start" });
     setShowDetails(false);
-  };
+  }, []);
+
+  // Clipboard images (Cmd/Ctrl+V anywhere while this card is mounted) join the batch like dropped
+  // files. Pastes without an image are left alone so text inputs keep working.
+  useEffect(() => {
+    if (mode !== "screenshots" || pickBlocked) return;
+    const onPaste = (e: ClipboardEvent) => {
+      const files = Array.from(e.clipboardData?.files ?? []).filter((f) => f.type.startsWith("image/"));
+      if (files.length === 0) return;
+      e.preventDefault();
+      addFiles(files);
+    };
+    document.addEventListener("paste", onPaste);
+    return () => document.removeEventListener("paste", onPaste);
+  }, [mode, pickBlocked, addFiles]);
   const cancel = () => { abortRef.current?.abort(); dispatch({ type: "cancel" }); };
   // Switch back to screenshots mode first so the batch card (and the reader effect) show the list,
   // even if the used-up flip already forced paste mode while this card was displayed.

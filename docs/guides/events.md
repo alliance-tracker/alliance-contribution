@@ -51,7 +51,8 @@ Read the Coverage check before trusting the paste — it is the LLM's own sanity
 Above the participants box a switch offers **Paste text** (the flow above) and **From screenshots**. The
 switch remembers your last choice. In screenshot mode:
 
-1. **Choose screenshots** (several at once, any order; on a phone this is the photo picker). Each is read
+1. **Choose screenshots** (several at once, any order; on a phone this is the photo picker), drop them on
+   the box, or **paste** an image from the clipboard (Cmd/Ctrl+V while the dialog is open). Each is read
    one at a time, about two seconds each, and its rows are added to the same text box as they arrive —
    you can still paste or edit.
 2. The card shows one line per screenshot: Waiting, Reading…, Done · N rows, or Failed with a reason

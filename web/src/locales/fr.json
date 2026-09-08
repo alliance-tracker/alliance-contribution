@@ -130,7 +130,7 @@
     },
     "picker": {
       "choose": "Choisir des captures",
-      "drop": "Déposez des captures ici, ou <1>choisissez des fichiers</1>",
+      "drop": "Déposez ou collez des captures ici, ou <1>choisissez des fichiers</1>",
       "hintEvent": "Choisissez-en plusieurs à la fois, l'ordre importe peu. Environ 2 s chacune ; une capture normale donne 5 à 6 lignes.",
       "hintRoster": "Plusieurs à la fois, dans n'importe quel ordre. Environ 2 s chacune. Un roster complet fait 12 à 15 captures.",
       "addMore": "Ajouter des captures"

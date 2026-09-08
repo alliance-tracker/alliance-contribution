@@ -130,7 +130,7 @@
     },
     "picker": {
       "choose": "Screenshots auswählen",
-      "drop": "Screenshots hierher ziehen oder <1>Dateien auswählen</1>",
+      "drop": "Screenshots hierher ziehen oder einfügen, oder <1>Dateien auswählen</1>",
       "hintEvent": "Mehrere auf einmal wählen, Reihenfolge egal. Etwa 2 s pro Bild; ein normaler Screenshot ergibt 5–6 Zeilen.",
       "hintRoster": "Mehrere auf einmal, beliebige Reihenfolge. Etwa 2 s pro Bild. Ein vollständiges Roster sind 12–15 Screenshots.",
       "addMore": "Weitere Screenshots hinzufügen"

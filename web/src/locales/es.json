@@ -130,7 +130,7 @@
     },
     "picker": {
       "choose": "Elegir capturas",
-      "drop": "Suelta las capturas aquí, o <1>elige archivos</1>",
+      "drop": "Suelta o pega las capturas aquí, o <1>elige archivos</1>",
       "hintEvent": "Elige varias a la vez, el orden no importa. Unos 2 s cada una; una captura normal da 5–6 filas.",
       "hintRoster": "Varias a la vez, en cualquier orden. Unos 2 s cada una. Un roster completo son 12–15 capturas.",
       "addMore": "Añadir más capturas"

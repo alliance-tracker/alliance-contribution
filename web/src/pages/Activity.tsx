@@ -307,10 +307,16 @@ export function Activity() {
                       <span className="truncate text-[14px] font-semibold text-foreground">{m.governor}</span>
                       <AllianceRankBadge rank={m.alliance_rank} className="shrink-0" />
                     </div>
-                    <div className="mt-1 flex items-center gap-2 text-[11px] text-muted">
+                    <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted">
                       <span className="num">{m.appearances}/{detail.event_days}</span>
                       <span className="sr-only">{t("nav.attendance")}</span>
                       <AttendanceBadge pct={m.pct} />
+                      {detail.activity.max_instance > 1 &&
+                        m.byInstance.map((n, i) => (
+                          <span key={i}>
+                            {t("activity.instance", { n: i + 1 })}: <span className="num">{n > 0 ? formatNumber(n) : "—"}</span>
+                          </span>
+                        ))}
                     </div>
                   </div>
                   <div className="flex flex-none flex-col items-end">
@@ -327,6 +333,10 @@ export function Activity() {
                     <TableHead>{t("common.member")}</TableHead>
                     <TableHead className="w-[110px]">{t("common.allianceRank")}</TableHead>
                     <TableHead className="w-32 text-end">{t("activity.appearances")}</TableHead>
+                    {detail.activity.max_instance > 1 &&
+                      instances.map((s) => (
+                        <TableHead key={s.instance} className="w-24 text-end">{t("activity.instance", { n: s.instance })}</TableHead>
+                      ))}
                     <TableHead className="w-24 text-end">{t("nav.attendance")}</TableHead>
                     <TableHead className="w-32 text-end">{`${t("activity.total")} ${unit}`}</TableHead>
                     <TableHead className="w-32 text-end">{t("activity.avgPerAppearance")}</TableHead>
@@ -344,6 +354,10 @@ export function Activity() {
                       </TableCell>
                       <TableCell><AllianceRankBadge rank={m.alliance_rank} /></TableCell>
                       <TableCell className="num text-end">{m.appearances}/{detail.event_days}</TableCell>
+                      {detail.activity.max_instance > 1 &&
+                        m.byInstance.map((n, i) => (
+                          <TableCell key={i} className="num text-end text-muted">{n > 0 ? formatNumber(n) : "—"}</TableCell>
+                        ))}
                       <TableCell className="text-end"><AttendanceBadge pct={m.pct} /></TableCell>
                       <TableCell className="num text-end font-semibold">{formatNumber(m.total_value)}</TableCell>
                       <TableCell className="num text-end">{formatNumber(Math.round(m.avg_value))}</TableCell>

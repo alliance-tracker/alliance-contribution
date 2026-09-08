@@ -31,18 +31,21 @@ function valueLabel(v: number): string {
   return v >= 1_000_000 ? formatCompact(v) : formatNumber(v);
 }
 
-// Instance n: same activity colour, increasingly dashed so 1..max_instance stay distinguishable.
-const INSTANCE_DASH = ["", "5 3", "2 3", "8 3 2 3"];
+// Instance n: same activity colour, increasingly dashed so 1..max_instance stay distinguishable
+// however high max_instance goes (admin-editable, no ceiling). Instance 1 stays solid.
+function instanceDash(n: number): string | undefined {
+  return n === 1 ? undefined : `${n * 2} 3`;
+}
 
 function ValueTooltip({
   active,
   payload,
 }: {
   active?: boolean;
-  payload?: { name: string; value: number | null; color: string }[];
+  payload?: { name: string; value: number | null; color: string; payload: SeriesPoint }[];
 }) {
   if (!active || !payload?.length) return null;
-  const point = (payload[0] as unknown as { payload: SeriesPoint }).payload;
+  const point = payload[0].payload;
   return (
     <div className="rounded-[6px] border border-border bg-surface px-2.5 py-2 text-[12px] shadow-sm">
       <div className="mb-1 font-semibold">{dateLabel(point.date)}</div>
@@ -190,7 +193,7 @@ export function Activity() {
                     name={t("activity.instance", { n: s.instance })}
                     stroke={activityFillVar(detail.activity.color)}
                     strokeWidth={1.5}
-                    strokeDasharray={INSTANCE_DASH[(s.instance - 1) % INSTANCE_DASH.length]}
+                    strokeDasharray={instanceDash(s.instance)}
                     dot={{ r: 2 }}
                     connectNulls={false}
                   />

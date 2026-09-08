@@ -189,7 +189,7 @@ export function Activity() {
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 4" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  tickFormatter={(d: string) => formatDate(d, DATE_OPTS)}
+                  tickFormatter={(d: string) => formatDate(d, { month: "short", day: "numeric" })}
                   stroke="var(--color-border)"
                   tickLine={false}
                   tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}

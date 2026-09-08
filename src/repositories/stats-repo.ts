@@ -359,14 +359,15 @@ export class StatsRepo {
   }
 
   // Appearances per (member, instance) for one activity — feeds the by-member instance split.
-  // Mapped rows only; active filter is applied by the caller's join against `activityMembers`.
+  // Mapped, active members only — active filter applied here, same as `activityMembers`.
   async activityMemberInstances(activityTypeId: number): Promise<ActivityMemberInstanceRow[]> {
     return all<ActivityMemberInstanceRow>(
       this.db,
       `SELECT p.member_id, e.instance, COUNT(*) AS appearances
        FROM participations p
-       JOIN events e ON e.id = p.event_id
-       WHERE e.activity_type_id = ? AND p.member_id IS NOT NULL
+       JOIN events  e ON e.id = p.event_id
+       JOIN members m ON m.id = p.member_id AND m.active = 1
+       WHERE e.activity_type_id = ?
        GROUP BY p.member_id, e.instance`,
       activityTypeId,
     );

@@ -988,6 +988,24 @@ describe("StatsService.activityDetail", () => {
     expect(new Set(detail!.events.map((e) => e.date)).size).toBe(detail!.event_days);
   });
 
+  it("excludes a deactivated member from members and member_instances", async () => {
+    const { eventService, statsService, memberService } = createServices(DB);
+    const leftId = await seedMember("Act_Left");
+
+    await eventService.create({
+      activity: "bear_trap",
+      date: "2028-03-04",
+      instance: 1,
+      rows: [{ raw_name: "Act_Left", value: 1_000_000 }],
+    });
+
+    await memberService.deactivate(leftId);
+
+    const detail = await statsService.activityDetail("bear_trap");
+    expect(detail!.members.some((m) => m.governor === "Act_Left")).toBe(false);
+    expect(detail!.member_instances.some((r) => r.member_id === leftId)).toBe(false);
+  });
+
   it("returns null for an unknown activity key", async () => {
     const { statsService } = createServices(DB);
     expect(await statsService.activityDetail("nope")).toBeNull();

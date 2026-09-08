@@ -311,6 +311,7 @@
   "activity": {
     "unknown": "No activity with key {{key}}.",
     "empty": "No events logged for this activity yet.",
+    "chartTitle": "Total {{unit}} over time",
     "participants": "Participants",
     "instance": "Instance {{n}}",
     "total": "Total",

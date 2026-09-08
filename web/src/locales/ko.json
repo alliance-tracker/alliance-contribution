@@ -294,6 +294,7 @@
   "activity": {
     "unknown": "키 {{key}}에 해당하는 활동이 없습니다.",
     "empty": "이 활동에 기록된 이벤트가 아직 없습니다.",
+    "chartTitle": "시간별 {{unit}} 합계",
     "participants": "참가자",
     "instance": "인스턴스 {{n}}",
     "total": "합계",

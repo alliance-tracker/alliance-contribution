@@ -311,6 +311,7 @@
   "activity": {
     "unknown": "Keine Aktivität mit dem Schlüssel {{key}}.",
     "empty": "Für diese Aktivität sind noch keine Events erfasst.",
+    "chartTitle": "{{unit}} gesamt im Zeitverlauf",
     "participants": "Teilnehmer",
     "instance": "Instanz {{n}}",
     "total": "Gesamt",

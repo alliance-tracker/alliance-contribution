@@ -328,6 +328,7 @@
   "activity": {
     "unknown": "Aucune activité avec la clé {{key}}.",
     "empty": "Aucun événement enregistré pour cette activité.",
+    "chartTitle": "{{unit}} total dans le temps",
     "participants": "Participants",
     "instance": "Instance {{n}}",
     "total": "Total",

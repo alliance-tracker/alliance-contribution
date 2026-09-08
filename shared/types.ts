@@ -170,11 +170,15 @@ export type ActivityMemberRow = {
   total_points: number;
 };
 
+// Appearances of one member in one instance of an activity (A member who did Trap 2 five times).
+export type ActivityMemberInstanceRow = { member_id: number; instance: number; appearances: number };
+
 export type ActivityDetail = {
   activity: ActivityType;
   event_days: number; // distinct dates for this activity — attendance denominator
   events: ActivityEventRow[]; // ascending date, then instance
   members: ActivityMemberRow[]; // mapped members only, total_value desc then governor
+  member_instances: ActivityMemberInstanceRow[]; // mapped members only, any order
 };
 
 // Roster bulk import (Phase 4). The frontend classifies a pasted roster TSV whose columns are

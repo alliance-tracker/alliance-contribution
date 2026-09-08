@@ -24,6 +24,11 @@ const detail: ActivityDetail = {
     { member_id: 7, governor: "Alice", alliance_rank: "R3", appearances: 2, total_value: 120, total_points: 12 },
     { member_id: 8, governor: "Bob", alliance_rank: null, appearances: 1, total_value: 40, total_points: 4 },
   ],
+  member_instances: [
+    { member_id: 7, instance: 1, appearances: 1 },
+    { member_id: 7, instance: 2, appearances: 1 },
+    { member_id: 8, instance: 2, appearances: 1 },
+  ],
 };
 
 describe("dayRows", () => {
@@ -73,5 +78,11 @@ describe("memberRows", () => {
   it("returns pct 0 when there are no event days", () => {
     const rows = memberRows({ ...detail, event_days: 0 });
     expect(rows.every((r) => r.pct === 0)).toBe(true);
+  });
+
+  it("spreads instance appearances into a zero-filled byInstance array up to max_instance", () => {
+    const rows = memberRows(detail);
+    expect(rows[0].byInstance).toEqual([1, 1, 0, 0]);
+    expect(rows[1].byInstance).toEqual([0, 1, 0, 0]);
   });
 });

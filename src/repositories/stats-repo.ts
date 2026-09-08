@@ -1,4 +1,4 @@
-import type { ActivityEventRow, ActivityMemberRow } from "../../shared/types";
+import type { ActivityEventRow, ActivityMemberInstanceRow, ActivityMemberRow } from "../../shared/types";
 import { all, first } from "./db";
 
 // One reward-allocation metric row: the member's total plus current display context
@@ -354,6 +354,20 @@ export class StatsRepo {
        WHERE e.activity_type_id = ? AND m.active = 1
        GROUP BY m.id
        ORDER BY total_value DESC, m.governor`,
+      activityTypeId,
+    );
+  }
+
+  // Appearances per (member, instance) for one activity — feeds the by-member instance split.
+  // Mapped rows only; active filter is applied by the caller's join against `activityMembers`.
+  async activityMemberInstances(activityTypeId: number): Promise<ActivityMemberInstanceRow[]> {
+    return all<ActivityMemberInstanceRow>(
+      this.db,
+      `SELECT p.member_id, e.instance, COUNT(*) AS appearances
+       FROM participations p
+       JOIN events e ON e.id = p.event_id
+       WHERE e.activity_type_id = ? AND p.member_id IS NOT NULL
+       GROUP BY p.member_id, e.instance`,
       activityTypeId,
     );
   }

@@ -974,6 +974,16 @@ describe("StatsService.activityDetail", () => {
     expect(names).not.toContain("Act_Ghost");
     const alice = detail!.members.find((m) => m.governor === "Act_Alice")!;
     expect(alice).toMatchObject({ appearances: 1, total_value: 5_000_000 });
+
+    const aliceId = detail!.members.find((m) => m.governor === "Act_Alice")!.member_id;
+    const bobId = detail!.members.find((m) => m.governor === "Act_Bob")!.member_id;
+    expect(detail!.member_instances).toEqual(
+      expect.arrayContaining([
+        { member_id: aliceId, instance: 1, appearances: 1 },
+        { member_id: bobId, instance: 2, appearances: 1 },
+      ]),
+    );
+    expect(detail!.member_instances.some((r) => r.member_id === null)).toBe(false);
     expect(detail!.event_days).toBeGreaterThanOrEqual(1);
     expect(new Set(detail!.events.map((e) => e.date)).size).toBe(detail!.event_days);
   });

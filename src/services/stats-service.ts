@@ -121,12 +121,13 @@ export class StatsService {
   async activityDetail(key: string): Promise<ActivityDetail | null> {
     const activity = await this.activityRepo.getByKey(key);
     if (!activity) return null;
-    const [events, members, event_days] = await Promise.all([
+    const [events, members, member_instances, event_days] = await Promise.all([
       this.statsRepo.activityEvents(activity.id),
       this.statsRepo.activityMembers(activity.id),
+      this.statsRepo.activityMemberInstances(activity.id),
       this.statsRepo.totalEventDays(undefined, key),
     ]);
-    return { activity, event_days, events, members };
+    return { activity, event_days, events, members, member_instances };
   }
 
   // Y = total distinct event-days in scope (all-time by default; accepted simplification: mid-season

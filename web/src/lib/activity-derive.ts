@@ -24,7 +24,7 @@ export type InstanceStat = {
 
 export type SeriesPoint = { date: string; total: number } & Record<`i${number}`, number | null>;
 
-export type MemberRow = ActivityMemberRow & { pct: number; avg_value: number };
+export type MemberRow = ActivityMemberRow & { pct: number; avg_value: number; byInstance: number[] };
 
 function groupByDate(detail: ActivityDetail): Map<string, ActivityEventRow[]> {
   const groups = new Map<string, ActivityEventRow[]>();
@@ -90,11 +90,20 @@ export function valueSeries(detail: ActivityDetail): SeriesPoint[] {
   return out;
 }
 
-/** Member totals with attendance pct (appearances / event days) and average value per appearance. */
+/** Member totals with attendance pct, average value per appearance, and appearances per instance. */
 export function memberRows(detail: ActivityDetail): MemberRow[] {
+  const max = detail.activity.max_instance;
+  const perMember = new Map<number, number[]>();
+  for (const r of detail.member_instances) {
+    if (r.instance < 1 || r.instance > max) continue;
+    const arr = perMember.get(r.member_id) ?? Array.from({ length: max }, () => 0);
+    arr[r.instance - 1] = r.appearances;
+    perMember.set(r.member_id, arr);
+  }
   return detail.members.map((m) => ({
     ...m,
     pct: detail.event_days > 0 ? m.appearances / detail.event_days : 0,
     avg_value: m.appearances > 0 ? m.total_value / m.appearances : 0,
+    byInstance: perMember.get(m.member_id) ?? Array.from({ length: max }, () => 0),
   }));
 }

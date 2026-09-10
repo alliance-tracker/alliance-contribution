@@ -201,7 +201,6 @@
     "addDesc": "Registre un lote de participantes. Los nombres se resuelven mediante alias; la puntuación se aplica según la configuración.",
     "selectActivity": "Seleccionar actividad",
     "instance": "Instancia",
-    "instanceRange": "(1–{{max}})",
     "instanceWord": "instancia",
     "participants": "Participantes",
     "participantsHelp": "Una por línea, separadas por tabulación (TSV) — pegue directamente desde la hoja: <1>raw_name</1> · <2>value</2> · <3>notes</3> (opcional). Solo se cuenta el valor superior al umbral.",

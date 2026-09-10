@@ -195,7 +195,6 @@
     "addDesc": "Log a batch of participants. Names resolve via aliases; scoring is applied from config.",
     "selectActivity": "Select activity",
     "instance": "Instance",
-    "instanceRange": "(1–{{max}})",
     "instanceWord": "instance",
     "participants": "Participants",
     "participantsHelp": "One per line, tab-separated (TSV) — paste straight from the sheet: <1>raw_name</1> · <2>value</2> · <3>notes</3> (optional). Only value > threshold is counted.",

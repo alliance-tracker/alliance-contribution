@@ -189,7 +189,6 @@
     "addDesc": "참가자 배치를 기록하십시오. 이름은 별칭을 통해 해석되며, 점수는 설정에 따라 적용됩니다.",
     "selectActivity": "활동 선택",
     "instance": "회차",
-    "instanceRange": "(1–{{max}})",
     "instanceWord": "회차",
     "participants": "참가자",
     "participantsHelp": "한 줄에 하나씩, 탭으로 구분(TSV) — 시트에서 바로 붙여넣기: <1>raw_name</1> · <2>value</2> · <3>notes</3> (선택 사항). 기준값을 초과하는 값만 집계됩니다.",

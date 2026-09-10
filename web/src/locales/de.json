@@ -195,7 +195,6 @@
     "addDesc": "Erfassen Sie einen Stapel von Teilnehmern. Namen werden über Aliase aufgelöst; die Wertung erfolgt gemäß Konfiguration.",
     "selectActivity": "Aktivität auswählen",
     "instance": "Instanz",
-    "instanceRange": "(1–{{max}})",
     "instanceWord": "Instanz",
     "participants": "Teilnehmer",
     "participantsHelp": "Eine pro Zeile, tabulatorgetrennt (TSV) — direkt aus dem Sheet einfügen: <1>raw_name</1> · <2>value</2> · <3>notes</3> (optional). Nur ein Wert über dem Schwellenwert wird gezählt.",

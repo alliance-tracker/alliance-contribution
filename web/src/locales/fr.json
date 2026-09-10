@@ -201,7 +201,6 @@
     "addDesc": "Enregistrez un lot de participants. Les noms sont résolus via les alias ; le score est appliqué à partir de la configuration.",
     "selectActivity": "Sélectionner une activité",
     "instance": "Instance",
-    "instanceRange": "(1–{{max}})",
     "instanceWord": "instance",
     "participants": "Participants",
     "participantsHelp": "Une par ligne, séparées par tabulation (TSV) — collez directement depuis la feuille : <1>raw_name</1> · <2>value</2> · <3>notes</3> (facultatif). Seule la valeur supérieure au seuil est comptabilisée.",

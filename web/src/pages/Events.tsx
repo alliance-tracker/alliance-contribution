@@ -383,22 +383,19 @@ function EventFormDialog({
 
               {maxInstance > 1 && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-medium text-secondary">
-                    {t("events.instance")}
-                    <span className="ms-1 text-muted">{t("events.instanceRange", { max: maxInstance })}</span>
-                  </label>
-                  <Input
-                    className="num"
-                    type="number"
-                    min={1}
-                    max={maxInstance}
-                    value={instance}
-                    onChange={(e) => {
-                      const n = Number(e.target.value);
-                      if (!Number.isFinite(n)) return;
-                      setInstance(Math.min(Math.max(1, Math.trunc(n)), maxInstance));
-                    }}
-                  />
+                  <label className="text-[12px] font-medium text-secondary">{t("events.instance")}</label>
+                  <Select value={String(instance)} onValueChange={(v) => setInstance(Number(v))}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: maxInstance }, (_, i) => i + 1).map((n) => (
+                        <SelectItem key={n} value={String(n)}>
+                          {t("activity.instance", { n })}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </div>

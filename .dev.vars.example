@@ -3,3 +3,9 @@
 API_KEY=dev-key
 ADMIN_API_KEY=dev-admin-key
 VIEWER_API_KEY=dev-viewer-key
+
+# Event scheduling + Discord reminders (docs/guides/schedule.md). Off unless set to "true": shows the
+# Admin → Schedule tab and unlocks /api/admin/schedule/*. The cron itself lives in wrangler.toml
+# ([triggers]); locally, tick it by hand with `wrangler dev --test-scheduled` + GET /__scheduled.
+# SCHEDULER_ENABLED=true
+# NOTIFY_LANGUAGES=en,es,fr,de,ko,ar

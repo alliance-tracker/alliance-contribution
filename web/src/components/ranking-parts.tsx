@@ -16,7 +16,7 @@ import { AllianceRankBadge } from "@/components/AllianceRankBadge";
  */
 type MedalBar = "var(--color-gold)" | "var(--color-silver)" | "var(--color-bronze)";
 
-/** Medal palette for the top 3 — the only color pops in an otherwise monochrome list. */
+/** Medal palette for the top 3. */
 export const MEDALS: Record<number, { bar: MedalBar; badgeBg: string; badgeFg: string; card: string }> = {
   1: {
     bar: "var(--color-gold)",

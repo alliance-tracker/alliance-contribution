@@ -3,8 +3,8 @@
  * NOT the score rank the ranking boards compute, and NOT `power_position`.
  *
  * Every rank carries its own tone (2026-08-03 spec — supersedes the old "R1–R3 stay neutral"
- * colour budget): hues echo the board bands (R3=top blue, R2=mid teal, R1=rest slate,
- * R4/R5=leadership purple, R5 bold) so a badge-vs-row mismatch reads as "mis-ranked member".
+ * colour budget): hues echo the bands (R3=top, R2=mid, R1=rest, R4/R5=leadership; R5 is the
+ * solid variant, R4 the tint) so a badge-vs-row mismatch reads as "mis-ranked member".
  */
 export const LEADERSHIP_RANKS = new Set(["R4", "R5"]);
 

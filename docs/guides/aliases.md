@@ -8,7 +8,7 @@ Admin → Aliases has two panels side by side.
 
 - **Alias directory** (left) — every member who has at least one alias, grouped under their governor name. Each group shows the governor as a filled tag, followed by every raw name mapped to them as outlined tags. A search box filters the directory by governor or alias text. An **Add alias** button opens the mapping dialog.
 - **Unmapped queue** (right, flagged amber) — every raw name currently logged in an event that doesn't resolve to any member, with a badge for each activity/date/instance it was seen in (for example "bear_trap 2026-08-10 #1"). Each row has a **Map to member** button. A count badge shows how many names are waiting. When empty, it says everything resolves.
-- On a phone the unmapped queue sits above the directory, and each queued name has a **New member** shortcut next to **Map to member**.
+- Each queued name has a **New member** shortcut next to **Map to member**. On a phone the unmapped queue sits above the directory.
 
 Hovering an alias tag in the directory reveals a small trash-can button to remove it — visible to admins only.
 

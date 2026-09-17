@@ -394,7 +394,7 @@
     "avgParticipants": "متوسط المشاركين",
     "byDay": "حسب اليوم",
     "byMember": "حسب العضو",
-    "membersAppeared_zero": "{{count}} عضو ظهر",
+    "membersAppeared_zero": "{{count}} أعضاء ظهروا",
     "membersAppeared_one": "{{count}} عضو واحد ظهر",
     "membersAppeared_two": "{{count}} عضوان ظهرا",
     "membersAppeared_few": "{{count}} أعضاء ظهروا",

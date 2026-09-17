@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
+import { Trophy } from "lucide-react";
 import {
   DEFAULT_RANK_BANDS,
   type ActivityType,
@@ -22,7 +23,6 @@ import { MEDALS, Movement, PodiumCard, ScoreCell, medalBarClass, scorePct } from
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { IconTile, Strip } from "@/components/ui/tone";
-import { Trophy } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";

@@ -825,7 +825,7 @@ export function Events() {
 
       <div className="grid grid-cols-1 gap-3.5 md:gap-6 lg:grid-cols-[1fr_340px]">
         <Card className="overflow-hidden">
-          {/* Outside the state ternary: on a phone this is the only route to the ingest dialog, so it
+          {/* Outside the state ternary: this is the only route to the ingest dialog, so it
               has to be there in the error, loading and empty states too. */}
           <Strip
             tone="blue"

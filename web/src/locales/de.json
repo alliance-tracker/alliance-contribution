@@ -326,8 +326,8 @@
     "avgParticipants": "Ø Teilnehmer",
     "byDay": "Nach Tag",
     "byMember": "Nach Mitglied",
-    "membersAppeared_one": "{{count}} Mitglied erschienen",
-    "membersAppeared_other": "{{count}} Mitglieder erschienen",
+    "membersAppeared_one": "{{count}} Mitglied ist erschienen",
+    "membersAppeared_other": "{{count}} Mitglieder sind erschienen",
     "appearances": "Teilnahmen",
     "avgPerAppearance": "Ø / Teilnahme",
     "toggleParticipants": "Teilnehmer anzeigen"

@@ -62,7 +62,7 @@ The leaderboard: every active member ordered by Participation Score, for the cur
     participated or not, so the zero-score tail is never colored as if they'd earned a top slot.
   - A member tied on score with the row above them inherits that row's band, so a tie can never be
     split across a colour boundary.
-  - Band colours: Leadership is purple, Top is blue, Mid is teal, Rest is grey.
+  - Band colours: Leadership is orange, Top is blue, Mid is teal, Rest is grey.
 - **Alliance Rank badge mismatch warning** — each band has an "expected" in-game rank (Top → R3,
   Mid → R2, Rest → R1; Leadership has no expectation). If a member's actual Alliance Rank doesn't
   match their band's expected rank, their badge gets a warning ring and an up/down arrow showing

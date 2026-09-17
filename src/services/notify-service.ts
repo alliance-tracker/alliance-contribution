@@ -29,7 +29,9 @@ export class NotifyService {
   constructor(
     private readonly repo: ScheduleRepo,
     private readonly settings: SettingsRepo,
-    private readonly fetchImpl: typeof fetch = globalThis.fetch,
+    // Wrapped, not `globalThis.fetch` itself: a bare reference called as `this.fetchImpl(...)` runs with
+    // the service as `this` and workerd throws "Illegal invocation".
+    private readonly fetchImpl: typeof fetch = (input, init) => fetch(input, init),
     private readonly now: () => Date = () => new Date(),
   ) {}
 

@@ -4,9 +4,11 @@ import { DEFAULT_RANK_BANDS, type RankBands } from "@shared/types";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { useApiKey } from "@/lib/apiKey";
+import { Layers } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { IconTile } from "@/components/ui/tone";
 
 /**
  * Board band sizes (top N / next M). PUT is admin-gated server-side; non-admins see the values
@@ -55,16 +57,19 @@ export function RankBandsCard() {
   };
 
   return (
-    <Card className="flex flex-col gap-3 p-4">
-      <div>
-        <div className="text-[14px] font-semibold">{t("scoring.rankBands.title")}</div>
-        <p className="text-[12.5px] text-muted">{t("scoring.rankBands.desc")}</p>
+    <Card className="flex flex-col gap-3 border-tone-blue-border p-4">
+      <div className="flex items-center gap-[11px]">
+        <IconTile icon={Layers} tone="blue" />
+        <div>
+          <div className="text-[14px] font-semibold">{t("scoring.rankBands.title")}</div>
+          <p className="text-[12.5px] text-muted">{t("scoring.rankBands.desc")}</p>
+        </div>
       </div>
       <div className="flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1 text-[12px] text-muted">
           {t("scoring.rankBands.topBand")}
           <Input
-            className="w-24"
+            className="w-24 bg-band-top-bg font-semibold text-rank3-fg focus-visible:border-band-top"
             inputMode="numeric"
             value={topVal}
             onChange={(e) => {
@@ -78,7 +83,7 @@ export function RankBandsCard() {
         <label className="flex flex-col gap-1 text-[12px] text-muted">
           {t("scoring.rankBands.secondBand")}
           <Input
-            className="w-24"
+            className="w-24 bg-band-mid-bg font-semibold text-rank2-fg focus-visible:border-band-mid"
             inputMode="numeric"
             value={midVal}
             onChange={(e) => {

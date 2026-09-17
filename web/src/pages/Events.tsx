@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
-import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
+import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert, CalendarDays } from "lucide-react";
 import { eventChatPrompt } from "@shared/prompts";
 import type { ActivityType, Event, EventListRow } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
@@ -19,6 +19,7 @@ import { writeErrorMessage } from "@/lib/errors";
 import { activityBadgeClass, activitySolidClass } from "@/lib/activity";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
+import { IconTile, Strip } from "@/components/ui/tone";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -807,10 +808,6 @@ export function Events() {
             onChange={(e) => setWeekFilter(e.target.value)}
           />
         </div>
-        <Button size="sm" className="hidden md:inline-flex" onClick={openAdd}>
-          <Plus />
-          {t("events.add")}
-        </Button>
       </div>
 
       {note && (
@@ -828,13 +825,19 @@ export function Events() {
         <Card className="overflow-hidden">
           {/* Outside the state ternary: on a phone this is the only route to the ingest dialog, so it
               has to be there in the error, loading and empty states too. */}
-          <div className="flex items-center justify-between border-b border-border px-4 py-3 md:hidden">
-            <span className="text-[14px] font-semibold">{t("events.recentTitle")}</span>
-            <Button className="h-9" onClick={openAdd}>
+          <Strip
+            tone="blue"
+            className="flex items-center justify-between border-b border-border px-4 py-3 md:px-[18px] md:py-[13px]"
+          >
+            <div className="flex min-w-0 items-center gap-[11px]">
+              <IconTile icon={CalendarDays} tone="blue" />
+              <span className="text-[14px] font-semibold">{t("events.recentTitle")}</span>
+            </div>
+            <Button className="h-9 md:h-8" onClick={openAdd}>
               <Plus />
               {t("events.add")}
             </Button>
-          </div>
+          </Strip>
           {error ? (
             <div className="p-4">
               <ErrorState message={error} />

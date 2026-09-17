@@ -5,6 +5,7 @@ import { api, type ImportResult } from "@/lib/api";
 import { writeErrorMessage } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconTile } from "@/components/ui/tone";
 import {
   Dialog,
   DialogContent,
@@ -129,9 +130,12 @@ export function Backup() {
       {result && <ImportResultPanel result={result} />}
 
       <Card className="flex flex-col gap-3 p-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-[13.5px] font-semibold text-foreground">{t("backup.exportTitle")}</span>
-          <span className="text-[12px] text-muted">{t("backup.exportDesc")}</span>
+        <div className="flex items-center gap-[11px]">
+          <IconTile icon={Download} tone="slate" />
+          <div className="flex flex-col gap-1">
+            <span className="text-[13.5px] font-semibold text-foreground">{t("backup.exportTitle")}</span>
+            <span className="text-[12px] text-muted">{t("backup.exportDesc")}</span>
+          </div>
         </div>
         <div>
           <Button size="sm" className="h-11 w-full md:h-8 md:w-auto" onClick={handleExport} disabled={busy}>
@@ -142,9 +146,12 @@ export function Backup() {
       </Card>
 
       <Card className="flex flex-col gap-3 p-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-[13.5px] font-semibold text-foreground">{t("backup.importTitle")}</span>
-          <span className="text-[12px] text-muted">{t("backup.importDesc")}</span>
+        <div className="flex items-center gap-[11px]">
+          <IconTile icon={Upload} tone="warn" />
+          <div className="flex flex-col gap-1">
+            <span className="text-[13.5px] font-semibold text-foreground">{t("backup.importTitle")}</span>
+            <span className="text-[12px] text-muted">{t("backup.importDesc")}</span>
+          </div>
         </div>
         <div>
           <input

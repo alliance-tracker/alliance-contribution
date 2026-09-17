@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { useTranslation, Trans } from "react-i18next";
-import { Plus, Pencil, Power, PowerOff, TriangleAlert } from "lucide-react";
+import { Plus, Pencil, Power, PowerOff, TriangleAlert, Swords } from "lucide-react";
 import type { ActivityType, NewActivityType } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
 import { api } from "@/lib/api";
@@ -15,6 +15,7 @@ import { EditBandsDialog } from "@/components/scoring/EditBandsDialog";
 import { RankBandsCard } from "@/components/scoring/RankBandsCard";
 import { SuccessNote } from "@/components/scoring/SuccessNote";
 import { Card } from "@/components/ui/card";
+import { IconTile } from "@/components/ui/tone";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -628,11 +629,12 @@ export function Scoring() {
   return (
     <div className="flex flex-col gap-3.5 md:gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-[18px] font-semibold tracking-[-0.01em] text-foreground">
-            {t("scoring.title")}
-          </h2>
-          <p className="text-[13px] text-muted">{t("scoring.subtitle")}</p>
+        <div className="flex min-w-0 items-center gap-[11px]">
+          <IconTile icon={Swords} tone="orange" />
+          <div className="flex flex-col gap-0.5">
+            <h2 className="text-[14px] font-semibold text-foreground">{t("scoring.title")}</h2>
+            <p className="text-[12px] text-muted">{t("scoring.subtitle")}</p>
+          </div>
         </div>
         <Button size="sm" onClick={() => setAddOpen(true)}>
           <Plus />

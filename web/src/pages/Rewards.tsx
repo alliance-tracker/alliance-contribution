@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
-import { Check, ChevronDown, ChevronRight, Pencil, Plus, Trash2, TriangleAlert, X } from "lucide-react";
+import { Check, ChevronDown, ChevronRight, Gift, Pencil, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 import type {
   Allocation,
   AllocationInput,
@@ -22,6 +22,7 @@ import { AttendanceBadge } from "@/components/AttendanceBadge";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconTile } from "@/components/ui/tone";
 import {
   Dialog,
   DialogContent,
@@ -545,9 +546,12 @@ export function Rewards() {
       {error && <ErrorState message={error} />}
 
       <Card className="flex flex-col gap-4 p-4 md:p-5">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-semibold text-foreground">{t("rewards.newTitle")}</span>
-          <span className="text-[12.5px] text-muted">{t("rewards.newDesc")}</span>
+        <div className="flex items-center gap-[11px]">
+          <IconTile icon={Gift} tone="pink" />
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[14px] font-semibold text-foreground">{t("rewards.newTitle")}</span>
+            <span className="text-[12.5px] text-muted">{t("rewards.newDesc")}</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-[1fr_1.4fr] gap-2.5 sm:gap-3.5 md:grid-cols-2 lg:grid-cols-4">

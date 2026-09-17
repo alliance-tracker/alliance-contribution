@@ -4,15 +4,15 @@ import { useApiKey } from "@/lib/apiKey";
 import { cn } from "@/lib/utils";
 import type { TKey } from "@/i18n";
 
-const TABS: { to: string; label: TKey; adminOnly?: boolean; schedulerOnly?: boolean }[] = [
-  { to: "/admin/events", label: "nav.adminTabs.events" },
-  { to: "/admin/roster", label: "nav.adminTabs.roster" },
-  { to: "/admin/aliases", label: "nav.adminTabs.aliases" },
-  { to: "/admin/scoring", label: "nav.adminTabs.scoring" },
-  { to: "/admin/rewards", label: "nav.adminTabs.rewards", adminOnly: true },
-  { to: "/admin/backup", label: "nav.adminTabs.backup", adminOnly: true },
+const TABS: { to: string; label: TKey; dot: string; adminOnly?: boolean; schedulerOnly?: boolean }[] = [
+  { to: "/admin/events", label: "nav.adminTabs.events", dot: "bg-tone-blue" },
+  { to: "/admin/roster", label: "nav.adminTabs.roster", dot: "bg-tone-teal" },
+  { to: "/admin/aliases", label: "nav.adminTabs.aliases", dot: "bg-tone-blue" },
+  { to: "/admin/scoring", label: "nav.adminTabs.scoring", dot: "bg-tone-orange" },
+  { to: "/admin/rewards", label: "nav.adminTabs.rewards", dot: "bg-tone-pink", adminOnly: true },
+  { to: "/admin/backup", label: "nav.adminTabs.backup", dot: "bg-band-rest", adminOnly: true },
   // Managers see it too — read-only; the tab only exists where the deployment runs the scheduler.
-  { to: "/admin/schedule", label: "nav.adminTabs.schedule", schedulerOnly: true },
+  { to: "/admin/schedule", label: "nav.adminTabs.schedule", dot: "bg-tone-blue", schedulerOnly: true },
 ];
 
 export function AdminTabs() {
@@ -30,14 +30,22 @@ export function AdminTabs() {
           to={tab.to}
           className={({ isActive }) =>
             cn(
-              "flex-none rounded-[7px] px-3.5 py-2 text-[13px] font-medium transition-colors duration-150 md:py-1.5",
+              "flex flex-none items-center gap-[7px] rounded-[7px] px-3.5 py-2 text-[13px] font-medium transition-colors duration-150 md:py-1.5",
               isActive
                 ? "bg-surface font-semibold text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
                 : "text-muted hover:text-foreground active:text-foreground",
             )
           }
         >
-          {t(tab.label)}
+          {({ isActive }) => (
+            <>
+              <span
+                aria-hidden
+                className={cn("hidden size-2 flex-none rounded-full md:block", tab.dot, !isActive && "opacity-50")}
+              />
+              {t(tab.label)}
+            </>
+          )}
         </NavLink>
       ))}
     </div>

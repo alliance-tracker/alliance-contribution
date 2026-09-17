@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import type { TFunction } from "i18next";
-import { Plus, Trash2, CheckCircle2, TriangleAlert } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, TriangleAlert, Tag } from "lucide-react";
 import type { ActivityType, Alias, Member } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
 import { api } from "@/lib/api";
@@ -17,6 +17,7 @@ import { MemberSearchSelect } from "@/components/member-search-select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
+import { IconTile, Strip } from "@/components/ui/tone";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertTitle, AlertContent } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -466,12 +467,15 @@ export function Aliases() {
       <div className="grid grid-cols-1 gap-3.5 md:gap-6 lg:grid-cols-2">
         {/* Alias directory — member → aliases, grouped and searchable. */}
         <Card className="overflow-hidden">
-          <div className="flex flex-col gap-3 border-b border-border p-4">
-            <div className="flex flex-col">
-              <span className="text-[13.5px] font-semibold text-foreground">
-                {t("aliases.directoryTitle")}
-              </span>
-              <span className="text-[11.5px] text-secondary">{t("aliases.directorySubtitle")}</span>
+          <Strip tone="blue" className="flex flex-col gap-3 border-b border-border p-4">
+            <div className="flex min-w-0 items-center gap-[11px]">
+              <IconTile icon={Tag} tone="blue" />
+              <div className="flex flex-col">
+                <span className="text-[13.5px] font-semibold text-foreground">
+                  {t("aliases.directoryTitle")}
+                </span>
+                <span className="text-[11.5px] text-secondary">{t("aliases.directorySubtitle")}</span>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Input
@@ -485,7 +489,7 @@ export function Aliases() {
                 {t("aliases.addTitle")}
               </Button>
             </div>
-          </div>
+          </Strip>
 
           <div className="flex flex-col gap-4 p-4">
             {loading ? (

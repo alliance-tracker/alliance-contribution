@@ -9,6 +9,7 @@ import {
   Tag,
   UserMinus,
   UserCheck,
+  Users,
   CalendarDays,
   CheckCircle2,
   Trash2,
@@ -76,7 +77,8 @@ import { LlmPrompt } from "@/components/llm-prompt";
 import { ScreenshotIngest, type IngestMode } from "@/components/screenshot-ingest";
 import { mergeLines } from "@/lib/screenshot-queue";
 import { Avatar } from "@/components/ui/avatar";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
+import { IconTile, Strip } from "@/components/ui/tone";
 import { Checkbox as ShadcnCheckbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1897,18 +1899,24 @@ export function Roster() {
       {rowError && <ErrorState message={rowError} />}
 
       <Card className="overflow-hidden">
-        <CardHeader className="flex-col items-stretch gap-3 border-b border-border md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-col gap-0.5">
-            <CardTitle>{t("roster.title")}</CardTitle>
-            <span className="text-[12px] text-muted">
-              {[
-                t("roster.memberCount", { count: counts.all }),
-                t("roster.activeCount", { n: counts.active }),
-                latestCaptureDate ? t("roster.lastImport", { date: fmtCaptureDate(latestCaptureDate) }) : null,
-              ]
-                .filter(Boolean)
-                .join(" · ")}
-            </span>
+        <Strip
+          tone="teal"
+          className="flex flex-col items-stretch gap-3 border-b border-border p-4 md:flex-row md:items-center md:justify-between"
+        >
+          <div className="flex min-w-0 items-center gap-[11px]">
+            <IconTile icon={Users} tone="teal" />
+            <div className="flex flex-col gap-0.5">
+              <CardTitle>{t("roster.title")}</CardTitle>
+              <span className="text-[12px] text-muted">
+                {[
+                  t("roster.memberCount", { count: counts.all }),
+                  t("roster.activeCount", { n: counts.active }),
+                  latestCaptureDate ? t("roster.lastImport", { date: fmtCaptureDate(latestCaptureDate) }) : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </span>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {captures.length > 0 && (
@@ -1973,7 +1981,7 @@ export function Roster() {
               {t("roster.addTitle")}
             </Button>
           </div>
-        </CardHeader>
+        </Strip>
 
         {historical && (
           <div className="border-b border-border bg-muted-surface px-4 py-2 text-[12.5px] text-secondary">

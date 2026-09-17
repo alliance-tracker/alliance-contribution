@@ -125,16 +125,20 @@ export class ScheduleService {
       token = input.token.trim();
     }
 
-    let channelId: string | null = null;
+    // Two failure modes, two messages: "could not reach" is the operator's network/runtime, "rejected"
+    // is the webhook itself (Discord says why: Unknown Webhook, Invalid Webhook Token, ...).
+    let res: Response;
     try {
-      const res = await this.fetchImpl(`https://discord.com/api/webhooks/${webhookId}/${token}`);
-      if (!res.ok) throw new ScheduleValidationError("webhook rejected by Discord");
-      const body = (await res.json()) as { channel_id?: unknown };
-      channelId = typeof body.channel_id === "string" ? body.channel_id : null;
+      res = await this.fetchImpl(`https://discord.com/api/webhooks/${webhookId}/${token}`);
     } catch (err) {
-      if (err instanceof ScheduleValidationError) throw err;
-      throw new ScheduleValidationError("webhook rejected by Discord");
+      throw new ScheduleValidationError(`could not reach Discord: ${err instanceof Error ? err.message : String(err)}`);
     }
+    const body = (await res.json().catch(() => ({}))) as { channel_id?: unknown; message?: unknown };
+    if (!res.ok) {
+      const why = typeof body.message === "string" ? body.message : `HTTP ${res.status}`;
+      throw new ScheduleValidationError(`webhook rejected by Discord: ${why}`);
+    }
+    const channelId = typeof body.channel_id === "string" ? body.channel_id : null;
 
     const id = await this.repo.insertWebhook({ name, webhook_id: webhookId, token, channel_id: channelId });
     return toWebhook({ id, name, webhook_id: webhookId, token, channel_id: channelId });

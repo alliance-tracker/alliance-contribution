@@ -57,7 +57,7 @@ export function RankBandsCard() {
   };
 
   return (
-    <Card className="flex flex-col gap-3 border-tone-blue-border p-4">
+    <Card className="flex flex-col gap-3 p-4 md:border-tone-blue-border">
       <div className="flex items-center gap-[11px]">
         <IconTile icon={Layers} tone="blue" />
         <div>

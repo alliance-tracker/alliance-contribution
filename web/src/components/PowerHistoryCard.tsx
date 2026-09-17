@@ -9,8 +9,10 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+import { TrendingUp } from "lucide-react";
 import type { MemberSnapshotSeries } from "@shared/types";
 import { Card } from "@/components/ui/card";
+import { IconTile } from "@/components/ui/tone";
 import { formatNumber, formatCompact, localeTag } from "@/lib/format";
 import { useIsMobile } from "@/lib/useIsMobile";
 
@@ -116,9 +118,12 @@ export function PowerHistoryCard({
   return (
     <Card className="p-4 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <div className="text-[14px] font-semibold">{t("powerHistory.title")}</div>
-          <div className="text-[12px] text-muted">{subtitle}</div>
+        <div className="flex min-w-0 items-center gap-[11px]">
+          <IconTile icon={TrendingUp} tone="blue" />
+          <div>
+            <div className="text-[14px] font-semibold">{t("powerHistory.title")}</div>
+            <div className="text-[12px] text-muted">{subtitle}</div>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="flex items-center gap-1.5 text-[11px] text-muted">

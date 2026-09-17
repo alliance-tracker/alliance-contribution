@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, BarChart3, ListChecks } from "lucide-react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -28,6 +28,7 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar } from "@/components/ui/avatar";
 import { AllianceRankBadge } from "@/components/AllianceRankBadge";
 import { PowerHistoryCard } from "@/components/PowerHistoryCard";
+import { IconTile } from "@/components/ui/tone";
 import { StatCard } from "@/components/overview/StatCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/States";
 import { activitySolidClass, activityFillVar } from "@/lib/activity";
@@ -319,10 +320,13 @@ export function MemberProfile() {
         {/* Score composition */}
         <Card className={snapshotsState.data ? "p-4 md:p-5" : "p-4 md:p-5 lg:col-span-2"}>
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
-              <div className="text-[14px] font-semibold">{t("profile.composition.title")}</div>
-              <div className="text-[12px] text-muted">
-                {t("profile.composition.subtitle", { count: series.length })}
+            <div className="flex min-w-0 items-center gap-[11px]">
+              <IconTile icon={BarChart3} tone="orange" />
+              <div>
+                <div className="text-[14px] font-semibold">{t("profile.composition.title")}</div>
+                <div className="text-[12px] text-muted">
+                  {t("profile.composition.subtitle", { count: series.length })}
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -379,9 +383,12 @@ export function MemberProfile() {
 
       {/* Score by activity */}
       <Card className="p-5">
-        <div className="mb-4">
-          <div className="text-[14px] font-semibold">{t("profile.byActivity.title")}</div>
-          <div className="text-[12px] text-muted">{t("profile.byActivity.subtitle")}</div>
+        <div className="mb-4 flex items-center gap-[11px]">
+          <IconTile icon={ListChecks} tone="teal" />
+          <div>
+            <div className="text-[14px] font-semibold">{t("profile.byActivity.title")}</div>
+            <div className="text-[12px] text-muted">{t("profile.byActivity.subtitle")}</div>
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 xl:grid-cols-4">
           {activitiesByPoints.map((activity) => (

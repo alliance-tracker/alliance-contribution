@@ -21,6 +21,8 @@ import { AllianceRankBadge } from "@/components/AllianceRankBadge";
 import { MEDALS, Movement, PodiumCard, ScoreCell, medalBarClass, scorePct } from "@/components/ranking-parts";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { IconTile, Strip } from "@/components/ui/tone";
+import { Trophy } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -185,22 +187,25 @@ export function Ranking() {
           <BandLegend bands={bandsCfg} />
 
           <Card className="overflow-hidden">
-            <div className="flex items-center justify-between border-b border-border px-[18px] py-[15px]">
-              <div>
-                <div className="text-[14px] font-semibold">{t("ranking.fullStandings")}</div>
-                <div className="text-[12px] text-muted">
-                  <Trans
-                    i18nKey="ranking.standings"
-                    count={visible.length}
-                    values={{ scope: weekly ? t("ranking.scopeThisWeek") : t("ranking.scopeOverall") }}
-                    components={{ 1: <span className="num" /> }}
-                  />
+            <Strip tone="amber" className="flex items-center justify-between border-b border-border px-[18px] py-[15px]">
+              <div className="flex min-w-0 items-center gap-[11px]">
+                <IconTile icon={Trophy} tone="amber" />
+                <div>
+                  <div className="text-[14px] font-semibold">{t("ranking.fullStandings")}</div>
+                  <div className="text-[12px] text-muted">
+                    <Trans
+                      i18nKey="ranking.standings"
+                      count={visible.length}
+                      values={{ scope: weekly ? t("ranking.scopeThisWeek") : t("ranking.scopeOverall") }}
+                      components={{ 1: <span className="num" /> }}
+                    />
+                  </div>
                 </div>
               </div>
               <Badge variant="neutral" className="hidden md:inline-flex">
                 {t("ranking.clickRowHint")}
               </Badge>
-            </div>
+            </Strip>
             <div className="md:hidden">
               {visible.map(({ row, band }) => {
                 const medal = MEDALS[row.rank];

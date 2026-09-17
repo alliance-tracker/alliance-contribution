@@ -39,7 +39,7 @@ export function ApiKeyDialog() {
         <Button
           variant="secondary"
           size="sm"
-          className="relative max-md:size-9 max-md:p-0"
+          className="relative h-9 bg-muted-surface hover:bg-border max-md:size-9 max-md:p-0 md:px-[13px]"
           aria-label={apiKey ? t("apiKey.set") : t("apiKey.unset")}
         >
           <KeyRound />
@@ -47,7 +47,7 @@ export function ApiKeyDialog() {
           {/* Status dot: inline after the label on desktop, pinned to the top-end corner on a phone. */}
           <span
             className={cn(
-              "size-1.5 rounded-full max-md:absolute max-md:end-1.5 max-md:top-1.5",
+              "size-1.5 rounded-full max-md:absolute max-md:end-1.5 max-md:top-1.5 md:size-[7px]",
               apiKey ? "bg-up" : "bg-faint",
             )}
             aria-hidden

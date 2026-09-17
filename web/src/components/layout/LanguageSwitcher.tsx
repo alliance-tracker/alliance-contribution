@@ -22,7 +22,7 @@ export function LanguageSwitcher() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={t("language.label")}>
+        <Button variant="ghost" size="icon" className="size-9" aria-label={t("language.label")}>
           <Languages />
         </Button>
       </PopoverTrigger>

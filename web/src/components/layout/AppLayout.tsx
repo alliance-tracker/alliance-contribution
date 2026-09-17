@@ -22,7 +22,7 @@ export function AppLayout() {
 
       {/* Mobile off-canvas nav (below md). */}
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
-        <SheetContent aria-describedby={undefined}>
+        <SheetContent aria-describedby={undefined} className="border-sidebar bg-sidebar text-sidebar-fg">
           <SheetTitle className="sr-only">{t("nav.navigation")}</SheetTitle>
           <SidebarNav />
         </SheetContent>

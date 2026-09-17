@@ -9,23 +9,24 @@ import {
 } from "lucide-react";
 import type { TKey } from "@/i18n";
 
-export type NavItem = { to: string; label: TKey; icon: LucideIcon };
+/** `hue` is a CSS colour reference (a --color-nav-* token): the sidebar tile and the top-bar accent bar. */
+export type NavItem = { to: string; label: TKey; icon: LucideIcon; hue: string };
 export type NavSection = { title: TKey; items: NavItem[] };
 
 export const navSections: NavSection[] = [
   {
     title: "nav.sections.dashboard",
     items: [
-      { to: "/", label: "nav.overview", icon: LayoutDashboard },
-      { to: "/rankings", label: "nav.ranking", icon: Trophy },
-      { to: "/members", label: "nav.members", icon: User },
-      { to: "/attendance", label: "nav.attendance", icon: CalendarCheck },
-      { to: "/activities", label: "nav.activities", icon: Swords },
+      { to: "/", label: "nav.overview", icon: LayoutDashboard, hue: "var(--color-nav-overview)" },
+      { to: "/rankings", label: "nav.ranking", icon: Trophy, hue: "var(--color-nav-ranking)" },
+      { to: "/members", label: "nav.members", icon: User, hue: "var(--color-nav-members)" },
+      { to: "/attendance", label: "nav.attendance", icon: CalendarCheck, hue: "var(--color-nav-attendance)" },
+      { to: "/activities", label: "nav.activities", icon: Swords, hue: "var(--color-nav-activities)" },
     ],
   },
   {
     title: "nav.sections.manage",
-    items: [{ to: "/admin", label: "nav.admin", icon: SlidersHorizontal }],
+    items: [{ to: "/admin", label: "nav.admin", icon: SlidersHorizontal, hue: "var(--color-nav-admin)" }],
   },
 ];
 
@@ -56,4 +57,11 @@ export function subtitleForPath(pathname: string): TKey | null {
   if (pathname.startsWith("/members/")) return "nav.subtitles.memberProfile";
   if (pathname.startsWith("/activities")) return "nav.subtitles.activities";
   return subtitles[pathname] ?? null;
+}
+
+/** Hue of the nav item that owns this path (nested routes included); null → no accent. */
+export function hueForPath(pathname: string): string | null {
+  const items = navSections.flatMap((section) => section.items);
+  const hit = items.find((item) => (item.to === "/" ? pathname === "/" : pathname.startsWith(item.to)));
+  return hit?.hue ?? null;
 }

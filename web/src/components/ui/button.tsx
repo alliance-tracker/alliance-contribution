@@ -11,6 +11,8 @@ const buttonVariants = cva(
         primary: "bg-accent text-accent-foreground hover:bg-accent-hover",
         secondary:
           "bg-surface text-foreground border border-border hover:bg-background",
+        dashed:
+          "bg-surface text-secondary border border-dashed border-border-strong hover:bg-background hover:text-foreground",
         ghost: "text-secondary hover:bg-background hover:text-foreground",
         danger: "bg-down text-white hover:brightness-95",
       },

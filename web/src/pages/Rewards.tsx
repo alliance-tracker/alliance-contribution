@@ -93,15 +93,15 @@ function parseTiers(drafts: TierDraft[]): TierBand[] {
   }));
 }
 
-// Amount badge intensity scale (design handoff): darkest = the biggest hand-out, fading down.
+// Amount badge intensity scale (design handoff, 2026-09-17): darkest = the biggest hand-out, fading down.
 // Fixed hexes on purpose — a data accent like the medal colors, identical in both themes.
 const AMOUNT_SCALE: [string, string][] = [
-  ["#1e3a8a", "#ffffff"],
-  ["#1d4ed8", "#ffffff"],
-  ["#3b82f6", "#ffffff"],
-  ["#93c5fd", "#1e3a8a"],
-  ["#dbeafe", "#1e40af"],
-  ["#eff6ff", "#60a5fa"],
+  ["#0a3570", "#fff"],
+  ["#155cb8", "#fff"],
+  ["#3b86e8", "#fff"],
+  ["#9dc3f5", "#0a3570"],
+  ["#d6e6fb", "#0f4a99"],
+  ["#e8f1fd", "#6aa5ef"],
 ];
 
 function amountColors(amount: number, maxAmount: number): [string, string] {

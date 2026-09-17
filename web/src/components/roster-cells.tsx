@@ -165,19 +165,19 @@ export function RosterStats({ summary }: { summary: RosterSummary }) {
   return (
     <div className="grid grid-cols-2 gap-2.5 md:gap-3 lg:grid-cols-4">
       <StatCard
-        valueClassName="max-md:text-[20px]"
+        valueClassName="max-md:text-[20px] md:text-[22px]"
         label={t("roster.stats.alliancePower")}
         value={formatNumber(summary.totalPower)}
         sub={t("roster.stats.activeMembers", { count: summary.tracked })}
       />
       <StatCard
-        valueClassName="max-md:text-[20px]"
+        valueClassName="max-md:text-[20px] md:text-[22px]"
         label={t("roster.stats.deltaPower")}
         value={<span className={summary.powerDelta >= 0 ? "text-up" : "text-down"}>{signed(summary.powerDelta)}</span>}
         sub={t("roster.stats.deltaSub")}
       />
       <StatCard
-        valueClassName="max-md:text-[20px]"
+        valueClassName="max-md:text-[20px] md:text-[22px]"
         label={t("roster.stats.gainedDropped")}
         value={
           <>
@@ -189,7 +189,7 @@ export function RosterStats({ summary }: { summary: RosterSummary }) {
         sub={t("roster.stats.gainedSub")}
       />
       <StatCard
-        valueClassName="max-md:text-[20px]"
+        valueClassName="max-md:text-[20px] md:text-[22px]"
         label={t("roster.stats.atRisk")}
         value={summary.atRisk}
         sub={t("roster.stats.atRiskSub")}

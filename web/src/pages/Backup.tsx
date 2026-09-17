@@ -125,7 +125,7 @@ export function Backup() {
     : "";
 
   return (
-    <div className="flex flex-col gap-3.5 md:gap-6">
+    <div className="flex max-w-[720px] flex-col gap-3.5 md:gap-6">
       {error && <ErrorState message={error} />}
       {result && <ImportResultPanel result={result} />}
 

@@ -590,15 +590,10 @@ export function Aliases() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="h-9 flex-1 max-md:border-transparent max-md:bg-accent max-md:text-accent-foreground max-md:hover:bg-accent-hover md:h-8 md:flex-none"
-                      onClick={() => openAdd(row.raw_name)}
-                    >
+                    <Button size="sm" className="h-9 flex-1 md:h-8 md:flex-none" onClick={() => openAdd(row.raw_name)}>
                       {t("aliases.mapToMember")}
                     </Button>
-                    <Button size="sm" variant="secondary" className="h-9 md:hidden" onClick={() => openAdd(row.raw_name, "new")}>
+                    <Button size="sm" variant="secondary" className="h-9 md:h-8" onClick={() => openAdd(row.raw_name, "new")}>
                       {t("aliases.newMember")}
                     </Button>
                   </div>

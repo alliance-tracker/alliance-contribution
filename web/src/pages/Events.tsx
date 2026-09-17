@@ -685,7 +685,7 @@ function NeedsMappingPanel({
               </div>
               <Link
                 to="/admin/aliases"
-                className="flex h-8 shrink-0 items-center rounded-[7px] border border-border bg-surface px-2.5 text-[12.5px] font-medium text-foreground transition-colors hover:bg-muted-surface active:bg-muted-surface"
+                className="flex h-8 shrink-0 items-center rounded-[7px] bg-accent px-2.5 text-[12.5px] font-medium text-accent-foreground transition-colors hover:bg-accent-hover active:bg-accent-hover"
               >
                 {t("events.map")}
               </Link>

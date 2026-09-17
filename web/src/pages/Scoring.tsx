@@ -528,65 +528,68 @@ function ActivityCard({
   const { t } = useTranslation();
   const inactive = activity.active !== 1;
   return (
-    <Card className={cn("flex flex-col gap-4 p-4", inactive && "opacity-60")}>
-      <div className="flex items-start justify-between gap-3">
-        <span
-          className={cn(
-            "rounded-[6px] px-2 py-0.5 text-[12px] font-medium",
-            activityBadgeClass(activity.color),
+    <Card className={cn("flex flex-col overflow-hidden", inactive && "opacity-60")}>
+      <div className="flex flex-col gap-2 border-b border-border px-[18px] py-4">
+        <div className="flex items-start justify-between gap-3">
+          <span
+            className={cn(
+              "rounded-[6px] px-2 py-0.5 text-[12px] font-medium",
+              activityBadgeClass(activity.color),
+            )}
+          >
+            {activity.name}
+          </span>
+          {inactive ? (
+            <Badge variant="neutral">{t("scoring.disabled")}</Badge>
+          ) : (
+            <Badge variant="up">{t("scoring.active")}</Badge>
           )}
-        >
-          {activity.name}
-        </span>
-        {inactive ? (
-          <Badge variant="neutral">{t("scoring.disabled")}</Badge>
-        ) : (
-          <Badge variant="up">{t("scoring.active")}</Badge>
-        )}
-      </div>
-
-      {activity.unit_label && <p className="text-[12px] text-muted">{activity.unit_label}</p>}
-
-      <div className="flex items-center justify-between text-[12px]">
-        <span className="text-secondary">{t("scoring.weightMultiplier")}</span>
-        <Badge variant="neutral" className="font-mono">
-          ×{activity.weight}
-        </Badge>
-      </div>
-
-      <TierBandsPreview activityType={activity} />
-
-      <div className="mt-auto flex flex-col gap-2 pt-2">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="h-[38px] flex-1 md:h-8"
-            onClick={() => onEdit(activity)}
-          >
-            <Pencil />
-            {t("common.actions.edit")}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="h-[38px] flex-1 md:h-8"
-            onClick={() => onEditBands(activity)}
-          >
-            {t("scoring.editBands")}
-          </Button>
         </div>
-        {inactive ? (
-          <Button variant="ghost" size="sm" onClick={() => onActivate(activity)}>
-            <Power />
-            {t("scoring.enable")}
-          </Button>
-        ) : (
-          <Button variant="ghost" size="sm" onClick={() => onDeactivate(activity)}>
-            <PowerOff />
-            {t("scoring.disable")}
-          </Button>
-        )}
+
+        {activity.unit_label && <p className="text-[12px] text-muted">{activity.unit_label}</p>}
+      </div>
+      <div className="flex flex-1 flex-col gap-4 px-[18px] py-4">
+        <div className="flex items-center justify-between text-[12px]">
+          <span className="text-secondary">{t("scoring.weightMultiplier")}</span>
+          <Badge variant="neutral" className="font-mono">
+            ×{activity.weight}
+          </Badge>
+        </div>
+
+        <TierBandsPreview activityType={activity} />
+
+        <div className="mt-auto flex flex-col gap-2 pt-2">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-[38px] flex-1 md:h-8"
+              onClick={() => onEdit(activity)}
+            >
+              <Pencil />
+              {t("common.actions.edit")}
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-[38px] flex-1 md:h-8"
+              onClick={() => onEditBands(activity)}
+            >
+              {t("scoring.editBands")}
+            </Button>
+          </div>
+          {inactive ? (
+            <Button variant="ghost" size="sm" onClick={() => onActivate(activity)}>
+              <Power />
+              {t("scoring.enable")}
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" onClick={() => onDeactivate(activity)}>
+              <PowerOff />
+              {t("scoring.disable")}
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );

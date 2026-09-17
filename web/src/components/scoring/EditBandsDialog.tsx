@@ -13,7 +13,6 @@ import { SuccessNote } from "@/components/scoring/SuccessNote";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Field } from "@/components/ui/field";
 import {
   Table,
   TableBody,
@@ -132,10 +131,18 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 sm:max-w-xs">
-        <Field label={t("scoring.weight")} hint={t("scoring.hintMin0")}>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-col">
+          <span className="text-[12px] font-medium text-secondary">{t("scoring.weight")}</span>
+          <span className="text-[11.5px] text-muted">{t("scoring.hintMin0")}</span>
+        </div>
+        <label className="flex shrink-0 items-center gap-1.5">
+          <span className="num text-[14px] text-muted" aria-hidden>
+            ×
+          </span>
           <Input
-            className="num text-end"
+            aria-label={t("scoring.weight")}
+            className="num w-20 text-end"
             type="number"
             min={0}
             step={1}
@@ -146,7 +153,7 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
             }}
             aria-invalid={weightNum === null || weightNum < 0}
           />
-        </Field>
+        </label>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -220,7 +227,7 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
         )}
 
         <div>
-          <Button variant="secondary" size="sm" onClick={addTier}>
+          <Button variant="dashed" size="sm" onClick={addTier}>
             <Plus />
             {t("scoring.editor.addTier")}
           </Button>

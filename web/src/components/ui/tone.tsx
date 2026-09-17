@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils";
 /**
  * Section tones — the hued chrome from the 2026-09-17 design refresh. A tone name resolves to a
  * --color-* token through an inline CSS variable, so the utilities below stay static strings
- * (Tailwind cannot see a class name assembled at runtime).
+ * (Tailwind cannot see a class name assembled at runtime). The lookup maps below must hold the
+ * full literal `var(--color-…)` strings rather than assembling them with a template string:
+ * Tailwind only emits a theme variable it can see verbatim in scanned source.
  */
 export type StripTone = "amber" | "red" | "blue" | "teal" | "orange";
 export type Tone = StripTone | "pink" | "slate" | "warn";
@@ -19,6 +21,14 @@ const FILL: Record<Tone, string> = {
   pink: "var(--color-tone-pink)",
   slate: "var(--color-band-rest)",
   warn: "var(--color-warn)",
+};
+
+const STRIP: Record<StripTone, { bg: string; border: string }> = {
+  amber: { bg: "var(--color-tone-amber-bg)", border: "var(--color-tone-amber-border)" },
+  red: { bg: "var(--color-tone-red-bg)", border: "var(--color-tone-red-border)" },
+  blue: { bg: "var(--color-tone-blue-bg)", border: "var(--color-tone-blue-border)" },
+  teal: { bg: "var(--color-tone-teal-bg)", border: "var(--color-tone-teal-border)" },
+  orange: { bg: "var(--color-tone-orange-bg)", border: "var(--color-tone-orange-border)" },
 };
 
 /**
@@ -72,8 +82,8 @@ export function Strip({
     <div
       style={
         {
-          "--strip-bg": `var(--color-tone-${tone}-bg)`,
-          "--strip-border": `var(--color-tone-${tone}-border)`,
+          "--strip-bg": STRIP[tone].bg,
+          "--strip-border": STRIP[tone].border,
           ...style,
         } as CSSProperties
       }

@@ -8,7 +8,9 @@ export class BackupRepo {
   async dumpAll(): Promise<Record<TableName, Row[]>> {
     const out = {} as Record<TableName, Row[]>;
     for (const table of INSERT_ORDER) {
-      out[table] = await all<Row>(this.db, `SELECT * FROM ${table} ORDER BY id`);
+      // ORDER BY rowid, not id: message_translations has a composite PK and no id column, and for
+      // every other table `id INTEGER PRIMARY KEY` IS the rowid, so the order is unchanged.
+      out[table] = await all<Row>(this.db, `SELECT * FROM ${table} ORDER BY rowid`);
     }
     return out;
   }

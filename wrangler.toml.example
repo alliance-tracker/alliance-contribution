@@ -53,6 +53,16 @@ remote = true
 # AI_DAILY_REQUEST_CAP = "400"                 # hard cap on reads per day
 # AI_MAX_TOKENS = "2500"
 # AI_THINKING = "false"                        # "true" = slower, ~7x the neurons, slightly better names
+#
+# Event scheduling + Discord notifications (docs/guides/schedule.md). Off by default: uncomment BOTH
+# the two vars below and the [triggers] block after them. The cron is what costs invocations
+# (1440/day); the var is what shows the section. The vars belong in the same [vars] table as the AI
+# ones above, which is why they sit inside that block.
+# SCHEDULER_ENABLED = "true"
+# NOTIFY_LANGUAGES = "en,es,fr,de,ko,ar"       # default; overridden at runtime by the in-app setting
+
+# [triggers]
+# crons = ["* * * * *"]
 
 [assets]
 directory = "dist"

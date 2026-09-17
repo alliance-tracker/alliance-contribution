@@ -96,7 +96,8 @@
       "aliases": "Aliase",
       "scoring": "Wertung & Aktivitäten",
       "rewards": "Belohnungen",
-      "backup": "Export / Import"
+      "backup": "Export / Import",
+      "schedule": "Zeitplan"
     },
     "overview": "Überblick",
     "ranking": "Rangliste",
@@ -121,7 +122,10 @@
     "copied": "Kopiert"
   },
   "screenshots": {
-    "mode": { "paste": "Text einfügen", "screenshots": "Aus Screenshots" },
+    "mode": {
+      "paste": "Text einfügen",
+      "screenshots": "Aus Screenshots"
+    },
     "meter": {
       "plenty": "Heute <1>{{used}}</1> von <2>{{limit}}</2> verbraucht · noch etwa <3>{{left}}</3> Screenshots übrig",
       "low": "<1>Noch etwa {{left}} Screenshots heute übrig.</1> Große Stapel werden möglicherweise nicht fertig.",
@@ -768,6 +772,228 @@
       "returningTitle": "Inaktiv, aber in dieser Erfassung vorhanden ({{n}})",
       "reactivateHeader": "Reaktivieren",
       "reactivateAria": "{{governor}} reaktivieren"
+    }
+  },
+  "schedule": {
+    "needKey": "Legen Sie Ihren API-Schlüssel fest (obere Leiste), um den Zeitplan zu verwalten.",
+    "readOnly": "Nur Lesen · Administratoren können bearbeiten",
+    "heartbeatTitle": "Wann der Hintergrundauftrag für Erinnerungen zuletzt lief",
+    "lastChecked": "Zuletzt geprüft: {{when}}",
+    "lastCheckedNever": "nie",
+    "addEvent": "Event hinzufügen",
+    "addMessage": "Nachricht hinzufügen",
+    "langCount_one": "{{count}} Sprache",
+    "langCount_other": "{{count}} Sprachen",
+    "tabs": {
+      "events": "Events",
+      "messages": "Nachrichten",
+      "discord": "Discord"
+    },
+    "events": {
+      "title": "Wiederkehrende Events",
+      "subtitle": "Erinnerungen werden auf Discord in {{langs}} gepostet · Zeiten in Ihrer lokalen Zeit ({{tz}})",
+      "colEvent": "Event",
+      "colRepeats": "Wiederholung",
+      "colLasts": "Dauer",
+      "colNext": "Nächstes",
+      "colOn": "An",
+      "colReminders": "Erinnerungen",
+      "nextLocal": "Nächstes · lokal",
+      "allDay": "ganztägig",
+      "instant": "sofort",
+      "lasts": "dauert {{duration}}",
+      "paused": "pausiert",
+      "notPosting": "postet nicht",
+      "turnOn": "Einschalten",
+      "turnOff": "Ausschalten",
+      "edit": "Event bearbeiten",
+      "delete": "Event löschen",
+      "count_one": "{{count}} Event",
+      "count_other": "{{count}} Events",
+      "reminderCount_one": "{{count}} Erinnerung",
+      "reminderCount_other": "{{count}} Erinnerungen",
+      "footer": "{{events}} · {{reminders}}",
+      "timingHint": "Der Zeitpunkt der Erinnerung ist relativ zum Eventstart · „nach dem Start“ nur für Events mit Dauer",
+      "empty": "Noch keine Events — fügen Sie eines hinzu, um Erinnerungen zu posten.",
+      "noPings": "keine Pings",
+      "defaultMessage": "Standard",
+      "neverFired": "nie ausgelöst",
+      "waiting": "wartet auf das nächste Vorkommen",
+      "delivered": "zugestellt",
+      "failed": "fehlgeschlagen",
+      "noReminders": "Noch keine Erinnerungen — das Event wird verfolgt, aber nichts wird auf Discord gepostet.",
+      "addReminder": "Erinnerung hinzufügen",
+      "editReminder": "Erinnerung bearbeiten",
+      "deleteReminder": "Erinnerung löschen",
+      "test": "Test",
+      "testTitle": "Diese Erinnerung jetzt auf Discord posten",
+      "unknownChannel": "(gelöschter Kanal)"
+    },
+    "messages": {
+      "title": "Erinnerungsnachrichten",
+      "subtitle": "Jede Nachricht wird in {{langs}} gepostet · Platzhalter {event} {time} {end}",
+      "default": "Standard",
+      "notTranslated": "nicht übersetzt",
+      "edit": "Nachricht bearbeiten",
+      "delete": "Nachricht löschen",
+      "footer": "Standardnachrichten können bearbeitet, aber nicht gelöscht werden. Eine Erinnerung auf „Standard“ wählt die Nachricht, die zu ihrem Zeitpunkt passt.",
+      "empty": "Noch keine Nachrichten."
+    },
+    "discord": {
+      "add": "Hinzufügen",
+      "channels": {
+        "title": "Kanäle",
+        "subtitle": "Webhooks, in die wir posten",
+        "id": "ID {{id}}",
+        "delete": "Kanal löschen",
+        "empty": "Noch keine Kanäle.",
+        "footer": "Tokens werden nach dem Speichern maskiert und sind nicht mehr einsehbar."
+      },
+      "roles": {
+        "title": "Rollen",
+        "subtitle": "Discord-Rollen, die wir pingen können",
+        "delete": "Rolle löschen",
+        "empty": "Noch keine Rollen."
+      },
+      "languages": {
+        "title": "Sprachen",
+        "subtitle": "Jede Erinnerung wird in dieser Reihenfolge gepostet",
+        "placeholder": "Sprache hinzufügen, z. B. German oder de",
+        "add": "Hinzufügen",
+        "remove": "Sprache entfernen",
+        "unknown": "Weder ein Sprachname noch ein zweibuchstabiger Code: {{value}}",
+        "note": "Englisch steht immer an erster Stelle und kann nicht entfernt werden.",
+        "source": {
+          "settings": "Sprachliste hier in der App festgelegt.",
+          "env": "Die Sprachliste stammt aus der Serverkonfiguration (NOTIFY_LANGUAGES).",
+          "default": "Es wird die eingebaute Standardliste verwendet."
+        }
+      }
+    },
+    "eventDialog": {
+      "add": "Event hinzufügen",
+      "edit": "Event bearbeiten",
+      "desc": "Wiederkehrendes Spiel-Event. Erinnerungen werden danach aus der Liste hinzugefügt.",
+      "name": "Name",
+      "namePlaceholder": "z. B. Bear Trap",
+      "activity": "Aktivität",
+      "activityNone": "— keine —",
+      "first": "Erstes Vorkommen",
+      "localHint": "(Ihre lokale Zeit)",
+      "storedAs": "Gespeichert als {{utc}} UTC",
+      "repeatEvery": "Wiederholen alle",
+      "allDay": "Ganztägig",
+      "duration": "Dauer",
+      "durationHint": "(optional · leer lassen für ein sofortiges Event)",
+      "hours": "Stunden",
+      "durNoteDuring": "Erinnerungen können während des Events ausgelöst werden",
+      "durNoteInstant": "sofortiges Event"
+    },
+    "reminderDialog": {
+      "add": "Erinnerung hinzufügen",
+      "edit": "Erinnerung bearbeiten",
+      "desc": "Für {{event}} · gepostet in {{langs}}",
+      "channel": "Kanal",
+      "noChannels": "Fügen Sie zuerst im Discord-Tab einen Kanal hinzu.",
+      "pingRoles": "Rollen pingen",
+      "noRoles": "Noch keine Rollen — fügen Sie im Discord-Tab eine hinzu.",
+      "when": "Wann",
+      "minutes": "Minuten",
+      "before": "vor dem Start",
+      "after": "nach dem Start",
+      "fires": "Löst <1>{{when}}</1> aus",
+      "laterThanEnd": "später als das Event endet ({{duration}})",
+      "message": "Nachricht",
+      "messageDefault": "Standard (passend zum Zeitpunkt)"
+    },
+    "messageDialog": {
+      "add": "Nachricht hinzufügen",
+      "edit": "Nachricht bearbeiten",
+      "desc": "Ein Text pro Sprache. Discord zeigt jede Zeile mit ihrer Flagge davor.",
+      "name": "Name",
+      "namePlaceholder": "z. B. Sammelruf",
+      "insert": "Platzhalter einfügen",
+      "chipEvent": "Eventname",
+      "chipTime": "Zeit bis zum Eventstart",
+      "chipEnd": "Endzeit des Events",
+      "source": "· Quelle",
+      "enPlaceholder": "Macht euch bereit! {event} beginnt {time}.",
+      "trPlaceholder": "Noch nicht übersetzt — tippen Sie es ein oder nutzen Sie Übersetzen",
+      "translate": "Aus dem Englischen übersetzen",
+      "translating": "Übersetze…",
+      "preview": "Vorschau · 15 Min vor Bear Trap",
+      "previewEvent": "Bear Trap",
+      "previewTime": "in 15 Minuten",
+      "previewEnd": "in 3 Stunden",
+      "previewMissing": "(nicht übersetzt — Englisch wird verwendet)"
+    },
+    "channelDialog": {
+      "title": "Kanal hinzufügen",
+      "desc": "Discord → Kanaleinstellungen → Integrationen → Webhooks",
+      "name": "Name",
+      "namePlaceholder": "#ankündigungen",
+      "modeUrl": "Webhook-URL",
+      "modeId": "ID + Token",
+      "urlPlaceholder": "https://discord.com/api/webhooks/…",
+      "webhookId": "Webhook-ID",
+      "webhookIdPlaceholder": "1284019928…",
+      "token": "Token",
+      "lockNote": "Das Token wird gespeichert und nach dem Speichern nie wieder angezeigt. Wir rufen Discord einmal auf, um zu ermitteln, in welchen Kanal es postet.",
+      "submit": "Kanal hinzufügen"
+    },
+    "roleDialog": {
+      "title": "Rolle hinzufügen",
+      "desc": "Discord → Servereinstellungen → Rollen → ⋯ → Rollen-ID kopieren",
+      "name": "Name",
+      "namePlaceholder": "@R4",
+      "roleId": "Discord-Rollen-ID",
+      "roleIdPlaceholder": "1180332211990011904",
+      "submit": "Rolle hinzufügen"
+    },
+    "confirm": {
+      "title": "{{kind}} löschen?",
+      "kind": {
+        "event": "Event",
+        "reminder": "Erinnerung",
+        "message": "Nachricht",
+        "channel": "Kanal",
+        "role": "Rolle"
+      },
+      "event": "und {{reminders}} werden entfernt. Dafür wird nichts mehr auf Discord gepostet.",
+      "reminder": "wird nicht mehr in {{channel}} gepostet.",
+      "message": "wird entfernt. Erinnerungen, die sie nutzen, fallen auf die Standardnachricht zurück.",
+      "channel": "wird entfernt. {{reminders}} posten dorthin und werden gestoppt.",
+      "role": "wird von keiner Erinnerung mehr gepingt."
+    },
+    "toast": {
+      "posted": "In {{channel}} gepostet",
+      "postedSub": "{{event}} · {{when}} · {{langs}}",
+      "channelAdded": "Kanal hinzugefügt",
+      "channelAddedSub": "{{name}} · Token gespeichert, ab jetzt maskiert"
+    },
+    "format": {
+      "minutes_one": "{{count}} Min",
+      "minutes_other": "{{count}} Min",
+      "hours_one": "{{count}} Std",
+      "hours_other": "{{count}} Std",
+      "days_one": "{{count}} T",
+      "days_other": "{{count}} T",
+      "hoursMinutes": "{{hours}} Std {{minutes}} Min",
+      "everyDay": "täglich",
+      "everyWeek": "wöchentlich",
+      "everyDays_one": "alle {{count}} Tag",
+      "everyDays_other": "alle {{count}} Tage",
+      "everyWeeks_one": "alle {{count}} Woche",
+      "everyWeeks_other": "alle {{count}} Wochen",
+      "day_one": "Tag",
+      "day_other": "Tage",
+      "week_one": "Woche",
+      "week_other": "Wochen",
+      "atStart": "zum Start",
+      "beforeStart": "{{duration}} vorher",
+      "afterStart": "{{duration}} nach dem Start",
+      "in": "in {{value}}",
+      "ago": "vor {{value}}"
     }
   }
 }

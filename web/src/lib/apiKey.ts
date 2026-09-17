@@ -20,6 +20,8 @@ export type ApiKeyContextValue = {
   setApiKey: (key: string) => void;
   /** Role resolved from the current key via GET /api/auth/me (null when unset or not recognised). */
   role: Role;
+  /** Whether this deployment runs the reminder scheduler — hides the Schedule tab and page when off. */
+  scheduler: boolean;
   /** True until the first /api/auth/me answer lands, so the gate doesn't flash on load. */
   checking: boolean;
 };

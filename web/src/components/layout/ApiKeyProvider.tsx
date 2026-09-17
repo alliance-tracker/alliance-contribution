@@ -6,11 +6,13 @@ import { readApiKey, writeApiKey } from "@/lib/apiKey";
 export function ApiKeyProvider({ children }: { children: ReactNode }) {
   const [apiKey, setApiKeyState] = useState<string>(() => readApiKey());
   const [role, setRole] = useState<Role>(null);
+  const [scheduler, setScheduler] = useState(false);
   const [checking, setChecking] = useState<boolean>(() => readApiKey() !== "");
 
   useEffect(() => {
     if (!apiKey) {
       setRole(null);
+      setScheduler(false);
       setChecking(false);
       return;
     }
@@ -19,10 +21,14 @@ export function ApiKeyProvider({ children }: { children: ReactNode }) {
     api
       .authMe()
       .then((res) => {
-        if (!cancelled) setRole(res.role);
+        if (cancelled) return;
+        setRole(res.role);
+        setScheduler(res.scheduler);
       })
       .catch(() => {
-        if (!cancelled) setRole(null);
+        if (cancelled) return;
+        setRole(null);
+        setScheduler(false);
       })
       .finally(() => {
         if (!cancelled) setChecking(false);
@@ -38,7 +44,7 @@ export function ApiKeyProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ApiKeyContext.Provider value={{ apiKey, setApiKey, role, checking }}>
+    <ApiKeyContext.Provider value={{ apiKey, setApiKey, role, scheduler, checking }}>
       {children}
     </ApiKeyContext.Provider>
   );

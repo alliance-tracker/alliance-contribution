@@ -4,19 +4,23 @@ import { useApiKey } from "@/lib/apiKey";
 import { cn } from "@/lib/utils";
 import type { TKey } from "@/i18n";
 
-const TABS: { to: string; label: TKey; adminOnly?: boolean }[] = [
+const TABS: { to: string; label: TKey; adminOnly?: boolean; schedulerOnly?: boolean }[] = [
   { to: "/admin/events", label: "nav.adminTabs.events" },
   { to: "/admin/roster", label: "nav.adminTabs.roster" },
   { to: "/admin/aliases", label: "nav.adminTabs.aliases" },
   { to: "/admin/scoring", label: "nav.adminTabs.scoring" },
   { to: "/admin/rewards", label: "nav.adminTabs.rewards", adminOnly: true },
   { to: "/admin/backup", label: "nav.adminTabs.backup", adminOnly: true },
+  // Managers see it too — read-only; the tab only exists where the deployment runs the scheduler.
+  { to: "/admin/schedule", label: "nav.adminTabs.schedule", schedulerOnly: true },
 ];
 
 export function AdminTabs() {
   const { t } = useTranslation();
-  const { role } = useApiKey();
-  const visibleTabs = TABS.filter((tab) => !tab.adminOnly || role === "admin");
+  const { role, scheduler } = useApiKey();
+  const visibleTabs = TABS.filter(
+    (tab) => (!tab.adminOnly || role === "admin") && (!tab.schedulerOnly || scheduler),
+  );
 
   return (
     <div className="no-scrollbar flex w-full items-center gap-1 overflow-x-auto whitespace-nowrap rounded-[10px] border border-border bg-muted-surface p-1 md:inline-flex md:w-auto md:flex-wrap md:overflow-visible">

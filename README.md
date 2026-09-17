@@ -181,7 +181,7 @@ User guides, one per section of the app, live in [`docs/guides/`](docs/guides/):
 - [Ranking](docs/guides/ranking.md) · [Attendance](docs/guides/attendance.md) · [Members](docs/guides/members.md)
 - Admin: [Events](docs/guides/events.md) (screenshots read in-app, or LLM → paste) · [Roster](docs/guides/roster.md) ·
   [Aliases](docs/guides/aliases.md) · [Scoring](docs/guides/scoring.md) · [Rewards](docs/guides/rewards.md) ·
-  [Backup](docs/guides/backup.md)
+  [Backup](docs/guides/backup.md) · [Schedule](docs/guides/schedule.md) (Discord reminders, opt-in)
 
 `CLAUDE.md` holds conventions and non-obvious decisions for humans and coding agents. The rest of `docs/`
 (`data/`, `fixtures/`, `plans/`, `specs/`) is gitignored — one deployment's real roster and alias data plus

@@ -96,7 +96,8 @@
       "aliases": "Aliases",
       "scoring": "Scoring & Activities",
       "rewards": "Rewards",
-      "backup": "Export / Import"
+      "backup": "Export / Import",
+      "schedule": "Schedule"
     },
     "overview": "Overview",
     "ranking": "Ranking",
@@ -121,7 +122,10 @@
     "copied": "Copied"
   },
   "screenshots": {
-    "mode": { "paste": "Paste text", "screenshots": "From screenshots" },
+    "mode": {
+      "paste": "Paste text",
+      "screenshots": "From screenshots"
+    },
     "meter": {
       "plenty": "Used <1>{{used}}</1> of <2>{{limit}}</2> today · about <3>{{left}}</3> screenshots left",
       "low": "<1>About {{left}} screenshots left today.</1> Large batches may not finish.",
@@ -768,6 +772,228 @@
       "returningTitle": "Inactive but present in this capture ({{n}})",
       "reactivateHeader": "Reactivate",
       "reactivateAria": "Reactivate {{governor}}"
+    }
+  },
+  "schedule": {
+    "needKey": "Set your API key (top bar) to manage the schedule.",
+    "readOnly": "Read-only · admins can edit",
+    "heartbeatTitle": "When the background reminder job last ran",
+    "lastChecked": "Last checked: {{when}}",
+    "lastCheckedNever": "never",
+    "addEvent": "Add event",
+    "addMessage": "Add message",
+    "langCount_one": "{{count}} language",
+    "langCount_other": "{{count}} languages",
+    "tabs": {
+      "events": "Events",
+      "messages": "Messages",
+      "discord": "Discord"
+    },
+    "events": {
+      "title": "Recurring events",
+      "subtitle": "Reminders post to Discord in {{langs}} · times in your local time ({{tz}})",
+      "colEvent": "Event",
+      "colRepeats": "Repeats",
+      "colLasts": "Lasts",
+      "colNext": "Next",
+      "colOn": "On",
+      "colReminders": "Reminders",
+      "nextLocal": "Next · local",
+      "allDay": "all day",
+      "instant": "instant",
+      "lasts": "lasts {{duration}}",
+      "paused": "paused",
+      "notPosting": "not posting",
+      "turnOn": "Turn on",
+      "turnOff": "Turn off",
+      "edit": "Edit event",
+      "delete": "Delete event",
+      "count_one": "{{count}} event",
+      "count_other": "{{count}} events",
+      "reminderCount_one": "{{count}} reminder",
+      "reminderCount_other": "{{count}} reminders",
+      "footer": "{{events}} · {{reminders}}",
+      "timingHint": "Reminder timing is relative to the event start · “after start” only for events that last",
+      "empty": "No events yet — add one to start posting reminders.",
+      "noPings": "no pings",
+      "defaultMessage": "default",
+      "neverFired": "never fired",
+      "waiting": "waiting for next occurrence",
+      "delivered": "delivered",
+      "failed": "failed",
+      "noReminders": "No reminders yet — this event is tracked but nothing is posted to Discord.",
+      "addReminder": "Add reminder",
+      "editReminder": "Edit reminder",
+      "deleteReminder": "Delete reminder",
+      "test": "Test",
+      "testTitle": "Post this reminder to Discord now",
+      "unknownChannel": "(deleted channel)"
+    },
+    "messages": {
+      "title": "Reminder messages",
+      "subtitle": "Every message is posted in {{langs}} · placeholders {event} {time} {end}",
+      "default": "Default",
+      "notTranslated": "not translated",
+      "edit": "Edit message",
+      "delete": "Delete message",
+      "footer": "Default messages can be edited but not deleted. A reminder set to “default” picks the message that matches its timing.",
+      "empty": "No messages yet."
+    },
+    "discord": {
+      "add": "Add",
+      "channels": {
+        "title": "Channels",
+        "subtitle": "Webhooks we post to",
+        "id": "ID {{id}}",
+        "delete": "Delete channel",
+        "empty": "No channels yet.",
+        "footer": "Tokens are masked after saving and can't be viewed again."
+      },
+      "roles": {
+        "title": "Roles",
+        "subtitle": "Discord roles we can ping",
+        "delete": "Delete role",
+        "empty": "No roles yet."
+      },
+      "languages": {
+        "title": "Languages",
+        "subtitle": "Every reminder is posted in this order",
+        "placeholder": "Add a language, e.g. German or de",
+        "add": "Add",
+        "remove": "Remove language",
+        "unknown": "Not a language name or a two-letter code: {{value}}",
+        "note": "English is always first and can't be removed.",
+        "source": {
+          "settings": "Language list set here in the app.",
+          "env": "Language list comes from the server config (NOTIFY_LANGUAGES).",
+          "default": "Using the built-in default list."
+        }
+      }
+    },
+    "eventDialog": {
+      "add": "Add event",
+      "edit": "Edit event",
+      "desc": "Recurring in-game event. Reminders are added from the list afterwards.",
+      "name": "Name",
+      "namePlaceholder": "e.g. Bear Trap",
+      "activity": "Activity",
+      "activityNone": "— none —",
+      "first": "First occurrence",
+      "localHint": "(your local time)",
+      "storedAs": "Stored as {{utc}} UTC",
+      "repeatEvery": "Repeat every",
+      "allDay": "All day",
+      "duration": "Duration",
+      "durationHint": "(optional · leave empty for an instant event)",
+      "hours": "hours",
+      "durNoteDuring": "reminders may fire during the event",
+      "durNoteInstant": "instant event"
+    },
+    "reminderDialog": {
+      "add": "Add reminder",
+      "edit": "Edit reminder",
+      "desc": "For {{event}} · posted in {{langs}}",
+      "channel": "Channel",
+      "noChannels": "Add a channel on the Discord tab first.",
+      "pingRoles": "Ping roles",
+      "noRoles": "No roles yet — add one on the Discord tab.",
+      "when": "When",
+      "minutes": "minutes",
+      "before": "before start",
+      "after": "after start",
+      "fires": "Fires <1>{{when}}</1>",
+      "laterThanEnd": "later than the event ends ({{duration}})",
+      "message": "Message",
+      "messageDefault": "default (matches the timing)"
+    },
+    "messageDialog": {
+      "add": "Add message",
+      "edit": "Edit message",
+      "desc": "One text per language. Discord shows each line prefixed with its flag.",
+      "name": "Name",
+      "namePlaceholder": "e.g. Rally call",
+      "insert": "Insert placeholder",
+      "chipEvent": "Event name",
+      "chipTime": "Time until the event starts",
+      "chipEnd": "End time of the event",
+      "source": "· source",
+      "enPlaceholder": "Get ready! {event} starts {time}.",
+      "trPlaceholder": "Not translated yet — type it or use Translate",
+      "translate": "Translate from English",
+      "translating": "Translating…",
+      "preview": "Preview · 15 min before Bear Trap",
+      "previewEvent": "Bear Trap",
+      "previewTime": "in 15 minutes",
+      "previewEnd": "in 3 hours",
+      "previewMissing": "(not translated — English will be used)"
+    },
+    "channelDialog": {
+      "title": "Add channel",
+      "desc": "Discord → channel settings → Integrations → Webhooks",
+      "name": "Name",
+      "namePlaceholder": "#announcements",
+      "modeUrl": "Webhook URL",
+      "modeId": "ID + token",
+      "urlPlaceholder": "https://discord.com/api/webhooks/…",
+      "webhookId": "Webhook ID",
+      "webhookIdPlaceholder": "1284019928…",
+      "token": "Token",
+      "lockNote": "The token is stored and never shown again after saving. We call Discord once to resolve which channel it posts to.",
+      "submit": "Add channel"
+    },
+    "roleDialog": {
+      "title": "Add role",
+      "desc": "Discord → Server settings → Roles → ⋯ → Copy Role ID",
+      "name": "Name",
+      "namePlaceholder": "@R4",
+      "roleId": "Discord role ID",
+      "roleIdPlaceholder": "1180332211990011904",
+      "submit": "Add role"
+    },
+    "confirm": {
+      "title": "Delete {{kind}}?",
+      "kind": {
+        "event": "event",
+        "reminder": "reminder",
+        "message": "message",
+        "channel": "channel",
+        "role": "role"
+      },
+      "event": "and {{reminders}} will be removed. Nothing more will be posted to Discord for it.",
+      "reminder": "will no longer be posted to {{channel}}.",
+      "message": "will be removed. Reminders using it fall back to the default message.",
+      "channel": "will be removed. {{reminders}} post there and will stop.",
+      "role": "will no longer be pinged by any reminder."
+    },
+    "toast": {
+      "posted": "Posted to {{channel}}",
+      "postedSub": "{{event}} · {{when}} · {{langs}}",
+      "channelAdded": "Channel added",
+      "channelAddedSub": "{{name}} · token stored, masked from now on"
+    },
+    "format": {
+      "minutes_one": "{{count}} min",
+      "minutes_other": "{{count}} min",
+      "hours_one": "{{count}} h",
+      "hours_other": "{{count}} h",
+      "days_one": "{{count}} d",
+      "days_other": "{{count}} d",
+      "hoursMinutes": "{{hours}} h {{minutes}} min",
+      "everyDay": "every day",
+      "everyWeek": "every week",
+      "everyDays_one": "every {{count}} day",
+      "everyDays_other": "every {{count}} days",
+      "everyWeeks_one": "every {{count}} week",
+      "everyWeeks_other": "every {{count}} weeks",
+      "day_one": "day",
+      "day_other": "days",
+      "week_one": "week",
+      "week_other": "weeks",
+      "atStart": "at start",
+      "beforeStart": "{{duration}} before",
+      "afterStart": "{{duration}} after start",
+      "in": "in {{value}}",
+      "ago": "{{value}} ago"
     }
   }
 }

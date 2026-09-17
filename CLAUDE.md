@@ -68,6 +68,11 @@ and operator data stay untranslated.
   in front of auth). Per-colo and eventually consistent — permissive by design. See
   `src/middleware/rate-limit.ts`.
 
+- **Event scheduling + Discord reminders are opt-in per deployment** (2026-09-17 spec). Two commented
+  blocks in `wrangler.toml.example`: `[triggers] crons` runs the job, `SCHEDULER_ENABLED = "true"` shows
+  the section and unlocks `/api/admin/schedule/*` (404 otherwise). Without the cron nothing runs or bills.
+  Firing is cron-every-minute + `notification_log` claim; no retries. See `docs/guides/schedule.md`.
+
 ## Nothing domain-configurable is hardcoded
 Activity types, scoring tiers, and activity weights live in **SQLite tables**, editable at runtime through
 the app — not TS constants. The roster and aliases are fully managed (CRUD) in-app, not seed-only. Derived

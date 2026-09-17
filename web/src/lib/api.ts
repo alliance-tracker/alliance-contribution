@@ -12,13 +12,24 @@ import type {
   Attendance,
   CaptureRosterRow,
   CaptureSummary,
+  DiscordRole,
+  DiscordWebhook,
   Event,
   EventListRow,
   Member,
   MemberDelta,
   MemberProfile,
   MemberSnapshotSeries,
+  MessageTemplate,
   NewActivityType,
+  NotificationInput,
+  EventNotification,
+  ScheduleEventInput,
+  ScheduleLanguages,
+  ScheduleReadModel,
+  ScheduleStatus,
+  ScheduledEventWithNotifications,
+  WebhookInput,
   NewAlias,
   OverallRanking,
   Overview,
@@ -97,7 +108,7 @@ export type ImportResult = {
   error?: string;
 };
 
-export type AuthMe = { role: "admin" | "manager" | null };
+export type AuthMe = { role: "admin" | "manager" | "viewer" | null; scheduler: boolean };
 
 // ---- Error + transport ------------------------------------------------------
 
@@ -268,6 +279,40 @@ export const api = {
     get: (id: number) => get<AllocationWithLines>(`/admin/allocations/${id}`),
     updateTitle: (id: number, title: string) => write<Allocation>("PATCH", `/admin/allocations/${id}`, { title }),
     delete: (id: number) => write<{ ok: true }>("DELETE", `/admin/allocations/${id}`),
+  },
+
+  // Read model for every tier; writes are admin-key only and 404 when the deployment has no scheduler.
+  schedule: {
+    read: () => get<ScheduleReadModel>("/schedule"),
+    status: () => get<ScheduleStatus>("/admin/schedule/status"),
+    languages: () => get<ScheduleLanguages>("/admin/schedule/languages"),
+    saveLanguages: (languages: string[]) =>
+      write<ScheduleLanguages>("PUT", "/admin/schedule/languages", { languages }),
+    webhooks: () => get<DiscordWebhook[]>("/admin/schedule/webhooks"),
+    addWebhook: (body: WebhookInput) => write<DiscordWebhook>("POST", "/admin/schedule/webhooks", body),
+    deleteWebhook: (id: number) => write<{ ok: true }>("DELETE", `/admin/schedule/webhooks/${id}`),
+    roles: () => get<DiscordRole[]>("/admin/schedule/roles"),
+    addRole: (body: { name: string; role_id: string }) => write<DiscordRole>("POST", "/admin/schedule/roles", body),
+    deleteRole: (id: number) => write<{ ok: true }>("DELETE", `/admin/schedule/roles/${id}`),
+    templates: () => get<MessageTemplate[]>("/admin/schedule/templates"),
+    addTemplate: (body: { name: string; texts: Record<string, string> }) =>
+      write<MessageTemplate>("POST", "/admin/schedule/templates", body),
+    updateTemplate: (id: number, body: { name?: string; texts?: Record<string, string> }) =>
+      write<MessageTemplate>("PUT", `/admin/schedule/templates/${id}`, body),
+    translateTemplate: (id: number) => write<MessageTemplate>("POST", `/admin/schedule/templates/${id}/translate`),
+    deleteTemplate: (id: number) => write<{ ok: true }>("DELETE", `/admin/schedule/templates/${id}`),
+    events: () => get<ScheduledEventWithNotifications[]>("/admin/schedule/events"),
+    addEvent: (body: ScheduleEventInput) =>
+      write<ScheduledEventWithNotifications>("POST", "/admin/schedule/events", body),
+    updateEvent: (id: number, body: Partial<ScheduleEventInput>) =>
+      write<ScheduledEventWithNotifications>("PUT", `/admin/schedule/events/${id}`, body),
+    deleteEvent: (id: number) => write<{ ok: true }>("DELETE", `/admin/schedule/events/${id}`),
+    addNotification: (eventId: number, body: NotificationInput) =>
+      write<EventNotification>("POST", `/admin/schedule/events/${eventId}/notifications`, body),
+    updateNotification: (id: number, body: NotificationInput) =>
+      write<EventNotification>("PUT", `/admin/schedule/notifications/${id}`, body),
+    deleteNotification: (id: number) => write<{ ok: true }>("DELETE", `/admin/schedule/notifications/${id}`),
+    testNotification: (id: number) => write<{ ok: true }>("POST", `/admin/schedule/notifications/${id}/test`),
   },
 
   admin: {

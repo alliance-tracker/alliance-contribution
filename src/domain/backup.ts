@@ -2,7 +2,7 @@
 // SCHEMA_VERSION is the latest migration that shapes the BACKED-UP tables; bump it when such a
 // migration lands so a dump taken under a different schema is rejected before any destructive
 // import step. Migrations that only touch BACKUP_EXCLUDED_TABLES do not move it.
-export const SCHEMA_VERSION = "0006";
+export const SCHEMA_VERSION = "0008";
 export const BACKUP_FORMAT = "alliance-backup";
 export const BACKUP_VERSION = 1;
 
@@ -15,14 +15,22 @@ export type TableName =
   | "events"
   | "participations"
   | "allocations"
-  | "allocation_lines";
+  | "allocation_lines"
+  | "discord_webhooks"
+  | "discord_roles"
+  | "message_templates"
+  | "message_translations"
+  | "scheduled_events"
+  | "event_notifications";
 
 /** Tables deliberately NOT in the backup format. `settings` (migration 0005) holds cosmetic
  *  presentation config with code defaults — nothing here needs to survive a restore. `ai_usage`
  *  (migration 0007) is Cloudflare's daily neuron tally: it has no `id` column, resets at 00:00 UTC
  *  and means nothing on another account. Adding a table to the schema means adding it either to
  *  INSERT_ORDER or, deliberately, to this set. */
-export const BACKUP_EXCLUDED_TABLES = new Set<string>(["settings", "ai_usage"]);
+/*  `notification_log` (migration 0008) joins them: it is the per-occurrence send ledger — the dedupe
+ *  lock and the "last sent" display, both meaningless once the occurrences it names are in the past. */
+export const BACKUP_EXCLUDED_TABLES = new Set<string>(["settings", "ai_usage", "notification_log"]);
 
 // FK dependency order for inserts; reverse for deletes. NEVER trust row order from the file.
 export const INSERT_ORDER: TableName[] = [
@@ -35,6 +43,12 @@ export const INSERT_ORDER: TableName[] = [
   "participations",
   "allocations",
   "allocation_lines",
+  "discord_webhooks",
+  "discord_roles",
+  "message_templates",
+  "message_translations",
+  "scheduled_events",
+  "event_notifications",
 ];
 
 // Exact column set per table (from migrations 0001-0004). Import rejects any row whose keys differ.
@@ -48,6 +62,12 @@ export const TABLE_COLUMNS: Record<TableName, string[]> = {
   participations: ["id", "event_id", "raw_name", "member_id", "value", "points", "notes"],
   allocations: ["id", "title", "quantity", "metric", "weeks", "strategy", "tiers", "top_count", "created_at"],
   allocation_lines: ["id", "allocation_id", "member_id", "amount", "rank", "metric_value"],
+  discord_webhooks: ["id", "name", "webhook_id", "token", "channel_id"],
+  discord_roles: ["id", "name", "role_id"],
+  message_templates: ["id", "name", "default_key"],
+  message_translations: ["template_id", "lng", "text"],
+  scheduled_events: ["id", "title", "activity_type_id", "starts_at", "every", "unit", "duration_minutes", "enabled"],
+  event_notifications: ["id", "event_id", "webhook_id", "template_id", "role_ids", "minutes_before"],
 };
 
 // Unique constraints to enforce within the payload (mirrors the schema's UNIQUE/PK declarations).
@@ -61,6 +81,14 @@ const UNIQUE_KEYS: Record<TableName, string[][]> = {
   participations: [["id"], ["event_id", "raw_name"]],
   allocations: [["id"]],
   allocation_lines: [["id"]], // deliberately no (allocation_id, member_id) — a merge can leave two lines per member
+  discord_webhooks: [["id"], ["webhook_id"]],
+  discord_roles: [["id"], ["role_id"]],
+  message_templates: [["id"], ["name"], ["default_key"]],
+  // The only backed-up table with no `id`: its PK IS the composite. Nothing references it, so it is
+  // never an FK target and the id-set lookup below never asks for one.
+  message_translations: [["template_id", "lng"]],
+  scheduled_events: [["id"]],
+  event_notifications: [["id"]],
 };
 
 // Foreign keys to check within the payload. nullable columns skip the check when the value is null.
@@ -73,6 +101,11 @@ const FOREIGN_KEYS: { table: TableName; column: string; ref: TableName; nullable
   { table: "participations", column: "member_id", ref: "members", nullable: true },
   { table: "allocation_lines", column: "allocation_id", ref: "allocations", nullable: false },
   { table: "allocation_lines", column: "member_id", ref: "members", nullable: false },
+  { table: "message_translations", column: "template_id", ref: "message_templates", nullable: false },
+  { table: "scheduled_events", column: "activity_type_id", ref: "activity_types", nullable: true },
+  { table: "event_notifications", column: "event_id", ref: "scheduled_events", nullable: false },
+  { table: "event_notifications", column: "webhook_id", ref: "discord_webhooks", nullable: false },
+  { table: "event_notifications", column: "template_id", ref: "message_templates", nullable: true },
 ];
 
 export type Row = Record<string, unknown>;
@@ -103,36 +136,60 @@ export type ValidationResult =
 
 // Schema versions this app can still read. Older exports are upgraded in memory before validation, so
 // a backup taken before migration 0004 stays usable for disaster recovery — the only reason it exists.
-const UPGRADABLE_SCHEMAS = new Set(["0002", "0003", "0004"]);
+const UPGRADABLE_SCHEMAS = new Set(["0002", "0003", "0004", "0006"]);
+// Config tables introduced by migration 0008. Every legacy file gains them as empty arrays.
+const SCHEDULE_TABLES = [
+  "discord_webhooks",
+  "discord_roles",
+  "message_templates",
+  "message_translations",
+  "scheduled_events",
+  "event_notifications",
+];
+const EMPTY_SCHEDULE_TABLES = Object.fromEntries(SCHEDULE_TABLES.map((t) => [t, []]));
 const ALLIANCE_RANKS = new Set(["R1", "R2", "R3", "R4", "R5"]);
 
 type UpgradeResult = { ok: true; tables: Record<string, unknown> } | { ok: false; error: string };
 
 // Upgrades a legacy file to the current table set. 0002/0003 → mirror migration 0004 (rename the two
 // member columns, normalize the free-text rank to the closed set, introduce member_snapshots as empty);
-// every legacy schema additionally gains empty allocations tables (0006). Never manufactures a
+// every legacy schema additionally gains empty allocations tables (0006) and empty scheduling tables
+// (0008). Never manufactures a
 // valid-looking table out of missing/malformed/contradictory input — it transforms, it doesn't forgive.
 function upgradeToCurrent(tables: Record<string, unknown>, schema: string): UpgradeResult {
   // A legacy-labelled file cannot legitimately carry a table younger than its schema. Reject rather
   // than silently discard — discarding buys no protection an admin-only endpoint didn't already have,
   // and silent data loss is worse than a loud refusal.
-  const laterTables = schema === "0004" ? ["allocations", "allocation_lines"] : ["member_snapshots", "allocations", "allocation_lines"];
+  const laterTables =
+    schema === "0006"
+      ? SCHEDULE_TABLES
+      : schema === "0004"
+        ? ["allocations", "allocation_lines", ...SCHEDULE_TABLES]
+        : ["member_snapshots", "allocations", "allocation_lines", ...SCHEDULE_TABLES];
   for (const table of laterTables) {
     if (table in tables) {
       return { ok: false, error: `schema "${schema}" file must not contain ${table}` };
     }
   }
 
+  // 0006 exports are complete apart from the scheduling tables.
+  if (schema === "0006") {
+    return { ok: true, tables: { ...tables, ...EMPTY_SCHEDULE_TABLES } };
+  }
+
   // 0004 exports already have the current member shape — only the allocation tables are missing.
   if (schema === "0004") {
-    return { ok: true, tables: { ...tables, allocations: [], allocation_lines: [] } };
+    return { ok: true, tables: { ...tables, allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES } };
   }
 
   if (!Array.isArray(tables.members)) {
     // Leave members exactly as-is (missing key, wrong type, whatever it is) — do not coerce it into an
     // empty array. The `members` key is re-asserted (even if undefined) so the table-count check below
     // still lets this through to the per-table loop, which reports the specific defect.
-    return { ok: true, tables: { ...tables, members: tables.members, member_snapshots: [], allocations: [], allocation_lines: [] } };
+    return {
+      ok: true,
+      tables: { ...tables, members: tables.members, member_snapshots: [], allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES },
+    };
   }
 
   for (const row of tables.members as Row[]) {
@@ -161,7 +218,10 @@ function upgradeToCurrent(tables: Record<string, unknown>, schema: string): Upgr
       power_position: rank_snapshot ?? null,
     };
   });
-  return { ok: true, tables: { ...tables, members: upgraded, member_snapshots: [], allocations: [], allocation_lines: [] } };
+  return {
+    ok: true,
+    tables: { ...tables, members: upgraded, member_snapshots: [], allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES },
+  };
 }
 
 function parsesToJsonArray(value: unknown): boolean {
@@ -231,7 +291,11 @@ export function validateBackup(parsed: unknown): ValidationResult {
     for (const key of UNIQUE_KEYS[table]) {
       const seen = new Set<string>();
       for (const row of file[table]) {
-        const composite = JSON.stringify(key.map((col) => row[col]));
+        const values = key.map((col) => row[col]);
+        // SQLite treats NULL as distinct in a UNIQUE index, so two user-created templates both with a
+        // NULL default_key are legal. Mirror that rather than inventing a stricter rule than the DB's.
+        if (values.some((v) => v === null || v === undefined)) continue;
+        const composite = JSON.stringify(values);
         if (seen.has(composite)) {
           return { ok: false, error: `duplicate ${key.join("+")} in "${table}"` };
         }

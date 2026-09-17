@@ -24,6 +24,9 @@ export default defineProject({
           API_KEY: "test-key",
           ADMIN_API_KEY: "test-admin-key",
           VIEWER_API_KEY: "test-viewer-key",
+          // The scheduler is opt-in per deployment; tests exercise the enabled side. The disabled
+          // side (routes 404) is covered by a direct unit test of the guard middleware.
+          SCHEDULER_ENABLED: "true",
           TEST_MIGRATIONS: await readD1Migrations(path.join(import.meta.dirname, "migrations")),
           // Read here, in node (integration tests run in workerd), then handed to the test as a
           // binding — same pattern as TEST_MIGRATIONS above.

@@ -30,6 +30,20 @@ function validFile(): BackupFile {
         { id: 1, title: "KvK chests", quantity: 2, metric: "points", weeks: '["2026-W01"]', strategy: "top_n", tiers: null, top_count: null, created_at: "2026-01-06 00:00:00" },
       ],
       allocation_lines: [{ id: 1, allocation_id: 1, member_id: 1, amount: 1, rank: 1, metric_value: 3 }],
+      discord_webhooks: [{ id: 1, name: "#announcements", webhook_id: "12345678901234567", token: "tok-abcd", channel_id: "22345678901234567" }],
+      discord_roles: [{ id: 1, name: "R4", role_id: "32345678901234567" }],
+      message_templates: [
+        { id: 1, name: "Get ready", default_key: "get_ready" },
+        { id: 2, name: "Custom", default_key: null },
+        { id: 3, name: "Custom two", default_key: null },
+      ],
+      message_translations: [{ template_id: 1, lng: "en", text: "Get ready! {event} starts {time}." }],
+      scheduled_events: [
+        { id: 1, title: "Bear Trap", activity_type_id: 1, starts_at: "2026-09-17T12:00:00.000Z", every: 2, unit: "day", duration_minutes: null, enabled: 1 },
+      ],
+      event_notifications: [
+        { id: 1, event_id: 1, webhook_id: 1, template_id: 1, role_ids: "[1]", minutes_before: 15 },
+      ],
     },
   };
 }
@@ -47,10 +61,11 @@ describe("buildBackup", () => {
 });
 
 describe("INSERT_ORDER", () => {
-  it("is the 9 tables in FK dependency order", () => {
+  it("is the 15 tables in FK dependency order", () => {
     expect(INSERT_ORDER).toEqual([
       "activity_types", "scoring_tiers", "members", "aliases", "member_snapshots", "events", "participations",
-      "allocations", "allocation_lines",
+      "allocations", "allocation_lines", "discord_webhooks", "discord_roles", "message_templates",
+      "message_translations", "scheduled_events", "event_notifications",
     ]);
   });
 });

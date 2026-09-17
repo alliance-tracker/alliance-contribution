@@ -96,7 +96,8 @@
       "aliases": "별칭",
       "scoring": "점수 및 활동",
       "rewards": "보상",
-      "backup": "내보내기 / 가져오기"
+      "backup": "내보내기 / 가져오기",
+      "schedule": "일정"
     },
     "overview": "개요",
     "ranking": "순위",
@@ -121,7 +122,10 @@
     "copied": "복사됨"
   },
   "screenshots": {
-    "mode": { "paste": "텍스트 붙여넣기", "screenshots": "스크린샷에서" },
+    "mode": {
+      "paste": "텍스트 붙여넣기",
+      "screenshots": "스크린샷에서"
+    },
     "meter": {
       "plenty": "오늘 <2>{{limit}}</2>개 중 <1>{{used}}</1>개 사용 · 약 <3>{{left}}</3>개 스크린샷 남음",
       "low": "<1>오늘 남은 스크린샷은 약 {{left}}개입니다.</1> 대량 배치는 끝나지 않을 수 있습니다.",
@@ -724,6 +728,218 @@
       "returningTitle": "비활성 상태이나 이 캡처에 있는 구성원 ({{n}})",
       "reactivateHeader": "재활성화",
       "reactivateAria": "{{governor}} 재활성화"
+    }
+  },
+  "schedule": {
+    "needKey": "일정을 관리하려면 API 키를 설정하십시오(상단 바).",
+    "readOnly": "읽기 전용 · 관리자만 편집 가능",
+    "heartbeatTitle": "백그라운드 알림 작업이 마지막으로 실행된 시각",
+    "lastChecked": "마지막 확인: {{when}}",
+    "lastCheckedNever": "없음",
+    "addEvent": "이벤트 추가",
+    "addMessage": "메시지 추가",
+    "langCount_other": "{{count}}개 언어",
+    "tabs": {
+      "events": "이벤트",
+      "messages": "메시지",
+      "discord": "디스코드"
+    },
+    "events": {
+      "title": "반복 이벤트",
+      "subtitle": "알림은 {{langs}}로 디스코드에 게시됩니다 · 시간은 현지 시간 기준({{tz}})",
+      "colEvent": "이벤트",
+      "colRepeats": "반복",
+      "colLasts": "지속",
+      "colNext": "다음",
+      "colOn": "사용",
+      "colReminders": "알림",
+      "nextLocal": "다음 · 현지",
+      "allDay": "하루 종일",
+      "instant": "즉시",
+      "lasts": "{{duration}} 지속",
+      "paused": "일시중지",
+      "notPosting": "게시 안 함",
+      "turnOn": "켜기",
+      "turnOff": "끄기",
+      "edit": "이벤트 편집",
+      "delete": "이벤트 삭제",
+      "count_other": "이벤트 {{count}}개",
+      "reminderCount_other": "알림 {{count}}개",
+      "footer": "{{events}} · {{reminders}}",
+      "timingHint": "알림 시점은 이벤트 시작 기준입니다 · ‘시작 후’는 지속 시간이 있는 이벤트에만 해당",
+      "empty": "아직 이벤트가 없습니다 — 추가하면 알림 게시가 시작됩니다.",
+      "noPings": "멘션 없음",
+      "defaultMessage": "기본",
+      "neverFired": "발송된 적 없음",
+      "waiting": "다음 발생을 기다리는 중",
+      "delivered": "전달됨",
+      "failed": "실패",
+      "noReminders": "아직 알림이 없습니다 — 이 이벤트는 추적되지만 디스코드에 아무것도 게시되지 않습니다.",
+      "addReminder": "알림 추가",
+      "editReminder": "알림 편집",
+      "deleteReminder": "알림 삭제",
+      "test": "테스트",
+      "testTitle": "이 알림을 지금 디스코드에 게시",
+      "unknownChannel": "(삭제된 채널)"
+    },
+    "messages": {
+      "title": "알림 메시지",
+      "subtitle": "모든 메시지는 {{langs}}로 게시됩니다 · 자리표시자 {event} {time} {end}",
+      "default": "기본",
+      "notTranslated": "미번역",
+      "edit": "메시지 편집",
+      "delete": "메시지 삭제",
+      "footer": "기본 메시지는 편집할 수 있지만 삭제할 수 없습니다. ‘기본’으로 설정된 알림은 시점에 맞는 메시지를 선택합니다.",
+      "empty": "아직 메시지가 없습니다."
+    },
+    "discord": {
+      "add": "추가",
+      "channels": {
+        "title": "채널",
+        "subtitle": "게시 대상 웹후크",
+        "id": "ID {{id}}",
+        "delete": "채널 삭제",
+        "empty": "아직 채널이 없습니다.",
+        "footer": "토큰은 저장 후 마스킹되며 다시 볼 수 없습니다."
+      },
+      "roles": {
+        "title": "역할",
+        "subtitle": "멘션할 수 있는 디스코드 역할",
+        "delete": "역할 삭제",
+        "empty": "아직 역할이 없습니다."
+      },
+      "languages": {
+        "title": "언어",
+        "subtitle": "모든 알림은 이 순서로 게시됩니다",
+        "placeholder": "언어 추가, 예: German 또는 de",
+        "add": "추가",
+        "remove": "언어 제거",
+        "unknown": "언어 이름도 두 글자 코드도 아닙니다: {{value}}",
+        "note": "영어는 항상 첫 번째이며 제거할 수 없습니다.",
+        "source": {
+          "settings": "언어 목록은 앱에서 설정되었습니다.",
+          "env": "언어 목록은 서버 설정(NOTIFY_LANGUAGES)에서 옵니다.",
+          "default": "기본 내장 목록을 사용 중입니다."
+        }
+      }
+    },
+    "eventDialog": {
+      "add": "이벤트 추가",
+      "edit": "이벤트 편집",
+      "desc": "반복되는 게임 내 이벤트입니다. 알림은 이후 목록에서 추가합니다.",
+      "name": "이름",
+      "namePlaceholder": "예: Bear Trap",
+      "activity": "활동",
+      "activityNone": "— 없음 —",
+      "first": "첫 발생",
+      "localHint": "(현지 시간)",
+      "storedAs": "{{utc}} UTC로 저장됩니다",
+      "repeatEvery": "반복 주기",
+      "allDay": "하루 종일",
+      "duration": "지속 시간",
+      "durationHint": "(선택 · 비워 두면 즉시 이벤트)",
+      "hours": "시간",
+      "durNoteDuring": "이벤트 진행 중에도 알림이 발송될 수 있습니다",
+      "durNoteInstant": "즉시 이벤트"
+    },
+    "reminderDialog": {
+      "add": "알림 추가",
+      "edit": "알림 편집",
+      "desc": "{{event}} 대상 · {{langs}}로 게시",
+      "channel": "채널",
+      "noChannels": "먼저 디스코드 탭에서 채널을 추가하십시오.",
+      "pingRoles": "멘션할 역할",
+      "noRoles": "아직 역할이 없습니다 — 디스코드 탭에서 추가하십시오.",
+      "when": "시점",
+      "minutes": "분",
+      "before": "시작 전",
+      "after": "시작 후",
+      "fires": "<1>{{when}}</1> 발송",
+      "laterThanEnd": "이벤트 종료보다 늦습니다 ({{duration}})",
+      "message": "메시지",
+      "messageDefault": "기본 (시점에 맞춤)"
+    },
+    "messageDialog": {
+      "add": "메시지 추가",
+      "edit": "메시지 편집",
+      "desc": "언어별로 하나의 문구. 디스코드는 각 줄 앞에 국기를 표시합니다.",
+      "name": "이름",
+      "namePlaceholder": "예: 집결 호출",
+      "insert": "자리표시자 삽입",
+      "chipEvent": "이벤트 이름",
+      "chipTime": "이벤트 시작까지 남은 시간",
+      "chipEnd": "이벤트 종료 시각",
+      "source": "· 원본",
+      "enPlaceholder": "준비하세요! {event}이(가) {time} 시작됩니다.",
+      "trPlaceholder": "아직 번역되지 않음 — 직접 입력하거나 번역을 사용하십시오",
+      "translate": "영어에서 번역",
+      "translating": "번역 중…",
+      "preview": "미리보기 · Bear Trap 15분 전",
+      "previewEvent": "Bear Trap",
+      "previewTime": "15분 후",
+      "previewEnd": "3시간 후",
+      "previewMissing": "(미번역 — 영어가 사용됩니다)"
+    },
+    "channelDialog": {
+      "title": "채널 추가",
+      "desc": "디스코드 → 채널 설정 → 연동 → 웹후크",
+      "name": "이름",
+      "namePlaceholder": "#공지",
+      "modeUrl": "웹후크 URL",
+      "modeId": "ID + 토큰",
+      "urlPlaceholder": "https://discord.com/api/webhooks/…",
+      "webhookId": "웹후크 ID",
+      "webhookIdPlaceholder": "1284019928…",
+      "token": "토큰",
+      "lockNote": "토큰은 저장되며 저장 후에는 다시 표시되지 않습니다. 어떤 채널에 게시하는지 확인하기 위해 디스코드를 한 번 호출합니다.",
+      "submit": "채널 추가"
+    },
+    "roleDialog": {
+      "title": "역할 추가",
+      "desc": "디스코드 → 서버 설정 → 역할 → ⋯ → 역할 ID 복사",
+      "name": "이름",
+      "namePlaceholder": "@R4",
+      "roleId": "디스코드 역할 ID",
+      "roleIdPlaceholder": "1180332211990011904",
+      "submit": "역할 추가"
+    },
+    "confirm": {
+      "title": "{{kind}}을(를) 삭제할까요?",
+      "kind": {
+        "event": "이벤트",
+        "reminder": "알림",
+        "message": "메시지",
+        "channel": "채널",
+        "role": "역할"
+      },
+      "event": "및 {{reminders}}이(가) 삭제됩니다. 이에 대해 더 이상 디스코드에 게시되지 않습니다.",
+      "reminder": "은(는) 더 이상 {{channel}}에 게시되지 않습니다.",
+      "message": "이(가) 삭제됩니다. 이를 사용하는 알림은 기본 메시지로 돌아갑니다.",
+      "channel": "이(가) 삭제됩니다. {{reminders}}이(가) 그곳에 게시 중이며 중단됩니다.",
+      "role": "은(는) 더 이상 어떤 알림에서도 멘션되지 않습니다."
+    },
+    "toast": {
+      "posted": "{{channel}}에 게시됨",
+      "postedSub": "{{event}} · {{when}} · {{langs}}",
+      "channelAdded": "채널 추가됨",
+      "channelAddedSub": "{{name}} · 토큰 저장됨, 이후 마스킹"
+    },
+    "format": {
+      "minutes_other": "{{count}}분",
+      "hours_other": "{{count}}시간",
+      "days_other": "{{count}}일",
+      "hoursMinutes": "{{hours}}시간 {{minutes}}분",
+      "everyDay": "매일",
+      "everyWeek": "매주",
+      "everyDays_other": "{{count}}일마다",
+      "everyWeeks_other": "{{count}}주마다",
+      "day_other": "일",
+      "week_other": "주",
+      "atStart": "시작 시점",
+      "beforeStart": "{{duration}} 전",
+      "afterStart": "시작 {{duration}} 후",
+      "in": "{{value}} 후",
+      "ago": "{{value}} 전"
     }
   }
 }

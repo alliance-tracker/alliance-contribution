@@ -410,3 +410,81 @@ export type ScreenshotReadResult = {
 };
 
 export type ScreenshotErrorCode = "exhausted" | "not_a_screen" | "read_failed";
+
+// ---- Event scheduling + Discord notifications (2026-09-17 spec) ----------------
+
+export type DiscordWebhook = {
+  id: number;
+  name: string;
+  webhook_id: string;
+  channel_id: string | null;
+  /** Last 4 characters of the token — the only part the SPA ever sees. */
+  token_tail: string;
+};
+export type DiscordRole = { id: number; name: string; role_id: string };
+/** `texts` is keyed by ISO 639-1 code; a configured language missing here shows "not translated". */
+export type MessageTemplate = { id: number; name: string; is_default: boolean; texts: Record<string, string> };
+export type ScheduleUnit = "day" | "week";
+export type ScheduledEvent = {
+  id: number;
+  title: string;
+  activity_type_id: number | null;
+  starts_at: string; // ISO 8601 UTC, first occurrence
+  every: number;
+  unit: ScheduleUnit;
+  duration_minutes: number | null; // null = point event; 1440 = all day
+  enabled: boolean;
+};
+export type LastSent = { at: string; ok: boolean } | null;
+export type EventNotification = {
+  id: number;
+  event_id: number;
+  webhook_id: number;
+  template_id: number | null; // null = default template for the timing
+  role_ids: number[];
+  minutes_before: number; // negative = minutes after start (during the event)
+  last_sent: LastSent;
+};
+export type ScheduledEventWithNotifications = ScheduledEvent & {
+  next_at: string | null; // null when disabled
+  notifications: EventNotification[];
+};
+export type ScheduleLanguages = { languages: string[]; source: "settings" | "env" | "default" };
+export type ScheduleStatus = { last_run: string | null };
+export type ScheduleEventInput = {
+  title: string;
+  activity_type_id?: number | null;
+  starts_at: string;
+  every: number;
+  unit: ScheduleUnit;
+  duration_minutes?: number | null;
+  enabled?: boolean;
+};
+export type NotificationInput = {
+  webhook_id: number;
+  template_id?: number | null;
+  role_ids: number[];
+  minutes_before: number;
+};
+export type WebhookInput = { name: string; url?: string; webhook_id?: string; token?: string };
+/** Name-only lookups so a read-only viewer can label reminders without seeing tokens or snowflakes. */
+export type ScheduleNameList = { id: number; name: string }[];
+export type ScheduleReadModel = {
+  events: ScheduledEventWithNotifications[];
+  languages: string[];
+  status: ScheduleStatus;
+  names: { channels: ScheduleNameList; roles: ScheduleNameList; templates: ScheduleNameList };
+};
+
+export const DEFAULT_NOTIFY_LANGUAGES = ["en", "es", "fr", "de", "ko", "ar"];
+/** Flag shown before each language line in a Discord post; unknown code → the bold upper-cased code. */
+export const LANGUAGE_FLAGS: Record<string, string> = {
+  en: "🇬🇧", es: "🇪🇸", fr: "🇫🇷", de: "🇩🇪", ko: "🇰🇷", ar: "🇸🇦", pt: "🇵🇹", it: "🇮🇹",
+  ja: "🇯🇵", zh: "🇨🇳", ru: "🇷🇺", tr: "🇹🇷", nl: "🇳🇱", pl: "🇵🇱",
+};
+export const LANGUAGE_NAMES: Record<string, string> = {
+  en: "English", es: "Spanish", fr: "French", de: "German", ko: "Korean", ar: "Arabic", pt: "Portuguese",
+  it: "Italian", ja: "Japanese", zh: "Chinese", ru: "Russian", tr: "Turkish", nl: "Dutch", pl: "Polish",
+};
+/** The only placeholders a template may use. `{time}`/`{end}` become Discord `<t:unix:R>` stamps. */
+export const TEMPLATE_PLACEHOLDERS = ["{event}", "{time}", "{end}"] as const;

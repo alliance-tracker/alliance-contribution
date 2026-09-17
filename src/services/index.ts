@@ -5,6 +5,7 @@ import { BackupRepo } from "../repositories/backup-repo";
 import { EventRepo } from "../repositories/event-repo";
 import { MemberRepo } from "../repositories/member-repo";
 import { ParticipationRepo } from "../repositories/participation-repo";
+import { ScheduleRepo } from "../repositories/schedule-repo";
 import { ScoringTierRepo } from "../repositories/scoring-tier-repo";
 import { SettingsRepo } from "../repositories/settings-repo";
 import { SnapshotRepo } from "../repositories/snapshot-repo";
@@ -15,8 +16,10 @@ import { AllocationService } from "./allocation-service";
 import { BackupService } from "./backup-service";
 import { EventService } from "./event-service";
 import { MemberService } from "./member-service";
+import { NotifyService } from "./notify-service";
 import { RecomputeService } from "./recompute-service";
 import { ResolveService } from "./resolve-service";
+import { ScheduleService } from "./schedule-service";
 import { ScoringService } from "./scoring-service";
 import { SettingsService } from "./settings-service";
 import { StatsService } from "./stats-service";
@@ -33,6 +36,8 @@ export function createServices(db: D1Database) {
   const statsRepo = new StatsRepo(db);
   const backupRepo = new BackupRepo(db);
   const allocationRepo = new AllocationRepo(db);
+  const scheduleRepo = new ScheduleRepo(db);
+  const settingsRepo = new SettingsRepo(db);
 
   const resolveService = new ResolveService(aliasRepo, memberRepo);
   const scoringService = new ScoringService(scoringTierRepo, activityRepo);
@@ -54,7 +59,9 @@ export function createServices(db: D1Database) {
     resolveService,
     recomputeService,
     statsService: new StatsService(statsRepo, activityRepo),
-    settingsService: new SettingsService(new SettingsRepo(db)),
+    settingsService: new SettingsService(settingsRepo),
+    scheduleService: new ScheduleService(scheduleRepo, settingsRepo),
+    notifyService: new NotifyService(scheduleRepo, settingsRepo),
     backupService: new BackupService(backupRepo, recomputeService),
     allocationService: new AllocationService(allocationRepo, statsRepo),
   };

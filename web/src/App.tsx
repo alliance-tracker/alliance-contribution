@@ -23,6 +23,7 @@ const Aliases = lazy(() => import("@/pages/Aliases").then((m) => ({ default: m.A
 const Scoring = lazy(() => import("@/pages/Scoring").then((m) => ({ default: m.Scoring })));
 const Backup = lazy(() => import("@/pages/Backup").then((m) => ({ default: m.Backup })));
 const Rewards = lazy(() => import("@/pages/Rewards").then((m) => ({ default: m.Rewards })));
+const Schedule = lazy(() => import("@/pages/Schedule").then((m) => ({ default: m.Schedule })));
 
 export default function App() {
   const { t } = useTranslation();
@@ -46,6 +47,7 @@ export default function App() {
                 <Route path="scoring" element={<Scoring />} />
                 <Route path="rewards" element={<Rewards />} />
                 <Route path="backup" element={<Backup />} />
+                <Route path="schedule" element={<Schedule />} />
               </Route>
               <Route
                 path="*"

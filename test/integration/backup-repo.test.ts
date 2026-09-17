@@ -38,6 +38,8 @@ function multiChunkFile(participationCount: number): BackupFile {
     {
       activity_types: [], scoring_tiers: [], members: [], aliases: [], member_snapshots: [],
       events: [], participations, allocations: [], allocation_lines: [],
+      discord_webhooks: [], discord_roles: [], message_templates: [], message_translations: [],
+      scheduled_events: [], event_notifications: [],
     },
     "2026-11-16T00:00:00.000Z",
   );
@@ -60,7 +62,11 @@ describe("BackupRepo", () => {
     const repo = new BackupRepo(DB);
     const tables = await repo.dumpAll();
     expect(Object.keys(tables).sort()).toEqual(
-      ["activity_types", "aliases", "allocation_lines", "allocations", "events", "member_snapshots", "members", "participations", "scoring_tiers"],
+      [
+        "activity_types", "aliases", "allocation_lines", "allocations", "discord_roles", "discord_webhooks",
+        "event_notifications", "events", "member_snapshots", "members", "message_templates",
+        "message_translations", "participations", "scheduled_events", "scoring_tiers",
+      ],
     );
     expect(tables.members.some((r) => r.governor === "RepoDumpMember")).toBe(true);
     expect(tables.participations.length).toBeGreaterThan(0);
@@ -119,6 +125,12 @@ describe("BackupRepo", () => {
     expect(counts.participations).toBe(700);
     expect(calls.length).toBeGreaterThan(2); // the wipe, then more than one insert chunk
     expect(calls[0]).toEqual([
+      "DELETE FROM event_notifications",
+      "DELETE FROM scheduled_events",
+      "DELETE FROM message_translations",
+      "DELETE FROM message_templates",
+      "DELETE FROM discord_roles",
+      "DELETE FROM discord_webhooks",
       "DELETE FROM allocation_lines",
       "DELETE FROM allocations",
       "DELETE FROM participations",
@@ -149,6 +161,8 @@ describe("BackupRepo", () => {
       {
         activity_types: [], scoring_tiers: [], members: [], aliases: [], member_snapshots: [],
         events: [], participations: [], allocations: [], allocation_lines: [],
+        discord_webhooks: [], discord_roles: [], message_templates: [], message_translations: [],
+        scheduled_events: [], event_notifications: [],
       },
       "2026-11-02T00:00:00.000Z",
     );
@@ -179,6 +193,12 @@ describe("BackupRepo", () => {
         participations: [],
         allocations: [],
         allocation_lines: [],
+        discord_webhooks: [],
+        discord_roles: [],
+        message_templates: [],
+        message_translations: [],
+        scheduled_events: [],
+        event_notifications: [],
       },
       "2026-11-16T00:00:00.000Z",
     );

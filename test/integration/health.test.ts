@@ -39,7 +39,7 @@ describe("the viewer tier is read-only", () => {
     const res = await SELF.fetch("https://example.com/api/auth/me", {
       headers: { "X-Api-Key": "test-viewer-key" },
     });
-    expect(await res.json()).toEqual({ role: "viewer" });
+    expect(await res.json()).toEqual({ role: "viewer", scheduler: true });
   });
 
   it("rejects a write with the viewer key (403, not 401)", async () => {
@@ -99,7 +99,7 @@ describe("GET /api/auth/me", () => {
       headers: { "X-Api-Key": "test-admin-key" },
     });
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ role: "admin" });
+    expect(await res.json()).toEqual({ role: "admin", scheduler: true });
   });
 
   it("returns role manager for the manager key", async () => {
@@ -107,13 +107,13 @@ describe("GET /api/auth/me", () => {
       headers: { "X-Api-Key": "test-key" },
     });
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ role: "manager" });
+    expect(await res.json()).toEqual({ role: "manager", scheduler: true });
   });
 
   it("returns role null when no key is presented", async () => {
     const res = await SELF.fetch("https://example.com/api/auth/me");
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ role: null });
+    expect(await res.json()).toEqual({ role: null, scheduler: true });
   });
 
   it("returns role null for a wrong key", async () => {
@@ -121,7 +121,7 @@ describe("GET /api/auth/me", () => {
       headers: { "X-Api-Key": "wrong-key" },
     });
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ role: null });
+    expect(await res.json()).toEqual({ role: null, scheduler: true });
   });
 });
 

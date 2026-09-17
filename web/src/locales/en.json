@@ -873,7 +873,7 @@
     "eventDialog": {
       "add": "Add event",
       "edit": "Edit event",
-      "desc": "Recurring in-game event. Reminders are added from the list afterwards.",
+      "desc": "Recurring in-game event. Tick the reminders to create with it; more can be added from the list later.",
       "name": "Name",
       "namePlaceholder": "e.g. Bear Trap",
       "activity": "Activity",
@@ -887,7 +887,9 @@
       "durationHint": "(optional · leave empty for an instant event)",
       "hours": "hours",
       "durNoteDuring": "reminders may fire during the event",
-      "durNoteInstant": "instant event"
+      "durNoteInstant": "instant event",
+      "reminders": "Reminders",
+      "remindersHint": "(optional · created with the event)"
     },
     "reminderDialog": {
       "add": "Add reminder",

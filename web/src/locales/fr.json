@@ -920,7 +920,7 @@
     "eventDialog": {
       "add": "Ajouter un événement",
       "edit": "Modifier l'événement",
-      "desc": "Événement récurrent du jeu. Les rappels s'ajoutent ensuite depuis la liste.",
+      "desc": "Événement récurrent du jeu. Cochez les rappels à créer avec lui ; d'autres pourront être ajoutés ensuite depuis la liste.",
       "name": "Nom",
       "namePlaceholder": "p. ex. Bear Trap",
       "activity": "Activité",
@@ -934,7 +934,9 @@
       "durationHint": "(facultatif · laissez vide pour un événement instantané)",
       "hours": "heures",
       "durNoteDuring": "des rappels peuvent se déclencher pendant l'événement",
-      "durNoteInstant": "événement instantané"
+      "durNoteInstant": "événement instantané",
+      "reminders": "Rappels",
+      "remindersHint": "(facultatif · créés avec l'événement)"
     },
     "reminderDialog": {
       "add": "Ajouter un rappel",

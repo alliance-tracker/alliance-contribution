@@ -873,7 +873,7 @@
     "eventDialog": {
       "add": "Event hinzufügen",
       "edit": "Event bearbeiten",
-      "desc": "Wiederkehrendes Spiel-Event. Erinnerungen werden danach aus der Liste hinzugefügt.",
+      "desc": "Wiederkehrendes Spiel-Event. Wähle die Erinnerungen, die mit ihm angelegt werden; weitere können später aus der Liste hinzugefügt werden.",
       "name": "Name",
       "namePlaceholder": "z. B. Bear Trap",
       "activity": "Aktivität",
@@ -887,7 +887,9 @@
       "durationHint": "(optional · leer lassen für ein sofortiges Event)",
       "hours": "Stunden",
       "durNoteDuring": "Erinnerungen können während des Events ausgelöst werden",
-      "durNoteInstant": "sofortiges Event"
+      "durNoteInstant": "sofortiges Event",
+      "reminders": "Erinnerungen",
+      "remindersHint": "(optional · werden mit dem Event angelegt)"
     },
     "reminderDialog": {
       "add": "Erinnerung hinzufügen",

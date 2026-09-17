@@ -826,7 +826,7 @@
     "eventDialog": {
       "add": "이벤트 추가",
       "edit": "이벤트 편집",
-      "desc": "반복되는 게임 내 이벤트입니다. 알림은 이후 목록에서 추가합니다.",
+      "desc": "반복되는 게임 내 이벤트입니다. 함께 만들 알림을 선택하세요. 나중에 목록에서 더 추가할 수 있습니다.",
       "name": "이름",
       "namePlaceholder": "예: Bear Trap",
       "activity": "활동",
@@ -840,7 +840,9 @@
       "durationHint": "(선택 · 비워 두면 즉시 이벤트)",
       "hours": "시간",
       "durNoteDuring": "이벤트 진행 중에도 알림이 발송될 수 있습니다",
-      "durNoteInstant": "즉시 이벤트"
+      "durNoteInstant": "즉시 이벤트",
+      "reminders": "알림",
+      "remindersHint": "(선택 사항 · 이벤트와 함께 생성)"
     },
     "reminderDialog": {
       "add": "알림 추가",

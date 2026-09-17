@@ -31,14 +31,58 @@ function defaultStart(): { date: string; time: string } {
   return toLocalInputs(d.toISOString());
 }
 
+
+/** Toggle chips for the roles a reminder pings. Shared by the reminder dialog and the create-event presets. */
+function RolePicker({
+  roles,
+  value,
+  onChange,
+}: {
+  roles: DiscordRole[];
+  value: number[];
+  onChange: (next: number[]) => void;
+}) {
+  const { t } = useTranslation();
+  if (roles.length === 0) return <p className="text-[12.5px] text-muted">{t("schedule.reminderDialog.noRoles")}</p>;
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {roles.map((role) => {
+        const on = value.includes(role.id);
+        return (
+          <button
+            key={role.id}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onChange(on ? value.filter((id) => id !== role.id) : [...value, role.id])}
+            className={cn(
+              "h-[30px] rounded-[7px] border px-2.5 font-mono text-[12px] font-semibold transition-colors duration-150",
+              on ? "border-accent bg-accent-subtle text-foreground" : "border-border bg-surface text-muted hover:text-foreground",
+            )}
+          >
+            {on ? "✓ " : ""}
+            {role.name}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Offsets offered as one-tick reminders on a brand-new event (minutes before start). */
+const PRESET_OFFSETS = [15, 5, 0] as const;
+
 export function EventDialog({
   target,
   activities,
+  webhooks,
+  roles,
   onClose,
   onSaved,
 }: {
   target: { event: ScheduledEventWithNotifications | null } | null;
   activities: ActivityType[];
+  webhooks: DiscordWebhook[];
+  roles: DiscordRole[];
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -52,11 +96,18 @@ export function EventDialog({
   const [unit, setUnit] = useState<ScheduleUnit>("day");
   const [allDay, setAllDay] = useState(false);
   const [hours, setHours] = useState("");
+  // Create-only: reminders added together with the event. Edit uses the reminder list instead.
+  const [presetChannel, setPresetChannel] = useState("");
+  const [presetRoles, setPresetRoles] = useState<number[]>([]);
+  const [presets, setPresets] = useState<number[]>([...PRESET_OFFSETS]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!target) return;
+    setPresetChannel(webhooks[0] ? String(webhooks[0].id) : "");
+    setPresetRoles([]);
+    setPresets([...PRESET_OFFSETS]);
     const isAllDay = event?.duration_minutes === ALL_DAY;
     // An all-day event is anchored at 00:00 UTC, so its calendar date is the UTC date — the local
     // conversion would show the previous day west of Greenwich and shift the event on save.
@@ -75,6 +126,7 @@ export function EventDialog({
     setHours(event && event.duration_minutes !== null && event.duration_minutes !== ALL_DAY ? String(event.duration_minutes / 60) : "");
     setBusy(false);
     setError(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target, event]);
 
   const everyNum = Number(every);
@@ -101,8 +153,20 @@ export function EventDialog({
           : Math.round(hoursNum * 60),
     };
     try {
-      if (event) await api.schedule.updateEvent(event.id, body);
-      else await api.schedule.addEvent(body);
+      if (event) {
+        await api.schedule.updateEvent(event.id, body);
+      } else {
+        const created = await api.schedule.addEvent(body);
+        if (presetChannel !== "") {
+          for (const minutes of PRESET_OFFSETS.filter((m) => presets.includes(m))) {
+            await api.schedule.addNotification(created.id, {
+              webhook_id: Number(presetChannel),
+              role_ids: presetRoles,
+              minutes_before: minutes,
+            });
+          }
+        }
+      }
       onSaved();
       onClose();
     } catch (e) {
@@ -210,6 +274,50 @@ export function EventDialog({
                 </span>
               </div>
             </Field>
+          )}
+
+          {!event && webhooks.length > 0 && (
+            <div className="flex flex-col gap-3 rounded-[10px] border border-border bg-muted-surface p-3">
+              <Field label={t("schedule.eventDialog.reminders")} hint={t("schedule.eventDialog.remindersHint")}>
+                <div className="flex flex-wrap gap-2">
+                  {PRESET_OFFSETS.map((minutes) => {
+                    const on = presets.includes(minutes);
+                    return (
+                      <label key={minutes} className="flex cursor-pointer items-center gap-2 text-[13px] text-foreground">
+                        <Checkbox
+                          checked={on}
+                          onCheckedChange={(v) =>
+                            setPresets((prev) => (v === true ? [...prev, minutes] : prev.filter((m) => m !== minutes)))
+                          }
+                        />
+                        {whenLabel(minutes, t)}
+                      </label>
+                    );
+                  })}
+                </div>
+              </Field>
+              {presets.length > 0 && (
+                <>
+                  <Field label={t("schedule.reminderDialog.channel")}>
+                    <Select value={presetChannel} onValueChange={setPresetChannel}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {webhooks.map((w) => (
+                          <SelectItem key={w.id} value={String(w.id)}>
+                            {w.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field label={t("schedule.reminderDialog.pingRoles")}>
+                    <RolePicker roles={roles} value={presetRoles} onChange={setPresetRoles} />
+                  </Field>
+                </>
+              )}
+            </div>
           )}
         </div>
 
@@ -333,36 +441,7 @@ export function ReminderDialog({
           </Field>
 
           <Field label={t("schedule.reminderDialog.pingRoles")}>
-            {roles.length === 0 ? (
-              <p className="text-[12.5px] text-muted">{t("schedule.reminderDialog.noRoles")}</p>
-            ) : (
-              <div className="flex flex-wrap gap-1.5">
-                {roles.map((role) => {
-                  const on = roleIds.includes(role.id);
-                  return (
-                    <button
-                      key={role.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() =>
-                        setRoleIds((prev) =>
-                          prev.includes(role.id) ? prev.filter((id) => id !== role.id) : [...prev, role.id],
-                        )
-                      }
-                      className={cn(
-                        "h-[30px] rounded-[7px] border px-2.5 font-mono text-[12px] font-semibold transition-colors duration-150",
-                        on
-                          ? "border-accent bg-accent-subtle text-foreground"
-                          : "border-border bg-surface text-muted hover:text-foreground",
-                      )}
-                    >
-                      {on ? "✓ " : ""}
-                      {role.name}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            <RolePicker roles={roles} value={roleIds} onChange={setRoleIds} />
           </Field>
 
           <Field label={t("schedule.reminderDialog.when")}>

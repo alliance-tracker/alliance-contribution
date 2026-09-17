@@ -363,6 +363,8 @@ export function Schedule() {
       <EventDialog
         target={eventDialog}
         activities={(activitiesState.data ?? []).filter((a) => a.active === 1)}
+        webhooks={webhooks}
+        roles={roles}
         onClose={() => setEventDialog(null)}
         onSaved={() => refetch("events")}
       />

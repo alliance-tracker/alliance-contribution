@@ -131,7 +131,7 @@ export function PowerHistoryCard({
             {t("common.power")}
           </span>
           <span className="flex items-center gap-1.5 text-[11px] text-muted">
-            <span className="size-2 rounded-full bg-muted" />
+            <span className="size-2 rounded-full bg-faint" />
             {t("common.position")}
           </span>
         </div>
@@ -186,7 +186,7 @@ export function PowerHistoryCard({
               type="monotone"
               dataKey="position"
               name={t("common.position")}
-              stroke="var(--color-muted)"
+              stroke="var(--color-faint)"
               strokeWidth={1.5}
               strokeDasharray="4 3"
               dot={{ r: 2 }}

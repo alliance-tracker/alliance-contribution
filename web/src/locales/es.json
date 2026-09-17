@@ -343,6 +343,9 @@
     "avgParticipants": "Participantes prom.",
     "byDay": "Por día",
     "byMember": "Por miembro",
+    "membersAppeared_one": "{{count}} miembro apareció",
+    "membersAppeared_many": "{{count}} miembros aparecieron",
+    "membersAppeared_other": "{{count}} miembros aparecieron",
     "appearances": "Apariciones",
     "avgPerAppearance": "Prom. / aparición",
     "toggleParticipants": "Mostrar participantes"

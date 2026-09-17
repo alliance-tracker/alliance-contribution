@@ -77,7 +77,7 @@ export function PodiumCard({
       className={cn(
         "flex flex-col items-center rounded-[14px] border px-2 py-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-transform hover:-translate-y-0.5 md:p-4",
         m ? m.card : "border-border bg-surface",
-        first && "-translate-y-1.5 py-3.5 md:p-5",
+        first && "-translate-y-1.5 py-3.5 shadow-[0_8px_24px_rgba(234,179,8,0.28)] md:p-5",
       )}
     >
       <div

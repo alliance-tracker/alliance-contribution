@@ -22,6 +22,7 @@ import type {
 import { api, ApiError, type ScoringConfig } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
 import { useIsMobile } from "@/lib/useIsMobile";
+import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -266,10 +267,15 @@ export function MemberProfile() {
             {aliases.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 <span className="text-[12px] text-muted">{t("profile.knownAliases")}</span>
-                {aliases.map((a) => (
+                {aliases.map((a, i) => (
                   <span
                     key={a.id}
-                    className="rounded-[6px] bg-foreground px-1.5 py-0.5 font-mono text-[11px] text-accent-foreground"
+                    className={cn(
+                      "rounded-[6px] px-1.5 py-0.5 font-mono text-[11px]",
+                      i === 0
+                        ? "bg-foreground text-accent-foreground"
+                        : "border border-border bg-muted-surface text-secondary",
+                    )}
                   >
                     {a.alias}
                   </span>

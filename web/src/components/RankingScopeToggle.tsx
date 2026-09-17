@@ -18,7 +18,7 @@ export function RankingScopeToggle({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="grid w-full grid-cols-2 gap-1 rounded-[10px] border border-border bg-muted-surface p-1 md:inline-flex md:w-auto">
+    <div className="grid w-full grid-cols-2 gap-1 rounded-[10px] max-md:border max-md:border-border bg-muted-surface p-1 md:inline-flex md:w-auto">
       {SCOPES.map((s) => (
         <button
           key={s.value}

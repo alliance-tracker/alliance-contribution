@@ -309,6 +309,7 @@
     "avgParticipants": "평균 참가자",
     "byDay": "일자별",
     "byMember": "멤버별",
+    "membersAppeared_other": "{{count}}명 참가",
     "appearances": "참가 횟수",
     "avgPerAppearance": "참가당 평균",
     "toggleParticipants": "참가자 보기"

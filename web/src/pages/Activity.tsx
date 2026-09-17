@@ -125,6 +125,7 @@ function SeriesChart({
             tickLine={false}
             width={72}
             allowDecimals={false}
+            tickCount={3}
             tickFormatter={yFormatter}
             tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
           />
@@ -270,7 +271,7 @@ export function Activity() {
         <EmptyState message={t("activity.empty")} />
       ) : (
         <>
-          <Card className="flex flex-wrap gap-x-8 gap-y-3 p-3 md:p-[18px]">
+          <Card className="flex flex-wrap gap-x-10 gap-y-3 p-3 md:p-[18px]">
             <Stat label={t("activity.eventDays")} value={formatNumber(detail.event_days)} />
             <Stat label={t("activity.participations")} value={formatNumber(totalParticipants)} />
             <Stat label={`${t("activity.total")} ${unit}`} value={formatNumber(totalValue)} />
@@ -420,7 +421,12 @@ export function Activity() {
           </Card>
 
           <Card className="overflow-hidden p-0">
-            <div className="border-b border-border px-3 py-2.5 text-[14px] font-semibold md:px-[18px]">{t("activity.byMember")}</div>
+            <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 md:px-[18px]">
+              <span className="text-[14px] font-semibold">{t("activity.byMember")}</span>
+              <span className="text-[12px] text-muted">
+                {t("activity.membersAppeared", { count: members.length })}
+              </span>
+            </div>
             <div className="md:hidden">
               {members.map((m) => (
                 <Link

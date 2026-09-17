@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Search } from "lucide-react";
 import type { Alias, OverallRanking, OverallRankingRow } from "@shared/types";
 import { api } from "@/lib/api";
 import { useApi, firstError } from "@/lib/useApi";
@@ -132,12 +133,15 @@ export function Members() {
       </div>
 
       <div className="flex flex-col gap-1.5 md:flex-row md:flex-wrap md:items-center md:gap-3">
-        <Input
-          placeholder={t("members.searchPlaceholder")}
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="h-11 md:h-9 md:max-w-sm"
-        />
+        <div className="relative md:w-full md:max-w-sm">
+          <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-faint" aria-hidden />
+          <Input
+            placeholder={t("members.searchPlaceholder")}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            className="h-11 ps-9 md:h-9"
+          />
+        </div>
         <span className="text-[12px] text-faint">
           {t("members.shown", { shown: filtered.length, total: rows.length })}
         </span>
@@ -152,7 +156,7 @@ export function Members() {
           <EmptyState message={t("members.emptyMatch")} />
         </Card>
       ) : (
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 md:grid-cols-[repeat(auto-fill,minmax(232px,1fr))]">
           {filtered.map((row) => (
             <MemberCard
               key={row.member_id}

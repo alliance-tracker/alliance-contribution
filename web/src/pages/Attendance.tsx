@@ -147,7 +147,7 @@ export function Attendance() {
               </SelectContent>
             </Select>
           ) : (
-            <span className="inline-flex h-10 flex-1 items-center truncate rounded-[8px] border border-border bg-muted-surface px-3 text-[13px] font-medium text-secondary md:h-auto md:flex-none md:py-1.5">
+            <span className="inline-flex h-10 flex-1 items-center truncate rounded-[8px] border border-border bg-muted-surface px-3 text-[13px] font-medium text-secondary md:h-9 md:flex-none">
               {t("common.seasonAllWeeks")}
             </span>
           )}
@@ -277,7 +277,7 @@ export function Attendance() {
               })}
             </div>
             <div className="hidden md:block">
-              <Table>
+              <Table className="[&_td]:h-11">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
                     <TableHead>{t("common.governor")}</TableHead>

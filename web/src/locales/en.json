@@ -326,6 +326,8 @@
     "avgParticipants": "Avg participants",
     "byDay": "By day",
     "byMember": "By member",
+    "membersAppeared_one": "{{count}} member appeared",
+    "membersAppeared_other": "{{count}} members appeared",
     "appearances": "Appearances",
     "avgPerAppearance": "Avg / appearance",
     "toggleParticipants": "Show participants"

@@ -2,26 +2,27 @@
 
 /*
   Alliance Tracker — design system.
-  Zinc neutrals, monochrome black accent; medals, traffic-light status, and the rank-band
-  hues (blue/teal/slate/purple, 2026-08-03 spec) are the colour pops. Geist / Geist Mono.
+  Navy-slate neutrals, ink accent; medals, traffic-light status, the rank-band hues
+  (orange/blue/teal/slate) and the section tones are the colour pops. Geist / Geist Mono.
   Hairline borders + soft card shadows. Numbers are DATA: tabular-nums + monospace.
 */
 @theme {
-  /* Neutrals (zinc) */
-  --color-background: #fafafa; /* app shell, table headers, row hover */
+  /* Neutrals (navy-slate) */
+  --color-background: #f4f7fb; /* app shell, table headers, row hover */
   --color-surface: #ffffff; /* cards, main content */
-  --color-subtle: #fafafa; /* alias of background */
-  --color-muted-surface: #f4f4f5; /* chips, segmented tracks, bar tracks */
-  --color-foreground: #18181b;
-  --color-secondary: #3f3f46;
-  --color-muted: #71717a;
-  --color-faint: #a1a1aa;
-  --color-border: #e4e4e7;
+  --color-subtle: #f4f7fb; /* alias of background */
+  --color-muted-surface: #ecf1f7; /* chips, segmented tracks, bar tracks, avatars */
+  --color-foreground: #141e2a;
+  --color-secondary: #354351;
+  --color-muted: #5f7086;
+  --color-faint: #8f9fb1;
+  --color-border: #dbe3ec;
+  --color-border-strong: #c3cfdc; /* dashed "add" borders, toggle-off track, sheet grabber */
 
-  /* Accent — monochrome */
-  --color-accent: #18181b;
-  --color-accent-hover: #27272a;
-  --color-accent-subtle: #f4f4f5;
+  /* Accent — ink. Blue is a tone (below), never the button colour. */
+  --color-accent: #141e2a;
+  --color-accent-hover: #232f3b;
+  --color-accent-subtle: #ecf1f7;
   --color-accent-foreground: #ffffff; /* text/icon on bg-accent or bg-foreground */
 
   /* Semantic — movement / thresholds */
@@ -59,29 +60,30 @@
   --color-flag-fg: #92400e;
   --color-flag-accent: #b45309;
 
-  /* Rank bands (2026-08-03 spec): edge + faint row tint on the two boards. Hue families are
-     new on purpose — traffic-light status and medals keep their meanings. */
-  --color-band-lead: #9333ea;
-  --color-band-lead-bg: #faf5ff;
-  --color-band-top: #2563eb;
-  --color-band-top-bg: #eff6ff;
+  /* Rank bands: edge + faint row tint on the two boards. Leadership is orange (design refresh
+     2026-09-17; was purple in the 2026-08-03 spec). Traffic-light status and medals keep their
+     meanings. */
+  --color-band-lead: #f97316;
+  --color-band-lead-bg: #fff7f0;
+  --color-band-top: #1e6fd9;
+  --color-band-top-bg: #e8f1fd;
   --color-band-mid: #0d9488;
   --color-band-mid-bg: #f0fdfa;
   --color-band-rest: #64748b;
   --color-band-rest-bg: #f8fafc;
 
   /* R1–R5 badge tones — hues echo the bands (R3=top, R2=mid, R1=rest, R4/R5=leadership;
-     R5 is the bold variant, weight carries R4-vs-R5). */
-  --color-rank5-bg: #9333ea;
+     R5 is the solid variant, R4 the tint). */
+  --color-rank5-bg: #f97316;
   --color-rank5-fg: #ffffff;
-  --color-rank4-bg: #f3e8ff;
-  --color-rank4-fg: #7e22ce;
-  --color-rank3-bg: #dbeafe;
-  --color-rank3-fg: #1d4ed8;
+  --color-rank4-bg: #fff1e8;
+  --color-rank4-fg: #c2410c;
+  --color-rank3-bg: #d6e6fb;
+  --color-rank3-fg: #155cb8;
   --color-rank2-bg: #ccfbf1;
   --color-rank2-fg: #0f766e;
-  --color-rank1-bg: #f4f4f5;
-  --color-rank1-fg: #52525b;
+  --color-rank1-bg: #ecf1f7;
+  --color-rank1-fg: #475768;
 
   /* Activity-type badges (event log) */
   --color-badge-blue-bg: #eff6ff;
@@ -100,6 +102,38 @@
   --color-badge-slate-fg: #475569;
   --color-badge-pink-bg: #fdf2f8;
   --color-badge-pink-fg: #be185d;
+
+  /* Section tones — icon tiles (tone-X), tinted header strips (tone-X-bg) and their bottom
+     border (tone-X-border). Tile icons use text-surface: white in light, navy in dark. */
+  --color-tone-amber: #ca8a04;
+  --color-tone-amber-bg: #fefce8;
+  --color-tone-amber-border: #fde68a;
+  --color-tone-red: #dc2626;
+  --color-tone-red-bg: #fef2f2;
+  --color-tone-red-border: #fecaca;
+  --color-tone-blue: #1e6fd9;
+  --color-tone-blue-bg: #e8f1fd;
+  --color-tone-blue-border: #c3dafa;
+  --color-tone-blue-fg: #0f4a99; /* text on tone-blue-bg: role chips, translate button */
+  --color-tone-teal: #0d9488;
+  --color-tone-teal-bg: #f0fdfa;
+  --color-tone-teal-border: #99f6e4;
+  --color-tone-orange: #f97316;
+  --color-tone-orange-bg: #fff7f0;
+  --color-tone-orange-border: #fdd0b3;
+  --color-tone-pink: #db2777; /* tile only */
+
+  /* Fixed in both themes — no .dark override (test/unit/theme-tokens.test.ts allows these). */
+  --color-sidebar: #0b1a2e;
+  --color-sidebar-fg: #f1f5f9;
+  --color-sidebar-muted: #8ea0b3;
+  --color-nav-overview: #38bdf8;
+  --color-nav-ranking: #f59e0b;
+  --color-nav-members: #14b8a6;
+  --color-nav-attendance: #22c55e;
+  --color-nav-activities: #f97316;
+  --color-nav-admin: #a78bfa;
+  --color-warn-wash: #b45309; /* at-risk stat tile border/bg: stays muted amber on dark */
 
   --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans Arabic", "Geeza Pro", sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans Arabic", "Geeza Pro", monospace;
@@ -121,22 +155,23 @@
 .dark {
   color-scheme: dark;
 
-  /* Neutrals (zinc) */
-  --color-background: #09090b;
-  --color-surface: #18181b;
-  --color-subtle: #09090b;
-  --color-muted-surface: #27272a;
-  --color-foreground: #fafafa;
-  --color-secondary: #d4d4d8;
-  --color-muted: #a1a1aa;
-  --color-faint: #71717a;
-  --color-border: #27272a;
+  /* Neutrals (navy-slate) */
+  --color-background: #0b1626;
+  --color-surface: #13202f;
+  --color-subtle: #0b1626;
+  --color-muted-surface: #1c2b3c;
+  --color-foreground: #f1f5f9;
+  --color-secondary: #c8d4e1;
+  --color-muted: #8fa2b8;
+  --color-faint: #6b7f96;
+  --color-border: #22334a;
+  --color-border-strong: #2e4159;
 
-  /* Accent — monochrome (inverts to near-white; dark text on top) */
-  --color-accent: #fafafa;
-  --color-accent-hover: #e4e4e7;
-  --color-accent-subtle: #27272a;
-  --color-accent-foreground: #18181b;
+  /* Accent — ink inverts to near-white; dark text on top */
+  --color-accent: #f1f5f9;
+  --color-accent-hover: #e2e9f1;
+  --color-accent-subtle: #1c2b3c;
+  --color-accent-foreground: #13202f;
 
   /* Semantic — brighter so they read on dark surfaces */
   --color-up: #4ade80;
@@ -152,7 +187,7 @@
   --color-gold-bg: #2e2708;
   --color-gold-fg: #fde68a;
   --color-gold-tint: #1a1708;
-  --color-silver-bg: #27272a;
+  --color-silver-bg: #1e293b;
   --color-silver-fg: #e2e8f0;
   --color-bronze-bg: #2a1c0a;
   --color-bronze-fg: #fdba74;
@@ -173,29 +208,27 @@
   --color-flag-fg: #fde68a;
   --color-flag-accent: #fbbf24;
 
-  /* Rank bands (2026-08-03 spec): edge + faint row tint on the two boards. Hue families are
-     new on purpose — traffic-light status and medals keep their meanings. */
-  --color-band-lead: #c084fc;
-  --color-band-lead-bg: #2a1d3a;
+  /* Rank bands — leadership orange (see the light block). */
+  --color-band-lead: #fb923c;
+  --color-band-lead-bg: #431407;
   --color-band-top: #60a5fa;
   --color-band-top-bg: #172136;
   --color-band-mid: #2dd4bf;
   --color-band-mid-bg: #122b28;
-  --color-band-rest: #64748b;
-  --color-band-rest-bg: #1c2230;
+  --color-band-rest: #94a3b8;
+  --color-band-rest-bg: #1e293b;
 
-  /* R1–R5 badge tones — hues echo the bands (R3=top, R2=mid, R1=rest, R4/R5=leadership;
-     R5 is the bold variant, weight carries R4-vs-R5). */
-  --color-rank5-bg: #7e22ce;
-  --color-rank5-fg: #f3e8ff;
-  --color-rank4-bg: #3b2a52;
-  --color-rank4-fg: #d8b4fe;
+  /* R1–R5 badge tones */
+  --color-rank5-bg: #fb923c;
+  --color-rank5-fg: #13202f;
+  --color-rank4-bg: #431407;
+  --color-rank4-fg: #fdba74;
   --color-rank3-bg: #1e3a5f;
   --color-rank3-fg: #93c5fd;
   --color-rank2-bg: #113b37;
   --color-rank2-fg: #5eead4;
-  --color-rank1-bg: #334155;
-  --color-rank1-fg: #cbd5e1;
+  --color-rank1-bg: #1c2b3c;
+  --color-rank1-fg: #b3c2d3;
 
   /* Activity-type badges — dark tints, bright text */
   --color-badge-blue-bg: #172554;
@@ -214,6 +247,25 @@
   --color-badge-slate-fg: #cbd5e1;
   --color-badge-pink-bg: #500724;
   --color-badge-pink-fg: #f9a8d4;
+
+  /* Section tones */
+  --color-tone-amber: #eab308;
+  --color-tone-amber-bg: #422006;
+  --color-tone-amber-border: #713f12;
+  --color-tone-red: #f87171;
+  --color-tone-red-bg: #450a0a;
+  --color-tone-red-border: #7f1d1d;
+  --color-tone-blue: #60a5fa;
+  --color-tone-blue-bg: #172136;
+  --color-tone-blue-border: #1e3a5f;
+  --color-tone-blue-fg: #bfdbfe;
+  --color-tone-teal: #2dd4bf;
+  --color-tone-teal-bg: #122b28;
+  --color-tone-teal-border: #113b37;
+  --color-tone-orange: #fb923c;
+  --color-tone-orange-bg: #431407;
+  --color-tone-orange-border: #7c2d12;
+  --color-tone-pink: #f472b6;
 }
 
 /*

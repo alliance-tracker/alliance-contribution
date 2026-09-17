@@ -8,10 +8,10 @@ import type { TKey } from "@/i18n";
 import { languageFlag, languageName } from "@/lib/schedule-languages";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ErrorNote, DialogHead, Field, SHEET } from "./parts";
+import { ErrorNote, Field, SHEET } from "./parts";
 
 const CHIP_TITLE: Record<string, TKey> = {
   "{event}": "schedule.messageDialog.chipEvent",
@@ -98,8 +98,8 @@ export function MessageDialog({
     <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn("max-w-[600px] md:max-h-[88vh] md:overflow-y-auto", SHEET)}>
         <DialogHead
-          icon={<MessageSquare className="size-[18px]" />}
-          tone="bg-accent-subtle text-foreground"
+          icon={MessageSquare}
+          tone="blue"
           title={template ? t("schedule.messageDialog.edit") : t("schedule.messageDialog.add")}
           description={t("schedule.messageDialog.desc")}
         />
@@ -199,7 +199,7 @@ export function MessageDialog({
           </div>
         </div>
 
-        <div className="mt-5 flex justify-end gap-2">
+        <DialogFoot>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
@@ -210,7 +210,7 @@ export function MessageDialog({
                 ? t("common.actions.saveChanges")
                 : t("schedule.messageDialog.add")}
           </Button>
-        </div>
+        </DialogFoot>
       </DialogContent>
     </Dialog>
   );

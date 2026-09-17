@@ -16,10 +16,10 @@ import { formatDuration, fromLocalInputs, toLocalInputs, whenLabel } from "@/lib
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ErrorNote, DialogHead, Field, SegToggle, SHEET } from "./parts";
+import { ErrorNote, Field, SegToggle, SHEET } from "./parts";
 
 const ALL_DAY = 1440;
 const NONE = "none";
@@ -179,8 +179,8 @@ export function EventDialog({
     <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn("max-w-lg", SHEET)}>
         <DialogHead
-          icon={<CalendarClock className="size-[18px]" />}
-          tone="bg-accent-subtle text-foreground"
+          icon={CalendarClock}
+          tone="blue"
           title={event ? t("schedule.eventDialog.edit") : t("schedule.eventDialog.add")}
           description={t("schedule.eventDialog.desc")}
         />
@@ -321,7 +321,7 @@ export function EventDialog({
           )}
         </div>
 
-        <div className="mt-5 flex justify-end gap-2">
+        <DialogFoot>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
@@ -332,7 +332,7 @@ export function EventDialog({
                 ? t("common.actions.saveChanges")
                 : t("schedule.eventDialog.add")}
           </Button>
-        </div>
+        </DialogFoot>
       </DialogContent>
     </Dialog>
   );
@@ -409,8 +409,8 @@ export function ReminderDialog({
     <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn("max-w-lg", SHEET)}>
         <DialogHead
-          icon={<Bell className="size-[18px]" />}
-          tone="bg-accent-subtle text-foreground"
+          icon={Bell}
+          tone="blue"
           title={notification ? t("schedule.reminderDialog.edit") : t("schedule.reminderDialog.add")}
           description={t("schedule.reminderDialog.desc", {
             event: event?.title ?? "",
@@ -499,7 +499,7 @@ export function ReminderDialog({
           </Field>
         </div>
 
-        <div className="mt-5 flex justify-end gap-2">
+        <DialogFoot>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
@@ -510,7 +510,7 @@ export function ReminderDialog({
                 ? t("common.actions.saveChanges")
                 : t("schedule.reminderDialog.add")}
           </Button>
-        </div>
+        </DialogFoot>
       </DialogContent>
     </Dialog>
   );

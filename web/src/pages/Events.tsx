@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
-import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert, CalendarDays } from "lucide-react";
+import { Plus, Eye, Pencil, Trash2, CheckCircle2, TriangleAlert, CalendarDays, CalendarPlus } from "lucide-react";
 import { eventChatPrompt } from "@shared/prompts";
 import type { ActivityType, Event, EventListRow } from "@shared/types";
 import { DEFAULT_ACTIVITY_COLOR } from "@shared/colors";
@@ -48,6 +48,8 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFoot,
+  DialogHead,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -331,12 +333,12 @@ function EventFormDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{isEdit ? t("events.editTitle") : t("events.add")}</DialogTitle>
-          <DialogDescription>
-            {isEdit ? t("events.editDesc") : t("events.addDesc")}
-          </DialogDescription>
-        </DialogHeader>
+        <DialogHead
+          icon={CalendarPlus}
+          tone="blue"
+          title={isEdit ? t("events.editTitle") : t("events.add")}
+          description={isEdit ? t("events.editDesc") : t("events.addDesc")}
+        />
 
         {result ? (
           <div className="flex flex-col gap-4">
@@ -464,7 +466,7 @@ function EventFormDialog({
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-2">
+            <DialogFoot className="mt-1">
               <DialogClose asChild>
                 <Button variant="ghost" size="sm">
                   {t("common.actions.cancel")}
@@ -477,7 +479,7 @@ function EventFormDialog({
                     ? t("common.actions.saveChanges")
                     : t("events.add")}
               </Button>
-            </div>
+            </DialogFoot>
           </div>
         )}
       </DialogContent>

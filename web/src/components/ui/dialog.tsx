@@ -1,8 +1,10 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { IconTile, Strip, type StripTone } from "./tone";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -63,3 +65,46 @@ export const DialogDescription = React.forwardRef<
   />
 ));
 DialogDescription.displayName = "DialogDescription";
+
+/**
+ * Titled header strip: hued tile + title + description on the tone's tint. Runs edge to edge over
+ * DialogContent's p-5; `pe-12` keeps the text clear of the close button. Shown at every width.
+ */
+export function DialogHead({
+  icon,
+  tone,
+  title,
+  description,
+}: {
+  icon: LucideIcon;
+  tone: StripTone;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+}) {
+  return (
+    <Strip
+      tone={tone}
+      always
+      className="-mx-5 -mt-5 mb-5 flex items-center gap-3.5 rounded-t-[15px] border-b px-5 py-[18px] pe-12"
+    >
+      <IconTile icon={icon} tone={tone} size="lg" always />
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <DialogTitle className="text-[17px]">{title}</DialogTitle>
+        {description && <DialogDescription className="text-[12.5px]">{description}</DialogDescription>}
+      </div>
+    </Strip>
+  );
+}
+
+/** Footer bar that closes a DialogHead dialog: edge to edge, hairline on top, page-background fill. */
+export function DialogFoot({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "-mx-5 -mb-5 mt-5 flex items-center justify-end gap-2 rounded-b-[15px] border-t border-border bg-background px-5 py-3.5",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

@@ -26,6 +26,8 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFoot,
+  DialogHead,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -167,10 +169,12 @@ function EditActivityDialog({
       }}
     >
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("scoring.editTitle")}</DialogTitle>
-          {activity && (
-            <DialogDescription>
+        <DialogHead
+          icon={Swords}
+          tone="orange"
+          title={t("scoring.editTitle")}
+          description={
+            activity ? (
               <Trans
                 i18nKey="scoring.editDesc"
                 values={{ name: activity.name, key: activity.key }}
@@ -179,9 +183,9 @@ function EditActivityDialog({
                   2: <span className="num" />,
                 }}
               />
-            </DialogDescription>
-          )}
-        </DialogHeader>
+            ) : undefined
+          }
+        />
 
         <div className="flex flex-col gap-4">
           {error && <ErrorState message={error} />}
@@ -244,14 +248,14 @@ function EditActivityDialog({
             </div>
           </Field>
 
-          <div className="flex items-center justify-end gap-2">
+          <DialogFoot className="mt-1">
             <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
               {t("common.actions.cancel")}
             </Button>
             <Button size="sm" onClick={submit} disabled={!canSubmit}>
               {submitting ? t("common.actions.saving") : t("common.actions.saveChanges")}
             </Button>
-          </div>
+          </DialogFoot>
         </div>
       </DialogContent>
     </Dialog>
@@ -410,10 +414,7 @@ function AddActivityDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{t("scoring.addTitle")}</DialogTitle>
-          <DialogDescription>{t("scoring.addDesc")}</DialogDescription>
-        </DialogHeader>
+        <DialogHead icon={Swords} tone="orange" title={t("scoring.addTitle")} description={t("scoring.addDesc")} />
 
         <div className="flex flex-col gap-4">
           {error && <ErrorState message={error} />}
@@ -493,7 +494,7 @@ function AddActivityDialog({
             </div>
           </Field>
 
-          <div className="flex items-center justify-end gap-2">
+          <DialogFoot className="mt-1">
             <DialogClose asChild>
               <Button variant="ghost" size="sm">
                 {t("common.actions.cancel")}
@@ -502,7 +503,7 @@ function AddActivityDialog({
             <Button size="sm" onClick={submit} disabled={!canSubmit}>
               {submitting ? t("scoring.adding") : t("scoring.addActivity")}
             </Button>
-          </div>
+          </DialogFoot>
         </div>
       </DialogContent>
     </Dialog>

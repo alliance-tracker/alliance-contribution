@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
-import { Plus, Trash2 } from "lucide-react";
+import { Layers, Plus, Trash2 } from "lucide-react";
 import type { ActivityType } from "@shared/types";
 import type { TKey } from "@/i18n";
 import { api } from "@/lib/api";
@@ -22,13 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { LoadingState, ErrorState } from "@/components/States";
 
 /** Parse a numeric field: blank/non-numeric → null (invalid), else the finite number. */
@@ -240,12 +234,12 @@ function ScoringEditor({ activityType }: { activityType: ActivityType }) {
         <SuccessNote message={t("scoring.editor.savedRecomputed")} onDismiss={() => setSaved(false)} />
       )}
 
-      <div className="flex items-center justify-end gap-3">
+      <DialogFoot className="mt-1 gap-3">
         {reason && <span className="text-[12px] text-down">{t(reason)}</span>}
         <Button size="sm" onClick={save} disabled={saving || config === null}>
           {saving ? t("common.actions.saving") : t("scoring.editor.saveScoring")}
         </Button>
-      </div>
+      </DialogFoot>
     </div>
   );
 }
@@ -267,10 +261,12 @@ export function EditBandsDialog({
       }}
     >
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{t("scoring.editBands")}</DialogTitle>
-          {activity && (
-            <DialogDescription>
+        <DialogHead
+          icon={Layers}
+          tone="teal"
+          title={t("scoring.editBands")}
+          description={
+            activity ? (
               <Trans
                 i18nKey="scoring.editor.bandsDesc"
                 values={{ name: activity.name }}
@@ -278,9 +274,9 @@ export function EditBandsDialog({
                   1: <Badge className={cn(activityBadgeClass(activity.color), "align-middle")} />,
                 }}
               />
-            </DialogDescription>
-          )}
-        </DialogHeader>
+            ) : undefined
+          }
+        />
 
         {activity && <ScoringEditor activityType={activity} />}
       </DialogContent>

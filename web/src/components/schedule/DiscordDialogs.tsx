@@ -6,9 +6,9 @@ import { api } from "@/lib/api";
 import { writeErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ErrorNote, DialogHead, Field, SegToggle, SHEET } from "./parts";
+import { ErrorNote, Field, SegToggle, SHEET } from "./parts";
 
 type Mode = "url" | "id";
 
@@ -68,8 +68,8 @@ export function ChannelDialog({
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent className={cn("max-w-lg", SHEET)}>
         <DialogHead
-          icon={<Hash className="size-[18px]" />}
-          tone="bg-accent-subtle text-foreground"
+          icon={Hash}
+          tone="blue"
           title={t("schedule.channelDialog.title")}
           description={t("schedule.channelDialog.desc")}
         />
@@ -128,14 +128,14 @@ export function ChannelDialog({
           </p>
         </div>
 
-        <div className="mt-5 flex justify-end gap-2">
+        <DialogFoot>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
           <Button size="sm" onClick={save} disabled={!canSave}>
             {busy ? t("common.actions.saving") : t("schedule.channelDialog.submit")}
           </Button>
-        </div>
+        </DialogFoot>
       </DialogContent>
     </Dialog>
   );
@@ -188,8 +188,8 @@ export function RoleDialog({
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent className={cn("max-w-md", SHEET)}>
         <DialogHead
-          icon={<AtSign className="size-[18px]" />}
-          tone="bg-accent-subtle text-foreground"
+          icon={AtSign}
+          tone="blue"
           title={t("schedule.roleDialog.title")}
           description={t("schedule.roleDialog.desc")}
         />
@@ -212,14 +212,14 @@ export function RoleDialog({
           </Field>
         </div>
 
-        <div className="mt-5 flex justify-end gap-2">
+        <DialogFoot>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
           <Button size="sm" onClick={save} disabled={!canSave}>
             {busy ? t("common.actions.saving") : t("schedule.roleDialog.submit")}
           </Button>
-        </div>
+        </DialogFoot>
       </DialogContent>
     </Dialog>
   );

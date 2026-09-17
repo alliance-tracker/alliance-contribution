@@ -81,29 +81,6 @@ export function SegToggle<T extends string>({
   );
 }
 
-/** Icon tile + title + description — the header every schedule dialog shares. */
-export function DialogHead({
-  icon,
-  tone,
-  title,
-  description,
-}: {
-  icon: ReactNode;
-  tone: string;
-  title: string;
-  description: ReactNode;
-}) {
-  return (
-    <DialogHeader className="mb-4 flex-row items-start gap-3 pe-7">
-      <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-[9px]", tone)}>{icon}</span>
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </div>
-    </DialogHeader>
-  );
-}
-
 /** Inline error strip for a write failure (the page-level ErrorState carries a reload button). */
 export function ErrorNote({ message }: { message: string }) {
   return (
@@ -151,16 +128,17 @@ export function ConfirmDialog({ target, onClose }: { target: ConfirmTarget | nul
   return (
     <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn("max-w-sm", SHEET)}>
-        <DialogHead
-          icon={<TriangleAlert className="size-[18px]" />}
-          tone="bg-down/10 text-down"
-          title={t("schedule.confirm.title", { kind: target?.kind ?? "" })}
-          description={
-            <>
+        <DialogHeader className="mb-4 flex-row items-start gap-3 pe-7">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-[9px] bg-down/10 text-down">
+            <TriangleAlert className="size-[18px]" />
+          </span>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <DialogTitle>{t("schedule.confirm.title", { kind: target?.kind ?? "" })}</DialogTitle>
+            <DialogDescription>
               <b className="font-semibold text-foreground">{target?.label}</b> {target?.body}
-            </>
-          }
-        />
+            </DialogDescription>
+          </div>
+        </DialogHeader>
         {error && <ErrorNote message={error} />}
         <div className="mt-4 flex justify-end gap-2">
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>

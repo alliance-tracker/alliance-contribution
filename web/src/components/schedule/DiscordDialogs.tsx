@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ErrorNote, Field, SegToggle, SHEET } from "./parts";
+import { ErrorNote, Field, SegToggle, SHEET, SHEET_FOOT } from "./parts";
 
 type Mode = "url" | "id";
 
@@ -128,7 +128,7 @@ export function ChannelDialog({
           </p>
         </div>
 
-        <DialogFoot>
+        <DialogFoot className={SHEET_FOOT}>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
@@ -212,7 +212,7 @@ export function RoleDialog({
           </Field>
         </div>
 
-        <DialogFoot>
+        <DialogFoot className={SHEET_FOOT}>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>

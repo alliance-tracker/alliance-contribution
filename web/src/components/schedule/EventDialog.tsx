@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ErrorNote, Field, SegToggle, SHEET } from "./parts";
+import { ErrorNote, Field, SegToggle, SHEET, SHEET_FOOT } from "./parts";
 
 const ALL_DAY = 1440;
 const NONE = "none";
@@ -321,7 +321,7 @@ export function EventDialog({
           )}
         </div>
 
-        <DialogFoot>
+        <DialogFoot className={SHEET_FOOT}>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>
@@ -499,7 +499,7 @@ export function ReminderDialog({
           </Field>
         </div>
 
-        <DialogFoot>
+        <DialogFoot className={SHEET_FOOT}>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>

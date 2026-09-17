@@ -15,10 +15,15 @@ import {
 /**
  * Below `md` a schedule dialog sits as a bottom sheet (design 2b–2e); from `md` up it keeps the
  * centred card. left/right rather than logical insets on purpose: the override is symmetric and has
- * to beat the base `left-1/2`, which is physical too.
+ * to beat the base `left-1/2`, which is physical too. The `::before` is the decorative 36×4 grabber
+ * from the mobile mocks; sheets do not drag.
  */
 export const SHEET =
-  "max-md:top-auto max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:translate-x-0 max-md:translate-y-0 max-md:max-w-none max-md:rounded-b-none max-md:max-h-[92dvh] max-md:overflow-y-auto";
+  "max-md:top-auto max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:translate-x-0 max-md:translate-y-0 max-md:max-w-none max-md:rounded-b-none max-md:max-h-[92dvh] max-md:overflow-y-auto max-md:before:pointer-events-none max-md:before:absolute max-md:before:inset-x-0 max-md:before:top-2 max-md:before:mx-auto max-md:before:h-1 max-md:before:w-9 max-md:before:rounded-full max-md:before:bg-border-strong max-md:before:content-['']";
+
+/** Sheet footers on a phone: Cancel and the primary action as two big buttons, 1 : 1.6. */
+export const SHEET_FOOT =
+  "max-md:grid max-md:grid-cols-[1fr_1.6fr] max-md:gap-[9px] max-md:[&>button]:h-[46px] max-md:[&>button]:text-[14px]";
 
 /** Uppercase mono micro-label above a field, sentence-case hint beside it. */
 export function Field({

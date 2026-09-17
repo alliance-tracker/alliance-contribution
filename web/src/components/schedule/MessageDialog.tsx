@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFoot, DialogHead } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ErrorNote, Field, SHEET } from "./parts";
+import { ErrorNote, Field, SHEET, SHEET_FOOT } from "./parts";
 
 const CHIP_TITLE: Record<string, TKey> = {
   "{event}": "schedule.messageDialog.chipEvent",
@@ -96,7 +96,13 @@ export function MessageDialog({
 
   return (
     <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn("max-w-[600px] md:max-h-[88vh] md:overflow-y-auto", SHEET)}>
+      <DialogContent
+        className={cn(
+          "max-w-[600px] md:max-h-[88vh] md:overflow-y-auto",
+          SHEET,
+          "max-md:h-[calc(100dvh-54px)] max-md:max-h-none",
+        )}
+      >
         <DialogHead
           icon={MessageSquare}
           tone="blue"
@@ -199,7 +205,7 @@ export function MessageDialog({
           </div>
         </div>
 
-        <DialogFoot>
+        <DialogFoot className={SHEET_FOOT}>
           <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
             {t("common.actions.cancel")}
           </Button>

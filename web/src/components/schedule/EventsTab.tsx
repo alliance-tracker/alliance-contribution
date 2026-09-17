@@ -250,7 +250,7 @@ function ReminderPanel({
       )}
       {isAdmin && (
         <div className="py-2">
-          <Button variant="secondary" size="sm" onClick={() => actions.addReminder(event)}>
+          <Button variant="dashed" size="sm" onClick={() => actions.addReminder(event)}>
             <Plus className="size-3.5" />
             {t("schedule.events.addReminder")}
           </Button>
@@ -443,7 +443,7 @@ function EventCard({
         type="button"
         onClick={onToggleExpand}
         aria-expanded={expanded}
-        className="mt-2.5 flex w-full items-center gap-2 rounded-[8px] bg-background px-2.5 py-2 text-start"
+        className="mt-2.5 flex w-full items-center gap-2 border-t border-border pt-2.5 text-start"
       >
         <div className="min-w-0 flex-1">
           <div className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.04em] text-faint">
@@ -465,7 +465,13 @@ function EventCard({
       {expanded && (
         <div className="mt-2 flex flex-col gap-2">
           {event.notifications.map((n) => (
-            <div key={n.id} className="rounded-[8px] border border-border bg-background px-2.5 py-2">
+            <div
+              key={n.id}
+              className={cn(
+                "rounded-[8px] border bg-background px-2.5 py-2",
+                n.last_sent && !n.last_sent.ok ? "border-risk-border" : "border-border",
+              )}
+            >
               <ReminderLine
                 event={event}
                 notification={n}
@@ -479,7 +485,7 @@ function EventCard({
             <p className="text-[12.5px] text-muted">{t("schedule.events.noReminders")}</p>
           )}
           {isAdmin && (
-            <Button variant="secondary" size="sm" className="self-start" onClick={() => actions.addReminder(event)}>
+            <Button variant="dashed" size="sm" className="self-start" onClick={() => actions.addReminder(event)}>
               <Plus className="size-3.5" />
               {t("schedule.events.addReminder")}
             </Button>

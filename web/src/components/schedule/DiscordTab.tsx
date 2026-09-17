@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AtSign, Globe, Hash, Info, Lock, Plus, Trash2, X } from "lucide-react";
+import { AtSign, Globe, Hash, Info, Lock, Plus, Trash2, X, type LucideIcon } from "lucide-react";
 import type { DiscordRole, DiscordWebhook, ScheduleLanguages } from "@shared/types";
 import type { TKey } from "@/i18n";
 import { languageFlag, languageName, parseLanguageInput } from "@/lib/schedule-languages";
@@ -8,6 +8,7 @@ import { writeErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconTile, Strip } from "@/components/ui/tone";
 import { Input } from "@/components/ui/input";
 import { ErrorNote } from "./parts";
 
@@ -23,22 +24,20 @@ function CardHead({
   subtitle,
   action,
 }: {
-  icon: React.ReactNode;
+  icon: LucideIcon;
   title: string;
   subtitle: string;
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 border-b border-border p-4">
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-muted-surface text-secondary">
-        {icon}
-      </span>
+    <Strip tone="blue" always className="flex items-center gap-3 border-b p-4">
+      <IconTile icon={icon} tone="blue" always />
       <div className="min-w-0 flex-1">
         <div className="text-[13.5px] font-semibold text-foreground">{title}</div>
         <div className="truncate text-[12px] text-muted">{subtitle}</div>
       </div>
       {action}
-    </div>
+    </Strip>
   );
 }
 
@@ -87,7 +86,7 @@ export function DiscordTab({
     <div className="grid gap-3.5 md:grid-cols-3 md:items-start">
       <Card className="overflow-hidden">
         <CardHead
-          icon={<Hash className="size-[15px]" />}
+          icon={Hash}
           title={t("schedule.discord.channels.title")}
           subtitle={t("schedule.discord.channels.subtitle")}
           action={
@@ -137,7 +136,7 @@ export function DiscordTab({
 
       <Card className="overflow-hidden">
         <CardHead
-          icon={<AtSign className="size-[15px]" />}
+          icon={AtSign}
           title={t("schedule.discord.roles.title")}
           subtitle={t("schedule.discord.roles.subtitle")}
           action={
@@ -154,7 +153,11 @@ export function DiscordTab({
         ) : (
           roles.map((role) => (
             <div key={role.id} className="flex items-center gap-2 border-b border-border p-3.5 last:border-b-0">
-              <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-foreground">{role.name}</span>
+              <span className="min-w-0 flex-1">
+                <span className="inline-block max-w-full truncate rounded-[6px] border border-tone-blue-border bg-tone-blue-bg px-2 py-[3px] align-middle font-mono text-[12px] font-semibold text-tone-blue-fg">
+                  {role.name}
+                </span>
+              </span>
               <span className="shrink-0 font-mono text-[10.5px] text-faint">{role.role_id}</span>
               {isAdmin && (
                 <Button
@@ -174,7 +177,7 @@ export function DiscordTab({
 
       <Card className="overflow-hidden">
         <CardHead
-          icon={<Globe className="size-[15px]" />}
+          icon={Globe}
           title={t("schedule.discord.languages.title")}
           subtitle={t("schedule.discord.languages.subtitle")}
         />

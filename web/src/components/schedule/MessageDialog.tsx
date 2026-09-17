@@ -155,7 +155,7 @@ export function MessageDialog({
                     <Button
                       variant="secondary"
                       size="sm"
-                      className="h-7 px-2 text-[12px]"
+                      className="h-7 border-tone-blue-border bg-tone-blue-bg px-2 text-[12px] text-tone-blue-fg hover:bg-tone-blue-bg hover:brightness-95"
                       onClick={translate}
                       disabled={translating || busy}
                     >

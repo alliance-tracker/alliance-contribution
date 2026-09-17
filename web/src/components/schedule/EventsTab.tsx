@@ -12,6 +12,7 @@ import { formatLocal, formatDuration, formatRepeat, localZone, relativeTime, whe
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconTile, Strip } from "@/components/ui/tone";
 import { EmptyState } from "@/components/States";
 
 /** Name lookups for a reminder's foreign keys. Null in the read-only view, which has no such lists. */
@@ -135,7 +136,7 @@ function RoleChips({ roleIds, names }: { roleIds: number[]; names: ScheduleNames
       {roleIds.map((id) => (
         <span
           key={id}
-          className="inline-flex items-center rounded-[5px] border border-border bg-muted-surface px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-secondary"
+          className="inline-flex items-center rounded-[5px] border border-tone-blue-border bg-tone-blue-bg px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-tone-blue-fg"
         >
           {names.role(id) ?? `#${id}`}
         </span>
@@ -498,10 +499,8 @@ export function EventsTab({ events, languages, activities, names, isAdmin, actio
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center gap-3 border-b border-border p-4">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-muted-surface text-secondary">
-          <Clock className="size-[15px]" />
-        </span>
+      <Strip tone="blue" always className="flex items-center gap-3 border-b p-4">
+        <IconTile icon={Clock} tone="blue" always />
         <div className="min-w-0">
           <div className="text-[13.5px] font-semibold text-foreground">{t("schedule.events.title")}</div>
           <div className="text-[12px] text-muted">
@@ -511,7 +510,7 @@ export function EventsTab({ events, languages, activities, names, isAdmin, actio
             })}
           </div>
         </div>
-      </div>
+      </Strip>
 
       {events.length === 0 ? (
         <EmptyState message={t("schedule.events.empty")} />

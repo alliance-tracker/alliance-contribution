@@ -56,7 +56,7 @@ function RolePicker({
             onClick={() => onChange(on ? value.filter((id) => id !== role.id) : [...value, role.id])}
             className={cn(
               "h-[30px] rounded-[7px] border px-2.5 font-mono text-[12px] font-semibold transition-colors duration-150",
-              on ? "border-accent bg-accent-subtle text-foreground" : "border-border bg-surface text-muted hover:text-foreground",
+              on ? "border-tone-blue bg-tone-blue-bg text-tone-blue-fg" : "border-border bg-surface text-muted hover:text-foreground",
             )}
           >
             {on ? "✓ " : ""}

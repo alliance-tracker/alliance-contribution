@@ -5,6 +5,7 @@ import { languageFlag } from "@/lib/schedule-languages";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconTile, Strip } from "@/components/ui/tone";
 import { EmptyState } from "@/components/States";
 
 export function MessagesTab({
@@ -27,17 +28,15 @@ export function MessagesTab({
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center gap-3 border-b border-border p-4">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-muted-surface text-secondary">
-          <MessageSquare className="size-[15px]" />
-        </span>
+      <Strip tone="blue" always className="flex items-center gap-3 border-b p-4">
+        <IconTile icon={MessageSquare} tone="blue" always />
         <div className="min-w-0">
           <div className="text-[13.5px] font-semibold text-foreground">{t("schedule.messages.title")}</div>
           <div className="text-[12px] text-muted">
             {t("schedule.messages.subtitle", { langs: languageNames })}
           </div>
         </div>
-      </div>
+      </Strip>
 
       {templates.length === 0 ? (
         <EmptyState message={t("schedule.messages.empty")} />

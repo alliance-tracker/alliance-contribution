@@ -125,7 +125,7 @@ function ActivityRow({
       <Progress
         value={Math.round((stat.points / max) * 100)}
         indicatorClassName={activitySolidClass(activity.color)}
-        className="h-2 w-16 flex-none rounded-full bg-background md:w-auto md:min-w-14 md:flex-1"
+        className="h-2 w-16 flex-none rounded-full md:w-auto md:min-w-14 md:flex-1"
       />
       <span className="num shrink-0 text-[13px] font-semibold">
         {stat.points} <span className="text-[11px] font-normal text-faint">{t("profile.pts")}</span>
@@ -300,7 +300,7 @@ export function MemberProfile() {
               <div>
                 <Progress
                   value={attendancePct ?? 0}
-                  className="mb-1.5 h-1.5 rounded-full bg-background"
+                  className="mb-1.5 h-1.5 rounded-full"
                 />
                 <Trans
                   i18nKey="profile.eventDaysRatio"

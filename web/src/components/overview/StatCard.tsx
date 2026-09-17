@@ -25,7 +25,7 @@ export function StatCard({
   valueClassName?: string;
 }) {
   return (
-    <Card className={cn("p-3.5 md:p-[18px]", tone === "warn" && "border-warn/30 bg-warn/5")}>
+    <Card className={cn("p-3.5 md:p-[18px]", tone === "warn" && "border-warn-wash/30 bg-warn-wash/5")}>
       <div className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.04em] text-faint">
         {label}
       </div>

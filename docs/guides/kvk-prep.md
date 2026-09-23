@@ -14,7 +14,7 @@ admin hands out.
 | --- | --- | --- |
 | 1 | Construction | Chief Minister |
 | 2 | Research | Chief Minister |
-| 3 | Troop Training | Noble Advisor |
+| 3 | Training | Noble Advisor |
 | 4 | No focus | — |
 | 5 | Final Push | Chief Minister |
 
@@ -37,7 +37,7 @@ settings** — managers and viewers see the schedule only, read-only.
   a phone shows one day at a time, picked from a row of day chips, with the player-ID line dropped
   from each cell. A free slot is empty and clickable; a filled slot shows the alliance colour, the
   player ID and name. The current day is highlighted and a "Now" row tracks the live slot, both
-  recomputed every minute.
+  recomputed every 30 seconds, alongside the board refresh.
 - **Access keys** (admin) — a table (cards on phone) of every alliance: colour, name,
   representative, masked key, slot count, last used, and Key/Link copy buttons.
 - **Event settings** (admin) — the enable toggle, start date with a preview of all 5 days, the
@@ -86,7 +86,7 @@ settings** — managers and viewers see the schedule only, read-only.
 **Sign in as a key holder / sign out**
 
 - Paste the key into the key field on the login screen, or open the `/?key=` sign-in link, which
-  fills it in automatically.
+  signs the holder in directly — no field to fill in or submit.
 - The top bar shows the alliance's colour, name and masked key. **Sign out** clears the key and
   returns to the login prompt.
 

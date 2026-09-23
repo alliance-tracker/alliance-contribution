@@ -10,6 +10,7 @@ import {
   gridStyle,
   indexAppointments,
   isRedacted,
+  shownDays,
   SLOTS,
   slotKey,
   slotLabel,
@@ -50,8 +51,18 @@ export function ScheduleGrid({
   const alliances = useMemo(() => new Map(board.alliances.map((a) => [a.id, a])), [board.alliances]);
   const daySlot = currentDaySlot(start, now);
   const live = daySlot?.phase === "live" ? daySlot : null;
-  const dayNums = day ? [day] : [1, 2, 3, 4, 5];
   const days = board.event.days;
+  const shown = shownDays(days);
+  const dayNums = day ? [day] : shown;
+
+  if (!day && shown.length === 0) {
+    return (
+      <div className="flex min-h-[160px] items-center justify-center rounded-[12px] border border-border bg-surface p-6 text-center text-[13px] text-muted">
+        {t("kvk.grid.allHidden")}
+      </div>
+    );
+  }
+
   const style = gridStyle(dayNums.reduce((n, d) => n + days[d - 1]!.shown.length, 0), !!day);
 
   return (
@@ -67,13 +78,13 @@ export function ScheduleGrid({
             {t("kvk.grid.utc")}
           </div>
           {!day &&
-            DAYS.map((d, i) => {
-              const dayNum = i + 1;
+            shown.map((dayNum) => {
+              const d = DAYS[dayNum - 1]!;
               const isLive = live?.day === dayNum;
               return (
                 <div
                   key={dayNum}
-                  style={{ gridColumn: `span ${days[i]!.shown.length}` }}
+                  style={{ gridColumn: `span ${days[dayNum - 1]!.shown.length}` }}
                   className={cn(
                     "flex min-w-0 flex-col gap-0.5 border-e-2 border-b border-border px-3 pt-2.5 pb-2",
                     isLive && "bg-live-bg",

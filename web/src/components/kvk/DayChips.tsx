@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { KvkBoard } from "@shared/types";
-import { DAYS, dayIso, SLOTS } from "@/lib/kvk";
+import { DAYS, dayIso, shownDays, SLOTS } from "@/lib/kvk";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -16,8 +16,8 @@ export function DayChips({ board, day, onDay }: { board: KvkBoard; day: number; 
   return (
     <div className="flex flex-col gap-1.5">
       <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
-        {DAYS.map((d, i) => {
-          const n = i + 1;
+        {shownDays(board.event.days).map((n) => {
+          const d = DAYS[n - 1]!;
           const selected = n === day;
           return (
             <button

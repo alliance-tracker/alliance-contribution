@@ -1265,7 +1265,8 @@
       "filled": "محجوز",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "تعيين {{position}}",
-      "appointLabel": "تعيين {{position}} · يوم {{day}} · {{time}}"
+      "appointLabel": "تعيين {{position}} · يوم {{day}} · {{time}}",
+      "allHidden": "كل الأيام مخفية. أظهر منصبًا ليوم ما في إعدادات الحدث لعرض الجدول."
     },
     "slot": {
       "appoint": "تعيين {{position}}",
@@ -1320,8 +1321,10 @@
       "startSub": "يبدأ اليوم الأول الساعة 00:00 بتوقيت UTC في هذا التاريخ. يستمر الحدث 5 أيام.",
       "keyLabel": "المنصب الرئيسي",
       "keyNone": "بدون",
+      "keyLockedTitle": "المنصب الرئيسي — اختر بدون أو منصبًا رئيسيًا آخر لإخفائه",
       "shownLabel": "معروض",
       "showPosition": "إظهار {{position}}",
+      "dayHidden": "مخفي",
       "hiddenNote_zero": "{{count}} فتحات محجوزة في مناصب مخفية",
       "hiddenNote_one": "{{count}} فتحة محجوزة واحدة في منصب مخفي",
       "hiddenNote_two": "{{count}} فتحتان محجوزتان في منصب مخفي",

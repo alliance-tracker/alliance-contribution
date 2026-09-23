@@ -1045,7 +1045,8 @@
       "filled": "Filled",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "Appoint {{position}}",
-      "appointLabel": "Appoint {{position}} · Day {{day}} · {{time}}"
+      "appointLabel": "Appoint {{position}} · Day {{day}} · {{time}}",
+      "allHidden": "Every day is hidden. Show a position for a day in Event settings to see the schedule."
     },
     "slot": {
       "appoint": "Appoint {{position}}",
@@ -1096,8 +1097,10 @@
       "startSub": "Day 1 begins at 00:00 UTC on this date. The event runs 5 days.",
       "keyLabel": "Key position",
       "keyNone": "None",
+      "keyLockedTitle": "Key position — choose None or another key to hide it",
       "shownLabel": "Shown",
       "showPosition": "Show {{position}}",
+      "dayHidden": "Hidden",
       "hiddenNote_one": "{{count}} booked slot is in a hidden position",
       "hiddenNote_other": "{{count}} booked slots are in hidden positions",
       "visibilityTitle": "Other alliances' slots",

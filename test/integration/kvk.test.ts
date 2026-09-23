@@ -228,6 +228,22 @@ describe("/api/kvk", () => {
     await setEvent(true, "all");
   });
 
+  it("hiding day 2 entirely: board omits its bookings, and POST to day 2 → 400", async () => {
+    const created = await call("/kvk/appointments", as("A"), "POST", { day: 2, position: "chief_minister", slot: 3, ...player("Hidden2") });
+    expect(created.status).toBe(200);
+
+    const hideDay2: KvkDay[] = [DEFAULT_DAYS[0]!, { key: null, shown: [] }, ...DEFAULT_DAYS.slice(2)];
+    expect((await setEvent(true, "all", hideDay2)).status).toBe(200);
+
+    const board = (await (await call("/kvk", ADMIN)).json()) as { appointments: { day: number }[] };
+    expect(board.appointments.some((a) => a.day === 2)).toBe(false);
+
+    const post = await call("/kvk/appointments", as("A"), "POST", { day: 2, position: "chief_minister", slot: 4, ...player("Hidden3") });
+    expect(post.status).toBe(400);
+
+    await setEvent(true, "all");
+  });
+
   it("admin key CRUD: list includes plaintext key, patch validates and 404s", async () => {
     const list = (await (await call("/kvk/keys", ADMIN)).json()) as { id: number; key: string }[];
     expect(list.find((k) => k.id === keys.A.id)?.key).toBe(keys.A.key);

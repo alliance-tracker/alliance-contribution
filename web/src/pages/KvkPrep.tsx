@@ -5,7 +5,7 @@ import type { KvkAppointmentRow, KvkBoard, KvkEvent, KvkKey } from "@shared/type
 import { api, ApiError } from "@/lib/api";
 import { useApiKey } from "@/lib/apiKey";
 import { useApi } from "@/lib/useApi";
-import { currentDaySlot, fillCounts, holderCanEdit, signInLink, type KvkSlotRef } from "@/lib/kvk";
+import { currentDaySlot, fillCounts, holderCanEdit, shownDays, signInLink, type KvkSlotRef } from "@/lib/kvk";
 import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
 import { ConfirmDialog, Toast, type ConfirmTarget } from "@/components/schedule/parts";
@@ -117,7 +117,16 @@ export function KvkPrep() {
 
   const { filled } = fillCounts(board.appointments, board.event.days);
   const daySlot = currentDaySlot(board.event.start_date, now);
-  const mobileDay = pickedDay ?? (daySlot?.phase === "live" ? daySlot.day : 1);
+  const shown = shownDays(board.event.days);
+  const liveDay = daySlot?.phase === "live" ? daySlot.day : null;
+  // The picked day if it's still shown, otherwise the live day if it's shown, otherwise the first
+  // shown day — null only when every day is hidden.
+  const mobileDay =
+    pickedDay !== null && shown.includes(pickedDay)
+      ? pickedDay
+      : liveDay !== null && shown.includes(liveDay)
+        ? liveDay
+        : (shown[0] ?? null);
 
   return (
     <div className="flex flex-col gap-3.5">
@@ -182,14 +191,14 @@ export function KvkPrep() {
             />
           </div>
           <div className="flex flex-col gap-3 md:hidden">
-            <DayChips board={board} day={mobileDay} onDay={setPickedDay} />
+            {mobileDay !== null && <DayChips board={board} day={mobileDay} onDay={setPickedDay} />}
             <ScheduleGrid
               board={board}
               now={now}
               ownKeyId={ownKeyId}
               canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
               onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
-              day={mobileDay}
+              day={mobileDay ?? undefined}
             />
           </div>
         </>

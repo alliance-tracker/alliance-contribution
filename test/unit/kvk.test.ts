@@ -145,8 +145,13 @@ describe("parseDays", () => {
     expect(() => parseDays(days)).toThrow(KvkValidationError);
   });
 
-  it("rejects an empty shown", () => {
+  it("accepts an empty shown when key is null (hides the day)", () => {
     const days = DEFAULT_DAYS.map((d, i) => (i === 0 ? { key: null, shown: [] } : d));
+    expect(parseDays(days)[0]).toEqual({ key: null, shown: [] });
+  });
+
+  it("rejects an empty shown with a non-null key", () => {
+    const days = DEFAULT_DAYS.map((d, i) => (i === 0 ? { key: "chief_minister", shown: [] } : d));
     expect(() => parseDays(days)).toThrow(KvkValidationError);
   });
 

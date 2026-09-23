@@ -1045,7 +1045,8 @@
       "filled": "Belegt",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "{{position}} ernennen",
-      "appointLabel": "{{position}} ernennen · Tag {{day}} · {{time}}"
+      "appointLabel": "{{position}} ernennen · Tag {{day}} · {{time}}",
+      "allHidden": "Jeder Tag ist ausgeblendet. Blende in den Ereigniseinstellungen eine Position für einen Tag ein, um den Zeitplan zu sehen."
     },
     "slot": {
       "appoint": "{{position}} ernennen",
@@ -1096,8 +1097,10 @@
       "startSub": "Tag 1 beginnt an diesem Datum um 00:00 UTC. Das Ereignis dauert 5 Tage.",
       "keyLabel": "Schlüsselposition",
       "keyNone": "Keine",
+      "keyLockedTitle": "Schlüsselposition — wähle Keine oder eine andere Schlüsselposition, um sie auszublenden",
       "shownLabel": "Sichtbar",
       "showPosition": "{{position}} anzeigen",
+      "dayHidden": "Ausgeblendet",
       "hiddenNote_one": "{{count}} gebuchter Slot befindet sich in einer ausgeblendeten Position",
       "hiddenNote_other": "{{count}} gebuchte Slots befinden sich in ausgeblendeten Positionen",
       "visibilityTitle": "Slots anderer Allianzen",

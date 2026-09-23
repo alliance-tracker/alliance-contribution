@@ -119,8 +119,13 @@ export function EventSettings({
                   {t("kvk.grid.day", { n: day })}
                   {local.start_date && ` · ${formatDate(dayIso(local.start_date, day), DATE_OPTS)}`}
                 </p>
-                <p className="truncate text-[13px] font-semibold text-foreground">
+                <p className="flex items-center gap-1.5 truncate text-[13px] font-semibold text-foreground">
                   {t(`kvk.days.${d.theme}` as const)}
+                  {dayCfg.shown.length === 0 && (
+                    <span className="rounded-[4px] bg-muted-surface px-[5px] py-px font-mono text-[9.5px] font-semibold text-muted uppercase">
+                      {t("kvk.settings.dayHidden")}
+                    </span>
+                  )}
                 </p>
 
                 <div className="mt-2 max-md:mt-0 max-md:basis-full">
@@ -151,7 +156,11 @@ export function EventSettings({
                       <Switch
                         on={dayCfg.shown.includes(p)}
                         disabled={!canToggle}
-                        title={t("kvk.settings.showPosition", { position: positionLabel })}
+                        title={
+                          canToggle
+                            ? t("kvk.settings.showPosition", { position: positionLabel })
+                            : t("kvk.settings.keyLockedTitle")
+                        }
                         onToggle={() => change({ ...local, days: toggleShown(local.days, day, p) })}
                       />
                     );

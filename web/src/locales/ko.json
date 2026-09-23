@@ -990,7 +990,8 @@
       "filled": "배정됨",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "{{position}} 임명",
-      "appointLabel": "{{position}} 임명 · {{day}}일차 · {{time}}"
+      "appointLabel": "{{position}} 임명 · {{day}}일차 · {{time}}",
+      "allHidden": "모든 날짜가 숨겨져 있습니다. 일정을 보려면 이벤트 설정에서 하루의 직책을 표시하세요."
     },
     "slot": {
       "appoint": "{{position}} 임명",
@@ -1040,8 +1041,10 @@
       "startSub": "1일차는 이 날짜의 00:00 UTC에 시작됩니다. 이벤트는 5일간 진행됩니다.",
       "keyLabel": "핵심 직책",
       "keyNone": "없음",
+      "keyLockedTitle": "핵심 직책 — 숨기려면 없음이나 다른 핵심 직책을 선택하세요",
       "shownLabel": "표시",
       "showPosition": "{{position}} 표시",
+      "dayHidden": "숨김",
       "hiddenNote_other": "예약된 슬롯 {{count}}개가 숨겨진 직책에 있습니다",
       "visibilityTitle": "다른 연맹의 슬롯",
       "visibilitySub": "다른 연맹이 예약한 슬롯에서 키 보유자가 무엇을 보는지: 모든 정보(연맹, 색상, 플레이어 ID와 이름) 또는 슬롯이 찼다는 사실만. 자신의 슬롯은 항상 전체 정보를 보여줍니다.",

@@ -73,8 +73,10 @@ settings** — managers and viewers see the schedule only, read-only.
 2. Set **Event start** — day 1 begins at 00:00 UTC on that date, and the event runs 5 days.
 3. For each day, pick its **key position** (Chief Minister, Noble Advisor, or None) and hide the
    positions nobody books that day — e.g. Day 1 Noble Advisor, if only Chief Minister is used.
-   Picking a key position auto-shows it, and you can't hide the key position or the last shown
-   position. Hidden bookings are kept and reappear when the position is shown again; the settings
+   Picking a key position auto-shows it, and you can't hide the key position itself — choose None or
+   a different key first. Deselecting both positions (with key set to None) hides the whole day: it
+   drops off the schedule grid and the phone day picker, and the day card shows a "Hidden" badge.
+   Hidden bookings are kept and reappear when the position (or day) is shown again; the settings
    note under the day cards counts them ("N booked slots are in hidden positions").
 4. Choose what key holders see of **other alliances' slots**: **Show all** (alliance, colour,
    player ID and name) or **Filled only** (just that the slot is taken). A holder's own slots

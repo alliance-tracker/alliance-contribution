@@ -12,6 +12,7 @@ import {
   maskKey,
   otherSlotsFor,
   setDayKey,
+  shownDays,
   signInLink,
   slotLabel,
   slotTotals,
@@ -123,6 +124,27 @@ describe("slotTotals", () => {
     const days: KvkDay[] = [{ key: null, shown: ["chief_minister"] }, ...DEFAULT_DAYS.slice(1)];
     expect(slotTotals(days)).toEqual({ total: 432, focusTotal: 144 });
   });
+
+  it("a hidden day (empty shown) contributes 0 to both totals", () => {
+    const days: KvkDay[] = [{ key: null, shown: [] }, ...DEFAULT_DAYS.slice(1)];
+    expect(slotTotals(days)).toEqual({ total: 384, focusTotal: 144 });
+  });
+});
+
+describe("shownDays", () => {
+  it("returns all 5 days for the defaults", () => {
+    expect(shownDays(DEFAULT_DAYS)).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it("omits a day with an empty shown", () => {
+    const days: KvkDay[] = [{ key: null, shown: [] }, ...DEFAULT_DAYS.slice(1)];
+    expect(shownDays(days)).toEqual([2, 3, 4, 5]);
+  });
+
+  it("is empty when every day is hidden", () => {
+    const days: KvkDay[] = DEFAULT_DAYS.map(() => ({ key: null, shown: [] }));
+    expect(shownDays(days)).toEqual([]);
+  });
 });
 
 describe("gridStyle", () => {
@@ -181,12 +203,26 @@ describe("canToggleShown", () => {
     expect(canToggleShown({ key: "chief_minister", shown: ["chief_minister", "noble_advisor"] }, "chief_minister")).toBe(false);
   });
 
-  it("is false for the last shown position, even when it isn't the key", () => {
-    expect(canToggleShown({ key: null, shown: ["noble_advisor"] }, "noble_advisor")).toBe(false);
+  it("is true for the last shown position when it isn't the key (hiding it hides the day)", () => {
+    expect(canToggleShown({ key: null, shown: ["noble_advisor"] }, "noble_advisor")).toBe(true);
   });
 
   it("is true otherwise", () => {
     expect(canToggleShown({ key: "chief_minister", shown: ["chief_minister", "noble_advisor"] }, "noble_advisor")).toBe(true);
+  });
+
+  it("acceptance sequence: key CM locks CM; key None + hide NA + hide CM empties shown; re-showing un-hides", () => {
+    let days: KvkDay[] = [{ key: "chief_minister", shown: ["chief_minister", "noble_advisor"] }, ...DEFAULT_DAYS.slice(1)];
+    expect(canToggleShown(days[0]!, "chief_minister")).toBe(false); // 1. key CM → hiding CM disabled
+
+    days = setDayKey(days, 1, null);
+    days = toggleShown(days, 1, "noble_advisor"); // hide NA
+    expect(canToggleShown(days[0]!, "chief_minister")).toBe(true);
+    days = toggleShown(days, 1, "chief_minister"); // hide CM
+    expect(days[0]).toEqual({ key: null, shown: [] }); // 2. shown = [], day hidden
+
+    days = toggleShown(days, 1, "chief_minister"); // 3. re-showing un-hides
+    expect(days[0]).toEqual({ key: null, shown: ["chief_minister"] });
   });
 });
 

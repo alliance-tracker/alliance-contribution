@@ -87,7 +87,9 @@ export function parseSlotRef(
 }
 
 /** Validates the `kvk_days` shape; throws KvkValidationError naming the offending day on any problem.
- *  Returns fresh objects with `shown` normalised to POSITIONS order, dropping any extra fields. */
+ *  Returns fresh objects with `shown` normalised to POSITIONS order, dropping any extra fields.
+ *  `shown` may be empty — that hides the whole day — but then `key` must be null, which the
+ *  key-in-shown check below already enforces. */
 export function parseDays(raw: unknown): KvkDay[] {
   if (!Array.isArray(raw) || raw.length !== DAYS) {
     throw new KvkValidationError(`days must be an array of ${DAYS} entries`);
@@ -100,8 +102,8 @@ export function parseDays(raw: unknown): KvkDay[] {
     if (key !== null && !(POSITIONS as readonly string[]).includes(key as string)) {
       throw new KvkValidationError(`days[${i}].key must be null or one of ${POSITIONS.join(", ")}`);
     }
-    if (!Array.isArray(shown) || shown.length === 0 || !shown.every((p) => (POSITIONS as readonly string[]).includes(p))) {
-      throw new KvkValidationError(`days[${i}].shown must be a non-empty array of ${POSITIONS.join(", ")}`);
+    if (!Array.isArray(shown) || !shown.every((p) => (POSITIONS as readonly string[]).includes(p))) {
+      throw new KvkValidationError(`days[${i}].shown must be an array of ${POSITIONS.join(", ")}`);
     }
     if (new Set(shown).size !== shown.length) {
       throw new KvkValidationError(`days[${i}].shown must not contain duplicates`);

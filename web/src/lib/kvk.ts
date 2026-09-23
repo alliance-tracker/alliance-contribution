@@ -25,7 +25,8 @@ export const DAYS: readonly { theme: KvkDayTheme }[] = [
 ];
 
 /** Header totals from the per-day config: `total` = every shown column's 48 slots, `focusTotal` =
- *  only the days with a key position. Defaults: 480 / 192. */
+ *  only the days with a key position. A day with an empty `shown` (hidden) contributes 0 to both.
+ *  Defaults: 480 / 192. */
 export function slotTotals(days: readonly KvkDay[]): { total: number; focusTotal: number } {
   let total = 0;
   let focusTotal = 0;
@@ -34,6 +35,16 @@ export function slotTotals(days: readonly KvkDay[]): { total: number; focusTotal
     if (d.key !== null) focusTotal += SLOTS;
   }
   return { total, focusTotal };
+}
+
+/** 1-based day numbers with a non-empty `shown` — the days actually rendered. A day with an empty
+ *  `shown` is hidden entirely (Event settings' show toggles). */
+export function shownDays(days: readonly KvkDay[]): number[] {
+  const out: number[] = [];
+  for (let i = 0; i < days.length; i++) {
+    if (days[i]!.shown.length > 0) out.push(i + 1);
+  }
+  return out;
 }
 
 /** Grid column template as an inline style — Tailwind statically scans class names, so it can't see a
@@ -151,11 +162,10 @@ export function toggleShown(days: readonly KvkDay[], day: number, position: KvkP
   });
 }
 
-/** A show toggle is disabled for the day's key position (can't hide it) and for the last shown
- *  position (a day always shows at least one column). */
+/** A show toggle is disabled only for the day's key position — choose a different key or None first.
+ *  With key None, every position may be hidden, including the last one, which hides the whole day. */
 export function canToggleShown(d: KvkDay, position: KvkPosition): boolean {
-  if (position === d.key) return false;
-  return !(d.shown.length === 1 && d.shown[0] === position);
+  return position !== d.key;
 }
 
 /** Non-redacted rows this player holds elsewhere — powers the "also appointed to N other slots" note. */

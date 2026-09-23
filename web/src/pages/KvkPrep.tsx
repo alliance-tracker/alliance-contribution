@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
 import { ScheduleHeader } from "@/components/kvk/ScheduleHeader";
 import { PositionStrip } from "@/components/kvk/PositionStrip";
+import { ScheduleGrid } from "@/components/kvk/ScheduleGrid";
 
 // Tasks 5 (Access keys) and 6 (Event settings) widen this to "schedule" | "keys" | "settings" and add
 // their TABS/TAB_DOT entries (dots bg-tone-blue / bg-nav-admin per the handoff) — no restructuring.
@@ -97,6 +98,7 @@ export function KvkPrep() {
         <>
           <ScheduleHeader board={board} now={now} ownKeyId={null} />
           <PositionStrip />
+          <ScheduleGrid board={board} now={now} ownKeyId={null} canEdit={() => isAdmin} onCellClick={() => {}} />
         </>
       )}
     </div>

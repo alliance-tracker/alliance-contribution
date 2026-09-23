@@ -1247,6 +1247,23 @@
         "name": "مستشار النبلاء",
         "boosts": "سرعة التدريب <1>+75%</1> · سعة التدريب <2>+300</2>"
       }
+    },
+    "grid": {
+      "utc": "UTC",
+      "day": "يوم {{n}}",
+      "today": "اليوم",
+      "now": "الآن",
+      "free": "شاغر",
+      "filled": "محجوز",
+      "cellTitle": "{{alliance}} · {{id}} {{name}}",
+      "appointTitle": "تعيين {{position}}"
+    },
+    "days": {
+      "construction": "البناء",
+      "research": "البحث",
+      "training": "التدريب",
+      "none": "بلا تركيز",
+      "finalPush": "الدفعة الأخيرة"
     }
   }
 }

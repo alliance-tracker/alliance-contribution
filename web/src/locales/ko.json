@@ -972,6 +972,23 @@
         "name": "귀족 고문",
         "boosts": "훈련 속도 <1>+75%</1> · 훈련 용량 <2>+300</2>"
       }
+    },
+    "grid": {
+      "utc": "UTC",
+      "day": "{{n}}일차",
+      "today": "오늘",
+      "now": "현재",
+      "free": "비어 있음",
+      "filled": "배정됨",
+      "cellTitle": "{{alliance}} · {{id}} {{name}}",
+      "appointTitle": "{{position}} 임명"
+    },
+    "days": {
+      "construction": "건설",
+      "research": "연구",
+      "training": "훈련",
+      "none": "집중 없음",
+      "finalPush": "최종 돌파"
     }
   }
 }

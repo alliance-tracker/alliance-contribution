@@ -1082,6 +1082,23 @@
         "name": "Conseiller noble",
         "boosts": "Vitesse d'Entraînement <1>+75 %</1> · Capacité d'Entraînement <2>+300</2>"
       }
+    },
+    "grid": {
+      "utc": "UTC",
+      "day": "Jour {{n}}",
+      "today": "Aujourd’hui",
+      "now": "En cours",
+      "free": "Libre",
+      "filled": "Occupé",
+      "cellTitle": "{{alliance}} · {{id}} {{name}}",
+      "appointTitle": "Nommer {{position}}"
+    },
+    "days": {
+      "construction": "Construction",
+      "research": "Recherche",
+      "training": "Entraînement",
+      "none": "Sans priorité",
+      "finalPush": "Sprint final"
     }
   }
 }

@@ -1027,6 +1027,23 @@
         "name": "Adelsberater",
         "boosts": "Ausbildungsgeschwindigkeit <1>+75 %</1> · Ausbildungskapazität <2>+300</2>"
       }
+    },
+    "grid": {
+      "utc": "UTC",
+      "day": "Tag {{n}}",
+      "today": "Heute",
+      "now": "Jetzt",
+      "free": "Frei",
+      "filled": "Belegt",
+      "cellTitle": "{{alliance}} · {{id}} {{name}}",
+      "appointTitle": "{{position}} ernennen"
+    },
+    "days": {
+      "construction": "Bau",
+      "research": "Forschung",
+      "training": "Ausbildung",
+      "none": "Kein Fokus",
+      "finalPush": "Endspurt"
     }
   }
 }

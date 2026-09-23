@@ -1082,6 +1082,23 @@
         "name": "Consejero Noble",
         "boosts": "Velocidad de Entrenamiento <1>+75%</1> · Capacidad de Entrenamiento <2>+300</2>"
       }
+    },
+    "grid": {
+      "utc": "UTC",
+      "day": "Día {{n}}",
+      "today": "Hoy",
+      "now": "Ahora",
+      "free": "Libre",
+      "filled": "Ocupado",
+      "cellTitle": "{{alliance}} · {{id}} {{name}}",
+      "appointTitle": "Nombrar {{position}}"
+    },
+    "days": {
+      "construction": "Construcción",
+      "research": "Investigación",
+      "training": "Entrenamiento",
+      "none": "Sin enfoque",
+      "finalPush": "Empuje final"
     }
   }
 }

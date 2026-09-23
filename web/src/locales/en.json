@@ -1027,6 +1027,23 @@
         "name": "Noble Advisor",
         "boosts": "Training Speed <1>+75%</1> · Training Capacity <2>+300</2>"
       }
+    },
+    "grid": {
+      "utc": "UTC",
+      "day": "Day {{n}}",
+      "today": "Today",
+      "now": "Now",
+      "free": "Free",
+      "filled": "Filled",
+      "cellTitle": "{{alliance}} · {{id}} {{name}}",
+      "appointTitle": "Appoint {{position}}"
+    },
+    "days": {
+      "construction": "Construction",
+      "research": "Research",
+      "training": "Training",
+      "none": "No focus",
+      "finalPush": "Final Push"
     }
   }
 }

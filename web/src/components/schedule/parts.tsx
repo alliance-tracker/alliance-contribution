@@ -164,7 +164,7 @@ export function Toast({ toast }: { toast: { title: string; sub: string } | null 
   return (
     <div className="pointer-events-none fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 rounded-[10px] bg-foreground px-4 py-2.5 text-center shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
       <div className="text-[13px] font-semibold text-accent-foreground">{toast.title}</div>
-      <div className="text-[11.5px] text-accent-foreground/70">{toast.sub}</div>
+      {toast.sub && <div className="text-[11.5px] text-accent-foreground/70">{toast.sub}</div>}
     </div>
   );
 }

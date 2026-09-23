@@ -1036,7 +1036,23 @@
       "free": "Frei",
       "filled": "Belegt",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
-      "appointTitle": "{{position}} ernennen"
+      "appointTitle": "{{position}} ernennen",
+      "appointLabel": "{{position}} ernennen · Tag {{day}} · {{time}}"
+    },
+    "slot": {
+      "appoint": "{{position}} ernennen",
+      "edit": "{{position}} bearbeiten",
+      "playerId": "Spieler-ID",
+      "playerName": "Spielername",
+      "playerIdPlaceholder": "48213377",
+      "playerNamePlaceholder": "Name im Spiel",
+      "alliance": "Allianz",
+      "noKeys": "Noch keine Allianzschlüssel — erstelle einen unter Zugriffsschlüssel.",
+      "duplicate_one": "{{name}} ist außerdem {{count}} weiterem Slot zugewiesen.",
+      "duplicate_other": "{{name}} ist außerdem {{count}} weiteren Slots zugewiesen.",
+      "createdBy": "Erstellt von {{rep}} · {{alliance}}",
+      "createdByAdmin": "Von einem Administrator erstellt",
+      "appointBtn": "Ernennen"
     },
     "days": {
       "construction": "Bau",
@@ -1044,6 +1060,14 @@
       "training": "Ausbildung",
       "none": "Kein Fokus",
       "finalPush": "Endspurt"
-    }
+    },
+    "toast": {
+      "appointed": "{{name}} ernannt",
+      "updated": "{{name}} aktualisiert",
+      "freed": "Slot freigegeben",
+      "taken": "Slot bereits vergeben",
+      "takenSub": "Jemand hat diesen Slot gerade gebucht. Der Plan wurde aktualisiert."
+    },
+    "needKey": "Lege deinen API-Schlüssel (obere Leiste) fest, um KvK Prep zu verwalten."
   }
 }

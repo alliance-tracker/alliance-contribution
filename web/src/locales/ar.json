@@ -1256,7 +1256,27 @@
       "free": "شاغر",
       "filled": "محجوز",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
-      "appointTitle": "تعيين {{position}}"
+      "appointTitle": "تعيين {{position}}",
+      "appointLabel": "تعيين {{position}} · يوم {{day}} · {{time}}"
+    },
+    "slot": {
+      "appoint": "تعيين {{position}}",
+      "edit": "تعديل {{position}}",
+      "playerId": "معرّف اللاعب",
+      "playerName": "اسم اللاعب",
+      "playerIdPlaceholder": "48213377",
+      "playerNamePlaceholder": "الاسم داخل اللعبة",
+      "alliance": "التحالف",
+      "noKeys": "لا توجد مفاتيح تحالف بعد — أنشئ واحدًا في مفاتيح الوصول.",
+      "duplicate_zero": "{{name}} معيّن أيضًا إلى {{count}} فتحة أخرى.",
+      "duplicate_one": "{{name}} معيّن أيضًا إلى {{count}} فتحة أخرى واحدة.",
+      "duplicate_two": "{{name}} معيّن أيضًا إلى {{count}} فتحتين أخريين.",
+      "duplicate_few": "{{name}} معيّن أيضًا إلى {{count}} فتحات أخرى.",
+      "duplicate_many": "{{name}} معيّن أيضًا إلى {{count}} فتحة أخرى.",
+      "duplicate_other": "{{name}} معيّن أيضًا إلى {{count}} فتحة أخرى.",
+      "createdBy": "أُنشئ بواسطة {{rep}} · {{alliance}}",
+      "createdByAdmin": "أُنشئ بواسطة المسؤول",
+      "appointBtn": "تعيين"
     },
     "days": {
       "construction": "البناء",
@@ -1264,6 +1284,14 @@
       "training": "التدريب",
       "none": "بلا تركيز",
       "finalPush": "الدفعة الأخيرة"
-    }
+    },
+    "toast": {
+      "appointed": "تم تعيين {{name}}",
+      "updated": "تم تحديث {{name}}",
+      "freed": "تم تحرير الفتحة",
+      "taken": "الفتحة مشغولة",
+      "takenSub": "قام شخص آخر للتو بحجز هذه الفتحة. تم تحديث اللوحة."
+    },
+    "needKey": "اضبط مفتاح API (الشريط العلوي) لإدارة KvK Prep."
   }
 }

@@ -981,7 +981,22 @@
       "free": "비어 있음",
       "filled": "배정됨",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
-      "appointTitle": "{{position}} 임명"
+      "appointTitle": "{{position}} 임명",
+      "appointLabel": "{{position}} 임명 · {{day}}일차 · {{time}}"
+    },
+    "slot": {
+      "appoint": "{{position}} 임명",
+      "edit": "{{position}} 수정",
+      "playerId": "플레이어 ID",
+      "playerName": "플레이어 이름",
+      "playerIdPlaceholder": "48213377",
+      "playerNamePlaceholder": "게임 내 이름",
+      "alliance": "연맹",
+      "noKeys": "아직 연맹 키가 없습니다 — 액세스 키에서 하나 만드세요.",
+      "duplicate_other": "{{name}} 님은 다른 {{count}}개 슬롯에도 배정되어 있습니다.",
+      "createdBy": "{{rep}} · {{alliance}}이(가) 생성함",
+      "createdByAdmin": "관리자가 생성함",
+      "appointBtn": "임명"
     },
     "days": {
       "construction": "건설",
@@ -989,6 +1004,14 @@
       "training": "훈련",
       "none": "집중 없음",
       "finalPush": "최종 돌파"
-    }
+    },
+    "toast": {
+      "appointed": "{{name}} 임명됨",
+      "updated": "{{name}} 업데이트됨",
+      "freed": "슬롯 비움",
+      "taken": "슬롯이 이미 찼습니다",
+      "takenSub": "다른 사람이 방금 이 슬롯을 예약했습니다. 보드가 새로고침되었습니다."
+    },
+    "needKey": "KvK Prep을 관리하려면 API 키(상단 바)를 설정하세요."
   }
 }

@@ -1036,7 +1036,23 @@
       "free": "Free",
       "filled": "Filled",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
-      "appointTitle": "Appoint {{position}}"
+      "appointTitle": "Appoint {{position}}",
+      "appointLabel": "Appoint {{position}} · Day {{day}} · {{time}}"
+    },
+    "slot": {
+      "appoint": "Appoint {{position}}",
+      "edit": "Edit {{position}}",
+      "playerId": "Player ID",
+      "playerName": "Player Name",
+      "playerIdPlaceholder": "48213377",
+      "playerNamePlaceholder": "In-game name",
+      "alliance": "Alliance",
+      "noKeys": "No alliance keys yet — create one in Access keys.",
+      "duplicate_one": "{{name}} is also appointed to {{count}} other slot.",
+      "duplicate_other": "{{name}} is also appointed to {{count}} other slots.",
+      "createdBy": "Created by {{rep}} · {{alliance}}",
+      "createdByAdmin": "Created by Admin",
+      "appointBtn": "Appoint"
     },
     "days": {
       "construction": "Construction",
@@ -1044,6 +1060,14 @@
       "training": "Training",
       "none": "No focus",
       "finalPush": "Final Push"
-    }
+    },
+    "toast": {
+      "appointed": "Appointed {{name}}",
+      "updated": "Updated {{name}}",
+      "freed": "Slot freed",
+      "taken": "Slot taken",
+      "takenSub": "Someone just booked this slot. The board has refreshed."
+    },
+    "needKey": "Set your API key (top bar) to manage KvK Prep."
   }
 }

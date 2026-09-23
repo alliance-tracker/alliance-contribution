@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import type { KvkBoard } from "@shared/types";
+import type { KvkAppointmentRow, KvkBoard } from "@shared/types";
 import { api, ApiError } from "@/lib/api";
 import { useApiKey } from "@/lib/apiKey";
+import type { KvkSlotRef } from "@/lib/kvk";
 import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
+import { Toast } from "@/components/schedule/parts";
 import { ScheduleHeader } from "@/components/kvk/ScheduleHeader";
 import { PositionStrip } from "@/components/kvk/PositionStrip";
 import { ScheduleGrid } from "@/components/kvk/ScheduleGrid";
+import { SlotDialog } from "@/components/kvk/SlotDialog";
 
 // Tasks 5 (Access keys) and 6 (Event settings) widen this to "schedule" | "keys" | "settings" and add
 // their TABS/TAB_DOT entries (dots bg-tone-blue / bg-nav-admin per the handoff) — no restructuring.
@@ -27,34 +30,50 @@ export function KvkPrep() {
   const [board, setBoard] = useState<KvkBoard | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
+  const [slotTarget, setSlotTarget] = useState<{ ref: KvkSlotRef; appt: KvkAppointmentRow | null } | null>(null);
+
+  const [toast, setToast] = useState<{ title: string; sub: string } | null>(null);
+  const toastTimer = useRef<number | undefined>(undefined);
+  const showToast = (title: string, sub = "") => {
+    window.clearTimeout(toastTimer.current);
+    setToast({ title, sub });
+    toastTimer.current = window.setTimeout(() => setToast(null), 2600);
+  };
+  useEffect(() => () => window.clearTimeout(toastTimer.current), []);
 
   // Same polling shape as Schedule.tsx's status effect, at 30s instead of 60s: no useApi (it would
   // flash LoadingState on every poll), and a failed poll after the first load just keeps the last board.
-  useEffect(() => {
-    let alive = true;
-    const reload = () =>
+  // `reload` is also called directly after a slot write (appoint/edit/remove/conflict) so the board
+  // reflects it immediately instead of waiting for the next tick.
+  const aliveRef = useRef(true);
+  const reload = useCallback(
+    () =>
       api.kvk
         .board()
         .then((next) => {
-          if (alive) {
+          if (aliveRef.current) {
             setBoard(next);
             setLoadError(null);
           }
         })
         .catch((e: unknown) => {
-          if (alive) setLoadError(e instanceof ApiError ? e.message : t("common.errors.generic"));
-        });
+          if (aliveRef.current) setLoadError(e instanceof ApiError ? e.message : t("common.errors.generic"));
+        }),
+    [t],
+  );
+
+  useEffect(() => {
+    aliveRef.current = true;
     reload();
     const timer = window.setInterval(() => {
       reload();
       setNow(Date.now());
     }, 30_000);
     return () => {
-      alive = false;
+      aliveRef.current = false;
       window.clearInterval(timer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reload]);
 
   if (!TABS.includes(tab as Tab) || (tab !== "schedule" && !isAdmin)) {
     return <Navigate to="/kvk" replace />;
@@ -98,9 +117,33 @@ export function KvkPrep() {
         <>
           <ScheduleHeader board={board} now={now} ownKeyId={null} />
           <PositionStrip />
-          <ScheduleGrid board={board} now={now} ownKeyId={null} canEdit={() => isAdmin} onCellClick={() => {}} />
+          <ScheduleGrid
+            board={board}
+            now={now}
+            ownKeyId={null}
+            canEdit={() => isAdmin}
+            onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
+          />
         </>
       )}
+
+      <SlotDialog
+        target={slotTarget}
+        alliances={board.alliances}
+        appointments={board.appointments}
+        startDate={board.event.start_date}
+        lockedKeyId={null}
+        onClose={() => setSlotTarget(null)}
+        onSaved={(message) => {
+          showToast(message);
+          reload();
+        }}
+        onConflict={() => {
+          showToast(t("kvk.toast.taken"), t("kvk.toast.takenSub"));
+          reload();
+        }}
+      />
+      <Toast toast={toast} />
     </div>
   );
 }

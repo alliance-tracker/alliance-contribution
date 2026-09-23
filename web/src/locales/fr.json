@@ -1091,7 +1091,24 @@
       "free": "Libre",
       "filled": "Occupé",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
-      "appointTitle": "Nommer {{position}}"
+      "appointTitle": "Nommer {{position}}",
+      "appointLabel": "Nommer {{position}} · Jour {{day}} · {{time}}"
+    },
+    "slot": {
+      "appoint": "Nommer {{position}}",
+      "edit": "Modifier {{position}}",
+      "playerId": "ID du joueur",
+      "playerName": "Nom du joueur",
+      "playerIdPlaceholder": "48213377",
+      "playerNamePlaceholder": "Pseudo en jeu",
+      "alliance": "Alliance",
+      "noKeys": "Aucune clé d'alliance pour l'instant — créez-en une dans Clés d'accès.",
+      "duplicate_one": "{{name}} est aussi affecté à {{count}} autre créneau.",
+      "duplicate_many": "{{name}} est aussi affecté à {{count}} autres créneaux.",
+      "duplicate_other": "{{name}} est aussi affecté à {{count}} autres créneaux.",
+      "createdBy": "Créé par {{rep}} · {{alliance}}",
+      "createdByAdmin": "Créé par l'administrateur",
+      "appointBtn": "Nommer"
     },
     "days": {
       "construction": "Construction",
@@ -1099,6 +1116,14 @@
       "training": "Entraînement",
       "none": "Sans priorité",
       "finalPush": "Sprint final"
-    }
+    },
+    "toast": {
+      "appointed": "{{name}} nommé",
+      "updated": "{{name}} mis à jour",
+      "freed": "Créneau libéré",
+      "taken": "Créneau déjà pris",
+      "takenSub": "Quelqu'un vient de réserver ce créneau. Le tableau a été actualisé."
+    },
+    "needKey": "Définissez votre clé API (barre du haut) pour gérer KvK Prep."
   }
 }

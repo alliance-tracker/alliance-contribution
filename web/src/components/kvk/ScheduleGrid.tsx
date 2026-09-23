@@ -149,6 +149,17 @@ export function ScheduleGrid({
                         : editable
                           ? t("kvk.grid.appointTitle", { position: t(`kvk.positions.${position}.name` as const) })
                           : undefined;
+                    // Booked reuses the same text as the tooltip; free gets day/time context a hover
+                    // title can't carry to a screen reader.
+                    const ariaLabel = !editable
+                      ? undefined
+                      : row
+                        ? title
+                        : t("kvk.grid.appointLabel", {
+                            position: t(`kvk.positions.${position}.name` as const),
+                            day: i + 1,
+                            time: slotLabel(slot).start,
+                          });
                     return (
                       <SlotCell
                         key={`${i}-${position}`}
@@ -160,6 +171,7 @@ export function ScheduleGrid({
                         editable={editable}
                         current={live?.day === i + 1 && isNow}
                         title={title}
+                        ariaLabel={ariaLabel}
                         onClick={() => onCellClick(ref, row)}
                         className={cn("border-b border-b-muted-surface", sepClass(pi))}
                       />
@@ -186,6 +198,7 @@ export function SlotCell({
   editable,
   current,
   title,
+  ariaLabel,
   onClick,
   className,
 }: {
@@ -197,6 +210,7 @@ export function SlotCell({
   editable: boolean;
   current: boolean;
   title?: string;
+  ariaLabel?: string;
   onClick?: () => void;
   className?: string;
 }) {
@@ -210,7 +224,9 @@ export function SlotCell({
     redacted && "bg-badge-green-bg text-badge-green-fg",
     faded && "opacity-85",
     current && "shadow-[inset_0_0_0_2px_var(--color-ember-ring)]",
-    editable ? "cursor-pointer hover:brightness-[.98]" : "cursor-default",
+    editable
+      ? "cursor-pointer outline-none hover:brightness-[.98] focus-visible:shadow-[inset_0_0_0_2px_var(--color-ember-ring)]"
+      : "cursor-default",
     className,
   );
   const style = row && alliance ? { background: alliance.color + (own ? "2e" : "1a") } : undefined;
@@ -240,7 +256,7 @@ export function SlotCell({
   );
 
   return editable ? (
-    <button type="button" className={cls} style={style} title={title} onClick={onClick}>
+    <button type="button" className={cls} style={style} title={title} aria-label={ariaLabel} onClick={onClick}>
       {content}
     </button>
   ) : (

@@ -1091,7 +1091,24 @@
       "free": "Libre",
       "filled": "Ocupado",
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
-      "appointTitle": "Nombrar {{position}}"
+      "appointTitle": "Nombrar {{position}}",
+      "appointLabel": "Nombrar {{position}} · Día {{day}} · {{time}}"
+    },
+    "slot": {
+      "appoint": "Nombrar {{position}}",
+      "edit": "Editar {{position}}",
+      "playerId": "ID de jugador",
+      "playerName": "Nombre de jugador",
+      "playerIdPlaceholder": "48213377",
+      "playerNamePlaceholder": "Nombre en el juego",
+      "alliance": "Alianza",
+      "noKeys": "Aún no hay claves de alianza — crea una en Claves de acceso.",
+      "duplicate_one": "{{name}} también está asignado a {{count}} otro turno.",
+      "duplicate_many": "{{name}} también está asignado a otros {{count}} turnos.",
+      "duplicate_other": "{{name}} también está asignado a otros {{count}} turnos.",
+      "createdBy": "Creado por {{rep}} · {{alliance}}",
+      "createdByAdmin": "Creado por el administrador",
+      "appointBtn": "Nombrar"
     },
     "days": {
       "construction": "Construcción",
@@ -1099,6 +1116,14 @@
       "training": "Entrenamiento",
       "none": "Sin enfoque",
       "finalPush": "Empuje final"
-    }
+    },
+    "toast": {
+      "appointed": "Se nombró a {{name}}",
+      "updated": "Se actualizó a {{name}}",
+      "freed": "Turno liberado",
+      "taken": "Turno ocupado",
+      "takenSub": "Alguien acaba de reservar este turno. El tablero se actualizó."
+    },
+    "needKey": "Configura tu clave de API (barra superior) para gestionar KvK Prep."
   }
 }

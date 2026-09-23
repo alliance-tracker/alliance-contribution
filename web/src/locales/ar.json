@@ -1336,6 +1336,7 @@
       "colKey": "المفتاح",
       "colSlots": "الفتحات",
       "colLastUsed": "آخر استخدام",
+      "cardMeta": "الممثل · {{rep}} · الفتحات: {{n}}",
       "keyBtn": "المفتاح",
       "linkBtn": "الرابط",
       "copyKeyTitle": "نسخ المفتاح",

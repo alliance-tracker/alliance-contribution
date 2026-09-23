@@ -1168,6 +1168,7 @@
       "colKey": "Clave",
       "colSlots": "Turnos",
       "colLastUsed": "Último uso",
+      "cardMeta": "Rep. · {{rep}} · {{n}} turnos",
       "keyBtn": "Clave",
       "linkBtn": "Enlace",
       "copyKeyTitle": "Copiar clave",

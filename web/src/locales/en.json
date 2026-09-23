@@ -1112,6 +1112,7 @@
       "colKey": "Key",
       "colSlots": "Slots",
       "colLastUsed": "Last used",
+      "cardMeta": "Rep · {{rep}} · {{n}} slots",
       "keyBtn": "Key",
       "linkBtn": "Link",
       "copyKeyTitle": "Copy key",

@@ -1168,6 +1168,7 @@
       "colKey": "Clé",
       "colSlots": "Créneaux",
       "colLastUsed": "Dernière utilisation",
+      "cardMeta": "Repr. · {{rep}} · {{n}} créneaux",
       "keyBtn": "Clé",
       "linkBtn": "Lien",
       "copyKeyTitle": "Copier la clé",

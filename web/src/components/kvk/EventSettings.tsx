@@ -104,11 +104,14 @@ export function EventSettings({
           value={local.start_date ?? ""}
           onChange={(e) => change({ ...local, start_date: e.target.value === "" ? null : e.target.value })}
         />
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
           {DAYS.map((d, i) => {
             const day = i + 1;
             return (
-              <div key={day} className="rounded-[9px] border border-border bg-background px-[11px] py-2.5">
+              <div
+                key={day}
+                className="rounded-[9px] border border-border bg-background px-[11px] py-2.5 max-md:flex max-md:items-center max-md:gap-3"
+              >
                 <p className="font-mono text-[10.5px] font-semibold text-muted">
                   {t("kvk.grid.day", { n: day })}
                   {local.start_date && ` · ${formatDate(dayIso(local.start_date, day), DATE_OPTS)}`}
@@ -116,7 +119,7 @@ export function EventSettings({
                 <p className="truncate text-[13px] font-semibold text-foreground">
                   {t(`kvk.days.${d.theme}` as const)}
                 </p>
-                <p className="text-[11.5px] text-ember-fg">
+                <p className="text-[11.5px] text-ember-fg max-md:ms-auto">
                   {d.focus
                     ? t("kvk.settings.keyPosition", { position: t(`kvk.positions.${d.focus}.name` as const) })
                     : t("kvk.settings.noKeyPosition")}
@@ -183,7 +186,7 @@ function VisibilityCard({
       aria-checked={selected}
       onClick={onSelect}
       className={cn(
-        "flex flex-col gap-2.5 rounded-[10px] border p-3 text-start transition-colors duration-150",
+        "flex min-h-12 flex-col gap-2.5 rounded-[10px] border p-3 text-start transition-colors duration-150",
         selected ? "border-accent bg-accent-subtle" : "border-border hover:border-border-strong",
       )}
     >
@@ -201,7 +204,7 @@ function VisibilityCard({
           {t(value === "all" ? "kvk.settings.visibilityAll" : "kvk.settings.visibilityFilled")}
         </span>
       </span>
-      <div className="w-[160px] max-w-full overflow-hidden rounded-[8px] border border-border">
+      <div className="w-[160px] max-w-full overflow-hidden rounded-[8px] border border-border max-md:hidden">
         <SlotCell
           appt={value === "all" ? previewRow : previewRedacted}
           alliance={value === "all" ? previewAlliance : null}

@@ -119,6 +119,7 @@ export type AuthMe = {
   /** KvK Prep: key holders also get their alliance card; everyone else just the open flag. */
   kvk?: {
     enabled: boolean;
+    key_id?: number;
     alliance_name?: string;
     representative?: string;
     color?: string;

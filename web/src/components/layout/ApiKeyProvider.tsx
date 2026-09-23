@@ -1,13 +1,16 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { api } from "@/lib/api";
 import { ApiKeyContext, type Role } from "@/lib/apiKey";
-import { readApiKey, writeApiKey } from "@/lib/apiKey";
+import { consumeUrlKey, readApiKey, writeApiKey } from "@/lib/apiKey";
 import type { AuthMe } from "@/lib/api";
 
 const KVK_DISABLED: NonNullable<AuthMe["kvk"]> = { enabled: false };
 
 export function ApiKeyProvider({ children }: { children: ReactNode }) {
-  const [apiKey, setApiKeyState] = useState<string>(() => readApiKey());
+  const [apiKey, setApiKeyState] = useState<string>(() => {
+    consumeUrlKey();
+    return readApiKey();
+  });
   const [role, setRole] = useState<Role>(null);
   const [scheduler, setScheduler] = useState(false);
   const [kvk, setKvk] = useState<NonNullable<AuthMe["kvk"]>>(KVK_DISABLED);

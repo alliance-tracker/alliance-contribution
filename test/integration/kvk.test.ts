@@ -62,6 +62,7 @@ describe("/api/kvk", () => {
       scheduler: true,
       kvk: {
         enabled: false,
+        key_id: keys.A.id,
         alliance_name: "Alliance A",
         representative: "Rep A",
         color: "#ff0000",
@@ -76,6 +77,11 @@ describe("/api/kvk", () => {
     expect(await (await call("/auth/me", {})).json()).toEqual({ role: null, scheduler: true, kvk: { enabled: false } });
     const bogus = await call("/auth/me", { "X-Api-Key": "kvk_bogus" });
     expect(await bogus.json()).toEqual({ role: null, scheduler: true, kvk: { enabled: false } });
+
+    const meB = await call("/auth/me", as("B"));
+    const bodyB = (await meB.json()) as { kvk: { key_id: number; enabled: boolean } };
+    expect(bodyB.kvk.key_id).toBe(keys.B.id);
+    expect(bodyB.kvk.enabled).toBe(true);
   });
 
   it("fence: a kvk key never resolves outside /api/kvk and /api/auth/me (401), bogus kvk key is 401", async () => {

@@ -11,6 +11,22 @@ export function writeApiKey(key: string): void {
   else localStorage.removeItem(API_KEY_STORAGE);
 }
 
+/**
+ * Reads a `?key=` sign-in link (a key holder's URL), stores it, and strips it from the address bar
+ * before anything else can log or share it. A URL key wins over any stored key — the link is how a
+ * holder signs in. No-op when the param is absent or empty.
+ */
+export function consumeUrlKey(): void {
+  const params = new URLSearchParams(location.search);
+  const key = params.get("key");
+  if (!key) return;
+  writeApiKey(key);
+  params.delete("key");
+  const rest = params.toString();
+  const url = location.pathname + (rest ? `?${rest}` : "") + location.hash;
+  history.replaceState(null, "", url);
+}
+
 export type Role = "admin" | "manager" | "viewer" | "kvk" | null;
 
 export type ApiKeyContextValue = {

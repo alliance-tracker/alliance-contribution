@@ -27,8 +27,8 @@ app.use("/api/*", apiKeyAuth);
 app.get("/api/health", (c) => c.json({ ok: true }));
 
 // Lets clients discover which tier the presented X-Api-Key resolves to. Public GET, always 200.
-// `kvk` carries the KvK Prep open flag; key holders also get their alliance card (key masked). A request
-// with no valid key gets `{ enabled: false }` so it learns nothing.
+// `kvk` carries the KvK Prep open flag; key holders also get their key id and alliance card (key masked).
+// A request with no valid key gets `{ enabled: false }` so it learns nothing.
 app.get("/api/auth/me", async (c) => {
   const role = c.get("role");
   const scheduler = c.env.SCHEDULER_ENABLED === "true";
@@ -41,7 +41,11 @@ app.get("/api/auth/me", async (c) => {
   if (!row) return c.json({ role: null, scheduler, kvk: { enabled: false } });
   const { alliance_name, representative, color, key } = row;
   const masked_key = `${key.slice(0, 8)}••••${key.slice(-4)}`;
-  return c.json({ role, scheduler, kvk: { enabled, alliance_name, representative, color, masked_key } });
+  return c.json({
+    role,
+    scheduler,
+    kvk: { enabled, key_id: row.id, alliance_name, representative, color, masked_key },
+  });
 });
 
 app.route("/api/activity-types", activityTypesRoutes);

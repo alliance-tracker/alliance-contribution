@@ -14,11 +14,13 @@ Access comes from a key with one of three tiers:
 - **Manager** — read and write. Can upload events, edit the roster, map aliases, and adjust scoring.
 - **Admin** — everything a manager can do, plus destructive/high-risk actions such as deleting an event, deleting a roster capture, or restoring a database backup.
 
+Alongside these three, an admin can hand out **alliance access keys** for [KvK Prep](kvk-prep.md) — narrower keys that open only that section, for one alliance.
+
 The app is unusable without a valid key — the first thing you see on load is a prompt asking for the alliance access key, and nothing else renders until the key is accepted. An unrecognized key re-prompts rather than letting you in with reduced access.
 
 The interface is available in English, Spanish, French, German, Korean, and Arabic. Use the globe button — in the top bar once you're in, or on the access-key prompt before you unlock — to pick a language; the page reloads in it and the choice sticks in this browser. On a first visit the app follows your browser's language when it is one of the six, otherwise English. Names, activity names, unit labels, and any text an officer typed into the app are shown exactly as entered, in whatever language they were written. Arabic flips the whole layout to right-to-left; numbers keep Western digits.
 
-See [Ranking](ranking.md), [Attendance](attendance.md), [Activities](activities.md), [Members](members.md), [Events](events.md), [Roster](roster.md), [Aliases](aliases.md), [Scoring](scoring.md), [Rewards](rewards.md), and [Backup](backup.md) for the rest.
+See [Ranking](ranking.md), [Attendance](attendance.md), [Activities](activities.md), [Members](members.md), [Events](events.md), [Roster](roster.md), [Aliases](aliases.md), [Scoring](scoring.md), [Rewards](rewards.md), [Backup](backup.md), and [KvK Prep](kvk-prep.md) for the rest.
 
 ## What you see
 

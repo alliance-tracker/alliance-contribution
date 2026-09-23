@@ -1,14 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
   DAYS,
+  DEFAULT_DAYS,
   KvkValidationError,
   POSITIONS,
   SLOTS,
+  daysFromSetting,
   generateKey,
   normalizePlayer,
+  parseDays,
   parseSlotRef,
   redactForKeyHolder,
   type KvkAppointmentRow,
+  type KvkDay,
 } from "../../src/domain/kvk";
 
 const row = (over: Partial<KvkAppointmentRow> = {}): KvkAppointmentRow => ({
@@ -115,5 +119,77 @@ describe("normalizePlayer", () => {
 
   it("accepts a name of exactly 40 characters", () => {
     expect(normalizePlayer("12345", "a".repeat(40)).playerName).toBe("a".repeat(40));
+  });
+});
+
+describe("parseDays", () => {
+  it("accepts DEFAULT_DAYS", () => {
+    expect(parseDays(DEFAULT_DAYS)).toEqual(DEFAULT_DAYS);
+  });
+
+  it("rejects a non-array", () => {
+    expect(() => parseDays("nope")).toThrow(KvkValidationError);
+    expect(() => parseDays(null)).toThrow(KvkValidationError);
+  });
+
+  it("rejects fewer than 5 entries", () => {
+    expect(() => parseDays(DEFAULT_DAYS.slice(0, 4))).toThrow(KvkValidationError);
+  });
+
+  it("rejects more than 5 entries", () => {
+    expect(() => parseDays([...DEFAULT_DAYS, DEFAULT_DAYS[0]])).toThrow(KvkValidationError);
+  });
+
+  it("rejects an unknown key", () => {
+    const days = DEFAULT_DAYS.map((d, i) => (i === 0 ? { key: "healer", shown: d.shown } : d));
+    expect(() => parseDays(days)).toThrow(KvkValidationError);
+  });
+
+  it("rejects an empty shown", () => {
+    const days = DEFAULT_DAYS.map((d, i) => (i === 0 ? { key: null, shown: [] } : d));
+    expect(() => parseDays(days)).toThrow(KvkValidationError);
+  });
+
+  it("rejects a duplicate in shown", () => {
+    const days = DEFAULT_DAYS.map((d, i) =>
+      i === 0 ? { key: null, shown: ["chief_minister", "chief_minister"] } : d,
+    );
+    expect(() => parseDays(days)).toThrow(KvkValidationError);
+  });
+
+  it("rejects an unknown position in shown", () => {
+    const days = DEFAULT_DAYS.map((d, i) => (i === 0 ? { key: null, shown: ["healer"] } : d));
+    expect(() => parseDays(days)).toThrow(KvkValidationError);
+  });
+
+  it("rejects a key that isn't in shown", () => {
+    const days = DEFAULT_DAYS.map((d, i) => (i === 0 ? { key: "chief_minister", shown: ["noble_advisor"] } : d));
+    expect(() => parseDays(days)).toThrow(KvkValidationError);
+  });
+
+  it("reorders shown to POSITIONS order and drops extra fields", () => {
+    const days = DEFAULT_DAYS.map((d, i) =>
+      i === 0 ? { key: null, shown: ["noble_advisor", "chief_minister"], extra: "drop me" } : d,
+    );
+    const parsed = parseDays(days);
+    expect(parsed[0]).toEqual({ key: null, shown: ["chief_minister", "noble_advisor"] });
+  });
+});
+
+describe("daysFromSetting", () => {
+  const defaultCopy: KvkDay[] = DEFAULT_DAYS.map((d) => ({ key: d.key, shown: [...d.shown] }));
+
+  it("falls back to DEFAULT_DAYS for null, bad JSON, and a valid-JSON-but-invalid shape", () => {
+    expect(daysFromSetting(null)).toEqual(defaultCopy);
+    expect(daysFromSetting("{")).toEqual(defaultCopy);
+    expect(daysFromSetting("[]")).toEqual(defaultCopy);
+  });
+
+  it("round-trips a valid string", () => {
+    const days: KvkDay[] = [
+      { key: "noble_advisor", shown: ["noble_advisor"] },
+      ...DEFAULT_DAYS.slice(1),
+    ];
+    expect(daysFromSetting(JSON.stringify(days))).toEqual(days);
   });
 });

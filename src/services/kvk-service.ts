@@ -5,16 +5,26 @@ import {
   type KvkBoard,
   type KvkEvent,
   type KvkKey,
+  type KvkPosition,
   type KvkVisibility,
 } from "../../shared/types";
-import { KvkValidationError, generateKey, normalizePlayer, parseSlotRef, redactForKeyHolder } from "../domain/kvk";
+import {
+  daysFromSetting,
+  isShown,
+  KvkValidationError,
+  generateKey,
+  normalizePlayer,
+  parseDays,
+  parseSlotRef,
+  redactForKeyHolder,
+} from "../domain/kvk";
 import type { KvkKeyRow, KvkRepo } from "../repositories/kvk-repo";
 import type { SettingsRepo } from "../repositories/settings-repo";
 
 /** Who is calling. Routes (Task 4) only let admin and kvk reach the write methods. */
 export type KvkCaller = { role: "admin" | "manager" | "viewer" | "kvk"; keyId: number | null };
 
-export type KvkEventInput = { enabled?: unknown; start_date?: unknown; others_visibility?: unknown };
+export type KvkEventInput = { enabled?: unknown; start_date?: unknown; others_visibility?: unknown; days?: unknown };
 export type KvkKeyInput = { alliance_name?: unknown; representative?: unknown; color?: unknown };
 export type KvkSlotRefInput = { day: unknown; position: unknown; slot: unknown };
 export type KvkAppointmentInput = { player_id?: unknown; player_name?: unknown; key_id?: unknown };
@@ -22,6 +32,7 @@ export type KvkAppointmentInput = { player_id?: unknown; player_name?: unknown; 
 const ENABLED_KEY = "kvk_enabled";
 const START_KEY = "kvk_start_date";
 const VISIBILITY_KEY = "kvk_others_visibility";
+const DAYS_KEY = "kvk_days";
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const COLOR_RE = /^#[0-9a-f]{6}$/i;
 
@@ -52,7 +63,7 @@ export class KvkService {
   ) {}
 
   // ---- event (settings rows) -----------------------------------------------
-  /** Missing or hand-edited values fall back to the code defaults: false / null / "all". */
+  /** Missing or hand-edited values fall back to the code defaults: false / null / "all" / DEFAULT_DAYS. */
   async getEvent(): Promise<KvkEvent> {
     const start = await this.settings.get(START_KEY);
     const vis = await this.settings.get(VISIBILITY_KEY);
@@ -61,6 +72,7 @@ export class KvkService {
       // ponytail: a cleared start date is stored as "" (SettingsRepo has no delete) and reads as null here.
       start_date: start !== null && isDate(start) ? start : null,
       others_visibility: (KVK_VISIBILITY as readonly string[]).includes(vis ?? "") ? (vis as KvkVisibility) : "all",
+      days: daysFromSetting(await this.settings.get(DAYS_KEY)),
     };
   }
 
@@ -73,10 +85,12 @@ export class KvkService {
     if (typeof others_visibility !== "string" || !(KVK_VISIBILITY as readonly string[]).includes(others_visibility)) {
       throw new KvkValidationError(`others_visibility must be one of ${KVK_VISIBILITY.join(", ")}`);
     }
+    const days = parseDays(input.days);
     await this.settings.set(ENABLED_KEY, String(enabled));
     await this.settings.set(START_KEY, start_date ?? "");
     await this.settings.set(VISIBILITY_KEY, others_visibility);
-    return { enabled, start_date, others_visibility: others_visibility as KvkVisibility };
+    await this.settings.set(DAYS_KEY, JSON.stringify(days));
+    return { enabled, start_date, others_visibility: others_visibility as KvkVisibility, days };
   }
 
   // ---- board ---------------------------------------------------------------
@@ -84,10 +98,12 @@ export class KvkService {
     const event = await this.getEvent();
     const keys = await this.repo.listKeysBare();
     const appts = await this.repo.listAppointments();
+    const visible = appts.filter((a) => isShown(event.days, a.day, a.position));
+    const hidden = appts.length - visible.length;
     // slot_count from the appointments already loaded, not a per-key COUNT(*) — board() is polled
     // every 30s (see kvk-repo.ts listKeys() vs listKeysBare()).
     const counts = new Map<number, number>();
-    for (const a of appts) {
+    for (const a of visible) {
       if (a.key_id !== null) counts.set(a.key_id, (counts.get(a.key_id) ?? 0) + 1);
     }
     let alliances: KvkAlliance[] = keys.map(({ id, alliance_name, color }) => ({
@@ -97,9 +113,11 @@ export class KvkService {
       slot_count: counts.get(id) ?? 0,
     }));
     const own = ownKeyId(caller);
-    if (own === null) return { event, alliances, appointments: appts };
+    if (own === null) {
+      return { event, alliances, appointments: visible, ...(caller.role === "admin" ? { hidden_count: hidden } : {}) };
+    }
     if (event.others_visibility === "filled") alliances = alliances.filter((a) => a.id === own);
-    return { event, alliances, appointments: redactForKeyHolder(appts, own, event.others_visibility) };
+    return { event, alliances, appointments: redactForKeyHolder(visible, own, event.others_visibility) };
   }
 
   // ---- keys (admin) --------------------------------------------------------
@@ -148,6 +166,7 @@ export class KvkService {
   /** A kvk caller always books for its own key (body key_id ignored); an admin must name an existing key. */
   async createAppointment(caller: KvkCaller, ref: KvkSlotRefInput, input: KvkAppointmentInput): Promise<KvkAppointmentRow> {
     const { day, position, slot } = parseSlotRef(ref.day, ref.position, ref.slot);
+    await this.assertShown({ day, position });
     const { playerId, playerName } = normalizePlayer(input.player_id, input.player_name);
     const own = ownKeyId(caller);
     const key = await this.existingKey(own ?? input.key_id);
@@ -168,6 +187,7 @@ export class KvkService {
   /** Replaces the player; an admin may also move the slot to another existing key. false → 404. */
   async updateAppointment(caller: KvkCaller, ref: KvkSlotRefInput, input: KvkAppointmentInput): Promise<boolean> {
     const slotRef = parseSlotRef(ref.day, ref.position, ref.slot);
+    await this.assertShown(slotRef);
     const { playerId, playerName } = normalizePlayer(input.player_id, input.player_name);
     const own = ownKeyId(caller);
     const keyId = own === null && input.key_id !== undefined ? (await this.existingKey(input.key_id)).id : undefined;
@@ -182,11 +202,21 @@ export class KvkService {
   /** false → 404 (for a kvk caller that includes another alliance's slot, so existence isn't leaked). */
   async deleteAppointment(caller: KvkCaller, ref: KvkSlotRefInput): Promise<boolean> {
     const slotRef = parseSlotRef(ref.day, ref.position, ref.slot);
-    return (await this.repo.deleteAppointment(slotRef, ownKeyId(caller))) > 0;
+    const own = ownKeyId(caller);
+    if (own !== null) await this.assertShown(slotRef);
+    return (await this.repo.deleteAppointment(slotRef, own)) > 0;
   }
 
   clearAppointments(): Promise<number> {
     return this.repo.clearAppointments();
+  }
+
+  /** A hidden (day, position) can't be booked, edited, or (by a key holder) deleted. */
+  private async assertShown(ref: { day: number; position: KvkPosition }): Promise<void> {
+    const event = await this.getEvent();
+    if (!isShown(event.days, ref.day, ref.position)) {
+      throw new KvkValidationError(`${ref.position} is hidden on day ${ref.day}`);
+    }
   }
 
   private async existingKey(id: unknown): Promise<KvkKeyRow> {

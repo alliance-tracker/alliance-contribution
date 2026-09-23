@@ -1,6 +1,7 @@
 import { SELF } from "cloudflare:test";
 import { env } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
+import { DEFAULT_DAYS, type KvkDay } from "../../src/domain/kvk";
 import { ADMIN, MANAGER, VIEWER } from "./keys";
 
 // Storage persists across `it` blocks within this file, so tests run in order: keys A and B are created
@@ -17,8 +18,8 @@ function call(path: string, headers: Record<string, string>, method = "GET", bod
   });
 }
 
-const setEvent = (enabled: boolean, others_visibility = "all") =>
-  call("/kvk/event", ADMIN, "PUT", { enabled, start_date: "2026-10-01", others_visibility });
+const setEvent = (enabled: boolean, others_visibility = "all", days: KvkDay[] = DEFAULT_DAYS as KvkDay[]) =>
+  call("/kvk/event", ADMIN, "PUT", { enabled, start_date: "2026-10-01", others_visibility, days });
 const player = (name: string) => ({ player_id: "123", player_name: name });
 
 async function lastUsed(id: number): Promise<number | null> {
@@ -151,7 +152,10 @@ describe("/api/kvk", () => {
     await setEvent(true, "all");
     const res = await call("/kvk", as("A"));
     const text = await res.text();
-    expect(text).not.toContain('"key"');
+    // Board responses never carry a plaintext access key — days[].key (a KvkPosition or null) is a
+    // different, non-secret field that happens to share the name.
+    expect(text).not.toContain(keys.A.key);
+    expect(text).not.toContain(keys.B.key);
     const all = JSON.parse(text) as { alliances: unknown[]; appointments: Record<string, unknown>[] };
     expect(all.alliances).toHaveLength(2);
     expect(all.appointments.find((a) => a.slot === 1)).toMatchObject({ key_id: keys.B.id, player_name: "Bob" });
@@ -203,6 +207,24 @@ describe("/api/kvk", () => {
     expect(res.status).toBe(200);
     const body = (await (await call("/kvk", ADMIN)).json()) as { appointments: unknown[] };
     expect(body.appointments).toEqual([]);
+  });
+
+  it("PUT rejects invalid days; hidden positions reject writes and hidden_count is admin-only", async () => {
+    const bad = await call("/kvk/event", ADMIN, "PUT", { enabled: true, start_date: "2026-10-01", others_visibility: "all", days: [] });
+    expect(bad.status).toBe(400);
+
+    const hideDay2NA: KvkDay[] = [DEFAULT_DAYS[0]!, { key: "chief_minister", shown: ["chief_minister"] }, ...DEFAULT_DAYS.slice(2)];
+    expect((await setEvent(true, "all", hideDay2NA)).status).toBe(200);
+
+    const post = await call("/kvk/appointments", as("A"), "POST", { day: 2, position: "noble_advisor", slot: 0, ...player("Hidden") });
+    expect(post.status).toBe(400);
+
+    const adminBody = (await (await call("/kvk", ADMIN)).json()) as { hidden_count?: number };
+    expect(typeof adminBody.hidden_count).toBe("number");
+    const viewerBody = (await (await call("/kvk", VIEWER)).json()) as { hidden_count?: number };
+    expect(viewerBody.hidden_count).toBeUndefined();
+
+    await setEvent(true, "all");
   });
 
   it("admin key CRUD: list includes plaintext key, patch validates and 404s", async () => {

@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
-import { KvkConflictError, KvkValidationError } from "../../src/domain/kvk";
+import { DEFAULT_DAYS, KvkConflictError, KvkValidationError, type KvkDay } from "../../src/domain/kvk";
 import { KvkRepo } from "../../src/repositories/kvk-repo";
 import { SettingsRepo } from "../../src/repositories/settings-repo";
 import { KvkService, type KvkCaller } from "../../src/services/kvk-service";
@@ -17,24 +17,32 @@ const ref = (day: number, slot: number, position = "chief_minister") => ({ day, 
 
 describe("KvkService event", () => {
   it("reads defaults when nothing is stored", async () => {
-    expect(await svc.getEvent()).toEqual({ enabled: false, start_date: null, others_visibility: "all" });
+    expect(await svc.getEvent()).toEqual({
+      enabled: false,
+      start_date: null,
+      others_visibility: "all",
+      days: DEFAULT_DAYS,
+    });
   });
 
   it("validates and round-trips, clearing start_date with null", async () => {
-    await expect(svc.setEvent({ enabled: "yes", start_date: null, others_visibility: "all" })).rejects.toThrow(
-      KvkValidationError,
-    );
-    await expect(svc.setEvent({ enabled: true, start_date: "2026-02-30", others_visibility: "all" })).rejects.toThrow(
-      KvkValidationError,
-    );
-    await expect(svc.setEvent({ enabled: true, start_date: null, others_visibility: "some" })).rejects.toThrow(
-      KvkValidationError,
-    );
-    const set = { enabled: true, start_date: "2026-10-01", others_visibility: "filled" };
+    await expect(
+      svc.setEvent({ enabled: "yes", start_date: null, others_visibility: "all", days: DEFAULT_DAYS }),
+    ).rejects.toThrow(KvkValidationError);
+    await expect(
+      svc.setEvent({ enabled: true, start_date: "2026-02-30", others_visibility: "all", days: DEFAULT_DAYS }),
+    ).rejects.toThrow(KvkValidationError);
+    await expect(
+      svc.setEvent({ enabled: true, start_date: null, others_visibility: "some", days: DEFAULT_DAYS }),
+    ).rejects.toThrow(KvkValidationError);
+    await expect(
+      svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: [] }),
+    ).rejects.toThrow(KvkValidationError);
+    const set = { enabled: true, start_date: "2026-10-01", others_visibility: "filled", days: DEFAULT_DAYS };
     expect(await svc.setEvent(set)).toEqual(set);
     expect(await svc.getEvent()).toEqual(set);
     await svc.setEvent({ ...set, start_date: null, others_visibility: "all" });
-    expect(await svc.getEvent()).toEqual({ enabled: true, start_date: null, others_visibility: "all" });
+    expect(await svc.getEvent()).toEqual({ enabled: true, start_date: null, others_visibility: "all", days: DEFAULT_DAYS });
   });
 
   it("falls back to defaults for garbage stored values", async () => {
@@ -42,7 +50,13 @@ describe("KvkService event", () => {
     await s.set("kvk_enabled", "1");
     await s.set("kvk_start_date", "soon");
     await s.set("kvk_others_visibility", "none");
-    expect(await svc.getEvent()).toEqual({ enabled: false, start_date: null, others_visibility: "all" });
+    await s.set("kvk_days", "nope");
+    expect(await svc.getEvent()).toEqual({
+      enabled: false,
+      start_date: null,
+      others_visibility: "all",
+      days: DEFAULT_DAYS,
+    });
   });
 });
 
@@ -120,7 +134,7 @@ describe("KvkService keys + appointments", () => {
   });
 
   it("board: full rows for staff and for kvk in all mode, never a key field", async () => {
-    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all" });
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: DEFAULT_DAYS });
     for (const caller of [ADMIN, VIEWER, kvk(b)]) {
       const board = await svc.board(caller);
       expect(board.alliances).toHaveLength(2);
@@ -130,7 +144,7 @@ describe("KvkService keys + appointments", () => {
   });
 
   it("board: filled mode redacts others and keeps only the caller's alliance", async () => {
-    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "filled" });
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "filled", days: DEFAULT_DAYS });
     const board = await svc.board(kvk(b));
     expect(board.alliances).toEqual([{ id: b, alliance_name: "Beta2", color: "#112233", slot_count: 1 }]);
     expect(board.appointments).toEqual([
@@ -138,6 +152,55 @@ describe("KvkService keys + appointments", () => {
       expect.objectContaining({ slot: 1, key_id: b, player_name: "Ann" }),
     ]);
     expect((await svc.board(ADMIN)).alliances).toHaveLength(2);
+  });
+
+  it("hidden positions: board omits them, admin sees hidden_count, writes are rejected", async () => {
+    const slot = 20;
+    const naDay1 = ref(1, slot, "noble_advisor");
+    const hideDay1NA: KvkDay[] = [{ key: "chief_minister", shown: ["chief_minister"] }, ...DEFAULT_DAYS.slice(1)];
+
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: DEFAULT_DAYS });
+    await svc.createAppointment(ADMIN, naDay1, { ...player, key_id: b });
+    const before = (await svc.board(ADMIN)).alliances.find((al) => al.id === b)!.slot_count;
+
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: hideDay1NA });
+
+    const adminBoard = await svc.board(ADMIN);
+    expect(adminBoard.appointments.some((x) => x.day === 1 && x.position === "noble_advisor" && x.slot === slot)).toBe(
+      false,
+    );
+    expect(adminBoard.hidden_count).toBe(1);
+    expect(adminBoard.alliances.find((al) => al.id === b)!.slot_count).toBe(before - 1);
+
+    const viewerBoard = await svc.board(VIEWER);
+    expect(
+      viewerBoard.appointments.some((x) => x.day === 1 && x.position === "noble_advisor" && x.slot === slot),
+    ).toBe(false);
+    expect(viewerBoard).not.toHaveProperty("hidden_count");
+
+    const kvkABoard = await svc.board(kvk(a));
+    expect(kvkABoard.appointments.some((x) => x.day === 1 && x.position === "noble_advisor" && x.slot === slot)).toBe(
+      false,
+    );
+    expect(kvkABoard).not.toHaveProperty("hidden_count");
+
+    await expect(svc.createAppointment(ADMIN, naDay1, { ...player, key_id: b })).rejects.toThrow(KvkValidationError);
+    await expect(svc.createAppointment(kvk(b), naDay1, player)).rejects.toThrow(KvkValidationError);
+    await expect(svc.updateAppointment(kvk(b), naDay1, player)).rejects.toThrow(KvkValidationError);
+    await expect(svc.deleteAppointment(kvk(b), naDay1)).rejects.toThrow(KvkValidationError);
+    await expect(svc.updateAppointment(ADMIN, naDay1, player)).rejects.toThrow(KvkValidationError);
+
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: DEFAULT_DAYS });
+    const reshown = await svc.board(ADMIN);
+    expect(reshown.appointments.some((x) => x.day === 1 && x.position === "noble_advisor" && x.slot === slot)).toBe(
+      true,
+    );
+    expect(reshown.hidden_count).toBe(0);
+
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: hideDay1NA });
+    expect(await svc.deleteAppointment(ADMIN, naDay1)).toBe(true);
+
+    await svc.setEvent({ enabled: true, start_date: null, others_visibility: "all", days: DEFAULT_DAYS });
   });
 
   it("kvk delete of its own slot succeeds", async () => {

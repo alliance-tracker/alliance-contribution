@@ -4,6 +4,7 @@ import {
   POSITIONS,
   type KvkAppointmentRow,
   type KvkBoardAppointment,
+  type KvkDay,
   type KvkPosition,
   type KvkVisibility,
 } from "../../shared/types";
@@ -14,6 +15,7 @@ export {
   POSITIONS,
   type KvkAppointmentRow,
   type KvkBoardAppointment,
+  type KvkDay,
   type KvkPosition,
   type KvkRedactedAppointment,
   type KvkVisibility,
@@ -21,6 +23,15 @@ export {
 
 export const DAYS = 5;
 export const SLOTS = 48;
+
+/** Today's fixed behaviour, and the fallback when the `kvk_days` setting is missing or invalid. */
+export const DEFAULT_DAYS: readonly KvkDay[] = [
+  { key: "chief_minister", shown: [...POSITIONS] },
+  { key: "chief_minister", shown: [...POSITIONS] },
+  { key: "noble_advisor", shown: [...POSITIONS] },
+  { key: null, shown: [...POSITIONS] },
+  { key: "chief_minister", shown: [...POSITIONS] },
+];
 
 export class KvkValidationError extends Error {
   constructor(message: string) {
@@ -73,6 +84,47 @@ export function parseSlotRef(
     throw new KvkValidationError(`position must be one of ${POSITIONS.join(", ")}`);
   }
   return { day, position: positionRaw as KvkPosition, slot };
+}
+
+/** Validates the `kvk_days` shape; throws KvkValidationError naming the offending day on any problem.
+ *  Returns fresh objects with `shown` normalised to POSITIONS order, dropping any extra fields. */
+export function parseDays(raw: unknown): KvkDay[] {
+  if (!Array.isArray(raw) || raw.length !== DAYS) {
+    throw new KvkValidationError(`days must be an array of ${DAYS} entries`);
+  }
+  return raw.map((entry, i) => {
+    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+      throw new KvkValidationError(`days[${i}] must be an object`);
+    }
+    const { key, shown } = entry as { key: unknown; shown: unknown };
+    if (key !== null && !(POSITIONS as readonly string[]).includes(key as string)) {
+      throw new KvkValidationError(`days[${i}].key must be null or one of ${POSITIONS.join(", ")}`);
+    }
+    if (!Array.isArray(shown) || shown.length === 0 || !shown.every((p) => (POSITIONS as readonly string[]).includes(p))) {
+      throw new KvkValidationError(`days[${i}].shown must be a non-empty array of ${POSITIONS.join(", ")}`);
+    }
+    if (new Set(shown).size !== shown.length) {
+      throw new KvkValidationError(`days[${i}].shown must not contain duplicates`);
+    }
+    if (key !== null && !shown.includes(key)) {
+      throw new KvkValidationError(`days[${i}].key must be in days[${i}].shown`);
+    }
+    return { key: key as KvkPosition | null, shown: POSITIONS.filter((p) => shown.includes(p)) };
+  });
+}
+
+/** Missing, unparsable or invalid stored JSON falls back to a fresh copy of DEFAULT_DAYS, never the
+ *  shared reference — same "garbage → default" rule as getEvent() applies to the other settings. */
+export function daysFromSetting(raw: string | null): KvkDay[] {
+  try {
+    return parseDays(JSON.parse(raw as string));
+  } catch {
+    return DEFAULT_DAYS.map((d) => ({ key: d.key, shown: [...d.shown] }));
+  }
+}
+
+export function isShown(days: readonly KvkDay[], day: number, position: KvkPosition): boolean {
+  return days[day - 1]?.shown.includes(position) ?? false;
 }
 
 /** playerId is stripped to digits only; playerName is trimmed and capped at 40 chars. */

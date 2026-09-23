@@ -496,7 +496,14 @@ export const KVK_VISIBILITY = ["all", "filled"] as const;
 export type KvkPosition = (typeof POSITIONS)[number];
 export type KvkVisibility = (typeof KVK_VISIBILITY)[number];
 
-export type KvkEvent = { enabled: boolean; start_date: string | null; others_visibility: KvkVisibility };
+/** Per-day config: which position (if any) is the "key" position, and which positions get a column. */
+export type KvkDay = { key: KvkPosition | null; shown: KvkPosition[] };
+export type KvkEvent = {
+  enabled: boolean;
+  start_date: string | null;
+  others_visibility: KvkVisibility;
+  days: KvkDay[];
+};
 /** Admin-only: carries the plaintext `key`. */
 export type KvkKey = {
   id: number;
@@ -525,4 +532,10 @@ export type KvkAppointmentRow = {
 /** What a `filled`-visibility caller sees in place of another alliance's row. */
 export type KvkRedactedAppointment = { day: number; position: KvkPosition; slot: number; filled: true };
 export type KvkBoardAppointment = KvkAppointmentRow | KvkRedactedAppointment;
-export type KvkBoard = { event: KvkEvent; alliances: KvkAlliance[]; appointments: KvkBoardAppointment[] };
+export type KvkBoard = {
+  event: KvkEvent;
+  alliances: KvkAlliance[];
+  appointments: KvkBoardAppointment[];
+  /** admin only: appointments in hidden (day, position) columns, omitted from `appointments` */
+  hidden_count?: number;
+};

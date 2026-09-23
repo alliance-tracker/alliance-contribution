@@ -89,7 +89,8 @@
     "sections": {
       "dashboard": "Dashboard",
       "events": "Events",
-      "manage": "Manage"
+      "manage": "Manage",
+      "kvk": "KvK Prep"
     },
     "adminTabs": {
       "events": "Events",
@@ -120,7 +121,10 @@
       "kvkKeys": "Alliance access keys",
       "kvkSettings": "Availability, dates and visibility"
     },
-    "live": "LIVE"
+    "live": "LIVE",
+    "appointments": "Appointments",
+    "signedInWithKey": "Signed in with key",
+    "rep": "Rep · {{rep}}"
   },
   "llmPrompt": {
     "title": "LLM prompt for screenshots",
@@ -1141,6 +1145,12 @@
       "key": "loses its access key. Appointments already booked stay on the schedule.",
       "scheduleLabel": "{{n}} appointments",
       "schedule": "will be permanently deleted. This can't be undone."
+    },
+    "holder": {
+      "subtitle": "Appointing for {{alliance}} · all times UTC",
+      "signOut": "Sign out",
+      "closedTitle": "KvK Prep is closed",
+      "closedBody": "The host alliance has turned off external access. Your key will work again when they reopen it."
     }
   }
 }

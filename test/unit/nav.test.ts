@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hueForPath, navSections, subtitleForPath, titleForPath } from "../../web/src/lib/nav";
+import { hueForPath, kvkHolderSections, navSections, subtitleForPath, titleForPath } from "../../web/src/lib/nav";
 
 describe("hueForPath", () => {
   it("gives every nav item a hue token", () => {
@@ -38,5 +38,13 @@ describe("subtitleForPath", () => {
 
   it("gives the Event settings tab its own subtitle", () => {
     expect(subtitleForPath("/kvk/settings")).toBe("nav.subtitles.kvkSettings");
+  });
+});
+
+describe("kvkHolderSections", () => {
+  it("gives a key holder exactly one item, /kvk, still on the kvk hue", () => {
+    const items = kvkHolderSections.flatMap((s) => s.items);
+    expect(items.map((i) => i.to)).toEqual(["/kvk"]);
+    expect(hueForPath("/kvk")).toBe("var(--color-nav-kvk)");
   });
 });

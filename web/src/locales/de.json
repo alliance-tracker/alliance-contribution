@@ -89,7 +89,8 @@
     "sections": {
       "dashboard": "Übersicht",
       "events": "Events",
-      "manage": "Verwalten"
+      "manage": "Verwalten",
+      "kvk": "KvK Prep"
     },
     "adminTabs": {
       "events": "Events",
@@ -120,7 +121,10 @@
       "kvkKeys": "Allianz-Zugriffsschlüssel",
       "kvkSettings": "Verfügbarkeit, Termine und Sichtbarkeit"
     },
-    "live": "LIVE"
+    "live": "LIVE",
+    "appointments": "Ernennungen",
+    "signedInWithKey": "Mit Schlüssel angemeldet",
+    "rep": "Vertr. · {{rep}}"
   },
   "llmPrompt": {
     "title": "LLM-Prompt für Screenshots",
@@ -1141,6 +1145,12 @@
       "key": "verliert ihren Zugriffsschlüssel. Bereits gebuchte Ernennungen bleiben im Zeitplan.",
       "scheduleLabel": "{{n}} Ernennungen",
       "schedule": "werden endgültig gelöscht. Kann nicht rückgängig gemacht werden."
+    },
+    "holder": {
+      "subtitle": "Ernennungen für {{alliance}} · alle Zeiten in UTC",
+      "signOut": "Abmelden",
+      "closedTitle": "KvK Prep ist geschlossen",
+      "closedBody": "Die Gastgeber-Allianz hat den externen Zugriff deaktiviert. Ihr Schlüssel funktioniert wieder, sobald sie den Zugriff erneut öffnet."
     }
   }
 }

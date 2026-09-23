@@ -89,7 +89,8 @@
     "sections": {
       "dashboard": "Tableau de bord",
       "events": "Événements",
-      "manage": "Gérer"
+      "manage": "Gérer",
+      "kvk": "KvK Prep"
     },
     "adminTabs": {
       "events": "Événements",
@@ -120,7 +121,10 @@
       "kvkKeys": "Clés d'accès de l'alliance",
       "kvkSettings": "Disponibilité, dates et visibilité"
     },
-    "live": "EN DIRECT"
+    "live": "EN DIRECT",
+    "appointments": "Nominations",
+    "signedInWithKey": "Connecté avec une clé",
+    "rep": "Rep. · {{rep}}"
   },
   "llmPrompt": {
     "title": "Invite LLM pour les captures d'écran",
@@ -1197,6 +1201,12 @@
       "key": "perd sa clé d'accès. Les affectations déjà réservées restent sur le planning.",
       "scheduleLabel": "{{n}} affectations",
       "schedule": "seront définitivement supprimées. Action irréversible."
+    },
+    "holder": {
+      "subtitle": "Nominations pour {{alliance}} · heures en UTC",
+      "signOut": "Se déconnecter",
+      "closedTitle": "KvK Prep est fermé",
+      "closedBody": "L'alliance hôte a désactivé l'accès externe. Votre clé fonctionnera de nouveau dès sa réouverture."
     }
   }
 }

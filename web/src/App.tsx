@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useApiKey } from "@/lib/apiKey";
 import { ApiKeyProvider } from "@/components/layout/ApiKeyProvider";
 import { KeyGate } from "@/components/layout/KeyGate";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -9,6 +10,7 @@ import { Overview } from "@/pages/Overview";
 import { Ranking } from "@/pages/Ranking";
 import { Attendance } from "@/pages/Attendance";
 import { Members } from "@/pages/Members";
+import { KvkClosed } from "@/components/kvk/KvkClosed";
 
 // Route-split so the initial load stays small. MemberProfile is the only page that pulls in recharts
 // (~107 kB gzip), and the admin pages are irrelevant to most viewers. The layouts render these behind a
@@ -26,37 +28,55 @@ const Rewards = lazy(() => import("@/pages/Rewards").then((m) => ({ default: m.R
 const Schedule = lazy(() => import("@/pages/Schedule").then((m) => ({ default: m.Schedule })));
 const KvkPrep = lazy(() => import("@/pages/KvkPrep").then((m) => ({ default: m.KvkPrep })));
 
-export default function App() {
+/** Key holders ("kvk") get KvK Prep only — every other path lands on /kvk, including admin tabs. */
+function AppRoutes() {
   const { t } = useTranslation();
+  const { role, kvk } = useApiKey();
+  if (role === "kvk") {
+    return (
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/kvk" element={kvk.enabled ? <KvkPrep /> : <KvkClosed />} />
+          <Route path="*" element={<Navigate to="/kvk" replace />} />
+        </Route>
+      </Routes>
+    );
+  }
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Overview />} />
+        <Route path="/rankings" element={<Ranking />} />
+        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/members" element={<Members />} />
+        <Route path="/members/:id" element={<MemberProfile />} />
+        <Route path="/activities/:key?" element={<Activity />} />
+        <Route path="/kvk/:tab?" element={<KvkPrep />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/events" replace />} />
+          <Route path="events" element={<Events />} />
+          <Route path="roster" element={<Roster />} />
+          <Route path="aliases" element={<Aliases />} />
+          <Route path="scoring" element={<Scoring />} />
+          <Route path="rewards" element={<Rewards />} />
+          <Route path="backup" element={<Backup />} />
+          <Route path="schedule" element={<Schedule />} />
+        </Route>
+        <Route
+          path="*"
+          element={<p className="mx-auto max-w-3xl text-[13px] text-muted">{t("common.notFound")}</p>}
+        />
+      </Route>
+    </Routes>
+  );
+}
+
+export default function App() {
   return (
     <ApiKeyProvider>
       <KeyGate>
         <BrowserRouter>
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route path="/" element={<Overview />} />
-              <Route path="/rankings" element={<Ranking />} />
-              <Route path="/attendance" element={<Attendance />} />
-              <Route path="/members" element={<Members />} />
-              <Route path="/members/:id" element={<MemberProfile />} />
-              <Route path="/activities/:key?" element={<Activity />} />
-              <Route path="/kvk/:tab?" element={<KvkPrep />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Navigate to="/admin/events" replace />} />
-                <Route path="events" element={<Events />} />
-                <Route path="roster" element={<Roster />} />
-                <Route path="aliases" element={<Aliases />} />
-                <Route path="scoring" element={<Scoring />} />
-                <Route path="rewards" element={<Rewards />} />
-                <Route path="backup" element={<Backup />} />
-                <Route path="schedule" element={<Schedule />} />
-              </Route>
-              <Route
-                path="*"
-                element={<p className="mx-auto max-w-3xl text-[13px] text-muted">{t("common.notFound")}</p>}
-              />
-            </Route>
-          </Routes>
+          <AppRoutes />
         </BrowserRouter>
       </KeyGate>
     </ApiKeyProvider>

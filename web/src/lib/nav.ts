@@ -35,6 +35,14 @@ export const navSections: NavSection[] = [
   },
 ];
 
+/** A key holder's whole nav: just their appointments page. */
+export const kvkHolderSections: NavSection[] = [
+  {
+    title: "nav.sections.kvk",
+    items: [{ to: "/kvk", label: "nav.appointments", icon: Crown, hue: "var(--color-nav-kvk)" }],
+  },
+];
+
 /** Translation key of the best-match page title; null → caller shows the brand name. */
 export function titleForPath(pathname: string): TKey | null {
   if (pathname.startsWith("/admin")) return "nav.admin";

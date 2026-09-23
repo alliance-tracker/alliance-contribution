@@ -89,7 +89,8 @@
     "sections": {
       "dashboard": "Panel",
       "events": "Eventos",
-      "manage": "Gestionar"
+      "manage": "Gestionar",
+      "kvk": "KvK Prep"
     },
     "adminTabs": {
       "events": "Eventos",
@@ -120,7 +121,10 @@
       "kvkKeys": "Claves de acceso de la alianza",
       "kvkSettings": "Disponibilidad, fechas y visibilidad"
     },
-    "live": "EN VIVO"
+    "live": "EN VIVO",
+    "appointments": "Nombramientos",
+    "signedInWithKey": "Sesión iniciada con clave",
+    "rep": "Rep. · {{rep}}"
   },
   "llmPrompt": {
     "title": "Prompt de LLM para capturas de pantalla",
@@ -1197,6 +1201,12 @@
       "key": "pierde su clave de acceso. Las asignaciones ya reservadas permanecen en el calendario.",
       "scheduleLabel": "{{n}} asignaciones",
       "schedule": "se eliminarán permanentemente. Esto no se puede deshacer."
+    },
+    "holder": {
+      "subtitle": "Nombrando para {{alliance}} · todas las horas en UTC",
+      "signOut": "Cerrar sesión",
+      "closedTitle": "KvK Prep está cerrado",
+      "closedBody": "La alianza anfitriona ha desactivado el acceso externo. Su clave volverá a funcionar cuando lo reabran."
     }
   }
 }

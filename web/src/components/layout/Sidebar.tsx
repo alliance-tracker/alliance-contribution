@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { navSections } from "@/lib/nav";
-import { useApiKey } from "@/lib/apiKey";
+import { kvkHolderSections, navSections } from "@/lib/nav";
+import { useApiKey, type ApiKeyContextValue } from "@/lib/apiKey";
 import { cn } from "@/lib/utils";
 
 /** Brand header + nav list, shared by the desktop aside and the mobile drawer. Both sit on the
@@ -10,7 +10,8 @@ import { cn } from "@/lib/utils";
  *  never the theme-flipping foreground tokens. */
 export function SidebarNav() {
   const { t } = useTranslation();
-  const { kvk } = useApiKey();
+  const { role, kvk } = useApiKey();
+  const holder = role === "kvk";
   return (
     <>
       {/* Brand */}
@@ -30,7 +31,7 @@ export function SidebarNav() {
 
       {/* Nav */}
       <nav className="flex flex-1 flex-col gap-4 px-3 py-4">
-        {navSections.map((section) => (
+        {(holder ? kvkHolderSections : navSections).map((section) => (
           <div key={section.title} className="flex flex-col gap-[3px]">
             <p className="px-2.5 pb-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-sidebar-muted">
               {t(section.title)}
@@ -66,7 +67,7 @@ export function SidebarNav() {
                     <span className="truncate" title={t(item.label)}>
                       {t(item.label)}
                     </span>
-                    {item.to === "/kvk" && kvk.enabled && (
+                    {item.to === "/kvk" && kvk.enabled && !holder && (
                       <span className="ms-auto shrink-0 rounded-[5px] bg-[#22c55e26] px-1.5 py-0.5 font-mono text-[9.5px] font-semibold tracking-[0.02em] text-[#4ade80]">
                         {t("nav.live")}
                       </span>
@@ -78,7 +79,25 @@ export function SidebarNav() {
           </div>
         ))}
       </nav>
+      {holder && <HolderCard kvk={kvk} />}
     </>
+  );
+}
+
+/** Key holder's "signed in with key" card, pinned under the nav. */
+function HolderCard({ kvk }: { kvk: ApiKeyContextValue["kvk"] }) {
+  const { t } = useTranslation();
+  return (
+    <div className="m-3 rounded-[10px] border border-white/10 bg-white/5 p-3">
+      <p className="font-mono text-[10px] font-semibold uppercase text-sidebar-muted">{t("nav.signedInWithKey")}</p>
+      <div className="mt-2 flex items-center gap-2">
+        <span className="size-3.5 flex-none rounded-[4px]" style={{ background: kvk.color }} aria-hidden />
+        <span className="truncate text-[13px] font-semibold text-sidebar-fg">{kvk.alliance_name}</span>
+      </div>
+      <p className="mt-1 truncate text-[11.5px] text-sidebar-muted">
+        {t("nav.rep", { rep: kvk.representative })}
+      </p>
+    </div>
   );
 }
 

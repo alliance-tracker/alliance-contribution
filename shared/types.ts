@@ -488,3 +488,41 @@ export const LANGUAGE_NAMES: Record<string, string> = {
 };
 /** The only placeholders a template may use. `{time}`/`{end}` become Discord `<t:unix:R>` stamps. */
 export const TEMPLATE_PLACEHOLDERS = ["{event}", "{time}", "{end}"] as const;
+
+// ---- KvK Prep (2026-09-23 spec) ------------------------------------------------
+
+export const POSITIONS = ["chief_minister", "noble_advisor"] as const;
+export const KVK_VISIBILITY = ["all", "filled"] as const;
+export type KvkPosition = (typeof POSITIONS)[number];
+export type KvkVisibility = (typeof KVK_VISIBILITY)[number];
+
+export type KvkEvent = { enabled: boolean; start_date: string | null; others_visibility: KvkVisibility };
+/** Admin-only: carries the plaintext `key`. */
+export type KvkKey = {
+  id: number;
+  alliance_name: string;
+  representative: string;
+  color: string;
+  key: string;
+  last_used_at: number | null;
+  created_at: number;
+  slot_count: number;
+};
+/** What every board reader sees of a key — never the `key` itself. */
+export type KvkAlliance = { id: number; alliance_name: string; color: string; slot_count: number };
+
+/** Row shape as stored in kvk_appointments (minus the surrogate id). */
+export type KvkAppointmentRow = {
+  day: number;
+  position: KvkPosition;
+  slot: number;
+  key_id: number | null;
+  player_id: string;
+  player_name: string;
+  created_by: string;
+  updated_at: number;
+};
+/** What a `filled`-visibility caller sees in place of another alliance's row. */
+export type KvkRedactedAppointment = { day: number; position: KvkPosition; slot: number; filled: true };
+export type KvkBoardAppointment = KvkAppointmentRow | KvkRedactedAppointment;
+export type KvkBoard = { event: KvkEvent; alliances: KvkAlliance[]; appointments: KvkBoardAppointment[] };

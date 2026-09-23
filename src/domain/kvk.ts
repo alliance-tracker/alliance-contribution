@@ -1,12 +1,26 @@
 // Pure KvK Prep domain helpers. No D1, no fetch, no Date.now().
 
-export const POSITIONS = ["chief_minister", "noble_advisor"] as const;
+import {
+  POSITIONS,
+  type KvkAppointmentRow,
+  type KvkBoardAppointment,
+  type KvkPosition,
+  type KvkVisibility,
+} from "../../shared/types";
+
+// Types and the POSITIONS/KVK_VISIBILITY lists live in shared/ (the SPA needs them too); re-exported here.
+export {
+  KVK_VISIBILITY,
+  POSITIONS,
+  type KvkAppointmentRow,
+  type KvkBoardAppointment,
+  type KvkPosition,
+  type KvkRedactedAppointment,
+  type KvkVisibility,
+} from "../../shared/types";
+
 export const DAYS = 5;
 export const SLOTS = 48;
-export const KVK_VISIBILITY = ["all", "filled"] as const;
-
-export type KvkPosition = (typeof POSITIONS)[number];
-export type KvkVisibility = (typeof KVK_VISIBILITY)[number];
 
 export class KvkValidationError extends Error {
   constructor(message: string) {
@@ -21,23 +35,6 @@ export class KvkConflictError extends Error {
     this.name = "KvkConflictError";
   }
 }
-
-/** Row shape as stored in kvk_appointments. */
-export type KvkAppointmentRow = {
-  day: number;
-  position: KvkPosition;
-  slot: number;
-  key_id: number | null;
-  player_id: string;
-  player_name: string;
-  created_by: string;
-  updated_at: number;
-};
-
-/** What a `filled`-visibility caller sees in place of another alliance's row. */
-export type KvkRedactedAppointment = { day: number; position: KvkPosition; slot: number; filled: true };
-
-export type KvkBoardAppointment = KvkAppointmentRow | KvkRedactedAppointment;
 
 /** `all` → rows unchanged. `filled` → the caller's own rows unchanged, every other row (including a
  *  NULL key_id "deleted key" row) redacted to just its slot coordinates. */

@@ -3,6 +3,7 @@ import { AliasRepo } from "../repositories/alias-repo";
 import { AllocationRepo } from "../repositories/allocation-repo";
 import { BackupRepo } from "../repositories/backup-repo";
 import { EventRepo } from "../repositories/event-repo";
+import { KvkRepo } from "../repositories/kvk-repo";
 import { MemberRepo } from "../repositories/member-repo";
 import { ParticipationRepo } from "../repositories/participation-repo";
 import { ScheduleRepo } from "../repositories/schedule-repo";
@@ -15,6 +16,7 @@ import { AliasService } from "./alias-service";
 import { AllocationService } from "./allocation-service";
 import { BackupService } from "./backup-service";
 import { EventService } from "./event-service";
+import { KvkService } from "./kvk-service";
 import { MemberService } from "./member-service";
 import { NotifyService } from "./notify-service";
 import { RecomputeService } from "./recompute-service";
@@ -64,5 +66,6 @@ export function createServices(db: D1Database) {
     notifyService: new NotifyService(scheduleRepo, settingsRepo),
     backupService: new BackupService(backupRepo, recomputeService),
     allocationService: new AllocationService(allocationRepo, statsRepo),
+    kvkService: new KvkService(new KvkRepo(db), settingsRepo),
   };
 }

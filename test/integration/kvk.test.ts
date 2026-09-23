@@ -130,6 +130,13 @@ describe("/api/kvk", () => {
     expect((await call("/kvk/appointments/2/chief_minister/0", ADMIN, "DELETE")).status).toBe(404);
   });
 
+  it("holder PATCHing its own slot ignores an attempted key_id move to another alliance", async () => {
+    const res = await call("/kvk/appointments/1/chief_minister/0", as("A"), "PATCH", { ...player("Ann2"), key_id: keys.B.id });
+    expect(res.status).toBe(200);
+    const body = (await (await call("/kvk", ADMIN)).json()) as { appointments: Record<string, unknown>[] };
+    expect(body.appointments.find((a) => a.day === 1 && a.slot === 0)).toMatchObject({ key_id: keys.A.id, player_name: "Ann2" });
+  });
+
   it("filled mode hides B's detail from A; all mode shows full rows and never a key field", async () => {
     await setEvent(true, "filled");
     const filled = (await (await call("/kvk", as("A"))).json()) as {
@@ -181,6 +188,12 @@ describe("/api/kvk", () => {
     expect((await call("/kvk", as("B"))).status).toBe(401);
     const body = (await (await call("/kvk", ADMIN)).json()) as { appointments: Record<string, unknown>[] };
     expect(body.appointments.find((a) => a.slot === 1)).toMatchObject({ key_id: null, player_name: "Bob" });
+  });
+
+  it("a holder cannot PATCH or DELETE a NULL-key_id orphan row left by a deleted key", async () => {
+    const orphan = "/kvk/appointments/1/chief_minister/1";
+    expect((await call(orphan, as("A"), "PATCH", player("Hax"))).status).toBe(404);
+    expect((await call(orphan, as("A"), "DELETE")).status).toBe(404);
   });
 
   it("clear schedule is admin-only and empties the table", async () => {

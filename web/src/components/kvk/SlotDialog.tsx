@@ -161,6 +161,7 @@ export function SlotDialog({
               <Input
                 dir="ltr"
                 inputMode="numeric"
+                maxLength={20}
                 value={playerId}
                 onChange={(e) => setPlayerId(e.target.value.replace(/\D/g, ""))}
                 placeholder={t("kvk.slot.playerIdPlaceholder")}

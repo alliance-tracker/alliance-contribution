@@ -51,7 +51,7 @@ settings** — managers and viewers see the schedule only, read-only.
 
 1. **Access keys → New key**. Give it the alliance's name, a representative, and a colour (colours
    already used by another alliance are dimmed).
-2. **Create key** reveals the plaintext key once. **Copy key** or **Copy sign-in link**
+2. **Create key** reveals the plaintext key. **Copy key** or **Copy sign-in link**
    (`https://<your-domain>/?key=<key>`) and send it to the representative — opening the link signs
    them straight in, or they can paste the key into the login screen's key field. You can copy the
    key or link again later from the keys table.
@@ -89,6 +89,9 @@ settings** — managers and viewers see the schedule only, read-only.
   signs the holder in directly — no field to fill in or submit.
 - The top bar shows the alliance's colour, name and masked key. **Sign out** clears the key and
   returns to the login prompt.
+- Opening a sign-in link replaces whatever key is already stored in that browser — an admin who
+  opens a holder's link to test it is signed out of admin and into that alliance's key until they
+  sign back in with their own.
 
 ## How it works
 

@@ -97,6 +97,14 @@ describe("normalizePlayer", () => {
     expect(() => normalizePlayer("abc", "Someone")).toThrow(KvkValidationError);
   });
 
+  it("rejects an id over 20 digits", () => {
+    expect(() => normalizePlayer("1".repeat(21), "Someone")).toThrow(KvkValidationError);
+  });
+
+  it("accepts an id of exactly 20 digits", () => {
+    expect(normalizePlayer("1".repeat(20), "Someone").playerId).toBe("1".repeat(20));
+  });
+
   it("rejects an empty name after trimming", () => {
     expect(() => normalizePlayer("12345", "   ")).toThrow(KvkValidationError);
   });

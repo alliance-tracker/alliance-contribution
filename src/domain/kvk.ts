@@ -83,6 +83,7 @@ export function normalizePlayer(id: unknown, name: unknown): { playerId: string;
   const playerId = id.replace(/\D/g, "");
   const playerName = name.trim();
   if (playerId === "") throw new KvkValidationError("playerId is required");
+  if (playerId.length > 20) throw new KvkValidationError("playerId must be 20 digits or fewer");
   if (playerName === "") throw new KvkValidationError("playerName is required");
   if (playerName.length > 40) throw new KvkValidationError("playerName must be 40 characters or fewer");
   return { playerId, playerName };

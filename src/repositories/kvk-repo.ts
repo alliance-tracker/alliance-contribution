@@ -3,6 +3,8 @@ import { KvkConflictError } from "../domain/kvk";
 import { all, first, run } from "./db";
 
 export type KvkKeyRow = Omit<KvkKey, "slot_count">;
+/** For board(): just enough to render an alliance chip, no per-key COUNT(*) scan. */
+export type KvkKeyBare = Pick<KvkKeyRow, "id" | "alliance_name" | "color">;
 export type NewKvkKey = Pick<KvkKey, "alliance_name" | "representative" | "color" | "key" | "created_at">;
 export type KvkKeyPatch = Pick<KvkKey, "alliance_name" | "representative" | "color">;
 export type SlotRef = { day: number; position: KvkPosition; slot: number };
@@ -18,12 +20,19 @@ export class KvkRepo {
   constructor(private readonly db: D1Database) {}
 
   // ---- kvk_access_keys -----------------------------------------------------
+  /** Admin key management only: the correlated COUNT(*) subquery scans kvk_appointments per key. */
   listKeys(): Promise<KvkKey[]> {
     return all<KvkKey>(
       this.db,
       `SELECT k.*, (SELECT COUNT(*) FROM kvk_appointments a WHERE a.key_id = k.id) AS slot_count
        FROM kvk_access_keys k ORDER BY k.id`,
     );
+  }
+
+  /** board() (polled every 30s): no per-key subquery — the caller derives slot_count from the
+   *  appointments it already loaded. */
+  listKeysBare(): Promise<KvkKeyBare[]> {
+    return all<KvkKeyBare>(this.db, "SELECT id, alliance_name, color FROM kvk_access_keys ORDER BY id");
   }
 
   key(id: number): Promise<KvkKeyRow | null> {

@@ -82,13 +82,19 @@ export class KvkService {
   // ---- board ---------------------------------------------------------------
   async board(caller: KvkCaller): Promise<KvkBoard> {
     const event = await this.getEvent();
-    const keys = await this.repo.listKeys();
+    const keys = await this.repo.listKeysBare();
     const appts = await this.repo.listAppointments();
-    let alliances: KvkAlliance[] = keys.map(({ id, alliance_name, color, slot_count }) => ({
+    // slot_count from the appointments already loaded, not a per-key COUNT(*) — board() is polled
+    // every 30s (see kvk-repo.ts listKeys() vs listKeysBare()).
+    const counts = new Map<number, number>();
+    for (const a of appts) {
+      if (a.key_id !== null) counts.set(a.key_id, (counts.get(a.key_id) ?? 0) + 1);
+    }
+    let alliances: KvkAlliance[] = keys.map(({ id, alliance_name, color }) => ({
       id,
       alliance_name,
       color,
-      slot_count,
+      slot_count: counts.get(id) ?? 0,
     }));
     const own = ownKeyId(caller);
     if (own === null) return { event, alliances, appointments: appts };

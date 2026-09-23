@@ -158,6 +158,7 @@ describe("/api/kvk", () => {
     expect(text).not.toContain(keys.B.key);
     const all = JSON.parse(text) as { alliances: unknown[]; appointments: Record<string, unknown>[] };
     expect(all.alliances).toHaveLength(2);
+    expect(all.alliances.every((a) => !("key" in (a as object)))).toBe(true);
     expect(all.appointments.find((a) => a.slot === 1)).toMatchObject({ key_id: keys.B.id, player_name: "Bob" });
   });
 

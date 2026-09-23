@@ -10,7 +10,7 @@ admin hands out.
 | Chief Minister | Construction, Research & Training Speed +15% |
 | Noble Advisor | Training Speed +75%, Training Capacity +300 |
 
-| Day | Theme | Focus position |
+| Day | Theme | Default key position |
 | --- | --- | --- |
 | 1 | Construction | Chief Minister |
 | 2 | Research | Chief Minister |
@@ -18,8 +18,12 @@ admin hands out.
 | 4 | No focus | — |
 | 5 | Final Push | Chief Minister |
 
-The grid is 5 days × 2 positions × 48 slots = **480 slots**; the 4 themed days' focus position adds
-up to **192** of those. All times are UTC.
+The key position and which positions get a column are set per day in Event settings, not fixed —
+the table above is only the default.
+
+The grid is 5 days × 2 positions × 48 slots = **480 slots** with the defaults; the themed days'
+focus position adds up to **192** of those. All times are UTC, and the header counts follow the
+current per-day configuration, not always these defaults.
 
 ## What you see
 
@@ -40,8 +44,9 @@ settings** — managers and viewers see the schedule only, read-only.
   recomputed every 30 seconds, alongside the board refresh.
 - **Access keys** (admin) — a table (cards on phone) of every alliance: colour, name,
   representative, masked key, slot count, last used, and Key/Link copy buttons.
-- **Event settings** (admin) — the enable toggle, start date with a preview of all 5 days, the
-  "other alliances' slots" visibility choice, and Clear schedule.
+- **Event settings** (admin) — the enable toggle, start date with a preview of all 5 days (each with
+  a key-position picker and per-position show/hide toggles), the "other alliances' slots"
+  visibility choice, and Clear schedule.
 - A key holder signed in while the event is off sees a closed card instead of the schedule; an
   admin sees a warning banner on the Schedule tab instead, with everything still usable for them.
 
@@ -66,10 +71,15 @@ settings** — managers and viewers see the schedule only, read-only.
 1. **Event settings → Enable KvK Prep** opens the section to access keys; off, keys can't sign in
    but bookings are kept.
 2. Set **Event start** — day 1 begins at 00:00 UTC on that date, and the event runs 5 days.
-3. Choose what key holders see of **other alliances' slots**: **Show all** (alliance, colour,
+3. For each day, pick its **key position** (Chief Minister, Noble Advisor, or None) and hide the
+   positions nobody books that day — e.g. Day 1 Noble Advisor, if only Chief Minister is used.
+   Picking a key position auto-shows it, and you can't hide the key position or the last shown
+   position. Hidden bookings are kept and reappear when the position is shown again; the settings
+   note under the day cards counts them ("N booked slots are in hidden positions").
+4. Choose what key holders see of **other alliances' slots**: **Show all** (alliance, colour,
    player ID and name) or **Filled only** (just that the slot is taken). A holder's own slots
    always show full detail either way.
-4. **Clear schedule** deletes every appointment — use it between KvK events. It needs confirming
+5. **Clear schedule** deletes every appointment — use it between KvK events. It needs confirming
    and can't be undone.
 
 **Book or edit a slot (admin or key holder)**
@@ -111,9 +121,9 @@ settings** — managers and viewers see the schedule only, read-only.
 - **A key grants appointment access for one alliance until it's deleted.** Keys are stored in
   plaintext, never expire, and aren't hashed — treat the key and sign-in link like a password, and
   delete the key to revoke access.
-- **Event settings are not in backups.** `Enable`, `Event start`, and the visibility choice live
-  outside the backed-up tables, so re-set them by hand after restoring a backup. Bookings
-  themselves are backed up normally.
+- **Event settings are not in backups.** `Enable`, `Event start`, the visibility choice, and each
+  day's key/shown positions live outside the backed-up tables, so re-set them by hand after
+  restoring a backup. Bookings themselves are backed up normally.
 - A key holder's closed card doesn't poll — if the host disables the event or deletes their key
   mid-session, they only find out on their next action or reload, not instantly.
 - On a phone the schedule shows one day at a time; switch days with the chip row above the grid.

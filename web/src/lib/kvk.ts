@@ -2,6 +2,7 @@
 // shapes and rules of src/domain/kvk.ts, but for the SPA's read-model derivations.
 
 import type { KvkBoardAppointment, KvkDay, KvkPosition, KvkRedactedAppointment } from "../../../shared/types";
+import { POSITIONS } from "../../../shared/types";
 
 export { POSITIONS } from "../../../shared/types";
 
@@ -126,6 +127,35 @@ export function fillCounts(
     if (days[a.day - 1]?.key === a.position) focus++;
   }
   return { filled, focus };
+}
+
+/** Sets day `day`'s (1-indexed) key position. A non-null key not already in `shown` is added, kept in
+ *  `POSITIONS` order; `null` leaves `shown` as it is. Event settings' key picker. */
+export function setDayKey(days: readonly KvkDay[], day: number, key: KvkPosition | null): KvkDay[] {
+  return days.map((d, i) => {
+    if (i !== day - 1) return d;
+    const shown = key !== null && !d.shown.includes(key) ? POSITIONS.filter((p) => d.shown.includes(p) || p === key) : d.shown;
+    return { key, shown };
+  });
+}
+
+/** Adds or removes `position` from day `day`'s (1-indexed) `shown`, kept in `POSITIONS` order. Event
+ *  settings' show/hide toggles; callers gate this on `canToggleShown`. */
+export function toggleShown(days: readonly KvkDay[], day: number, position: KvkPosition): KvkDay[] {
+  return days.map((d, i) => {
+    if (i !== day - 1) return d;
+    const shown = d.shown.includes(position)
+      ? d.shown.filter((p) => p !== position)
+      : POSITIONS.filter((p) => d.shown.includes(p) || p === position);
+    return { ...d, shown };
+  });
+}
+
+/** A show toggle is disabled for the day's key position (can't hide it) and for the last shown
+ *  position (a day always shows at least one column). */
+export function canToggleShown(d: KvkDay, position: KvkPosition): boolean {
+  if (position === d.key) return false;
+  return !(d.shown.length === 1 && d.shown[0] === position);
 }
 
 /** Non-redacted rows this player holds elsewhere — powers the "also appointed to N other slots" note. */

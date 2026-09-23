@@ -213,6 +213,7 @@ export function KvkPrep() {
         <EventSettings
           event={board.event}
           filled={filled}
+          hidden={board.hidden_count ?? 0}
           onSave={async (next: KvkEvent) => {
             await api.kvk.setEvent(next);
             setKvkEnabled(next.enabled);
@@ -221,7 +222,7 @@ export function KvkPrep() {
           onClear={() =>
             setConfirm({
               kind: t("kvk.confirm.kind.schedule"),
-              label: t("kvk.confirm.scheduleLabel", { n: filled }),
+              label: t("kvk.confirm.scheduleLabel", { n: filled + (board.hidden_count ?? 0) }),
               body: t("kvk.confirm.schedule"),
               run: async () => {
                 await api.kvk.clearAppointments();

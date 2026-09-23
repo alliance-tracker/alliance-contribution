@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { KvkAppointmentRow, KvkBoardAppointment, KvkDay, KvkRedactedAppointment } from "../../shared/types";
 import {
+  canToggleShown,
   currentDaySlot,
   dayIso,
   fillCounts,
@@ -10,9 +11,11 @@ import {
   KVK_COLORS,
   maskKey,
   otherSlotsFor,
+  setDayKey,
   signInLink,
   slotLabel,
   slotTotals,
+  toggleShown,
 } from "../../web/src/lib/kvk";
 
 const DEFAULT_DAYS: KvkDay[] = [
@@ -132,6 +135,58 @@ describe("gridStyle", () => {
 
   it("builds a compact single-column layout with no minWidth", () => {
     expect(gridStyle(1, true)).toEqual({ gridTemplateColumns: "58px repeat(1,1fr)" });
+  });
+});
+
+describe("setDayKey", () => {
+  it("choosing NA on a CM-only day adds NA to shown, in POSITIONS order", () => {
+    const days: KvkDay[] = [{ key: "chief_minister", shown: ["chief_minister"] }, ...DEFAULT_DAYS.slice(1)];
+    const next = setDayKey(days, 1, "noble_advisor");
+    expect(next[0]).toEqual({ key: "noble_advisor", shown: ["chief_minister", "noble_advisor"] });
+    expect(next.slice(1)).toEqual(days.slice(1));
+  });
+
+  it("setting null leaves shown as it is", () => {
+    const next = setDayKey(DEFAULT_DAYS, 1, null);
+    expect(next[0]).toEqual({ key: null, shown: ["chief_minister", "noble_advisor"] });
+  });
+
+  it("a key already in shown doesn't reorder shown", () => {
+    const days: KvkDay[] = [{ key: null, shown: ["noble_advisor", "chief_minister"] }, ...DEFAULT_DAYS.slice(1)];
+    const next = setDayKey(days, 1, "chief_minister");
+    expect(next[0]).toEqual({ key: "chief_minister", shown: ["noble_advisor", "chief_minister"] });
+  });
+});
+
+describe("toggleShown", () => {
+  it("removes a shown position", () => {
+    const next = toggleShown(DEFAULT_DAYS, 4, "noble_advisor");
+    expect(next[3]).toEqual({ key: null, shown: ["chief_minister"] });
+  });
+
+  it("adds a hidden position back in POSITIONS order regardless of prior order", () => {
+    const days: KvkDay[] = [{ key: null, shown: ["noble_advisor"] }, ...DEFAULT_DAYS.slice(1)];
+    const next = toggleShown(days, 1, "chief_minister");
+    expect(next[0]).toEqual({ key: null, shown: ["chief_minister", "noble_advisor"] });
+  });
+
+  it("only touches the targeted day", () => {
+    const next = toggleShown(DEFAULT_DAYS, 1, "noble_advisor");
+    expect(next.slice(1)).toEqual(DEFAULT_DAYS.slice(1));
+  });
+});
+
+describe("canToggleShown", () => {
+  it("is false for the key position", () => {
+    expect(canToggleShown({ key: "chief_minister", shown: ["chief_minister", "noble_advisor"] }, "chief_minister")).toBe(false);
+  });
+
+  it("is false for the last shown position, even when it isn't the key", () => {
+    expect(canToggleShown({ key: null, shown: ["noble_advisor"] }, "noble_advisor")).toBe(false);
+  });
+
+  it("is true otherwise", () => {
+    expect(canToggleShown({ key: "chief_minister", shown: ["chief_minister", "noble_advisor"] }, "noble_advisor")).toBe(true);
   });
 });
 

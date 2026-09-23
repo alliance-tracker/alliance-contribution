@@ -90,7 +90,7 @@
       "dashboard": "Übersicht",
       "events": "Events",
       "manage": "Verwalten",
-      "kvk": "KvK Prep"
+      "kvk": "KvK-Vorbereitung"
     },
     "adminTabs": {
       "events": "Events",
@@ -1149,8 +1149,14 @@
     "holder": {
       "subtitle": "Ernennungen für {{alliance}} · alle Zeiten in UTC",
       "signOut": "Abmelden",
-      "closedTitle": "KvK Prep ist geschlossen",
-      "closedBody": "Die Gastgeber-Allianz hat den externen Zugriff deaktiviert. Ihr Schlüssel funktioniert wieder, sobald sie den Zugriff erneut öffnet."
+      "closedTitle": "KvK-Vorbereitung ist geschlossen",
+      "closedBody": "Die Gastgeber-Allianz hat den externen Zugriff deaktiviert. Ihr Schlüssel funktioniert wieder, sobald sie den Zugriff erneut öffnet.",
+      "note": "Sie können Spieler für <1>{{alliance}}</1> auf jedem freien Slot ernennen und Ihre eigenen bearbeiten. Slots anderer Allianzen sind schreibgeschützt.",
+      "closedError": "Die Gastgeber-Allianz hat die KvK-Vorbereitung geschlossen."
+    },
+    "legend": {
+      "you": "{{alliance}} (Sie)",
+      "filledByOthers": "Von anderen belegt"
     }
   }
 }

@@ -42,6 +42,12 @@ export function isRedacted(a: KvkBoardAppointment): a is KvkRedactedAppointment 
   return "filled" in a;
 }
 
+/** Key-holder edit rule (UI side; the server 404s foreign rows): a free slot, or a full row under the
+ *  holder's own key. A deleted key's rows (`key_id` null) belong to nobody. */
+export function holderCanEdit(appt: KvkBoardAppointment | null, ownKeyId: number): boolean {
+  return appt === null || (!isRedacted(appt) && appt.key_id === ownKeyId);
+}
+
 export function indexAppointments(appts: readonly KvkBoardAppointment[]): Map<string, KvkBoardAppointment> {
   const out = new Map<string, KvkBoardAppointment>();
   for (const a of appts) out.set(slotKey(a), a);

@@ -90,7 +90,7 @@
       "dashboard": "Tableau de bord",
       "events": "Événements",
       "manage": "Gérer",
-      "kvk": "KvK Prep"
+      "kvk": "Préparation KvK"
     },
     "adminTabs": {
       "events": "Événements",
@@ -1205,8 +1205,14 @@
     "holder": {
       "subtitle": "Nominations pour {{alliance}} · heures en UTC",
       "signOut": "Se déconnecter",
-      "closedTitle": "KvK Prep est fermé",
-      "closedBody": "L'alliance hôte a désactivé l'accès externe. Votre clé fonctionnera de nouveau dès sa réouverture."
+      "closedTitle": "La Préparation KvK est fermée",
+      "closedBody": "L'alliance hôte a désactivé l'accès externe. Votre clé fonctionnera de nouveau dès sa réouverture.",
+      "note": "Vous pouvez nommer des joueurs pour <1>{{alliance}}</1> sur tout créneau libre et modifier les vôtres. Les créneaux des autres alliances sont en lecture seule.",
+      "closedError": "L'alliance hôte a fermé la Préparation KvK."
+    },
+    "legend": {
+      "you": "{{alliance}} (vous)",
+      "filledByOthers": "Pris par d'autres"
     }
   }
 }

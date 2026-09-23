@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, useNavigate, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import type { KvkAppointmentRow, KvkBoard, KvkEvent, KvkKey } from "@shared/types";
 import { api, ApiError } from "@/lib/api";
 import { useApiKey } from "@/lib/apiKey";
 import { useApi } from "@/lib/useApi";
-import { fillCounts, signInLink, type KvkSlotRef } from "@/lib/kvk";
+import { fillCounts, holderCanEdit, signInLink, type KvkSlotRef } from "@/lib/kvk";
 import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
 import { ConfirmDialog, Toast, type ConfirmTarget } from "@/components/schedule/parts";
@@ -30,8 +30,9 @@ export function KvkPrep() {
   const { t } = useTranslation();
   const { tab = "schedule" } = useParams();
   const navigate = useNavigate();
-  const { role, setKvkEnabled } = useApiKey();
+  const { role, kvk, setKvkEnabled } = useApiKey();
   const isAdmin = role === "admin";
+  const ownKeyId = role === "kvk" ? (kvk.key_id ?? null) : null;
 
   const [board, setBoard] = useState<KvkBoard | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -82,9 +83,15 @@ export function KvkPrep() {
           }
         })
         .catch((e: unknown) => {
-          if (aliveRef.current) setLoadError(e instanceof ApiError ? e.message : t("common.errors.generic"));
+          if (!aliveRef.current) return;
+          // The host turned the event off mid-session: AppRoutes swaps in KvkClosed.
+          if (role === "kvk" && e instanceof ApiError && e.status === 401 && e.message === "kvk closed") {
+            setKvkEnabled(false);
+            return;
+          }
+          setLoadError(e instanceof ApiError ? e.message : t("common.errors.generic"));
         }),
-    [t],
+    [t, role, setKvkEnabled],
   );
 
   useEffect(() => {
@@ -150,13 +157,22 @@ export function KvkPrep() {
           {isAdmin && !board.event.enabled && (
             <DisabledBanner onOpenSettings={() => navigate("/kvk/settings")} />
           )}
-          <ScheduleHeader board={board} now={now} ownKeyId={null} />
+          <ScheduleHeader board={board} now={now} ownKeyId={ownKeyId} />
           <PositionStrip />
+          {ownKeyId !== null && (
+            <p className="text-[12.5px] text-muted">
+              <Trans
+                i18nKey="kvk.holder.note"
+                values={{ alliance: kvk.alliance_name }}
+                components={{ 1: <b className="font-semibold text-foreground" /> }}
+              />
+            </p>
+          )}
           <ScheduleGrid
             board={board}
             now={now}
-            ownKeyId={null}
-            canEdit={() => isAdmin}
+            ownKeyId={ownKeyId}
+            canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
             onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
           />
         </>
@@ -205,7 +221,7 @@ export function KvkPrep() {
         alliances={board.alliances}
         appointments={board.appointments}
         startDate={board.event.start_date}
-        lockedKeyId={null}
+        lockedKeyId={ownKeyId}
         onClose={() => setSlotTarget(null)}
         onSaved={(message) => {
           showToast(message);

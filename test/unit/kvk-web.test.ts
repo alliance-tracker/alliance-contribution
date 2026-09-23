@@ -5,6 +5,7 @@ import {
   dayIso,
   fillCounts,
   firstFreeColor,
+  holderCanEdit,
   KVK_COLORS,
   maskKey,
   otherSlotsFor,
@@ -126,5 +127,18 @@ describe("signInLink", () => {
     expect(signInLink("kvk_abc def", "https://tracker.example")).toBe(
       "https://tracker.example/?key=kvk_abc%20def",
     );
+  });
+});
+
+describe("holderCanEdit", () => {
+  it("allows a free slot and the holder's own row", () => {
+    expect(holderCanEdit(null, 1)).toBe(true);
+    expect(holderCanEdit(row({ key_id: 1 }), 1)).toBe(true);
+  });
+
+  it("refuses another alliance's row, a redacted row and a deleted key's row", () => {
+    expect(holderCanEdit(row({ key_id: 2 }), 1)).toBe(false);
+    expect(holderCanEdit(redacted(), 1)).toBe(false);
+    expect(holderCanEdit(row({ key_id: null }), 1)).toBe(false);
   });
 });

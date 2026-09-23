@@ -1,5 +1,5 @@
 import { LogOut, Menu } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useApiKey } from "@/lib/apiKey";
 import { hueForPath, titleForPath, subtitleForPath } from "@/lib/nav";
@@ -63,6 +63,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 function HolderControls() {
   const { t } = useTranslation();
   const { kvk, setApiKey } = useApiKey();
+  const navigate = useNavigate();
   return (
     <>
       <div className="flex h-9 min-w-0 items-center gap-2 rounded-[8px] border border-border bg-surface px-[13px]">
@@ -78,7 +79,10 @@ function HolderControls() {
         variant="ghost"
         size="sm"
         className="h-9 max-md:size-9 max-md:p-0"
-        onClick={() => setApiKey("")}
+        onClick={() => {
+          setApiKey("");
+          navigate("/");
+        }}
         aria-label={t("kvk.holder.signOut")}
       >
         <LogOut />

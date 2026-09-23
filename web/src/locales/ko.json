@@ -90,7 +90,7 @@
       "dashboard": "대시보드",
       "events": "이벤트",
       "manage": "관리",
-      "kvk": "KvK Prep"
+      "kvk": "KvK 준비"
     },
     "adminTabs": {
       "events": "이벤트",
@@ -1093,8 +1093,14 @@
     "holder": {
       "subtitle": "{{alliance}} 임명 중 · 모든 시간 UTC",
       "signOut": "로그아웃",
-      "closedTitle": "KvK Prep이 닫혀 있습니다",
-      "closedBody": "주최 연맹이 외부 접근을 해제했습니다. 다시 열리면 키를 다시 사용할 수 있습니다."
+      "closedTitle": "KvK 준비가 닫혀 있습니다",
+      "closedBody": "주최 연맹이 외부 접근을 해제했습니다. 다시 열리면 키를 다시 사용할 수 있습니다.",
+      "note": "빈 슬롯 어디에나 <1>{{alliance}}</1> 플레이어를 임명하고 자신의 슬롯을 수정할 수 있습니다. 다른 연맹의 슬롯은 읽기 전용입니다.",
+      "closedError": "주최 연맹이 KvK 준비를 닫았습니다."
+    },
+    "legend": {
+      "you": "{{alliance}} (나)",
+      "filledByOthers": "다른 연맹이 채움"
     }
   }
 }

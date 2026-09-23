@@ -90,7 +90,7 @@
       "dashboard": "Panel",
       "events": "Eventos",
       "manage": "Gestionar",
-      "kvk": "KvK Prep"
+      "kvk": "Preparación KvK"
     },
     "adminTabs": {
       "events": "Eventos",
@@ -1205,8 +1205,14 @@
     "holder": {
       "subtitle": "Nombrando para {{alliance}} · todas las horas en UTC",
       "signOut": "Cerrar sesión",
-      "closedTitle": "KvK Prep está cerrado",
-      "closedBody": "La alianza anfitriona ha desactivado el acceso externo. Su clave volverá a funcionar cuando lo reabran."
+      "closedTitle": "La Preparación KvK está cerrada",
+      "closedBody": "La alianza anfitriona ha desactivado el acceso externo. Su clave volverá a funcionar cuando lo reabran.",
+      "note": "Puede designar jugadores para <1>{{alliance}}</1> en cualquier franja libre y editar las suyas. Las franjas de otras alianzas son de solo lectura.",
+      "closedError": "La alianza anfitriona ha cerrado la Preparación KvK."
+    },
+    "legend": {
+      "you": "{{alliance}} (usted)",
+      "filledByOthers": "Ocupadas por otros"
     }
   }
 }

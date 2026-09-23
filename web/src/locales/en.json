@@ -1150,7 +1150,13 @@
       "subtitle": "Appointing for {{alliance}} · all times UTC",
       "signOut": "Sign out",
       "closedTitle": "KvK Prep is closed",
-      "closedBody": "The host alliance has turned off external access. Your key will work again when they reopen it."
+      "closedBody": "The host alliance has turned off external access. Your key will work again when they reopen it.",
+      "note": "You can appoint players for <1>{{alliance}}</1> on any free slot and edit your own. Other alliances' slots are read-only.",
+      "closedError": "KvK Prep has been closed by the host alliance."
+    },
+    "legend": {
+      "you": "{{alliance}} (you)",
+      "filledByOthers": "Filled by others"
     }
   }
 }

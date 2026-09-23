@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { api } from "@/lib/api";
 import { ApiKeyContext, type Role } from "@/lib/apiKey";
 import { consumeUrlKey, readApiKey, writeApiKey } from "@/lib/apiKey";
@@ -53,7 +53,8 @@ export function ApiKeyProvider({ children }: { children: ReactNode }) {
     setApiKeyState(readApiKey());
   };
 
-  const setKvkEnabled = (enabled: boolean) => setKvk((prev) => ({ ...prev, enabled }));
+  // Stable identity: KvkPrep's poll callback depends on it.
+  const setKvkEnabled = useCallback((enabled: boolean) => setKvk((prev) => ({ ...prev, enabled })), []);
 
   return (
     <ApiKeyContext.Provider value={{ apiKey, setApiKey, role, scheduler, kvk, setKvkEnabled, checking }}>

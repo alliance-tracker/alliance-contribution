@@ -61,12 +61,13 @@ export function SlotDialog({
   const duplicateCount = ref ? otherSlotsFor(appointments, trimmedId, ref) : 0;
 
   const finish = (e: unknown): void => {
-    if (e instanceof ApiError && e.status === 409) {
+    // A holder's 404 means the row changed hands (or was freed) under them: same refresh as a conflict.
+    if (e instanceof ApiError && (e.status === 409 || (lockedKeyId !== null && e.status === 404))) {
       onConflict();
       onClose();
       return;
     }
-    setError(writeErrorMessage(e, t, "kvk.needKey", true));
+    setError(writeErrorMessage(e, t, lockedKeyId !== null ? "kvk.holder.closedError" : "kvk.needKey", true));
     setBusy(false);
   };
 

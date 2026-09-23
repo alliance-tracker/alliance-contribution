@@ -8,11 +8,13 @@ import { cn } from "@/lib/utils";
 const DATE_OPTS: Intl.DateTimeFormatOptions = { weekday: "short", day: "numeric", month: "short" };
 
 /** Date range + live/starts-in/ended status, the filled-slots line, and one legend chip per alliance.
- *  `ownKeyId` is always null in p2 (admin/manager/viewer only); p3's kvk-role caller uses it to mark
- *  the holder's own alliance chip "(you)" and fold others into "Filled by others". */
+ *  With `ownKeyId` (key holder) the own chip comes first as "(you)", then a "Filled by others" chip for
+ *  the redacted rows. Under "filled" visibility the server sends only the own alliance, so the same
+ *  path covers both visibility modes. */
 export function ScheduleHeader({
   board,
   now,
+  ownKeyId,
 }: {
   board: KvkBoard;
   now: number;
@@ -23,6 +25,8 @@ export function ScheduleHeader({
   const daySlot = currentDaySlot(event.start_date, now);
   const { filled, focus } = fillCounts(appointments);
   const deletedCount = appointments.filter((a) => !isRedacted(a) && a.key_id === null).length;
+  const redactedCount = ownKeyId !== null ? appointments.filter(isRedacted).length : 0;
+  const ordered = ownKeyId !== null ? [...alliances].sort((a, b) => +(b.id === ownKeyId) - +(a.id === ownKeyId)) : alliances;
 
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
@@ -41,11 +45,16 @@ export function ScheduleHeader({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        {alliances.map((alliance) => (
+        {ordered.map((alliance) => (
           <LegendChip key={alliance.id} color={alliance.color} count={alliance.slot_count}>
-            {alliance.alliance_name}
+            {alliance.id === ownKeyId ? t("kvk.legend.you", { alliance: alliance.alliance_name }) : alliance.alliance_name}
           </LegendChip>
         ))}
+        {redactedCount > 0 && (
+          <LegendChip color="var(--color-good-fg)" count={redactedCount}>
+            {t("kvk.legend.filledByOthers")}
+          </LegendChip>
+        )}
         {deletedCount > 0 && (
           <LegendChip color={DELETED_COLOR} count={deletedCount}>
             {t("kvk.deletedKey")}

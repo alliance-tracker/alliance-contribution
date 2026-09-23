@@ -2,7 +2,7 @@
 // SCHEMA_VERSION is the latest migration that shapes the BACKED-UP tables; bump it when such a
 // migration lands so a dump taken under a different schema is rejected before any destructive
 // import step. Migrations that only touch BACKUP_EXCLUDED_TABLES do not move it.
-export const SCHEMA_VERSION = "0008";
+export const SCHEMA_VERSION = "0009";
 export const BACKUP_FORMAT = "alliance-backup";
 export const BACKUP_VERSION = 1;
 
@@ -21,7 +21,9 @@ export type TableName =
   | "message_templates"
   | "message_translations"
   | "scheduled_events"
-  | "event_notifications";
+  | "event_notifications"
+  | "kvk_access_keys"
+  | "kvk_appointments";
 
 /** Tables deliberately NOT in the backup format. `settings` (migration 0005) holds cosmetic
  *  presentation config with code defaults — nothing here needs to survive a restore. `ai_usage`
@@ -49,6 +51,8 @@ export const INSERT_ORDER: TableName[] = [
   "message_translations",
   "scheduled_events",
   "event_notifications",
+  "kvk_access_keys",
+  "kvk_appointments",
 ];
 
 // Exact column set per table (from migrations 0001-0004). Import rejects any row whose keys differ.
@@ -68,6 +72,8 @@ export const TABLE_COLUMNS: Record<TableName, string[]> = {
   message_translations: ["template_id", "lng", "text"],
   scheduled_events: ["id", "title", "activity_type_id", "starts_at", "every", "unit", "duration_minutes", "enabled"],
   event_notifications: ["id", "event_id", "webhook_id", "template_id", "role_ids", "minutes_before"],
+  kvk_access_keys: ["id", "alliance_name", "representative", "color", "key", "last_used_at", "created_at"],
+  kvk_appointments: ["id", "day", "position", "slot", "key_id", "player_id", "player_name", "created_by", "updated_at"],
 };
 
 // Unique constraints to enforce within the payload (mirrors the schema's UNIQUE/PK declarations).
@@ -89,6 +95,8 @@ const UNIQUE_KEYS: Record<TableName, string[][]> = {
   message_translations: [["template_id", "lng"]],
   scheduled_events: [["id"]],
   event_notifications: [["id"]],
+  kvk_access_keys: [["id"], ["key"]],
+  kvk_appointments: [["id"], ["day", "position", "slot"]],
 };
 
 // Foreign keys to check within the payload. nullable columns skip the check when the value is null.
@@ -106,6 +114,7 @@ const FOREIGN_KEYS: { table: TableName; column: string; ref: TableName; nullable
   { table: "event_notifications", column: "event_id", ref: "scheduled_events", nullable: false },
   { table: "event_notifications", column: "webhook_id", ref: "discord_webhooks", nullable: false },
   { table: "event_notifications", column: "template_id", ref: "message_templates", nullable: true },
+  { table: "kvk_appointments", column: "key_id", ref: "kvk_access_keys", nullable: true },
 ];
 
 export type Row = Record<string, unknown>;
@@ -136,7 +145,7 @@ export type ValidationResult =
 
 // Schema versions this app can still read. Older exports are upgraded in memory before validation, so
 // a backup taken before migration 0004 stays usable for disaster recovery — the only reason it exists.
-const UPGRADABLE_SCHEMAS = new Set(["0002", "0003", "0004", "0006"]);
+const UPGRADABLE_SCHEMAS = new Set(["0002", "0003", "0004", "0006", "0008"]);
 // Config tables introduced by migration 0008. Every legacy file gains them as empty arrays.
 const SCHEDULE_TABLES = [
   "discord_webhooks",
@@ -147,39 +156,52 @@ const SCHEDULE_TABLES = [
   "event_notifications",
 ];
 const EMPTY_SCHEDULE_TABLES = Object.fromEntries(SCHEDULE_TABLES.map((t) => [t, []]));
+// Tables introduced by migration 0009. Every legacy file gains them as empty arrays.
+const KVK_TABLES = ["kvk_access_keys", "kvk_appointments"];
+const EMPTY_KVK_TABLES = Object.fromEntries(KVK_TABLES.map((t) => [t, []]));
 const ALLIANCE_RANKS = new Set(["R1", "R2", "R3", "R4", "R5"]);
 
 type UpgradeResult = { ok: true; tables: Record<string, unknown> } | { ok: false; error: string };
 
 // Upgrades a legacy file to the current table set. 0002/0003 → mirror migration 0004 (rename the two
 // member columns, normalize the free-text rank to the closed set, introduce member_snapshots as empty);
-// every legacy schema additionally gains empty allocations tables (0006) and empty scheduling tables
-// (0008). Never manufactures a
+// every legacy schema additionally gains empty allocations tables (0006), empty scheduling tables
+// (0008) and empty kvk tables (0009). Never manufactures a
 // valid-looking table out of missing/malformed/contradictory input — it transforms, it doesn't forgive.
 function upgradeToCurrent(tables: Record<string, unknown>, schema: string): UpgradeResult {
   // A legacy-labelled file cannot legitimately carry a table younger than its schema. Reject rather
   // than silently discard — discarding buys no protection an admin-only endpoint didn't already have,
   // and silent data loss is worse than a loud refusal.
   const laterTables =
-    schema === "0006"
-      ? SCHEDULE_TABLES
-      : schema === "0004"
-        ? ["allocations", "allocation_lines", ...SCHEDULE_TABLES]
-        : ["member_snapshots", "allocations", "allocation_lines", ...SCHEDULE_TABLES];
+    schema === "0008"
+      ? KVK_TABLES
+      : schema === "0006"
+        ? [...SCHEDULE_TABLES, ...KVK_TABLES]
+        : schema === "0004"
+          ? ["allocations", "allocation_lines", ...SCHEDULE_TABLES, ...KVK_TABLES]
+          : ["member_snapshots", "allocations", "allocation_lines", ...SCHEDULE_TABLES, ...KVK_TABLES];
   for (const table of laterTables) {
     if (table in tables) {
       return { ok: false, error: `schema "${schema}" file must not contain ${table}` };
     }
   }
 
-  // 0006 exports are complete apart from the scheduling tables.
+  // 0008 exports are complete apart from the kvk tables.
+  if (schema === "0008") {
+    return { ok: true, tables: { ...tables, ...EMPTY_KVK_TABLES } };
+  }
+
+  // 0006 exports are complete apart from the scheduling and kvk tables.
   if (schema === "0006") {
-    return { ok: true, tables: { ...tables, ...EMPTY_SCHEDULE_TABLES } };
+    return { ok: true, tables: { ...tables, ...EMPTY_SCHEDULE_TABLES, ...EMPTY_KVK_TABLES } };
   }
 
   // 0004 exports already have the current member shape — only the allocation tables are missing.
   if (schema === "0004") {
-    return { ok: true, tables: { ...tables, allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES } };
+    return {
+      ok: true,
+      tables: { ...tables, allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES, ...EMPTY_KVK_TABLES },
+    };
   }
 
   if (!Array.isArray(tables.members)) {
@@ -188,7 +210,15 @@ function upgradeToCurrent(tables: Record<string, unknown>, schema: string): Upgr
     // still lets this through to the per-table loop, which reports the specific defect.
     return {
       ok: true,
-      tables: { ...tables, members: tables.members, member_snapshots: [], allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES },
+      tables: {
+        ...tables,
+        members: tables.members,
+        member_snapshots: [],
+        allocations: [],
+        allocation_lines: [],
+        ...EMPTY_SCHEDULE_TABLES,
+        ...EMPTY_KVK_TABLES,
+      },
     };
   }
 
@@ -220,7 +250,15 @@ function upgradeToCurrent(tables: Record<string, unknown>, schema: string): Upgr
   });
   return {
     ok: true,
-    tables: { ...tables, members: upgraded, member_snapshots: [], allocations: [], allocation_lines: [], ...EMPTY_SCHEDULE_TABLES },
+    tables: {
+      ...tables,
+      members: upgraded,
+      member_snapshots: [],
+      allocations: [],
+      allocation_lines: [],
+      ...EMPTY_SCHEDULE_TABLES,
+      ...EMPTY_KVK_TABLES,
+    },
   };
 }
 

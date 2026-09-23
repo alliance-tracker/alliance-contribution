@@ -44,6 +44,12 @@ function validFile(): BackupFile {
       event_notifications: [
         { id: 1, event_id: 1, webhook_id: 1, template_id: 1, role_ids: "[1]", minutes_before: 15 },
       ],
+      kvk_access_keys: [
+        { id: 1, alliance_name: "ABC", representative: "Rep", color: "#f00", key: "kvk_abc", last_used_at: null, created_at: 1000 },
+      ],
+      kvk_appointments: [
+        { id: 1, day: 1, position: "chief_minister", slot: 0, key_id: 1, player_id: "123", player_name: "Rep", created_by: "admin", updated_at: 1000 },
+      ],
     },
   };
 }
@@ -61,11 +67,11 @@ describe("buildBackup", () => {
 });
 
 describe("INSERT_ORDER", () => {
-  it("is the 15 tables in FK dependency order", () => {
+  it("is the 17 tables in FK dependency order", () => {
     expect(INSERT_ORDER).toEqual([
       "activity_types", "scoring_tiers", "members", "aliases", "member_snapshots", "events", "participations",
       "allocations", "allocation_lines", "discord_webhooks", "discord_roles", "message_templates",
-      "message_translations", "scheduled_events", "event_notifications",
+      "message_translations", "scheduled_events", "event_notifications", "kvk_access_keys", "kvk_appointments",
     ]);
   });
 });
@@ -317,5 +323,28 @@ describe("backup back-compat", () => {
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.error).toBe('schema "0002" file must not contain member_snapshots');
+  });
+
+  it("upgrades a 0008 file by adding the empty kvk tables, everything else untouched", () => {
+    const file = validFile() as unknown as { schema: string; tables: Record<string, unknown> };
+    file.schema = "0008";
+    delete file.tables.kvk_access_keys;
+    delete file.tables.kvk_appointments;
+    const result = validateBackup(file);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.file.tables.kvk_access_keys).toEqual([]);
+    expect(result.file.tables.kvk_appointments).toEqual([]);
+    expect(result.file.tables.members).toEqual(validFile().tables.members);
+  });
+
+  it("rejects a 0008 file that already carries a kvk_access_keys key instead of silently discarding it", () => {
+    const file = validFile() as unknown as { schema: string; tables: Record<string, unknown> };
+    file.schema = "0008";
+    delete file.tables.kvk_appointments;
+    const result = validateBackup(file);
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error).toBe('schema "0008" file must not contain kvk_access_keys');
   });
 });

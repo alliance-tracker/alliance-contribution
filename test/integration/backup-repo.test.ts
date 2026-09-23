@@ -39,7 +39,7 @@ function multiChunkFile(participationCount: number): BackupFile {
       activity_types: [], scoring_tiers: [], members: [], aliases: [], member_snapshots: [],
       events: [], participations, allocations: [], allocation_lines: [],
       discord_webhooks: [], discord_roles: [], message_templates: [], message_translations: [],
-      scheduled_events: [], event_notifications: [],
+      scheduled_events: [], event_notifications: [], kvk_access_keys: [], kvk_appointments: [],
     },
     "2026-11-16T00:00:00.000Z",
   );
@@ -64,8 +64,8 @@ describe("BackupRepo", () => {
     expect(Object.keys(tables).sort()).toEqual(
       [
         "activity_types", "aliases", "allocation_lines", "allocations", "discord_roles", "discord_webhooks",
-        "event_notifications", "events", "member_snapshots", "members", "message_templates",
-        "message_translations", "participations", "scheduled_events", "scoring_tiers",
+        "event_notifications", "events", "kvk_access_keys", "kvk_appointments", "member_snapshots", "members",
+        "message_templates", "message_translations", "participations", "scheduled_events", "scoring_tiers",
       ],
     );
     expect(tables.members.some((r) => r.governor === "RepoDumpMember")).toBe(true);
@@ -125,6 +125,8 @@ describe("BackupRepo", () => {
     expect(counts.participations).toBe(700);
     expect(calls.length).toBeGreaterThan(2); // the wipe, then more than one insert chunk
     expect(calls[0]).toEqual([
+      "DELETE FROM kvk_appointments",
+      "DELETE FROM kvk_access_keys",
       "DELETE FROM event_notifications",
       "DELETE FROM scheduled_events",
       "DELETE FROM message_translations",
@@ -162,7 +164,7 @@ describe("BackupRepo", () => {
         activity_types: [], scoring_tiers: [], members: [], aliases: [], member_snapshots: [],
         events: [], participations: [], allocations: [], allocation_lines: [],
         discord_webhooks: [], discord_roles: [], message_templates: [], message_translations: [],
-        scheduled_events: [], event_notifications: [],
+        scheduled_events: [], event_notifications: [], kvk_access_keys: [], kvk_appointments: [],
       },
       "2026-11-02T00:00:00.000Z",
     );
@@ -199,6 +201,8 @@ describe("BackupRepo", () => {
         message_translations: [],
         scheduled_events: [],
         event_notifications: [],
+        kvk_access_keys: [],
+        kvk_appointments: [],
       },
       "2026-11-16T00:00:00.000Z",
     );

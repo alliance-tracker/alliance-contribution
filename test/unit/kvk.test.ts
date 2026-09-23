@@ -1,0 +1,111 @@
+import { describe, expect, it } from "vitest";
+import {
+  DAYS,
+  KvkValidationError,
+  POSITIONS,
+  SLOTS,
+  generateKey,
+  normalizePlayer,
+  parseSlotRef,
+  redactForKeyHolder,
+  type KvkAppointmentRow,
+} from "../../src/domain/kvk";
+
+const row = (over: Partial<KvkAppointmentRow> = {}): KvkAppointmentRow => ({
+  day: 1,
+  position: "chief_minister",
+  slot: 0,
+  key_id: 1,
+  player_id: "12345",
+  player_name: "Someone",
+  created_by: "admin",
+  updated_at: 1000,
+  ...over,
+});
+
+describe("generateKey", () => {
+  it("matches the kvk_ + 19 base62 chars shape", () => {
+    expect(generateKey()).toMatch(/^kvk_[0-9A-Za-z]{19}$/);
+  });
+
+  it("differs across calls", () => {
+    expect(generateKey()).not.toBe(generateKey());
+  });
+});
+
+describe("redactForKeyHolder", () => {
+  const appts = [row({ slot: 0, key_id: 1 }), row({ slot: 1, key_id: 2 }), row({ slot: 2, key_id: null })];
+
+  it("leaves rows unchanged in 'all' visibility", () => {
+    expect(redactForKeyHolder(appts, 1, "all")).toEqual(appts);
+  });
+
+  it("keeps the caller's own rows and redacts everyone else's in 'filled' visibility", () => {
+    const result = redactForKeyHolder(appts, 1, "filled");
+    expect(result[0]).toEqual(appts[0]);
+    expect(result[1]).toEqual({ day: 1, position: "chief_minister", slot: 1, filled: true });
+    expect(result[2]).toEqual({ day: 1, position: "chief_minister", slot: 2, filled: true });
+  });
+});
+
+describe("parseSlotRef", () => {
+  it("accepts string route params", () => {
+    expect(parseSlotRef("3", "noble_advisor", "47")).toEqual({ day: 3, position: "noble_advisor", slot: 47 });
+  });
+
+  it("accepts numeric body values", () => {
+    expect(parseSlotRef(1, "chief_minister", 0)).toEqual({ day: 1, position: "chief_minister", slot: 0 });
+  });
+
+  it("rejects a day out of range", () => {
+    expect(() => parseSlotRef(0, "chief_minister", 0)).toThrow(KvkValidationError);
+    expect(() => parseSlotRef(DAYS + 1, "chief_minister", 0)).toThrow(KvkValidationError);
+  });
+
+  it("rejects a slot out of range", () => {
+    expect(() => parseSlotRef(1, "chief_minister", -1)).toThrow(KvkValidationError);
+    expect(() => parseSlotRef(1, "chief_minister", SLOTS)).toThrow(KvkValidationError);
+  });
+
+  it("rejects an unknown position", () => {
+    expect(() => parseSlotRef(1, "healer", 0)).toThrow(KvkValidationError);
+  });
+
+  it("rejects non-integer values", () => {
+    expect(() => parseSlotRef(1.5, "chief_minister", 0)).toThrow(KvkValidationError);
+    expect(() => parseSlotRef("1.5", "chief_minister", 0)).toThrow(KvkValidationError);
+  });
+
+  it("returns a position from the POSITIONS list", () => {
+    for (const p of POSITIONS) {
+      expect(parseSlotRef(1, p, 0).position).toBe(p);
+    }
+  });
+});
+
+describe("normalizePlayer", () => {
+  it("strips non-digit characters from the id and trims the name", () => {
+    expect(normalizePlayer(" 12-34a5 ", "  Someone  ")).toEqual({ playerId: "12345", playerName: "Someone" });
+  });
+
+  it("rejects a non-string id or name", () => {
+    expect(() => normalizePlayer(12345, "Someone")).toThrow(KvkValidationError);
+    expect(() => normalizePlayer("12345", 5 as unknown as string)).toThrow(KvkValidationError);
+  });
+
+  it("rejects an empty id after stripping non-digits", () => {
+    expect(() => normalizePlayer("abc", "Someone")).toThrow(KvkValidationError);
+  });
+
+  it("rejects an empty name after trimming", () => {
+    expect(() => normalizePlayer("12345", "   ")).toThrow(KvkValidationError);
+  });
+
+  it("rejects a name over 40 characters", () => {
+    expect(() => normalizePlayer("12345", "a".repeat(41))).toThrow(KvkValidationError);
+  });
+
+  it("accepts a name of exactly 40 characters", () => {
+    expect(normalizePlayer("12345", "a".repeat(40)).playerName).toBe("a".repeat(40));
+  });
+});

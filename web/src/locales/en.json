@@ -1097,7 +1097,7 @@
       "startSub": "Day 1 begins at 00:00 UTC on this date. The event runs 5 days.",
       "keyLabel": "Key position",
       "keyNone": "None",
-      "keyLockedTitle": "Key position — choose None or another key to hide it",
+      "keyLockedTitle": "{{position}} is the key position — choose None or another key to hide it",
       "shownLabel": "Shown",
       "showPosition": "Show {{position}}",
       "dayHidden": "Hidden",

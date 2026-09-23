@@ -1153,7 +1153,7 @@
       "startSub": "Le jour 1 commence à 00:00 UTC à cette date. L'événement dure 5 jours.",
       "keyLabel": "Poste clé",
       "keyNone": "Aucun",
-      "keyLockedTitle": "Poste clé — choisissez Aucun ou un autre poste clé pour le masquer",
+      "keyLockedTitle": "{{position}} est le poste clé — choisissez Aucun ou un autre poste clé pour le masquer",
       "shownLabel": "Affiché",
       "showPosition": "Afficher {{position}}",
       "dayHidden": "Masqué",

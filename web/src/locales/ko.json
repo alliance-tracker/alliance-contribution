@@ -1041,7 +1041,7 @@
       "startSub": "1일차는 이 날짜의 00:00 UTC에 시작됩니다. 이벤트는 5일간 진행됩니다.",
       "keyLabel": "핵심 직책",
       "keyNone": "없음",
-      "keyLockedTitle": "핵심 직책 — 숨기려면 없음이나 다른 핵심 직책을 선택하세요",
+      "keyLockedTitle": "{{position}}은(는) 핵심 직책입니다 — 숨기려면 없음이나 다른 핵심 직책을 선택하세요",
       "shownLabel": "표시",
       "showPosition": "{{position}} 표시",
       "dayHidden": "숨김",

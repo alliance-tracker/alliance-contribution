@@ -159,7 +159,7 @@ export function EventSettings({
                         title={
                           canToggle
                             ? t("kvk.settings.showPosition", { position: positionLabel })
-                            : t("kvk.settings.keyLockedTitle")
+                            : t("kvk.settings.keyLockedTitle", { position: positionLabel })
                         }
                         onToggle={() => change({ ...local, days: toggleShown(local.days, day, p) })}
                       />

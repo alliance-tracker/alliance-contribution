@@ -1097,7 +1097,7 @@
       "startSub": "Tag 1 beginnt an diesem Datum um 00:00 UTC. Das Ereignis dauert 5 Tage.",
       "keyLabel": "Schlüsselposition",
       "keyNone": "Keine",
-      "keyLockedTitle": "Schlüsselposition — wähle Keine oder eine andere Schlüsselposition, um sie auszublenden",
+      "keyLockedTitle": "{{position}} ist die Schlüsselposition — wähle Keine oder eine andere Schlüsselposition, um sie auszublenden",
       "shownLabel": "Sichtbar",
       "showPosition": "{{position}} anzeigen",
       "dayHidden": "Ausgeblendet",

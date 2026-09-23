@@ -1381,6 +1381,9 @@
     "legend": {
       "you": "{{alliance}} (أنت)",
       "filledByOthers": "مشغولة من الآخرين"
+    },
+    "mobile": {
+      "dayFilled": "{{n}} من {{total}} مشغولة"
     }
   }
 }

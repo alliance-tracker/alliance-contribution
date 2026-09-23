@@ -20,6 +20,8 @@ import { cn } from "@/lib/utils";
 
 // Header and body share this; a literal so Tailwind scans it.
 const COLS = "grid grid-cols-[84px_repeat(10,minmax(118px,1fr))]";
+// Mobile (`day` set): one day's two position columns instead of all ten.
+const DAY_COLS = "grid grid-cols-[58px_1fr_1fr]";
 const DATE_OPTS: Intl.DateTimeFormatOptions = { weekday: "short", day: "numeric", month: "short" };
 const SLOT_INDEXES = Array.from({ length: SLOTS }, (_, i) => i);
 
@@ -27,19 +29,23 @@ const SLOT_INDEXES = Array.from({ length: SLOTS }, (_, i) => i);
 const sepClass = (pi: number) => (pi === POSITIONS.length - 1 ? "border-e-2 border-e-border" : "border-e border-e-muted-surface");
 
 /** The 5-day × 2-position × 48-slot board. Role-agnostic: callers decide editability via `canEdit`
- *  and pass `ownKeyId` (p3 key holder) to tint own slots and fade everyone else's. */
+ *  and pass `ownKeyId` (p3 key holder) to tint own slots and fade everyone else's.
+ *  With `day` (1..5, the mobile one-day view), only that day's two columns render, the day-header row
+ *  is skipped (the mobile day chips carry that context), and rows/padding shrink to fit a phone. */
 export function ScheduleGrid({
   board,
   now,
   ownKeyId,
   canEdit,
   onCellClick,
+  day,
 }: {
   board: KvkBoard;
   now: number;
   ownKeyId: number | null;
   canEdit: (appt: KvkBoardAppointment | null) => boolean;
   onCellClick: (ref: KvkSlotRef, appt: KvkAppointmentRow | null) => void;
+  day?: number;
 }) {
   const { t } = useTranslation();
   const start = board.event.start_date;
@@ -47,56 +53,64 @@ export function ScheduleGrid({
   const alliances = useMemo(() => new Map(board.alliances.map((a) => [a.id, a])), [board.alliances]);
   const daySlot = currentDaySlot(start, now);
   const live = daySlot?.phase === "live" ? daySlot : null;
+  const shown = day ? [day] : [1, 2, 3, 4, 5];
+  const cols = day ? DAY_COLS : COLS;
 
   return (
     <div className="max-h-[calc(100vh-290px)] min-h-[420px] overflow-auto rounded-[12px] border border-border bg-surface shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="w-full min-w-[1264px]">
-        <div className={cn(COLS, "sticky top-0 z-[3] bg-background")}>
-          <div className="sticky start-0 z-[2] row-span-2 flex items-end border-e border-b border-border bg-background px-3 py-2.5 font-mono text-[10.5px] font-semibold text-muted">
+      <div className={cn("w-full", !day && "min-w-[1264px]")}>
+        <div className={cn(cols, "sticky top-0 z-[3] bg-background")}>
+          <div
+            className={cn(
+              "sticky start-0 z-[2] flex items-end border-e border-b border-border bg-background px-3 py-2.5 font-mono text-[10.5px] font-semibold text-muted",
+              !day && "row-span-2",
+            )}
+          >
             {t("kvk.grid.utc")}
           </div>
-          {DAYS.map((d, i) => {
-            const day = i + 1;
-            const isLive = live?.day === day;
-            return (
-              <div
-                key={day}
-                className={cn(
-                  "col-span-2 flex min-w-0 flex-col gap-0.5 border-e-2 border-b border-border px-3 pt-2.5 pb-2",
-                  isLive && "bg-live-bg",
-                )}
-              >
-                <div className="flex min-w-0 items-baseline gap-2">
-                  <span className="shrink-0 font-mono text-[10.5px] font-semibold tracking-[0.4px] text-muted uppercase">
-                    {t("kvk.grid.day", { n: day })}
-                  </span>
-                  <span className="truncate text-[13px] font-semibold text-foreground">
-                    {t(`kvk.days.${d.theme}` as const)}
-                  </span>
-                </div>
-                {start && (
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-[11.5px] font-medium text-faint">
-                      {formatDate(dayIso(start, day), DATE_OPTS)}
+          {!day &&
+            DAYS.map((d, i) => {
+              const dayNum = i + 1;
+              const isLive = live?.day === dayNum;
+              return (
+                <div
+                  key={dayNum}
+                  className={cn(
+                    "col-span-2 flex min-w-0 flex-col gap-0.5 border-e-2 border-b border-border px-3 pt-2.5 pb-2",
+                    isLive && "bg-live-bg",
+                  )}
+                >
+                  <div className="flex min-w-0 items-baseline gap-2">
+                    <span className="shrink-0 font-mono text-[10.5px] font-semibold tracking-[0.4px] text-muted uppercase">
+                      {t("kvk.grid.day", { n: dayNum })}
                     </span>
-                    {isLive && (
-                      <span className="rounded-[4px] bg-good-bg px-[5px] py-px font-mono text-[9.5px] font-semibold text-good-fg uppercase">
-                        {t("kvk.grid.today")}
-                      </span>
-                    )}
+                    <span className="truncate text-[13px] font-semibold text-foreground">
+                      {t(`kvk.days.${d.theme}` as const)}
+                    </span>
                   </div>
-                )}
-              </div>
-            );
-          })}
-          {DAYS.map((d, i) =>
+                  {start && (
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono text-[11.5px] font-medium text-faint">
+                        {formatDate(dayIso(start, dayNum), DATE_OPTS)}
+                      </span>
+                      {isLive && (
+                        <span className="rounded-[4px] bg-good-bg px-[5px] py-px font-mono text-[9.5px] font-semibold text-good-fg uppercase">
+                          {t("kvk.grid.today")}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          {shown.map((dayNum) =>
             POSITIONS.map((p, pi) => (
               <div
-                key={`${i}-${p}`}
+                key={`${dayNum}-${p}`}
                 className={cn(
                   "truncate border-b border-b-border px-[7px] py-2 text-[12px] font-semibold",
                   sepClass(pi),
-                  d.focus === p ? "bg-ember-bg text-ember-fg" : "text-foreground",
+                  DAYS[dayNum - 1]!.focus === p ? "bg-ember-bg text-ember-fg" : "text-foreground",
                 )}
               >
                 {t(`kvk.positions.${p}.name` as const)}
@@ -105,7 +119,7 @@ export function ScheduleGrid({
           )}
         </div>
 
-        <div className={cn(COLS, "auto-rows-[44px]")}>
+        <div className={cn(cols, day ? "auto-rows-[50px]" : "auto-rows-[44px]")}>
           {SLOT_INDEXES.map((slot) => {
             const { start: from, end: to } = slotLabel(slot);
             const isNow = live?.slot === slot;
@@ -113,7 +127,8 @@ export function ScheduleGrid({
               <Fragment key={slot}>
                 <div
                   className={cn(
-                    "sticky start-0 z-[1] flex flex-col justify-center border-e border-b border-e-border border-b-muted-surface px-2.5",
+                    "sticky start-0 z-[1] flex flex-col justify-center border-e border-b border-e-border border-b-muted-surface",
+                    day ? "px-1.5" : "px-2.5",
                     isNow ? "bg-ember-bg text-ember" : "bg-surface text-foreground",
                   )}
                 >
@@ -129,9 +144,10 @@ export function ScheduleGrid({
                     – {to}
                   </span>
                 </div>
-                {DAYS.map((d, i) =>
+                {shown.map((dayNum) =>
                   POSITIONS.map((position, pi) => {
-                    const ref: KvkSlotRef = { day: i + 1, position, slot };
+                    const d = DAYS[dayNum - 1]!;
+                    const ref: KvkSlotRef = { day: dayNum, position, slot };
                     const appt = byKey.get(slotKey(ref)) ?? null;
                     const row = appt && !isRedacted(appt) ? appt : null;
                     const found = row?.key_id != null ? alliances.get(row.key_id) : undefined;
@@ -157,19 +173,19 @@ export function ScheduleGrid({
                         ? title
                         : t("kvk.grid.appointLabel", {
                             position: t(`kvk.positions.${position}.name` as const),
-                            day: i + 1,
+                            day: dayNum,
                             time: slotLabel(slot).start,
                           });
                     return (
                       <SlotCell
-                        key={`${i}-${position}`}
+                        key={`${dayNum}-${position}`}
                         appt={appt}
                         alliance={alliance}
                         focus={d.focus === position}
                         own={ownKeyId !== null && row?.key_id === ownKeyId}
                         faded={ownKeyId !== null && appt !== null && row?.key_id !== ownKeyId}
                         editable={editable}
-                        current={live?.day === i + 1 && isNow}
+                        current={live?.day === dayNum && isNow}
                         title={title}
                         ariaLabel={ariaLabel}
                         onClick={() => onCellClick(ref, row)}
@@ -240,7 +256,7 @@ export function SlotCell({
         </span>
       </span>
       <span className="truncate text-[12px] font-semibold text-foreground">
-        <span dir="ltr" className="font-mono text-[11px] font-medium text-muted">
+        <span dir="ltr" className="max-md:hidden font-mono text-[11px] font-medium text-muted">
           {row.player_id}
         </span>{" "}
         {row.player_name}

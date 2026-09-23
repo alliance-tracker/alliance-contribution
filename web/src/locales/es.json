@@ -1213,6 +1213,9 @@
     "legend": {
       "you": "{{alliance}} (usted)",
       "filledByOthers": "Ocupadas por otros"
+    },
+    "mobile": {
+      "dayFilled": "{{n}} de {{total}} ocupados"
     }
   }
 }

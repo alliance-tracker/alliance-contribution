@@ -1157,6 +1157,9 @@
     "legend": {
       "you": "{{alliance}} (Sie)",
       "filledByOthers": "Von anderen belegt"
+    },
+    "mobile": {
+      "dayFilled": "{{n}} von {{total}} belegt"
     }
   }
 }

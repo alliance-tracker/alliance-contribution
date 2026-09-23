@@ -1213,6 +1213,9 @@
     "legend": {
       "you": "{{alliance}} (vous)",
       "filledByOthers": "Pris par d'autres"
+    },
+    "mobile": {
+      "dayFilled": "{{n}} sur {{total}} pourvus"
     }
   }
 }

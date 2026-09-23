@@ -87,7 +87,7 @@ function Pill({ className, children }: { className: string; children: ReactNode 
 
 function LegendChip({ color, count, children }: { color: string; count: number; children: ReactNode }) {
   return (
-    <span className="inline-flex h-[30px] items-center gap-2 rounded-[8px] border border-border bg-surface px-2.5 text-[12.5px] font-medium text-secondary">
+    <span className="inline-flex h-[26px] items-center gap-2 rounded-[8px] border border-border bg-surface px-2.5 text-[12.5px] font-medium text-secondary md:h-[30px]">
       <span className="size-[7px] shrink-0 rounded-full" style={{ background: color }} aria-hidden />
       <span className="truncate">{children}</span>
       <span className="num font-mono text-[11px] font-semibold text-faint">{count}</span>

@@ -5,13 +5,14 @@ import type { KvkAppointmentRow, KvkBoard, KvkEvent, KvkKey } from "@shared/type
 import { api, ApiError } from "@/lib/api";
 import { useApiKey } from "@/lib/apiKey";
 import { useApi } from "@/lib/useApi";
-import { fillCounts, holderCanEdit, signInLink, type KvkSlotRef } from "@/lib/kvk";
+import { currentDaySlot, fillCounts, holderCanEdit, signInLink, type KvkSlotRef } from "@/lib/kvk";
 import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
 import { ConfirmDialog, Toast, type ConfirmTarget } from "@/components/schedule/parts";
 import { ScheduleHeader } from "@/components/kvk/ScheduleHeader";
 import { PositionStrip } from "@/components/kvk/PositionStrip";
 import { ScheduleGrid } from "@/components/kvk/ScheduleGrid";
+import { DayChips } from "@/components/kvk/DayChips";
 import { SlotDialog } from "@/components/kvk/SlotDialog";
 import { AccessKeysTab } from "@/components/kvk/AccessKeysTab";
 import { KeyDialog } from "@/components/kvk/KeyDialog";
@@ -38,6 +39,7 @@ export function KvkPrep() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [slotTarget, setSlotTarget] = useState<{ ref: KvkSlotRef; appt: KvkAppointmentRow | null } | null>(null);
+  const [pickedDay, setPickedDay] = useState<number | null>(null);
   const [keyTarget, setKeyTarget] = useState<{ key: KvkKey | null } | null>(null);
   const [confirm, setConfirm] = useState<ConfirmTarget | null>(null);
   const [keysNonce, setKeysNonce] = useState(0);
@@ -114,6 +116,8 @@ export function KvkPrep() {
   if (board === null) return loadError ? <ErrorState message={loadError} /> : <LoadingState />;
 
   const { filled } = fillCounts(board.appointments);
+  const daySlot = currentDaySlot(board.event.start_date, now);
+  const mobileDay = pickedDay ?? (daySlot?.phase === "live" ? daySlot.day : 1);
 
   return (
     <div className="flex flex-col gap-3.5">
@@ -168,13 +172,26 @@ export function KvkPrep() {
               />
             </p>
           )}
-          <ScheduleGrid
-            board={board}
-            now={now}
-            ownKeyId={ownKeyId}
-            canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
-            onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
-          />
+          <div className="hidden md:block">
+            <ScheduleGrid
+              board={board}
+              now={now}
+              ownKeyId={ownKeyId}
+              canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
+              onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
+            />
+          </div>
+          <div className="flex flex-col gap-3 md:hidden">
+            <DayChips board={board} day={mobileDay} onDay={setPickedDay} />
+            <ScheduleGrid
+              board={board}
+              now={now}
+              ownKeyId={ownKeyId}
+              canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
+              onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
+              day={mobileDay}
+            />
+          </div>
         </>
       )}
 

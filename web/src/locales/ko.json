@@ -1101,6 +1101,9 @@
     "legend": {
       "you": "{{alliance}} (나)",
       "filledByOthers": "다른 연맹이 채움"
+    },
+    "mobile": {
+      "dayFilled": "{{total}}개 중 {{n}}개 채움"
     }
   }
 }

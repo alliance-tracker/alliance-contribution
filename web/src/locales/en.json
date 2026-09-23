@@ -1157,6 +1157,9 @@
     "legend": {
       "you": "{{alliance}} (you)",
       "filledByOthers": "Filled by others"
+    },
+    "mobile": {
+      "dayFilled": "{{n}} of {{total}} filled"
     }
   }
 }

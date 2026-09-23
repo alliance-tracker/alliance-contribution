@@ -35,4 +35,8 @@ describe("subtitleForPath", () => {
   it("gives the Access keys tab its own subtitle", () => {
     expect(subtitleForPath("/kvk/keys")).toBe("nav.subtitles.kvkKeys");
   });
+
+  it("gives the Event settings tab its own subtitle", () => {
+    expect(subtitleForPath("/kvk/settings")).toBe("nav.subtitles.kvkSettings");
+  });
 });

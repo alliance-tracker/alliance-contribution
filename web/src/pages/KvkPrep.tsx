@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { NavLink, Navigate, useParams } from "react-router-dom";
+import { NavLink, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import type { KvkAppointmentRow, KvkBoard, KvkKey } from "@shared/types";
+import type { KvkAppointmentRow, KvkBoard, KvkEvent, KvkKey } from "@shared/types";
 import { api, ApiError } from "@/lib/api";
 import { useApiKey } from "@/lib/apiKey";
 import { useApi } from "@/lib/useApi";
-import { signInLink, type KvkSlotRef } from "@/lib/kvk";
+import { fillCounts, signInLink, type KvkSlotRef } from "@/lib/kvk";
 import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
 import { ConfirmDialog, Toast, type ConfirmTarget } from "@/components/schedule/parts";
@@ -15,20 +15,22 @@ import { ScheduleGrid } from "@/components/kvk/ScheduleGrid";
 import { SlotDialog } from "@/components/kvk/SlotDialog";
 import { AccessKeysTab } from "@/components/kvk/AccessKeysTab";
 import { KeyDialog } from "@/components/kvk/KeyDialog";
+import { DisabledBanner } from "@/components/kvk/DisabledBanner";
+import { EventSettings } from "@/components/kvk/EventSettings";
 
-// Task 6 (Event settings) widens this further to "schedule" | "keys" | "settings" and adds its own
-// TABS/TAB_DOT entry (dot bg-nav-admin per the handoff) — no restructuring.
-type Tab = "schedule" | "keys";
-const TABS: Tab[] = ["schedule", "keys"];
+type Tab = "schedule" | "keys" | "settings";
+const TABS: Tab[] = ["schedule", "keys", "settings"];
 const TAB_DOT: Record<Tab, string> = {
   schedule: "bg-nav-kvk",
   keys: "bg-tone-blue",
+  settings: "bg-nav-admin",
 };
 
 export function KvkPrep() {
   const { t } = useTranslation();
   const { tab = "schedule" } = useParams();
-  const { role } = useApiKey();
+  const navigate = useNavigate();
+  const { role, setKvkEnabled } = useApiKey();
   const isAdmin = role === "admin";
 
   const [board, setBoard] = useState<KvkBoard | null>(null);
@@ -104,6 +106,8 @@ export function KvkPrep() {
 
   if (board === null) return loadError ? <ErrorState message={loadError} /> : <LoadingState />;
 
+  const { filled } = fillCounts(board.appointments);
+
   return (
     <div className="flex flex-col gap-3.5">
       {isAdmin && (
@@ -143,6 +147,9 @@ export function KvkPrep() {
 
       {tab === "schedule" && (
         <>
+          {isAdmin && !board.event.enabled && (
+            <DisabledBanner onOpenSettings={() => navigate("/kvk/settings")} />
+          )}
           <ScheduleHeader board={board} now={now} ownKeyId={null} />
           <PositionStrip />
           <ScheduleGrid
@@ -168,6 +175,30 @@ export function KvkPrep() {
             onCopy={onCopy}
           />
         ))}
+
+      {tab === "settings" && (
+        <EventSettings
+          event={board.event}
+          filled={filled}
+          onSave={async (next: KvkEvent) => {
+            await api.kvk.setEvent(next);
+            setKvkEnabled(next.enabled);
+            await reload();
+          }}
+          onClear={() =>
+            setConfirm({
+              kind: t("kvk.confirm.kind.schedule"),
+              label: t("kvk.confirm.scheduleLabel", { n: filled }),
+              body: t("kvk.confirm.schedule"),
+              run: async () => {
+                await api.kvk.clearAppointments();
+                await reload();
+                showToast(t("kvk.toast.cleared"));
+              },
+            })
+          }
+        />
+      )}
 
       <SlotDialog
         target={slotTarget}

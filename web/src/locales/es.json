@@ -117,7 +117,8 @@
       "admin": "Gestione eventos, lista, alias y puntuación",
       "memberProfile": "Participación e historial individual",
       "kvk": "Nombramientos de ministros · turnos de 30 min · UTC",
-      "kvkKeys": "Claves de acceso de la alianza"
+      "kvkKeys": "Claves de acceso de la alianza",
+      "kvkSettings": "Disponibilidad, fechas y visibilidad"
     },
     "live": "EN VIVO"
   },
@@ -1063,7 +1064,8 @@
   "kvk": {
     "tabs": {
       "schedule": "Calendario",
-      "keys": "Claves de acceso"
+      "keys": "Claves de acceso",
+      "settings": "Configuración del evento"
     },
     "status": {
       "live": "Día {{n}} en curso",
@@ -1128,9 +1130,31 @@
       "keyCopied": "Clave copiada de {{alliance}}",
       "linkCopied": "Enlace de acceso copiado de {{alliance}}",
       "keyDeleted": "Clave eliminada",
-      "keyDeletedSub": "Sus asignaciones permanecen en el calendario"
+      "keyDeletedSub": "Sus asignaciones permanecen en el calendario",
+      "cleared": "Calendario vaciado"
     },
     "needKey": "Configura tu clave de API (barra superior) para gestionar KvK Prep.",
+    "banner": {
+      "text": "El acceso externo está desactivado. Las claves de acceso no pueden iniciar sesión hasta que vuelvas a activar KvK Prep.",
+      "cta": "Configuración del evento →"
+    },
+    "settings": {
+      "enableTitle": "Activar KvK Prep",
+      "enableSub": "Abre la sección a las claves de acceso de alianza. Si está desactivado, las claves no pueden iniciar sesión. Las asignaciones se conservan.",
+      "startTitle": "Inicio del evento",
+      "startSub": "El día 1 comienza a las 00:00 UTC en esta fecha. El evento dura 5 días.",
+      "keyPosition": "Clave: {{position}}",
+      "noKeyPosition": "Sin posición clave",
+      "visibilityTitle": "Turnos de otras alianzas",
+      "visibilitySub": "Lo que ven los titulares de claves en los turnos reservados por otras alianzas: todo (alianza, color, ID y nombre del jugador), o solo que el turno está ocupado. Los turnos propios siempre muestran todos los detalles.",
+      "visibilityAll": "Mostrar todo",
+      "visibilityFilled": "Solo ocupado",
+      "previewAlliance": "Ember Guard",
+      "previewPlayer": "Vexa",
+      "clearTitle": "Borrar calendario",
+      "clearSub": "Elimina todas las asignaciones del tablero. Esto no se puede deshacer.",
+      "clearButton": "Borrar calendario"
+    },
     "keys": {
       "title": "Claves de acceso de la alianza",
       "subtitle": "Los titulares de claves inician sesión con la clave y solo ven KvK Prep",
@@ -1167,9 +1191,12 @@
     },
     "confirm": {
       "kind": {
-        "key": "clave de acceso"
+        "key": "clave de acceso",
+        "schedule": "calendario"
       },
-      "key": "pierde su clave de acceso. Las asignaciones ya reservadas permanecen en el calendario."
+      "key": "pierde su clave de acceso. Las asignaciones ya reservadas permanecen en el calendario.",
+      "scheduleLabel": "{{n}} asignaciones",
+      "schedule": "se eliminarán permanentemente. Esto no se puede deshacer."
     }
   }
 }

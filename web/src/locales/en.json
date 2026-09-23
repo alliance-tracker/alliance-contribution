@@ -117,7 +117,8 @@
       "admin": "Manage events, roster, aliases & scoring",
       "memberProfile": "Individual participation & history",
       "kvk": "Minister appointments · 30-min slots · UTC",
-      "kvkKeys": "Alliance access keys"
+      "kvkKeys": "Alliance access keys",
+      "kvkSettings": "Availability, dates and visibility"
     },
     "live": "LIVE"
   },
@@ -1008,7 +1009,8 @@
   "kvk": {
     "tabs": {
       "schedule": "Schedule",
-      "keys": "Access keys"
+      "keys": "Access keys",
+      "settings": "Event settings"
     },
     "status": {
       "live": "Day {{n}} live",
@@ -1072,9 +1074,31 @@
       "keyCopied": "Key copied for {{alliance}}",
       "linkCopied": "Sign-in link copied for {{alliance}}",
       "keyDeleted": "Key deleted",
-      "keyDeletedSub": "Its appointments stay on the schedule"
+      "keyDeletedSub": "Its appointments stay on the schedule",
+      "cleared": "Schedule cleared"
     },
     "needKey": "Set your API key (top bar) to manage KvK Prep.",
+    "banner": {
+      "text": "External access is off. Access keys can't sign in until you turn KvK Prep back on.",
+      "cta": "Event settings →"
+    },
+    "settings": {
+      "enableTitle": "Enable KvK Prep",
+      "enableSub": "Opens the section to alliance access keys. When off, keys can't sign in. Appointments are kept.",
+      "startTitle": "Event start",
+      "startSub": "Day 1 begins at 00:00 UTC on this date. The event runs 5 days.",
+      "keyPosition": "Key: {{position}}",
+      "noKeyPosition": "No key position",
+      "visibilityTitle": "Other alliances' slots",
+      "visibilitySub": "What key holders see on slots booked by other alliances: everything (alliance, colour, player ID and name), or just that the slot is taken. Own slots always show full details.",
+      "visibilityAll": "Show all",
+      "visibilityFilled": "Filled only",
+      "previewAlliance": "Ember Guard",
+      "previewPlayer": "Vexa",
+      "clearTitle": "Clear schedule",
+      "clearSub": "Delete every appointment on the board. This can't be undone.",
+      "clearButton": "Clear schedule"
+    },
     "keys": {
       "title": "Alliance access keys",
       "subtitle": "Key holders sign in with the key and only see KvK Prep",
@@ -1111,9 +1135,12 @@
     },
     "confirm": {
       "kind": {
-        "key": "access key"
+        "key": "access key",
+        "schedule": "schedule"
       },
-      "key": "loses its access key. Appointments already booked stay on the schedule."
+      "key": "loses its access key. Appointments already booked stay on the schedule.",
+      "scheduleLabel": "{{n}} appointments",
+      "schedule": "will be permanently deleted. This can't be undone."
     }
   }
 }

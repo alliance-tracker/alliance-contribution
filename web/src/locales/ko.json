@@ -117,7 +117,8 @@
       "admin": "이벤트, 명단, 별칭, 점수 관리",
       "memberProfile": "개인 참여 및 이력",
       "kvk": "장관 임명 · 30분 슬롯 · UTC",
-      "kvkKeys": "연맹 액세스 키"
+      "kvkKeys": "연맹 액세스 키",
+      "kvkSettings": "가용성, 날짜 및 공개 범위"
     },
     "live": "라이브"
   },
@@ -953,7 +954,8 @@
   "kvk": {
     "tabs": {
       "schedule": "일정",
-      "keys": "액세스 키"
+      "keys": "액세스 키",
+      "settings": "이벤트 설정"
     },
     "status": {
       "live": "{{n}}일차 진행 중",
@@ -1016,9 +1018,31 @@
       "keyCopied": "{{alliance}}의 키가 복사되었습니다",
       "linkCopied": "{{alliance}}의 로그인 링크가 복사되었습니다",
       "keyDeleted": "키 삭제됨",
-      "keyDeletedSub": "배정 내역은 일정에 그대로 남습니다"
+      "keyDeletedSub": "배정 내역은 일정에 그대로 남습니다",
+      "cleared": "일정이 초기화되었습니다"
     },
     "needKey": "KvK Prep을 관리하려면 API 키(상단 바)를 설정하세요.",
+    "banner": {
+      "text": "외부 액세스가 꺼져 있습니다. KvK Prep을 다시 켤 때까지 액세스 키로 로그인할 수 없습니다.",
+      "cta": "이벤트 설정 →"
+    },
+    "settings": {
+      "enableTitle": "KvK Prep 활성화",
+      "enableSub": "연맹 액세스 키에 섹션을 공개합니다. 꺼져 있으면 키로 로그인할 수 없습니다. 배정 내역은 유지됩니다.",
+      "startTitle": "이벤트 시작",
+      "startSub": "1일차는 이 날짜의 00:00 UTC에 시작됩니다. 이벤트는 5일간 진행됩니다.",
+      "keyPosition": "핵심 직책: {{position}}",
+      "noKeyPosition": "핵심 직책 없음",
+      "visibilityTitle": "다른 연맹의 슬롯",
+      "visibilitySub": "다른 연맹이 예약한 슬롯에서 키 보유자가 무엇을 보는지: 모든 정보(연맹, 색상, 플레이어 ID와 이름) 또는 슬롯이 찼다는 사실만. 자신의 슬롯은 항상 전체 정보를 보여줍니다.",
+      "visibilityAll": "모두 표시",
+      "visibilityFilled": "채움만 표시",
+      "previewAlliance": "Ember Guard",
+      "previewPlayer": "Vexa",
+      "clearTitle": "일정 초기화",
+      "clearSub": "보드의 모든 배정을 삭제합니다. 되돌릴 수 없습니다.",
+      "clearButton": "일정 초기화"
+    },
     "keys": {
       "title": "연맹 액세스 키",
       "subtitle": "키 보유자는 키로 로그인하며 KvK Prep만 볼 수 있습니다",
@@ -1055,9 +1079,12 @@
     },
     "confirm": {
       "kind": {
-        "key": "액세스 키"
+        "key": "액세스 키",
+        "schedule": "일정"
       },
-      "key": "가 액세스 키를 잃습니다. 이미 예약된 배정은 일정에 남습니다."
+      "key": "가 액세스 키를 잃습니다. 이미 예약된 배정은 일정에 남습니다.",
+      "scheduleLabel": "배정 {{n}}건",
+      "schedule": "영구적으로 삭제됩니다. 되돌릴 수 없습니다."
     }
   }
 }

@@ -12,6 +12,7 @@ import { formatLocal, formatDuration, formatRepeat, localZone, relativeTime, whe
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { IconTile, Strip } from "@/components/ui/tone";
 import { EmptyState } from "@/components/States";
 
@@ -54,45 +55,6 @@ function ActivityBadge({ activity }: { activity: ActivityType }) {
       <span className={cn("size-[7px] rounded-[2px]", activitySolidClass(activity.color))} />
       {activity.name}
     </span>
-  );
-}
-
-/** 34×20 switch — green when the event posts, grey when paused. Read-only keys get a static one. */
-function Switch({
-  on,
-  disabled,
-  title,
-  onToggle,
-}: {
-  on: boolean;
-  disabled: boolean;
-  title: string;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      title={title}
-      aria-label={title}
-      aria-pressed={on}
-      disabled={disabled}
-      onClick={(e) => {
-        e.stopPropagation();
-        onToggle();
-      }}
-      className={cn(
-        "relative h-5 w-[34px] shrink-0 rounded-full transition-colors duration-150 disabled:opacity-100",
-        on ? "bg-up" : "bg-faint",
-        disabled ? "cursor-default" : "cursor-pointer",
-      )}
-    >
-      <span
-        className={cn(
-          "absolute top-0.5 size-4 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.2)] transition-all duration-150",
-          on ? "start-[16px]" : "start-0.5",
-        )}
-      />
-    </button>
   );
 }
 

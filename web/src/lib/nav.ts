@@ -57,6 +57,7 @@ const subtitles: Record<string, TKey> = {
   "/attendance": "nav.subtitles.attendance",
   "/kvk": "nav.subtitles.kvk",
   "/kvk/keys": "nav.subtitles.kvkKeys",
+  "/kvk/settings": "nav.subtitles.kvkSettings",
 };
 
 /** Translation key of the best-match page subtitle; null → none. */

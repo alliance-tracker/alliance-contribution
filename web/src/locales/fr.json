@@ -117,7 +117,8 @@
       "admin": "Gérez les événements, la liste, les alias et le score",
       "memberProfile": "Participation et historique individuels",
       "kvk": "Nominations des ministres · créneaux de 30 min · UTC",
-      "kvkKeys": "Clés d'accès de l'alliance"
+      "kvkKeys": "Clés d'accès de l'alliance",
+      "kvkSettings": "Disponibilité, dates et visibilité"
     },
     "live": "EN DIRECT"
   },
@@ -1063,7 +1064,8 @@
   "kvk": {
     "tabs": {
       "schedule": "Planning",
-      "keys": "Clés d'accès"
+      "keys": "Clés d'accès",
+      "settings": "Paramètres de l'événement"
     },
     "status": {
       "live": "Jour {{n}} en cours",
@@ -1128,9 +1130,31 @@
       "keyCopied": "Clé copiée pour {{alliance}}",
       "linkCopied": "Lien de connexion copié pour {{alliance}}",
       "keyDeleted": "Clé supprimée",
-      "keyDeletedSub": "Ses affectations restent sur le planning"
+      "keyDeletedSub": "Ses affectations restent sur le planning",
+      "cleared": "Planning effacé"
     },
     "needKey": "Définissez votre clé API (barre du haut) pour gérer KvK Prep.",
+    "banner": {
+      "text": "L'accès externe est désactivé. Les clés d'accès ne peuvent pas se connecter tant que vous n'avez pas réactivé KvK Prep.",
+      "cta": "Paramètres de l'événement →"
+    },
+    "settings": {
+      "enableTitle": "Activer KvK Prep",
+      "enableSub": "Ouvre la section aux clés d'accès d'alliance. Si désactivé, les clés ne peuvent pas se connecter. Les affectations sont conservées.",
+      "startTitle": "Début de l'événement",
+      "startSub": "Le jour 1 commence à 00:00 UTC à cette date. L'événement dure 5 jours.",
+      "keyPosition": "Poste clé : {{position}}",
+      "noKeyPosition": "Aucun poste clé",
+      "visibilityTitle": "Créneaux des autres alliances",
+      "visibilitySub": "Ce que voient les détenteurs de clé sur les créneaux réservés par d'autres alliances : tout (alliance, couleur, ID et nom du joueur), ou juste que le créneau est pris. Les créneaux propres affichent toujours tous les détails.",
+      "visibilityAll": "Tout afficher",
+      "visibilityFilled": "Pris uniquement",
+      "previewAlliance": "Ember Guard",
+      "previewPlayer": "Vexa",
+      "clearTitle": "Effacer le planning",
+      "clearSub": "Supprime toutes les affectations du tableau. Action irréversible.",
+      "clearButton": "Effacer le planning"
+    },
     "keys": {
       "title": "Clés d'accès de l'alliance",
       "subtitle": "Les détenteurs de clé se connectent avec la clé et ne voient que KvK Prep",
@@ -1167,9 +1191,12 @@
     },
     "confirm": {
       "kind": {
-        "key": "clé d'accès"
+        "key": "clé d'accès",
+        "schedule": "planning"
       },
-      "key": "perd sa clé d'accès. Les affectations déjà réservées restent sur le planning."
+      "key": "perd sa clé d'accès. Les affectations déjà réservées restent sur le planning.",
+      "scheduleLabel": "{{n}} affectations",
+      "schedule": "seront définitivement supprimées. Action irréversible."
     }
   }
 }

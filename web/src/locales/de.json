@@ -117,7 +117,8 @@
       "admin": "Events, Liste, Aliase und Wertung verwalten",
       "memberProfile": "Individuelle Beteiligung und Verlauf",
       "kvk": "Ministerernennungen · 30-Min-Slots · UTC",
-      "kvkKeys": "Allianz-Zugriffsschlüssel"
+      "kvkKeys": "Allianz-Zugriffsschlüssel",
+      "kvkSettings": "Verfügbarkeit, Termine und Sichtbarkeit"
     },
     "live": "LIVE"
   },
@@ -1008,7 +1009,8 @@
   "kvk": {
     "tabs": {
       "schedule": "Zeitplan",
-      "keys": "Zugriffsschlüssel"
+      "keys": "Zugriffsschlüssel",
+      "settings": "Ereigniseinstellungen"
     },
     "status": {
       "live": "Tag {{n}} live",
@@ -1072,9 +1074,31 @@
       "keyCopied": "Schlüssel für {{alliance}} kopiert",
       "linkCopied": "Anmeldelink für {{alliance}} kopiert",
       "keyDeleted": "Schlüssel gelöscht",
-      "keyDeletedSub": "Seine Ernennungen bleiben im Zeitplan erhalten"
+      "keyDeletedSub": "Seine Ernennungen bleiben im Zeitplan erhalten",
+      "cleared": "Zeitplan geleert"
     },
     "needKey": "Lege deinen API-Schlüssel (obere Leiste) fest, um KvK Prep zu verwalten.",
+    "banner": {
+      "text": "Der externe Zugriff ist deaktiviert. Zugriffsschlüssel können sich erst wieder anmelden, wenn du KvK Prep erneut aktivierst.",
+      "cta": "Ereigniseinstellungen →"
+    },
+    "settings": {
+      "enableTitle": "KvK Prep aktivieren",
+      "enableSub": "Öffnet den Bereich für Allianz-Zugriffsschlüssel. Wenn deaktiviert, können sich Schlüssel nicht anmelden. Ernennungen bleiben erhalten.",
+      "startTitle": "Ereignisbeginn",
+      "startSub": "Tag 1 beginnt an diesem Datum um 00:00 UTC. Das Ereignis dauert 5 Tage.",
+      "keyPosition": "Schlüsselposition: {{position}}",
+      "noKeyPosition": "Keine Schlüsselposition",
+      "visibilityTitle": "Slots anderer Allianzen",
+      "visibilitySub": "Was Schlüsselinhaber bei Slots sehen, die von anderen Allianzen gebucht wurden: alles (Allianz, Farbe, Spieler-ID und -name) oder nur, dass der Slot belegt ist. Eigene Slots zeigen immer alle Details.",
+      "visibilityAll": "Alles anzeigen",
+      "visibilityFilled": "Nur belegt",
+      "previewAlliance": "Ember Guard",
+      "previewPlayer": "Vexa",
+      "clearTitle": "Zeitplan leeren",
+      "clearSub": "Löscht jede Ernennung auf dem Plan. Kann nicht rückgängig gemacht werden.",
+      "clearButton": "Zeitplan leeren"
+    },
     "keys": {
       "title": "Allianz-Zugriffsschlüssel",
       "subtitle": "Schlüsselinhaber melden sich mit dem Schlüssel an und sehen nur KvK Prep",
@@ -1111,9 +1135,12 @@
     },
     "confirm": {
       "kind": {
-        "key": "Zugriffsschlüssel"
+        "key": "Zugriffsschlüssel",
+        "schedule": "Zeitplan"
       },
-      "key": "verliert ihren Zugriffsschlüssel. Bereits gebuchte Ernennungen bleiben im Zeitplan."
+      "key": "verliert ihren Zugriffsschlüssel. Bereits gebuchte Ernennungen bleiben im Zeitplan.",
+      "scheduleLabel": "{{n}} Ernennungen",
+      "schedule": "werden endgültig gelöscht. Kann nicht rückgängig gemacht werden."
     }
   }
 }

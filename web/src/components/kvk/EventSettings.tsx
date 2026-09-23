@@ -34,20 +34,28 @@ export function EventSettings({
   const { t } = useTranslation();
   const [local, setLocal] = useState(event);
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   // Resync when the parent reloads the board (after a successful save, or a poll picking up
-  // someone else's change).
-  useEffect(() => setLocal(event), [event]);
+  // someone else's change) — but not while a save is in flight, or the 30s board poll (KvkPrep's own
+  // reload interval) can land between the optimistic setLocal below and onSave's own post-success
+  // reload, and overwrite the optimistic value with the stale pre-save one.
+  useEffect(() => {
+    if (!busy) setLocal(event);
+  }, [event, busy]);
 
   const change = async (next: KvkEvent) => {
     const prev = local;
     setLocal(next);
     setError(null);
+    setBusy(true);
     try {
       await onSave(next);
     } catch (e) {
       setLocal(prev);
       setError(writeErrorMessage(e, t, "kvk.needKey", true));
+    } finally {
+      setBusy(false);
     }
   };
 

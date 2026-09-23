@@ -116,7 +116,8 @@
       "activities": "One activity's events, instances, and totals over time",
       "admin": "Manage events, roster, aliases & scoring",
       "memberProfile": "Individual participation & history",
-      "kvk": "Minister appointments · 30-min slots · UTC"
+      "kvk": "Minister appointments · 30-min slots · UTC",
+      "kvkKeys": "Alliance access keys"
     },
     "live": "LIVE"
   },
@@ -1006,7 +1007,8 @@
   },
   "kvk": {
     "tabs": {
-      "schedule": "Schedule"
+      "schedule": "Schedule",
+      "keys": "Access keys"
     },
     "status": {
       "live": "Day {{n}} live",
@@ -1066,8 +1068,52 @@
       "updated": "Updated {{name}}",
       "freed": "Slot freed",
       "taken": "Slot taken",
-      "takenSub": "Someone just booked this slot. The board has refreshed."
+      "takenSub": "Someone just booked this slot. The board has refreshed.",
+      "keyCopied": "Key copied for {{alliance}}",
+      "linkCopied": "Sign-in link copied for {{alliance}}",
+      "keyDeleted": "Key deleted",
+      "keyDeletedSub": "Its appointments stay on the schedule"
     },
-    "needKey": "Set your API key (top bar) to manage KvK Prep."
+    "needKey": "Set your API key (top bar) to manage KvK Prep.",
+    "keys": {
+      "title": "Alliance access keys",
+      "subtitle": "Key holders sign in with the key and only see KvK Prep",
+      "new": "New key",
+      "colAlliance": "Alliance",
+      "colRep": "Representative",
+      "colKey": "Key",
+      "colSlots": "Slots",
+      "colLastUsed": "Last used",
+      "keyBtn": "Key",
+      "linkBtn": "Link",
+      "copyKeyTitle": "Copy key",
+      "copyLinkTitle": "Copy sign-in link",
+      "never": "Never",
+      "empty": "No keys yet. Create one per alliance taking part."
+    },
+    "keyDialog": {
+      "newTitle": "New access key",
+      "editTitle": "Edit access key",
+      "sub": "Each alliance gets one key. Its holder can appoint players for that alliance only.",
+      "allianceName": "Alliance name",
+      "allianceNamePlaceholder": "e.g. Frost Wolves",
+      "representative": "Representative",
+      "representativePlaceholder": "Who holds the key",
+      "colour": "Colour",
+      "colourTaken": "Used by another alliance",
+      "deleteKey": "Delete key",
+      "createKey": "Create key",
+      "created": "Key created",
+      "createdSub": "Copy it now. You can copy it again from the keys table.",
+      "copyKey": "Copy key",
+      "copyLink": "Copy sign-in link",
+      "help": "Send this to the representative. They enter it in the key field on the login screen, or open the link to have it filled in."
+    },
+    "confirm": {
+      "kind": {
+        "key": "access key"
+      },
+      "key": "loses its access key. Appointments already booked stay on the schedule."
+    }
   }
 }

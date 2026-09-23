@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hueForPath, navSections, titleForPath } from "../../web/src/lib/nav";
+import { hueForPath, navSections, subtitleForPath, titleForPath } from "../../web/src/lib/nav";
 
 describe("hueForPath", () => {
   it("gives every nav item a hue token", () => {
@@ -28,5 +28,11 @@ describe("hueForPath", () => {
 describe("titleForPath", () => {
   it("matches nested /kvk routes by prefix", () => {
     expect(titleForPath("/kvk/settings")).toBe("nav.kvk");
+  });
+});
+
+describe("subtitleForPath", () => {
+  it("gives the Access keys tab its own subtitle", () => {
+    expect(subtitleForPath("/kvk/keys")).toBe("nav.subtitles.kvkKeys");
   });
 });

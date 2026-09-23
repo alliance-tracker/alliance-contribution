@@ -116,7 +116,8 @@
       "activities": "활동별 이벤트, 인스턴스, 시간에 따른 합계",
       "admin": "이벤트, 명단, 별칭, 점수 관리",
       "memberProfile": "개인 참여 및 이력",
-      "kvk": "장관 임명 · 30분 슬롯 · UTC"
+      "kvk": "장관 임명 · 30분 슬롯 · UTC",
+      "kvkKeys": "연맹 액세스 키"
     },
     "live": "라이브"
   },
@@ -951,7 +952,8 @@
   },
   "kvk": {
     "tabs": {
-      "schedule": "일정"
+      "schedule": "일정",
+      "keys": "액세스 키"
     },
     "status": {
       "live": "{{n}}일차 진행 중",
@@ -1010,8 +1012,52 @@
       "updated": "{{name}} 업데이트됨",
       "freed": "슬롯 비움",
       "taken": "슬롯이 이미 찼습니다",
-      "takenSub": "다른 사람이 방금 이 슬롯을 예약했습니다. 보드가 새로고침되었습니다."
+      "takenSub": "다른 사람이 방금 이 슬롯을 예약했습니다. 보드가 새로고침되었습니다.",
+      "keyCopied": "{{alliance}}의 키가 복사되었습니다",
+      "linkCopied": "{{alliance}}의 로그인 링크가 복사되었습니다",
+      "keyDeleted": "키 삭제됨",
+      "keyDeletedSub": "배정 내역은 일정에 그대로 남습니다"
     },
-    "needKey": "KvK Prep을 관리하려면 API 키(상단 바)를 설정하세요."
+    "needKey": "KvK Prep을 관리하려면 API 키(상단 바)를 설정하세요.",
+    "keys": {
+      "title": "연맹 액세스 키",
+      "subtitle": "키 보유자는 키로 로그인하며 KvK Prep만 볼 수 있습니다",
+      "new": "새 키",
+      "colAlliance": "연맹",
+      "colRep": "대표자",
+      "colKey": "키",
+      "colSlots": "슬롯",
+      "colLastUsed": "마지막 사용",
+      "keyBtn": "키",
+      "linkBtn": "링크",
+      "copyKeyTitle": "키 복사",
+      "copyLinkTitle": "로그인 링크 복사",
+      "never": "없음",
+      "empty": "아직 키가 없습니다. 참가하는 연맹마다 하나씩 만드세요."
+    },
+    "keyDialog": {
+      "newTitle": "새 액세스 키",
+      "editTitle": "액세스 키 수정",
+      "sub": "연맹마다 키가 하나씩 주어집니다. 키 보유자는 해당 연맹의 플레이어만 임명할 수 있습니다.",
+      "allianceName": "연맹 이름",
+      "allianceNamePlaceholder": "예: Frost Wolves",
+      "representative": "대표자",
+      "representativePlaceholder": "키를 보유한 사람",
+      "colour": "색상",
+      "colourTaken": "다른 연맹에서 사용 중",
+      "deleteKey": "키 삭제",
+      "createKey": "키 생성",
+      "created": "키가 생성되었습니다",
+      "createdSub": "지금 복사하세요. 나중에 키 표에서 다시 복사할 수 있습니다.",
+      "copyKey": "키 복사",
+      "copyLink": "로그인 링크 복사",
+      "help": "이것을 대표자에게 보내세요. 로그인 화면의 키 입력란에 입력하거나, 링크를 열면 자동으로 채워집니다."
+    },
+    "confirm": {
+      "kind": {
+        "key": "액세스 키"
+      },
+      "key": "가 액세스 키를 잃습니다. 이미 예약된 배정은 일정에 남습니다."
+    }
   }
 }

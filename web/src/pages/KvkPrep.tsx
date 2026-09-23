@@ -1,24 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import type { KvkAppointmentRow, KvkBoard } from "@shared/types";
+import type { KvkAppointmentRow, KvkBoard, KvkKey } from "@shared/types";
 import { api, ApiError } from "@/lib/api";
 import { useApiKey } from "@/lib/apiKey";
-import type { KvkSlotRef } from "@/lib/kvk";
+import { useApi } from "@/lib/useApi";
+import { signInLink, type KvkSlotRef } from "@/lib/kvk";
 import { cn } from "@/lib/utils";
 import { ErrorState, LoadingState } from "@/components/States";
-import { Toast } from "@/components/schedule/parts";
+import { ConfirmDialog, Toast, type ConfirmTarget } from "@/components/schedule/parts";
 import { ScheduleHeader } from "@/components/kvk/ScheduleHeader";
 import { PositionStrip } from "@/components/kvk/PositionStrip";
 import { ScheduleGrid } from "@/components/kvk/ScheduleGrid";
 import { SlotDialog } from "@/components/kvk/SlotDialog";
+import { AccessKeysTab } from "@/components/kvk/AccessKeysTab";
+import { KeyDialog } from "@/components/kvk/KeyDialog";
 
-// Tasks 5 (Access keys) and 6 (Event settings) widen this to "schedule" | "keys" | "settings" and add
-// their TABS/TAB_DOT entries (dots bg-tone-blue / bg-nav-admin per the handoff) — no restructuring.
-type Tab = "schedule";
-const TABS: Tab[] = ["schedule"];
+// Task 6 (Event settings) widens this further to "schedule" | "keys" | "settings" and adds its own
+// TABS/TAB_DOT entry (dot bg-nav-admin per the handoff) — no restructuring.
+type Tab = "schedule" | "keys";
+const TABS: Tab[] = ["schedule", "keys"];
 const TAB_DOT: Record<Tab, string> = {
   schedule: "bg-nav-kvk",
+  keys: "bg-tone-blue",
 };
 
 export function KvkPrep() {
@@ -31,6 +35,13 @@ export function KvkPrep() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [slotTarget, setSlotTarget] = useState<{ ref: KvkSlotRef; appt: KvkAppointmentRow | null } | null>(null);
+  const [keyTarget, setKeyTarget] = useState<{ key: KvkKey | null } | null>(null);
+  const [confirm, setConfirm] = useState<ConfirmTarget | null>(null);
+  const [keysNonce, setKeysNonce] = useState(0);
+  const keysState = useApi(
+    () => (isAdmin && tab === "keys" ? api.kvk.keys() : Promise.resolve<KvkKey[]>([])),
+    [isAdmin, tab, keysNonce],
+  );
 
   const [toast, setToast] = useState<{ title: string; sub: string } | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
@@ -40,6 +51,18 @@ export function KvkPrep() {
     toastTimer.current = window.setTimeout(() => setToast(null), 2600);
   };
   useEffect(() => () => window.clearTimeout(toastTimer.current), []);
+
+  // navigator.clipboard.writeText can reject (insecure context, denied permission) — a failed copy
+  // gets the generic error toast rather than a false "copied".
+  const onCopy = (k: KvkKey, what: "key" | "link") => {
+    const text = what === "key" ? k.key : signInLink(k.key, location.origin);
+    navigator.clipboard
+      .writeText(text)
+      .then(() =>
+        showToast(t(what === "key" ? "kvk.toast.keyCopied" : "kvk.toast.linkCopied", { alliance: k.alliance_name })),
+      )
+      .catch(() => showToast(t("common.errors.generic")));
+  };
 
   // Same polling shape as Schedule.tsx's status effect, at 30s instead of 60s: no useApi (it would
   // flash LoadingState on every poll), and a failed poll after the first load just keeps the last board.
@@ -106,6 +129,11 @@ export function KvkPrep() {
                     className={cn("hidden size-2 flex-none rounded-full md:block", TAB_DOT[key], !isActive && "opacity-50")}
                   />
                   {t(`kvk.tabs.${key}` as const)}
+                  {key === "keys" && (
+                    <span className="num flex size-[18px] items-center justify-center rounded-full bg-muted-surface text-[10px] font-bold text-secondary">
+                      {board.alliances.length}
+                    </span>
+                  )}
                 </>
               )}
             </NavLink>
@@ -127,6 +155,20 @@ export function KvkPrep() {
         </>
       )}
 
+      {tab === "keys" &&
+        (keysState.loading ? (
+          <LoadingState />
+        ) : keysState.error ? (
+          <ErrorState message={keysState.error} />
+        ) : (
+          <AccessKeysTab
+            keys={keysState.data ?? []}
+            onNew={() => setKeyTarget({ key: null })}
+            onEdit={(k) => setKeyTarget({ key: k })}
+            onCopy={onCopy}
+          />
+        ))}
+
       <SlotDialog
         target={slotTarget}
         alliances={board.alliances}
@@ -143,6 +185,30 @@ export function KvkPrep() {
           reload();
         }}
       />
+      <KeyDialog
+        target={keyTarget}
+        usedColors={board.alliances.filter((a) => a.id !== keyTarget?.key?.id).map((a) => a.color)}
+        onClose={() => setKeyTarget(null)}
+        onChanged={() => {
+          setKeysNonce((n) => n + 1);
+          reload();
+        }}
+        onCopy={onCopy}
+        onDelete={(k) =>
+          setConfirm({
+            kind: t("kvk.confirm.kind.key"),
+            label: k.alliance_name,
+            body: t("kvk.confirm.key"),
+            run: async () => {
+              await api.kvk.deleteKey(k.id);
+              setKeysNonce((n) => n + 1);
+              await reload();
+              showToast(t("kvk.toast.keyDeleted"), t("kvk.toast.keyDeletedSub"));
+            },
+          })
+        }
+      />
+      <ConfirmDialog target={confirm} onClose={() => setConfirm(null)} />
       <Toast toast={toast} />
     </div>
   );

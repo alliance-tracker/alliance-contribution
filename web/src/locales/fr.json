@@ -116,7 +116,8 @@
       "activities": "Événements, instances et totaux d'une activité dans le temps",
       "admin": "Gérez les événements, la liste, les alias et le score",
       "memberProfile": "Participation et historique individuels",
-      "kvk": "Nominations des ministres · créneaux de 30 min · UTC"
+      "kvk": "Nominations des ministres · créneaux de 30 min · UTC",
+      "kvkKeys": "Clés d'accès de l'alliance"
     },
     "live": "EN DIRECT"
   },
@@ -1061,7 +1062,8 @@
   },
   "kvk": {
     "tabs": {
-      "schedule": "Planning"
+      "schedule": "Planning",
+      "keys": "Clés d'accès"
     },
     "status": {
       "live": "Jour {{n}} en cours",
@@ -1122,8 +1124,52 @@
       "updated": "{{name}} mis à jour",
       "freed": "Créneau libéré",
       "taken": "Créneau déjà pris",
-      "takenSub": "Quelqu'un vient de réserver ce créneau. Le tableau a été actualisé."
+      "takenSub": "Quelqu'un vient de réserver ce créneau. Le tableau a été actualisé.",
+      "keyCopied": "Clé copiée pour {{alliance}}",
+      "linkCopied": "Lien de connexion copié pour {{alliance}}",
+      "keyDeleted": "Clé supprimée",
+      "keyDeletedSub": "Ses affectations restent sur le planning"
     },
-    "needKey": "Définissez votre clé API (barre du haut) pour gérer KvK Prep."
+    "needKey": "Définissez votre clé API (barre du haut) pour gérer KvK Prep.",
+    "keys": {
+      "title": "Clés d'accès de l'alliance",
+      "subtitle": "Les détenteurs de clé se connectent avec la clé et ne voient que KvK Prep",
+      "new": "Nouvelle clé",
+      "colAlliance": "Alliance",
+      "colRep": "Représentant",
+      "colKey": "Clé",
+      "colSlots": "Créneaux",
+      "colLastUsed": "Dernière utilisation",
+      "keyBtn": "Clé",
+      "linkBtn": "Lien",
+      "copyKeyTitle": "Copier la clé",
+      "copyLinkTitle": "Copier le lien de connexion",
+      "never": "Jamais",
+      "empty": "Aucune clé pour l'instant. Créez-en une par alliance participante."
+    },
+    "keyDialog": {
+      "newTitle": "Nouvelle clé d'accès",
+      "editTitle": "Modifier la clé d'accès",
+      "sub": "Chaque alliance reçoit une clé. Son détenteur ne peut nommer que les joueurs de cette alliance.",
+      "allianceName": "Nom de l'alliance",
+      "allianceNamePlaceholder": "ex. Frost Wolves",
+      "representative": "Représentant",
+      "representativePlaceholder": "Qui détient la clé",
+      "colour": "Couleur",
+      "colourTaken": "Utilisée par une autre alliance",
+      "deleteKey": "Supprimer la clé",
+      "createKey": "Créer la clé",
+      "created": "Clé créée",
+      "createdSub": "Copiez-la maintenant. Vous pourrez la recopier depuis le tableau des clés.",
+      "copyKey": "Copier la clé",
+      "copyLink": "Copier le lien de connexion",
+      "help": "Envoyez ceci au représentant. Il la saisit dans le champ clé de l'écran de connexion, ou ouvre le lien pour qu'elle soit remplie automatiquement."
+    },
+    "confirm": {
+      "kind": {
+        "key": "clé d'accès"
+      },
+      "key": "perd sa clé d'accès. Les affectations déjà réservées restent sur le planning."
+    }
   }
 }

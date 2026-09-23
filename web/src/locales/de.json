@@ -116,7 +116,8 @@
       "activities": "Events, Instanzen und Summen einer Aktivität im Zeitverlauf",
       "admin": "Events, Liste, Aliase und Wertung verwalten",
       "memberProfile": "Individuelle Beteiligung und Verlauf",
-      "kvk": "Ministerernennungen · 30-Min-Slots · UTC"
+      "kvk": "Ministerernennungen · 30-Min-Slots · UTC",
+      "kvkKeys": "Allianz-Zugriffsschlüssel"
     },
     "live": "LIVE"
   },
@@ -1006,7 +1007,8 @@
   },
   "kvk": {
     "tabs": {
-      "schedule": "Zeitplan"
+      "schedule": "Zeitplan",
+      "keys": "Zugriffsschlüssel"
     },
     "status": {
       "live": "Tag {{n}} live",
@@ -1066,8 +1068,52 @@
       "updated": "{{name}} aktualisiert",
       "freed": "Slot freigegeben",
       "taken": "Slot bereits vergeben",
-      "takenSub": "Jemand hat diesen Slot gerade gebucht. Der Plan wurde aktualisiert."
+      "takenSub": "Jemand hat diesen Slot gerade gebucht. Der Plan wurde aktualisiert.",
+      "keyCopied": "Schlüssel für {{alliance}} kopiert",
+      "linkCopied": "Anmeldelink für {{alliance}} kopiert",
+      "keyDeleted": "Schlüssel gelöscht",
+      "keyDeletedSub": "Seine Ernennungen bleiben im Zeitplan erhalten"
     },
-    "needKey": "Lege deinen API-Schlüssel (obere Leiste) fest, um KvK Prep zu verwalten."
+    "needKey": "Lege deinen API-Schlüssel (obere Leiste) fest, um KvK Prep zu verwalten.",
+    "keys": {
+      "title": "Allianz-Zugriffsschlüssel",
+      "subtitle": "Schlüsselinhaber melden sich mit dem Schlüssel an und sehen nur KvK Prep",
+      "new": "Neuer Schlüssel",
+      "colAlliance": "Allianz",
+      "colRep": "Vertreter",
+      "colKey": "Schlüssel",
+      "colSlots": "Slots",
+      "colLastUsed": "Zuletzt verwendet",
+      "keyBtn": "Schlüssel",
+      "linkBtn": "Link",
+      "copyKeyTitle": "Schlüssel kopieren",
+      "copyLinkTitle": "Anmeldelink kopieren",
+      "never": "Nie",
+      "empty": "Noch keine Schlüssel. Erstelle einen pro teilnehmender Allianz."
+    },
+    "keyDialog": {
+      "newTitle": "Neuer Zugriffsschlüssel",
+      "editTitle": "Zugriffsschlüssel bearbeiten",
+      "sub": "Jede Allianz erhält einen Schlüssel. Sein Inhaber kann nur Spieler dieser Allianz ernennen.",
+      "allianceName": "Allianzname",
+      "allianceNamePlaceholder": "z. B. Frost Wolves",
+      "representative": "Vertreter",
+      "representativePlaceholder": "Wer den Schlüssel hält",
+      "colour": "Farbe",
+      "colourTaken": "Von einer anderen Allianz verwendet",
+      "deleteKey": "Schlüssel löschen",
+      "createKey": "Schlüssel erstellen",
+      "created": "Schlüssel erstellt",
+      "createdSub": "Kopiere ihn jetzt. Du kannst ihn später erneut aus der Schlüsseltabelle kopieren.",
+      "copyKey": "Schlüssel kopieren",
+      "copyLink": "Anmeldelink kopieren",
+      "help": "Sende dies an den Vertreter. Er gibt es im Schlüsselfeld auf dem Anmeldebildschirm ein oder öffnet den Link, damit es automatisch ausgefüllt wird."
+    },
+    "confirm": {
+      "kind": {
+        "key": "Zugriffsschlüssel"
+      },
+      "key": "verliert ihren Zugriffsschlüssel. Bereits gebuchte Ernennungen bleiben im Zeitplan."
+    }
   }
 }

@@ -116,7 +116,8 @@
       "activities": "Eventos, instancias y totales de una actividad a lo largo del tiempo",
       "admin": "Gestione eventos, lista, alias y puntuación",
       "memberProfile": "Participación e historial individual",
-      "kvk": "Nombramientos de ministros · turnos de 30 min · UTC"
+      "kvk": "Nombramientos de ministros · turnos de 30 min · UTC",
+      "kvkKeys": "Claves de acceso de la alianza"
     },
     "live": "EN VIVO"
   },
@@ -1061,7 +1062,8 @@
   },
   "kvk": {
     "tabs": {
-      "schedule": "Calendario"
+      "schedule": "Calendario",
+      "keys": "Claves de acceso"
     },
     "status": {
       "live": "Día {{n}} en curso",
@@ -1122,8 +1124,52 @@
       "updated": "Se actualizó a {{name}}",
       "freed": "Turno liberado",
       "taken": "Turno ocupado",
-      "takenSub": "Alguien acaba de reservar este turno. El tablero se actualizó."
+      "takenSub": "Alguien acaba de reservar este turno. El tablero se actualizó.",
+      "keyCopied": "Clave copiada de {{alliance}}",
+      "linkCopied": "Enlace de acceso copiado de {{alliance}}",
+      "keyDeleted": "Clave eliminada",
+      "keyDeletedSub": "Sus asignaciones permanecen en el calendario"
     },
-    "needKey": "Configura tu clave de API (barra superior) para gestionar KvK Prep."
+    "needKey": "Configura tu clave de API (barra superior) para gestionar KvK Prep.",
+    "keys": {
+      "title": "Claves de acceso de la alianza",
+      "subtitle": "Los titulares de claves inician sesión con la clave y solo ven KvK Prep",
+      "new": "Nueva clave",
+      "colAlliance": "Alianza",
+      "colRep": "Representante",
+      "colKey": "Clave",
+      "colSlots": "Turnos",
+      "colLastUsed": "Último uso",
+      "keyBtn": "Clave",
+      "linkBtn": "Enlace",
+      "copyKeyTitle": "Copiar clave",
+      "copyLinkTitle": "Copiar enlace de acceso",
+      "never": "Nunca",
+      "empty": "Aún no hay claves. Crea una por cada alianza participante."
+    },
+    "keyDialog": {
+      "newTitle": "Nueva clave de acceso",
+      "editTitle": "Editar clave de acceso",
+      "sub": "Cada alianza recibe una clave. Su titular solo puede nombrar jugadores para esa alianza.",
+      "allianceName": "Nombre de la alianza",
+      "allianceNamePlaceholder": "p. ej. Frost Wolves",
+      "representative": "Representante",
+      "representativePlaceholder": "Quién tiene la clave",
+      "colour": "Color",
+      "colourTaken": "Usado por otra alianza",
+      "deleteKey": "Eliminar clave",
+      "createKey": "Crear clave",
+      "created": "Clave creada",
+      "createdSub": "Cópiala ahora. Puedes volver a copiarla desde la tabla de claves.",
+      "copyKey": "Copiar clave",
+      "copyLink": "Copiar enlace de acceso",
+      "help": "Envía esto al representante. Lo introduce en el campo de clave en la pantalla de inicio de sesión, o abre el enlace para que se rellene automáticamente."
+    },
+    "confirm": {
+      "kind": {
+        "key": "clave de acceso"
+      },
+      "key": "pierde su clave de acceso. Las asignaciones ya reservadas permanecen en el calendario."
+    }
   }
 }

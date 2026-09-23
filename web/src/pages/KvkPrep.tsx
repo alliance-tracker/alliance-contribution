@@ -115,7 +115,7 @@ export function KvkPrep() {
 
   if (board === null) return loadError ? <ErrorState message={loadError} /> : <LoadingState />;
 
-  const { filled } = fillCounts(board.appointments);
+  const { filled } = fillCounts(board.appointments, board.event.days);
   const daySlot = currentDaySlot(board.event.start_date, now);
   const mobileDay = pickedDay ?? (daySlot?.phase === "live" ? daySlot.day : 1);
 

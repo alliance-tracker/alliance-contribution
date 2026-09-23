@@ -1,28 +1,48 @@
 // Pure KvK Prep helpers — no path aliases, no JSX (test/unit/ imports this directly). Mirrors the
 // shapes and rules of src/domain/kvk.ts, but for the SPA's read-model derivations.
 
-import type { KvkBoardAppointment, KvkPosition, KvkRedactedAppointment } from "../../../shared/types";
+import type { KvkBoardAppointment, KvkDay, KvkPosition, KvkRedactedAppointment } from "../../../shared/types";
 
 export { POSITIONS } from "../../../shared/types";
 
 export const DAY_COUNT = 5;
 export const SLOTS = 48;
-export const TOTAL_SLOTS = DAY_COUNT * 2 * SLOTS; // 480
-export const FOCUS_SLOTS = 4 * SLOTS; // 192 — every day but day 4 has a focus position
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const SLOT_MS = 30 * 60 * 1000;
 
 export type KvkDayTheme = "construction" | "research" | "training" | "none" | "finalPush";
 
-/** `theme` is the i18n suffix (`kvk.days.${theme}`); `focus` is null on day 4 (no focus position). */
-export const DAYS: readonly { theme: KvkDayTheme; focus: KvkPosition | null }[] = [
-  { theme: "construction", focus: "chief_minister" },
-  { theme: "research", focus: "chief_minister" },
-  { theme: "training", focus: "noble_advisor" },
-  { theme: "none", focus: null },
-  { theme: "finalPush", focus: "chief_minister" },
+/** Day themes (Construction, Research, …) are fixed game facts, not configuration — unlike key/shown
+ *  positions, which come from `event.days` (`shared/types.ts`'s `KvkDay`). */
+export const DAYS: readonly { theme: KvkDayTheme }[] = [
+  { theme: "construction" },
+  { theme: "research" },
+  { theme: "training" },
+  { theme: "none" },
+  { theme: "finalPush" },
 ];
+
+/** Header totals from the per-day config: `total` = every shown column's 48 slots, `focusTotal` =
+ *  only the days with a key position. Defaults: 480 / 192. */
+export function slotTotals(days: readonly KvkDay[]): { total: number; focusTotal: number } {
+  let total = 0;
+  let focusTotal = 0;
+  for (const d of days) {
+    total += d.shown.length * SLOTS;
+    if (d.key !== null) focusTotal += SLOTS;
+  }
+  return { total, focusTotal };
+}
+
+/** Grid column template as an inline style — Tailwind statically scans class names, so it can't see a
+ *  runtime-built `grid-cols-[...]`, and a fixed map of 1-10 columns would just be ten literals for the
+ *  same thing. Desktop keeps today's 84px time column / 118px min day columns; compact (mobile day
+ *  view) drops the min-width and shrinks the time column to 58px. */
+export function gridStyle(columns: number, compact: boolean): { gridTemplateColumns: string; minWidth?: string } {
+  if (compact) return { gridTemplateColumns: `58px repeat(${columns},1fr)` };
+  return { gridTemplateColumns: `84px repeat(${columns},minmax(118px,1fr))`, minWidth: `${84 + 118 * columns}px` };
+}
 
 // Palette from the design handoff §4 (New/Edit key dialog), in order — first-unused wins new keys.
 export const KVK_COLORS: readonly string[] = [
@@ -94,13 +114,16 @@ export function currentDaySlot(start: string | null, now: number): KvkDaySlot | 
   return { phase: "live", day: day + 1, slot };
 }
 
-/** Focus means the row's position is `DAYS[day-1].focus` (never true on day 4). */
-export function fillCounts(appts: readonly KvkBoardAppointment[]): { filled: number; focus: number } {
+/** Focus means the row's position is that day's key position (`days[day-1].key`). */
+export function fillCounts(
+  appts: readonly KvkBoardAppointment[],
+  days: readonly KvkDay[],
+): { filled: number; focus: number } {
   let filled = 0;
   let focus = 0;
   for (const a of appts) {
     filled++;
-    if (DAYS[a.day - 1]?.focus === a.position) focus++;
+    if (days[a.day - 1]?.key === a.position) focus++;
   }
   return { filled, focus };
 }

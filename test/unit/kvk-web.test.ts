@@ -1,17 +1,27 @@
 import { describe, expect, it } from "vitest";
-import type { KvkAppointmentRow, KvkBoardAppointment, KvkRedactedAppointment } from "../../shared/types";
+import type { KvkAppointmentRow, KvkBoardAppointment, KvkDay, KvkRedactedAppointment } from "../../shared/types";
 import {
   currentDaySlot,
   dayIso,
   fillCounts,
   firstFreeColor,
+  gridStyle,
   holderCanEdit,
   KVK_COLORS,
   maskKey,
   otherSlotsFor,
   signInLink,
   slotLabel,
+  slotTotals,
 } from "../../web/src/lib/kvk";
+
+const DEFAULT_DAYS: KvkDay[] = [
+  { key: "chief_minister", shown: ["chief_minister", "noble_advisor"] },
+  { key: "chief_minister", shown: ["chief_minister", "noble_advisor"] },
+  { key: "noble_advisor", shown: ["chief_minister", "noble_advisor"] },
+  { key: null, shown: ["chief_minister", "noble_advisor"] },
+  { key: "chief_minister", shown: ["chief_minister", "noble_advisor"] },
+];
 
 function row(over: Partial<KvkAppointmentRow> = {}): KvkAppointmentRow {
   return {
@@ -81,14 +91,47 @@ describe("dayIso", () => {
 });
 
 describe("fillCounts", () => {
-  it("counts filled slots and focus slots, day 4 never counting toward focus", () => {
+  it("counts filled slots and focus slots, day 4 never counting toward focus with default days", () => {
     const appts: KvkBoardAppointment[] = [
       row({ day: 1, position: "chief_minister", slot: 0 }), // focus day, matching position
       row({ day: 1, position: "noble_advisor", slot: 1 }), // focus day, non-focus position
       row({ day: 4, position: "chief_minister", slot: 0 }), // no-focus day
       row({ day: 4, position: "noble_advisor", slot: 1 }), // no-focus day
     ];
-    expect(fillCounts(appts)).toEqual({ filled: 4, focus: 1 });
+    expect(fillCounts(appts, DEFAULT_DAYS)).toEqual({ filled: 4, focus: 1 });
+  });
+
+  it("counts focus per the day's configured key position", () => {
+    const days: KvkDay[] = DEFAULT_DAYS.map((d, i) => (i === 3 ? { ...d, key: "chief_minister" } : d));
+    const appts: KvkBoardAppointment[] = [
+      row({ day: 4, position: "chief_minister", slot: 0 }), // now a focus day
+      row({ day: 4, position: "noble_advisor", slot: 1 }), // still not the key position
+    ];
+    expect(fillCounts(appts, days)).toEqual({ filled: 2, focus: 1 });
+  });
+});
+
+describe("slotTotals", () => {
+  it("returns 480/192 for the defaults", () => {
+    expect(slotTotals(DEFAULT_DAYS)).toEqual({ total: 480, focusTotal: 192 });
+  });
+
+  it("drops a day's total when a position is hidden, and its focus total when key is null", () => {
+    const days: KvkDay[] = [{ key: null, shown: ["chief_minister"] }, ...DEFAULT_DAYS.slice(1)];
+    expect(slotTotals(days)).toEqual({ total: 432, focusTotal: 144 });
+  });
+});
+
+describe("gridStyle", () => {
+  it("builds today's desktop 10-column layout", () => {
+    expect(gridStyle(10, false)).toEqual({
+      gridTemplateColumns: "84px repeat(10,minmax(118px,1fr))",
+      minWidth: "1264px",
+    });
+  });
+
+  it("builds a compact single-column layout with no minWidth", () => {
+    expect(gridStyle(1, true)).toEqual({ gridTemplateColumns: "58px repeat(1,1fr)" });
   });
 });
 

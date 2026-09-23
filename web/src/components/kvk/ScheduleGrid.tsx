@@ -7,9 +7,9 @@ import {
   DAYS,
   dayIso,
   DELETED_COLOR,
+  gridStyle,
   indexAppointments,
   isRedacted,
-  POSITIONS,
   SLOTS,
   slotKey,
   slotLabel,
@@ -18,19 +18,16 @@ import {
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-// Header and body share this; a literal so Tailwind scans it.
-const COLS = "grid grid-cols-[84px_repeat(10,minmax(118px,1fr))]";
-// Mobile (`day` set): one day's two position columns instead of all ten.
-const DAY_COLS = "grid grid-cols-[58px_1fr_1fr]";
 const DATE_OPTS: Intl.DateTimeFormatOptions = { weekday: "short", day: "numeric", month: "short" };
 const SLOT_INDEXES = Array.from({ length: SLOTS }, (_, i) => i);
 
-/** Day separator after the second position column, a hairline after the first. */
-const sepClass = (pi: number) => (pi === POSITIONS.length - 1 ? "border-e-2 border-e-border" : "border-e border-e-muted-surface");
+/** Day separator after the day's last shown column, a hairline between shown columns. */
+const sepClass = (pi: number, count: number) => (pi === count - 1 ? "border-e-2 border-e-border" : "border-e border-e-muted-surface");
 
-/** The 5-day × 2-position × 48-slot board. Role-agnostic: callers decide editability via `canEdit`
- *  and pass `ownKeyId` (p3 key holder) to tint own slots and fade everyone else's.
- *  With `day` (1..5, the mobile one-day view), only that day's two columns render, the day-header row
+/** The 5-day board, each day showing the columns and slot count from `event.days`. Role-agnostic:
+ *  callers decide editability via `canEdit` and pass `ownKeyId` (p3 key holder) to tint own slots and
+ *  fade everyone else's.
+ *  With `day` (1..5, the mobile one-day view), only that day's shown columns render, the day-header row
  *  is skipped (the mobile day chips carry that context), and rows/padding shrink to fit a phone. */
 export function ScheduleGrid({
   board,
@@ -53,13 +50,14 @@ export function ScheduleGrid({
   const alliances = useMemo(() => new Map(board.alliances.map((a) => [a.id, a])), [board.alliances]);
   const daySlot = currentDaySlot(start, now);
   const live = daySlot?.phase === "live" ? daySlot : null;
-  const shown = day ? [day] : [1, 2, 3, 4, 5];
-  const cols = day ? DAY_COLS : COLS;
+  const dayNums = day ? [day] : [1, 2, 3, 4, 5];
+  const days = board.event.days;
+  const style = gridStyle(dayNums.reduce((n, d) => n + days[d - 1]!.shown.length, 0), !!day);
 
   return (
     <div className="max-h-[calc(100vh-290px)] min-h-[420px] overflow-auto rounded-[12px] border border-border bg-surface shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className={cn("w-full", !day && "min-w-[1264px]")}>
-        <div className={cn(cols, "sticky top-0 z-[3] bg-background")}>
+      <div className="w-full" style={{ minWidth: style.minWidth }}>
+        <div className="sticky top-0 z-[3] grid bg-background" style={{ gridTemplateColumns: style.gridTemplateColumns }}>
           <div
             className={cn(
               "sticky start-0 z-[2] flex items-end border-e border-b border-border bg-background px-3 py-2.5 font-mono text-[10.5px] font-semibold text-muted",
@@ -75,8 +73,9 @@ export function ScheduleGrid({
               return (
                 <div
                   key={dayNum}
+                  style={{ gridColumn: `span ${days[i]!.shown.length}` }}
                   className={cn(
-                    "col-span-2 flex min-w-0 flex-col gap-0.5 border-e-2 border-b border-border px-3 pt-2.5 pb-2",
+                    "flex min-w-0 flex-col gap-0.5 border-e-2 border-b border-border px-3 pt-2.5 pb-2",
                     isLive && "bg-live-bg",
                   )}
                 >
@@ -103,14 +102,14 @@ export function ScheduleGrid({
                 </div>
               );
             })}
-          {shown.map((dayNum) =>
-            POSITIONS.map((p, pi) => (
+          {dayNums.map((dayNum) =>
+            days[dayNum - 1]!.shown.map((p, pi) => (
               <div
                 key={`${dayNum}-${p}`}
                 className={cn(
                   "truncate border-b border-b-border px-[7px] py-2 text-[12px] font-semibold",
-                  sepClass(pi),
-                  DAYS[dayNum - 1]!.focus === p ? "bg-ember-bg text-ember-fg" : "text-foreground",
+                  sepClass(pi, days[dayNum - 1]!.shown.length),
+                  days[dayNum - 1]!.key === p ? "bg-ember-bg text-ember-fg" : "text-foreground",
                 )}
               >
                 {t(`kvk.positions.${p}.name` as const)}
@@ -119,7 +118,10 @@ export function ScheduleGrid({
           )}
         </div>
 
-        <div className={cn(cols, day ? "auto-rows-[50px]" : "auto-rows-[44px]")}>
+        <div
+          className={cn("grid", day ? "auto-rows-[50px]" : "auto-rows-[44px]")}
+          style={{ gridTemplateColumns: style.gridTemplateColumns }}
+        >
           {SLOT_INDEXES.map((slot) => {
             const { start: from, end: to } = slotLabel(slot);
             const isNow = live?.slot === slot;
@@ -144,9 +146,8 @@ export function ScheduleGrid({
                     – {to}
                   </span>
                 </div>
-                {shown.map((dayNum) =>
-                  POSITIONS.map((position, pi) => {
-                    const d = DAYS[dayNum - 1]!;
+                {dayNums.map((dayNum) =>
+                  days[dayNum - 1]!.shown.map((position, pi) => {
                     const ref: KvkSlotRef = { day: dayNum, position, slot };
                     const appt = byKey.get(slotKey(ref)) ?? null;
                     const row = appt && !isRedacted(appt) ? appt : null;
@@ -181,7 +182,7 @@ export function ScheduleGrid({
                         key={`${dayNum}-${position}`}
                         appt={appt}
                         alliance={alliance}
-                        focus={d.focus === position}
+                        focus={days[dayNum - 1]!.key === position}
                         own={ownKeyId !== null && row?.key_id === ownKeyId}
                         faded={ownKeyId !== null && appt !== null && row?.key_id !== ownKeyId}
                         editable={editable}
@@ -189,7 +190,7 @@ export function ScheduleGrid({
                         title={title}
                         ariaLabel={ariaLabel}
                         onClick={() => onCellClick(ref, row)}
-                        className={cn("border-b border-b-muted-surface", sepClass(pi))}
+                        className={cn("border-b border-b-muted-surface", sepClass(pi, days[dayNum - 1]!.shown.length))}
                       />
                     );
                   }),

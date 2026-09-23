@@ -5,7 +5,6 @@ import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 const DATE_OPTS: Intl.DateTimeFormatOptions = { weekday: "short", day: "numeric", month: "short" };
-const DAY_TOTAL = 2 * SLOTS; // both positions, one day
 
 /** Mobile-only day picker above the one-day `ScheduleGrid`: a scrolling row of 5 chips, then the
  *  picked day's date and fill count (the desktop day-header carries this on md+; here the chips do). */
@@ -43,7 +42,7 @@ export function DayChips({ board, day, onDay }: { board: KvkBoard; day: number; 
             <span dir="ltr">{formatDate(dayIso(start, day), DATE_OPTS)}</span> · {t("kvk.grid.utc")} ·{" "}
           </>
         )}
-        {t("kvk.mobile.dayFilled", { n: filled, total: DAY_TOTAL })}
+        {t("kvk.mobile.dayFilled", { n: filled, total: board.event.days[day - 1]!.shown.length * SLOTS })}
       </p>
     </div>
   );

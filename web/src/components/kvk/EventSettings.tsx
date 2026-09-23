@@ -120,8 +120,8 @@ export function EventSettings({
                   {t(`kvk.days.${d.theme}` as const)}
                 </p>
                 <p className="text-[11.5px] text-ember-fg max-md:ms-auto">
-                  {d.focus
-                    ? t("kvk.settings.keyPosition", { position: t(`kvk.positions.${d.focus}.name` as const) })
+                  {local.days[i]!.key
+                    ? t("kvk.settings.keyPosition", { position: t(`kvk.positions.${local.days[i]!.key}.name` as const) })
                     : t("kvk.settings.noKeyPosition")}
                 </p>
               </div>

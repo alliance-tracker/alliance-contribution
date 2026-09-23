@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { KvkBoard } from "@shared/types";
-import { currentDaySlot, dayIso, DELETED_COLOR, FOCUS_SLOTS, fillCounts, isRedacted, TOTAL_SLOTS } from "@/lib/kvk";
+import { currentDaySlot, dayIso, DELETED_COLOR, fillCounts, isRedacted, slotTotals } from "@/lib/kvk";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +23,8 @@ export function ScheduleHeader({
   const { t } = useTranslation();
   const { event, alliances, appointments } = board;
   const daySlot = currentDaySlot(event.start_date, now);
-  const { filled, focus } = fillCounts(appointments);
+  const { filled, focus } = fillCounts(appointments, event.days);
+  const { total, focusTotal } = slotTotals(event.days);
   const deletedCount = appointments.filter((a) => !isRedacted(a) && a.key_id === null).length;
   const redactedCount = ownKeyId !== null ? appointments.filter(isRedacted).length : 0;
   const ordered = ownKeyId !== null ? [...alliances].sort((a, b) => +(b.id === ownKeyId) - +(a.id === ownKeyId)) : alliances;
@@ -40,7 +41,7 @@ export function ScheduleHeader({
           <StatusPill daySlot={daySlot} />
         </div>
         <p className="text-[12.5px] text-muted">
-          {t("kvk.header.filled", { filled, total: TOTAL_SLOTS, focus, focusTotal: FOCUS_SLOTS })}
+          {t("kvk.header.filled", { filled, total, focus, focusTotal })}
         </p>
       </div>
 

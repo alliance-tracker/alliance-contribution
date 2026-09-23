@@ -133,7 +133,16 @@
   --color-nav-attendance: #22c55e;
   --color-nav-activities: #f97316;
   --color-nav-admin: #a78bfa;
+  --color-nav-kvk: #f43f5e;
   --color-warn-wash: #b45309; /* at-risk stat tile border/bg: stays muted amber on dark */
+
+  /* KvK Prep "Frost & Ember" accents — focus position / NOW row, and the live-day header wash. */
+  --color-ember: #c2410c;
+  --color-ember-fg: #9a3412;
+  --color-ember-ring: #fb923c;
+  --color-ember-bg: #fff7ed;
+  --color-ember-wash: #fffaf5;
+  --color-live-bg: #eef6ee;
 
   --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans Arabic", "Geeza Pro", sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans Arabic", "Geeza Pro", monospace;
@@ -266,6 +275,14 @@
   --color-tone-orange-bg: #431407;
   --color-tone-orange-border: #7c2d12;
   --color-tone-pink: #f472b6;
+
+  /* KvK Prep "Frost & Ember" accents — tuned against the dark surface #13202f. */
+  --color-ember: #fb923c;
+  --color-ember-fg: #fdba74;
+  --color-ember-ring: #f97316;
+  --color-ember-bg: #3a2416;
+  --color-ember-wash: #221c19;
+  --color-live-bg: #16291f;
 }
 
 /*

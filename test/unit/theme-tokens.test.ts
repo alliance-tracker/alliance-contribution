@@ -45,7 +45,9 @@ describe("theme tokens", () => {
       `tone-${t}-bg`,
       `tone-${t}-border`,
     ]);
-    const navs = ["overview", "ranking", "members", "attendance", "activities", "admin"].map((n) => `nav-${n}`);
+    const navs = ["overview", "ranking", "members", "attendance", "activities", "admin", "kvk"].map(
+      (n) => `nav-${n}`,
+    );
     const expected = [
       "border-strong",
       "sidebar",

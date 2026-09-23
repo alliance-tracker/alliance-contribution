@@ -16,6 +16,10 @@ import type {
   DiscordWebhook,
   Event,
   EventListRow,
+  KvkAppointmentRow,
+  KvkBoard,
+  KvkEvent,
+  KvkKey,
   Member,
   MemberDelta,
   MemberProfile,
@@ -40,6 +44,7 @@ import type {
   ScreenshotUsage,
   WeeklyRanking,
 } from "@shared/types";
+import type { KvkSlotRef } from "./kvk";
 
 const BASE = "/api";
 const API_KEY_STORAGE = "ic_api_key";
@@ -120,6 +125,8 @@ export type AuthMe = {
     masked_key?: string;
   };
 };
+
+export type KvkKeyBody = Pick<KvkKey, "alliance_name" | "representative" | "color">;
 
 // ---- Error + transport ------------------------------------------------------
 
@@ -324,6 +331,25 @@ export const api = {
       write<EventNotification>("PUT", `/admin/schedule/notifications/${id}`, body),
     deleteNotification: (id: number) => write<{ ok: true }>("DELETE", `/admin/schedule/notifications/${id}`),
     testNotification: (id: number) => write<{ ok: true }>("POST", `/admin/schedule/notifications/${id}/test`),
+  },
+
+  /** `KvkKeyBody` = the editable fields of a key: never the generated `key` itself. */
+  kvk: {
+    board: () => get<KvkBoard>("/kvk"),
+    setEvent: (body: KvkEvent) => write<KvkEvent>("PUT", "/kvk/event", body),
+    clearAppointments: () => write<{ ok: true; deleted: number }>("DELETE", "/kvk/appointments"),
+    keys: () => get<KvkKey[]>("/kvk/keys"),
+    createKey: (body: KvkKeyBody) => write<KvkKey>("POST", "/kvk/keys", body),
+    updateKey: (id: number, body: KvkKeyBody) => write<KvkKey>("PATCH", `/kvk/keys/${id}`, body),
+    deleteKey: (id: number) => write<{ ok: true }>("DELETE", `/kvk/keys/${id}`),
+    appoint: (body: KvkSlotRef & { player_id: string; player_name: string; key_id: number }) =>
+      write<KvkAppointmentRow>("POST", "/kvk/appointments", body),
+    updateAppointment: (
+      ref: KvkSlotRef,
+      body: { player_id: string; player_name: string; key_id?: number },
+    ) => write<{ ok: true }>("PATCH", `/kvk/appointments/${ref.day}/${ref.position}/${ref.slot}`, body),
+    deleteAppointment: (ref: KvkSlotRef) =>
+      write<{ ok: true }>("DELETE", `/kvk/appointments/${ref.day}/${ref.position}/${ref.slot}`),
   },
 
   admin: {

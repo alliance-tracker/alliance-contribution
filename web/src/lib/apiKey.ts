@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { API_KEY_STORAGE } from "./api";
+import { API_KEY_STORAGE, type AuthMe } from "./api";
 
 export function readApiKey(): string {
   return localStorage.getItem(API_KEY_STORAGE) ?? "";
@@ -22,6 +22,10 @@ export type ApiKeyContextValue = {
   role: Role;
   /** Whether this deployment runs the reminder scheduler — hides the Schedule tab and page when off. */
   scheduler: boolean;
+  /** KvK Prep open flag (+ alliance card for a key holder), from the last /api/auth/me answer. */
+  kvk: NonNullable<AuthMe["kvk"]>;
+  /** Flips the LIVE pill immediately after Event settings saves, without a second /auth/me round trip. */
+  setKvkEnabled: (enabled: boolean) => void;
   /** True until the first /api/auth/me answer lands, so the gate doesn't flash on load. */
   checking: boolean;
 };

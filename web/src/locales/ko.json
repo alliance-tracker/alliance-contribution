@@ -88,6 +88,7 @@
     "navigation": "탐색",
     "sections": {
       "dashboard": "대시보드",
+      "events": "이벤트",
       "manage": "관리"
     },
     "adminTabs": {
@@ -105,6 +106,7 @@
     "attendance": "참석",
     "activities": "활동",
     "admin": "관리자",
+    "kvk": "KvK 준비",
     "memberProfile": "구성원 프로필",
     "subtitles": {
       "overview": "연맹 참여 현황 한눈에 보기",
@@ -113,8 +115,10 @@
       "attendance": "전체 명단의 이벤트일 참석 현황",
       "activities": "활동별 이벤트, 인스턴스, 시간에 따른 합계",
       "admin": "이벤트, 명단, 별칭, 점수 관리",
-      "memberProfile": "개인 참여 및 이력"
-    }
+      "memberProfile": "개인 참여 및 이력",
+      "kvk": "장관 임명 · 30분 슬롯 · UTC"
+    },
+    "live": "라이브"
   },
   "llmPrompt": {
     "title": "스크린샷용 LLM 프롬프트",
@@ -943,6 +947,31 @@
       "afterStart": "시작 {{duration}} 후",
       "in": "{{value}} 후",
       "ago": "{{value}} 전"
+    }
+  },
+  "kvk": {
+    "tabs": {
+      "schedule": "일정"
+    },
+    "status": {
+      "live": "{{n}}일차 진행 중",
+      "startsIn": "{{days}}일 후 시작",
+      "ended": "종료됨",
+      "notSet": "일정 미설정"
+    },
+    "header": {
+      "filled": "{{total}}개 중 {{filled}}개 슬롯 채움 · 핵심 직책 {{focusTotal}}개 중 {{focus}}개"
+    },
+    "deletedKey": "삭제된 키",
+    "positions": {
+      "chief_minister": {
+        "name": "수석 장관",
+        "boosts": "건설, 연구 및 훈련 속도 <1>+15%</1>"
+      },
+      "noble_advisor": {
+        "name": "귀족 고문",
+        "boosts": "훈련 속도 <1>+75%</1> · 훈련 용량 <2>+300</2>"
+      }
     }
   }
 }

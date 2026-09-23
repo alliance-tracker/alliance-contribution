@@ -88,6 +88,7 @@
     "navigation": "Navegación",
     "sections": {
       "dashboard": "Panel",
+      "events": "Eventos",
       "manage": "Gestionar"
     },
     "adminTabs": {
@@ -105,6 +106,7 @@
     "attendance": "Asistencia",
     "activities": "Actividades",
     "admin": "Administración",
+    "kvk": "Preparación KvK",
     "memberProfile": "Perfil del miembro",
     "subtitles": {
       "overview": "Participación de la alianza de un vistazo",
@@ -113,8 +115,10 @@
       "attendance": "Cobertura de los días de evento en toda la lista",
       "activities": "Eventos, instancias y totales de una actividad a lo largo del tiempo",
       "admin": "Gestione eventos, lista, alias y puntuación",
-      "memberProfile": "Participación e historial individual"
-    }
+      "memberProfile": "Participación e historial individual",
+      "kvk": "Nombramientos de ministros · turnos de 30 min · UTC"
+    },
+    "live": "EN VIVO"
   },
   "llmPrompt": {
     "title": "Prompt de LLM para capturas de pantalla",
@@ -1053,6 +1057,31 @@
       "afterStart": "{{duration}} tras el inicio",
       "in": "en {{value}}",
       "ago": "hace {{value}}"
+    }
+  },
+  "kvk": {
+    "tabs": {
+      "schedule": "Calendario"
+    },
+    "status": {
+      "live": "Día {{n}} en curso",
+      "startsIn": "Empieza en {{days}} d",
+      "ended": "Finalizado",
+      "notSet": "Sin programar"
+    },
+    "header": {
+      "filled": "{{filled}} de {{total}} turnos ocupados · posiciones clave {{focus}} de {{focusTotal}}"
+    },
+    "deletedKey": "Clave eliminada",
+    "positions": {
+      "chief_minister": {
+        "name": "Ministro en Jefe",
+        "boosts": "Velocidad de Construcción, Investigación y Entrenamiento <1>+15%</1>"
+      },
+      "noble_advisor": {
+        "name": "Consejero Noble",
+        "boosts": "Velocidad de Entrenamiento <1>+75%</1> · Capacidad de Entrenamiento <2>+300</2>"
+      }
     }
   }
 }

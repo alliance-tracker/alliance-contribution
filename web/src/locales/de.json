@@ -88,6 +88,7 @@
     "navigation": "Navigation",
     "sections": {
       "dashboard": "Übersicht",
+      "events": "Events",
       "manage": "Verwalten"
     },
     "adminTabs": {
@@ -105,6 +106,7 @@
     "attendance": "Anwesenheit",
     "activities": "Aktivitäten",
     "admin": "Verwaltung",
+    "kvk": "KvK-Vorbereitung",
     "memberProfile": "Mitgliedsprofil",
     "subtitles": {
       "overview": "Allianzbeteiligung auf einen Blick",
@@ -113,8 +115,10 @@
       "attendance": "Abdeckung der Eventtage über die gesamte Liste",
       "activities": "Events, Instanzen und Summen einer Aktivität im Zeitverlauf",
       "admin": "Events, Liste, Aliase und Wertung verwalten",
-      "memberProfile": "Individuelle Beteiligung und Verlauf"
-    }
+      "memberProfile": "Individuelle Beteiligung und Verlauf",
+      "kvk": "Ministerernennungen · 30-Min-Slots · UTC"
+    },
+    "live": "LIVE"
   },
   "llmPrompt": {
     "title": "LLM-Prompt für Screenshots",
@@ -998,6 +1002,31 @@
       "afterStart": "{{duration}} nach dem Start",
       "in": "in {{value}}",
       "ago": "vor {{value}}"
+    }
+  },
+  "kvk": {
+    "tabs": {
+      "schedule": "Zeitplan"
+    },
+    "status": {
+      "live": "Tag {{n}} live",
+      "startsIn": "Beginnt in {{days}} T",
+      "ended": "Beendet",
+      "notSet": "Nicht geplant"
+    },
+    "header": {
+      "filled": "{{filled}} von {{total}} Slots belegt · Schlüsselpositionen {{focus}} von {{focusTotal}}"
+    },
+    "deletedKey": "Gelöschter Schlüssel",
+    "positions": {
+      "chief_minister": {
+        "name": "Oberminister",
+        "boosts": "Bau-, Forschungs- & Ausbildungsgeschwindigkeit <1>+15 %</1>"
+      },
+      "noble_advisor": {
+        "name": "Adelsberater",
+        "boosts": "Ausbildungsgeschwindigkeit <1>+75 %</1> · Ausbildungskapazität <2>+300</2>"
+      }
     }
   }
 }

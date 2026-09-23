@@ -88,6 +88,7 @@
     "navigation": "Navigation",
     "sections": {
       "dashboard": "Tableau de bord",
+      "events": "Événements",
       "manage": "Gérer"
     },
     "adminTabs": {
@@ -105,6 +106,7 @@
     "attendance": "Présence",
     "activities": "Activités",
     "admin": "Administration",
+    "kvk": "Préparation KvK",
     "memberProfile": "Profil du membre",
     "subtitles": {
       "overview": "La participation de l'alliance en un coup d'œil",
@@ -113,8 +115,10 @@
       "attendance": "Couverture des jours d'événement sur l'ensemble de la liste",
       "activities": "Événements, instances et totaux d'une activité dans le temps",
       "admin": "Gérez les événements, la liste, les alias et le score",
-      "memberProfile": "Participation et historique individuels"
-    }
+      "memberProfile": "Participation et historique individuels",
+      "kvk": "Nominations des ministres · créneaux de 30 min · UTC"
+    },
+    "live": "EN DIRECT"
   },
   "llmPrompt": {
     "title": "Invite LLM pour les captures d'écran",
@@ -1053,6 +1057,31 @@
       "afterStart": "{{duration}} après le début",
       "in": "dans {{value}}",
       "ago": "il y a {{value}}"
+    }
+  },
+  "kvk": {
+    "tabs": {
+      "schedule": "Planning"
+    },
+    "status": {
+      "live": "Jour {{n}} en cours",
+      "startsIn": "Débute dans {{days}} j",
+      "ended": "Terminé",
+      "notSet": "Non planifié"
+    },
+    "header": {
+      "filled": "{{filled}} sur {{total}} créneaux pourvus · postes clés {{focus}} sur {{focusTotal}}"
+    },
+    "deletedKey": "Clé supprimée",
+    "positions": {
+      "chief_minister": {
+        "name": "Ministre en chef",
+        "boosts": "Vitesse de Construction, Recherche et Entraînement <1>+15 %</1>"
+      },
+      "noble_advisor": {
+        "name": "Conseiller noble",
+        "boosts": "Vitesse d'Entraînement <1>+75 %</1> · Capacité d'Entraînement <2>+300</2>"
+      }
     }
   }
 }

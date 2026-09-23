@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { navSections } from "@/lib/nav";
+import { useApiKey } from "@/lib/apiKey";
 import { cn } from "@/lib/utils";
 
 /** Brand header + nav list, shared by the desktop aside and the mobile drawer. Both sit on the
@@ -9,6 +10,7 @@ import { cn } from "@/lib/utils";
  *  never the theme-flipping foreground tokens. */
 export function SidebarNav() {
   const { t } = useTranslation();
+  const { kvk } = useApiKey();
   return (
     <>
       {/* Brand */}
@@ -64,6 +66,11 @@ export function SidebarNav() {
                     <span className="truncate" title={t(item.label)}>
                       {t(item.label)}
                     </span>
+                    {item.to === "/kvk" && kvk.enabled && (
+                      <span className="ms-auto shrink-0 rounded-[5px] bg-[#22c55e26] px-1.5 py-0.5 font-mono text-[9.5px] font-semibold tracking-[0.02em] text-[#4ade80]">
+                        {t("nav.live")}
+                      </span>
+                    )}
                   </>
                 )}
               </NavLink>

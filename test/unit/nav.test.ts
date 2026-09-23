@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hueForPath, navSections } from "../../web/src/lib/nav";
+import { hueForPath, navSections, titleForPath } from "../../web/src/lib/nav";
 
 describe("hueForPath", () => {
   it("gives every nav item a hue token", () => {
@@ -17,9 +17,16 @@ describe("hueForPath", () => {
     expect(hueForPath("/members/42")).toBe("var(--color-nav-members)");
     expect(hueForPath("/activities/bear_trap")).toBe("var(--color-nav-activities)");
     expect(hueForPath("/admin/roster")).toBe("var(--color-nav-admin)");
+    expect(hueForPath("/kvk/keys")).toBe("var(--color-nav-kvk)");
   });
 
   it("returns null for an unknown path", () => {
     expect(hueForPath("/nope")).toBeNull();
+  });
+});
+
+describe("titleForPath", () => {
+  it("matches nested /kvk routes by prefix", () => {
+    expect(titleForPath("/kvk/settings")).toBe("nav.kvk");
   });
 });

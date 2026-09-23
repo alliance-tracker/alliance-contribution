@@ -88,6 +88,7 @@
     "navigation": "Navigation",
     "sections": {
       "dashboard": "Dashboard",
+      "events": "Events",
       "manage": "Manage"
     },
     "adminTabs": {
@@ -105,6 +106,7 @@
     "attendance": "Attendance",
     "activities": "Activities",
     "admin": "Admin",
+    "kvk": "KvK Prep",
     "memberProfile": "Member Profile",
     "subtitles": {
       "overview": "Alliance participation at a glance",
@@ -113,8 +115,10 @@
       "attendance": "Event-day coverage across the roster",
       "activities": "One activity's events, instances, and totals over time",
       "admin": "Manage events, roster, aliases & scoring",
-      "memberProfile": "Individual participation & history"
-    }
+      "memberProfile": "Individual participation & history",
+      "kvk": "Minister appointments · 30-min slots · UTC"
+    },
+    "live": "LIVE"
   },
   "llmPrompt": {
     "title": "LLM prompt for screenshots",
@@ -998,6 +1002,31 @@
       "afterStart": "{{duration}} after start",
       "in": "in {{value}}",
       "ago": "{{value}} ago"
+    }
+  },
+  "kvk": {
+    "tabs": {
+      "schedule": "Schedule"
+    },
+    "status": {
+      "live": "Day {{n}} live",
+      "startsIn": "Starts in {{days}} d",
+      "ended": "Ended",
+      "notSet": "Not scheduled"
+    },
+    "header": {
+      "filled": "{{filled}} of {{total}} slots filled · key positions {{focus}} of {{focusTotal}}"
+    },
+    "deletedKey": "Deleted key",
+    "positions": {
+      "chief_minister": {
+        "name": "Chief Minister",
+        "boosts": "Construction, Research & Training Speed <1>+15%</1>"
+      },
+      "noble_advisor": {
+        "name": "Noble Advisor",
+        "boosts": "Training Speed <1>+75%</1> · Training Capacity <2>+300</2>"
+      }
     }
   }
 }

@@ -24,6 +24,7 @@ const Scoring = lazy(() => import("@/pages/Scoring").then((m) => ({ default: m.S
 const Backup = lazy(() => import("@/pages/Backup").then((m) => ({ default: m.Backup })));
 const Rewards = lazy(() => import("@/pages/Rewards").then((m) => ({ default: m.Rewards })));
 const Schedule = lazy(() => import("@/pages/Schedule").then((m) => ({ default: m.Schedule })));
+const KvkPrep = lazy(() => import("@/pages/KvkPrep").then((m) => ({ default: m.KvkPrep })));
 
 export default function App() {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ export default function App() {
               <Route path="/members" element={<Members />} />
               <Route path="/members/:id" element={<MemberProfile />} />
               <Route path="/activities/:key?" element={<Activity />} />
+              <Route path="/kvk/:tab?" element={<KvkPrep />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Navigate to="/admin/events" replace />} />
                 <Route path="events" element={<Events />} />

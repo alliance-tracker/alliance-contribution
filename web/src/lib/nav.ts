@@ -5,6 +5,7 @@ import {
   CalendarCheck,
   SlidersHorizontal,
   Swords,
+  Crown,
   type LucideIcon,
 } from "lucide-react";
 import type { TKey } from "@/i18n";
@@ -25,6 +26,10 @@ export const navSections: NavSection[] = [
     ],
   },
   {
+    title: "nav.sections.events",
+    items: [{ to: "/kvk", label: "nav.kvk", icon: Crown, hue: "var(--color-nav-kvk)" }],
+  },
+  {
     title: "nav.sections.manage",
     items: [{ to: "/admin", label: "nav.admin", icon: SlidersHorizontal, hue: "var(--color-nav-admin)" }],
   },
@@ -36,6 +41,7 @@ export function titleForPath(pathname: string): TKey | null {
   if (pathname.startsWith("/rankings")) return "nav.ranking";
   if (pathname.startsWith("/members/")) return "nav.memberProfile";
   if (pathname.startsWith("/activities")) return "nav.activities";
+  if (pathname.startsWith("/kvk")) return "nav.kvk";
   for (const section of navSections) {
     for (const item of section.items) {
       if (item.to === pathname) return item.label;
@@ -49,6 +55,7 @@ const subtitles: Record<string, TKey> = {
   "/rankings": "nav.subtitles.ranking",
   "/members": "nav.subtitles.members",
   "/attendance": "nav.subtitles.attendance",
+  "/kvk": "nav.subtitles.kvk",
 };
 
 /** Translation key of the best-match page subtitle; null → none. */

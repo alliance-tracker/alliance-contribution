@@ -1116,7 +1116,8 @@
       "duplicate_other": "{{name}} est aussi affecté à {{count}} autres créneaux.",
       "createdBy": "Créé par {{rep}} · {{alliance}}",
       "createdByAdmin": "Créé par l'administrateur",
-      "appointBtn": "Nommer"
+      "appointBtn": "Nommer",
+      "remove": "Retirer"
     },
     "days": {
       "construction": "Construction",
@@ -1131,11 +1132,13 @@
       "freed": "Créneau libéré",
       "taken": "Créneau déjà pris",
       "takenSub": "Quelqu'un vient de réserver ce créneau. Le tableau a été actualisé.",
+      "slotChanged": "Ce créneau a changé — le planning a été actualisé",
       "keyCopied": "Clé copiée pour {{alliance}}",
       "linkCopied": "Lien de connexion copié pour {{alliance}}",
       "keyDeleted": "Clé supprimée",
       "keyDeletedSub": "Ses affectations restent sur le planning",
-      "cleared": "Planning effacé"
+      "cleared": "Planning effacé",
+      "copyFailed": "Impossible de copier dans le presse-papiers"
     },
     "needKey": "Définissez votre clé API (barre du haut) pour gérer KvK Prep.",
     "banner": {

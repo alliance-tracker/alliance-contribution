@@ -1116,7 +1116,8 @@
       "duplicate_other": "{{name}} también está asignado a otros {{count}} turnos.",
       "createdBy": "Creado por {{rep}} · {{alliance}}",
       "createdByAdmin": "Creado por el administrador",
-      "appointBtn": "Nombrar"
+      "appointBtn": "Nombrar",
+      "remove": "Quitar"
     },
     "days": {
       "construction": "Construcción",
@@ -1131,11 +1132,13 @@
       "freed": "Turno liberado",
       "taken": "Turno ocupado",
       "takenSub": "Alguien acaba de reservar este turno. El tablero se actualizó.",
+      "slotChanged": "Este turno cambió — el calendario se actualizó",
       "keyCopied": "Clave copiada de {{alliance}}",
       "linkCopied": "Enlace de acceso copiado de {{alliance}}",
       "keyDeleted": "Clave eliminada",
       "keyDeletedSub": "Sus asignaciones permanecen en el calendario",
-      "cleared": "Calendario vaciado"
+      "cleared": "Calendario vaciado",
+      "copyFailed": "No se pudo copiar al portapapeles"
     },
     "needKey": "Configura tu clave de API (barra superior) para gestionar KvK Prep.",
     "banner": {

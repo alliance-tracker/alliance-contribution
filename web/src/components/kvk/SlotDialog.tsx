@@ -34,7 +34,7 @@ export function SlotDialog({
   lockedKeyId: number | null;
   onClose: () => void;
   onSaved: (message: string) => void;
-  onConflict: () => void;
+  onConflict: (reason: "conflict" | "changed") => void;
 }) {
   const { t } = useTranslation();
   const appt = target?.appt ?? null;
@@ -61,9 +61,15 @@ export function SlotDialog({
   const duplicateCount = ref ? otherSlotsFor(appointments, trimmedId, ref) : 0;
 
   const finish = (e: unknown): void => {
-    // A holder's 404 means the row changed hands (or was freed) under them: same refresh as a conflict.
-    if (e instanceof ApiError && (e.status === 409 || (lockedKeyId !== null && e.status === 404))) {
-      onConflict();
+    if (e instanceof ApiError && e.status === 409) {
+      onConflict("conflict");
+      onClose();
+      return;
+    }
+    // A holder's 404/403 means the row changed hands (or was freed) under them: same refresh as a
+    // conflict, just with neutral wording since nothing was actually contested.
+    if (e instanceof ApiError && lockedKeyId !== null && (e.status === 404 || e.status === 403)) {
+      onConflict("changed");
       onClose();
       return;
     }
@@ -114,7 +120,7 @@ export function SlotDialog({
   const createdByAlliance = appt ? (alliances.find((a) => a.id === appt.key_id)?.alliance_name ?? t("kvk.deletedKey")) : "";
 
   return (
-    <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={target !== null} onOpenChange={(open) => !open && !busy && onClose()}>
       <DialogContent className={cn("max-w-[440px]", SHEET)}>
         <DialogHeader>
           <DialogTitle>
@@ -220,12 +226,12 @@ export function SlotDialog({
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           {appt ? (
             <Button type="button" variant="ghost" size="sm" className="text-down hover:bg-tone-red-bg" onClick={remove} disabled={busy}>
-              {t("common.actions.delete")}
+              {t("kvk.slot.remove")}
             </Button>
           ) : (
             <span />
           )}
-          <div className={cn("ms-auto flex items-center gap-2", SHEET_FOOT)}>
+          <div className={cn("ms-auto flex items-center gap-2 max-md:w-full", SHEET_FOOT)}>
             <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
               {t("common.actions.cancel")}
             </Button>

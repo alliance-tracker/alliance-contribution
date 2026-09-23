@@ -1060,7 +1060,8 @@
       "duplicate_other": "{{name}} is also appointed to {{count}} other slots.",
       "createdBy": "Created by {{rep}} · {{alliance}}",
       "createdByAdmin": "Created by Admin",
-      "appointBtn": "Appoint"
+      "appointBtn": "Appoint",
+      "remove": "Remove"
     },
     "days": {
       "construction": "Construction",
@@ -1075,11 +1076,13 @@
       "freed": "Slot freed",
       "taken": "Slot taken",
       "takenSub": "Someone just booked this slot. The board has refreshed.",
+      "slotChanged": "This slot changed — the schedule was refreshed",
       "keyCopied": "Key copied for {{alliance}}",
       "linkCopied": "Sign-in link copied for {{alliance}}",
       "keyDeleted": "Key deleted",
       "keyDeletedSub": "Its appointments stay on the schedule",
-      "cleared": "Schedule cleared"
+      "cleared": "Schedule cleared",
+      "copyFailed": "Couldn't copy to clipboard"
     },
     "needKey": "Set your API key (top bar) to manage KvK Prep.",
     "banner": {

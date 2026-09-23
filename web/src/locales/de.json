@@ -1060,7 +1060,8 @@
       "duplicate_other": "{{name}} ist außerdem {{count}} weiteren Slots zugewiesen.",
       "createdBy": "Erstellt von {{rep}} · {{alliance}}",
       "createdByAdmin": "Von einem Administrator erstellt",
-      "appointBtn": "Ernennen"
+      "appointBtn": "Ernennen",
+      "remove": "Entfernen"
     },
     "days": {
       "construction": "Bau",
@@ -1075,11 +1076,13 @@
       "freed": "Slot freigegeben",
       "taken": "Slot bereits vergeben",
       "takenSub": "Jemand hat diesen Slot gerade gebucht. Der Plan wurde aktualisiert.",
+      "slotChanged": "Dieser Slot hat sich geändert — der Zeitplan wurde aktualisiert",
       "keyCopied": "Schlüssel für {{alliance}} kopiert",
       "linkCopied": "Anmeldelink für {{alliance}} kopiert",
       "keyDeleted": "Schlüssel gelöscht",
       "keyDeletedSub": "Seine Ernennungen bleiben im Zeitplan erhalten",
-      "cleared": "Zeitplan geleert"
+      "cleared": "Zeitplan geleert",
+      "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
     },
     "needKey": "Lege deinen API-Schlüssel (obere Leiste) fest, um KvK Prep zu verwalten.",
     "banner": {

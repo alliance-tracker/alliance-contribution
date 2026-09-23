@@ -1284,7 +1284,8 @@
       "duplicate_other": "{{name}} معيّن أيضًا إلى {{count}} فتحة أخرى.",
       "createdBy": "أُنشئ بواسطة {{rep}} · {{alliance}}",
       "createdByAdmin": "أُنشئ بواسطة المسؤول",
-      "appointBtn": "تعيين"
+      "appointBtn": "تعيين",
+      "remove": "إزالة"
     },
     "days": {
       "construction": "البناء",
@@ -1299,11 +1300,13 @@
       "freed": "تم تحرير الفتحة",
       "taken": "الفتحة مشغولة",
       "takenSub": "قام شخص آخر للتو بحجز هذه الفتحة. تم تحديث اللوحة.",
+      "slotChanged": "تغيرت هذه الفتحة — تم تحديث الجدول",
       "keyCopied": "تم نسخ المفتاح لـ {{alliance}}",
       "linkCopied": "تم نسخ رابط تسجيل الدخول لـ {{alliance}}",
       "keyDeleted": "تم حذف المفتاح",
       "keyDeletedSub": "تبقى تعييناته في الجدول",
-      "cleared": "تم مسح الجدول"
+      "cleared": "تم مسح الجدول",
+      "copyFailed": "تعذر النسخ إلى الحافظة"
     },
     "needKey": "اضبط مفتاح API (الشريط العلوي) لإدارة KvK Prep.",
     "banner": {

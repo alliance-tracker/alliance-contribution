@@ -1004,7 +1004,8 @@
       "duplicate_other": "{{name}} 님은 다른 {{count}}개 슬롯에도 배정되어 있습니다.",
       "createdBy": "{{rep}} · {{alliance}}이(가) 생성함",
       "createdByAdmin": "관리자가 생성함",
-      "appointBtn": "임명"
+      "appointBtn": "임명",
+      "remove": "제거"
     },
     "days": {
       "construction": "건설",
@@ -1019,11 +1020,13 @@
       "freed": "슬롯 비움",
       "taken": "슬롯이 이미 찼습니다",
       "takenSub": "다른 사람이 방금 이 슬롯을 예약했습니다. 보드가 새로고침되었습니다.",
+      "slotChanged": "이 슬롯이 변경되어 일정이 새로고침되었습니다",
       "keyCopied": "{{alliance}}의 키가 복사되었습니다",
       "linkCopied": "{{alliance}}의 로그인 링크가 복사되었습니다",
       "keyDeleted": "키 삭제됨",
       "keyDeletedSub": "배정 내역은 일정에 그대로 남습니다",
-      "cleared": "일정이 초기화되었습니다"
+      "cleared": "일정이 초기화되었습니다",
+      "copyFailed": "클립보드에 복사하지 못했습니다"
     },
     "needKey": "KvK Prep을 관리하려면 API 키(상단 바)를 설정하세요.",
     "banner": {

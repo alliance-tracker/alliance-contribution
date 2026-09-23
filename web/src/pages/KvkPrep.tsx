@@ -58,7 +58,7 @@ export function KvkPrep() {
   useEffect(() => () => window.clearTimeout(toastTimer.current), []);
 
   // navigator.clipboard.writeText can reject (insecure context, denied permission) — a failed copy
-  // gets the generic error toast rather than a false "copied".
+  // gets a copy-specific error toast rather than a false "copied".
   const onCopy = (k: KvkKey, what: "key" | "link") => {
     const text = what === "key" ? k.key : signInLink(k.key, location.origin);
     navigator.clipboard
@@ -66,7 +66,7 @@ export function KvkPrep() {
       .then(() =>
         showToast(t(what === "key" ? "kvk.toast.keyCopied" : "kvk.toast.linkCopied", { alliance: k.alliance_name })),
       )
-      .catch(() => showToast(t("common.errors.generic")));
+      .catch(() => showToast(t("kvk.toast.copyFailed")));
   };
 
   // Same polling shape as Schedule.tsx's status effect, at 30s instead of 60s: no useApi (it would
@@ -244,8 +244,9 @@ export function KvkPrep() {
           showToast(message);
           reload();
         }}
-        onConflict={() => {
-          showToast(t("kvk.toast.taken"), t("kvk.toast.takenSub"));
+        onConflict={(reason) => {
+          if (reason === "conflict") showToast(t("kvk.toast.taken"), t("kvk.toast.takenSub"));
+          else showToast(t("kvk.toast.slotChanged"));
           reload();
         }}
       />

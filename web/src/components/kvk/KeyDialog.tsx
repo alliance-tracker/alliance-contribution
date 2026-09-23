@@ -79,7 +79,7 @@ export function KeyDialog({
   const sub = revealed ? t("kvk.keyDialog.createdSub") : t("kvk.keyDialog.sub");
 
   return (
-    <Dialog open={target !== null} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={target !== null} onOpenChange={(open) => !open && !busy && onClose()}>
       <DialogContent className={cn("max-w-[440px]", SHEET)}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -154,7 +154,7 @@ export function KeyDialog({
               ) : (
                 <span />
               )}
-              <div className={cn("ms-auto flex items-center gap-2", SHEET_FOOT)}>
+              <div className={cn("ms-auto flex items-center gap-2 max-md:w-full", SHEET_FOOT)}>
                 <Button variant="secondary" size="sm" onClick={onClose} disabled={busy}>
                   {t("common.actions.cancel")}
                 </Button>

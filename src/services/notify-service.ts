@@ -40,9 +40,10 @@ export class NotifyService {
   }
 
   /** Called once a minute by the cron trigger. Sequential on purpose: a handful of posts per minute at
-   *  most, and Discord would rather not be hit in parallel anyway. Returns how many posts were tried. */
-  async runDue(languagesResolver: () => Promise<string[]>, windowMs?: number): Promise<number> {
-    const now = this.now();
+   *  most, and Discord would rather not be hit in parallel anyway. Returns how many posts were tried.
+   *  `now` is the cron's scheduledTime: Cloudflare starts a tick a few hundred ms BEFORE the minute, so
+   *  the wall clock would find nothing due yet and every reminder would slip to the next tick. */
+  async runDue(languagesResolver: () => Promise<string[]>, windowMs?: number, now = this.now()): Promise<number> {
     const config = await this.load();
     const due = dueFires(
       config.events.filter((e) => e.enabled === 1).map(toRecurrence),

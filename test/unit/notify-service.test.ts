@@ -157,6 +157,13 @@ describe("NotifyService.runDue", () => {
     expect(settings.values.get("notify_last_run")).toBe(quiet.toISOString());
   });
 
+  it("fires on the cron's scheduled minute even when the wall clock reads a hair early", async () => {
+    // Cloudflare starts the tick ~300 ms before the boundary; the wall clock alone would slip it a minute.
+    const early = new Date(FIRE_TIME.getTime() - 300);
+    const svc = service(fixture(), new FakeSettings(), recordingFetch(), early);
+    expect(await svc.runDue(LANGS, undefined, FIRE_TIME)).toBe(1);
+  });
+
   it("skips a disabled event", async () => {
     const repo = fixture();
     repo.eventRows[0].enabled = 0;

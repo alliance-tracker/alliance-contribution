@@ -75,10 +75,16 @@ app.get("*", async (c) => {
 
 // Cron trigger (every minute when the deployment enables it). Guarded twice on purpose: a cron added
 // without the var must not start posting to Discord. waitUntil so the tick returns immediately.
-const scheduled: ExportedHandlerScheduledHandler<Env> = (_ev, env, ctx) => {
+const scheduled: ExportedHandlerScheduledHandler<Env> = (ev, env, ctx) => {
   if (env.SCHEDULER_ENABLED !== "true") return;
   const { notifyService, scheduleService } = createServices(env.DB);
-  ctx.waitUntil(notifyService.runDue(async () => (await scheduleService.getLanguages(env)).languages));
+  ctx.waitUntil(
+    notifyService.runDue(
+      async () => (await scheduleService.getLanguages(env)).languages,
+      undefined,
+      new Date(ev.scheduledTime),
+    ),
+  );
 };
 
 export default { fetch: app.fetch, scheduled };

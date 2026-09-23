@@ -11,7 +11,7 @@ export function writeApiKey(key: string): void {
   else localStorage.removeItem(API_KEY_STORAGE);
 }
 
-export type Role = "admin" | "manager" | "viewer" | null;
+export type Role = "admin" | "manager" | "viewer" | "kvk" | null;
 
 export type ApiKeyContextValue = {
   /** The current API key ("" when unset). Every request needs one — viewer tier is the read floor. */

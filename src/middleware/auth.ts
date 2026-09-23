@@ -1,8 +1,10 @@
 import type { MiddlewareHandler } from "hono";
 import type { Env } from "../env";
+import { createServices } from "../services";
 
-export type Role = "admin" | "manager" | "viewer";
-export type AuthVariables = { role: Role | null };
+export type Role = "admin" | "manager" | "viewer" | "kvk";
+/** kvkKeyId is the caller's kvk_access_keys.id when role is "kvk", null on every other request. */
+export type AuthVariables = { role: Role | null; kvkKeyId: number | null };
 
 // Reachable without any key: the uptime probe, and the endpoint the SPA uses to discover what tier its
 // stored key resolves to (it must be able to report "your key is not valid" rather than 401).
@@ -31,11 +33,31 @@ export function resolveRole(key: string | undefined, env: Env): Role | null {
   return null;
 }
 
+export const isKvkPath = (path: string) => path === "/api/kvk" || path.startsWith("/api/kvk/");
+
 // Resolves X-Api-Key to a role and stores it on context for downstream middleware/handlers. Gating rule:
 // every /api route outside PUBLIC_PATHS needs a key that resolves to some role (401 otherwise), and the
 // viewer tier is read-only — it may not touch /api/admin or any non-GET method (403).
+// KvK keys (external alliances) are looked up in D1 only on /api/kvk* and /api/auth/me, so everywhere
+// else a kvk key is just an unknown key (401) and costs no query.
 export const apiKeyAuth: MiddlewareHandler<{ Bindings: Env; Variables: AuthVariables }> = async (c, next) => {
-  const role = resolveRole(c.req.header("X-Api-Key"), c.env);
+  const key = c.req.header("X-Api-Key");
+  const path = c.req.path;
+  let role = resolveRole(key, c.env);
+  c.set("kvkKeyId", null);
+
+  if (role === null && key?.startsWith("kvk_") && (isKvkPath(path) || path === "/api/auth/me")) {
+    const { kvkService } = createServices(c.env.DB);
+    const row = await kvkService.keyByValue(key);
+    if (row) {
+      if (isKvkPath(path) && !(await kvkService.getEvent()).enabled) {
+        return c.json({ error: "kvk closed" }, 401);
+      }
+      role = "kvk";
+      c.set("kvkKeyId", row.id);
+      c.executionCtx.waitUntil(kvkService.touchKey(row.id, Date.now()));
+    }
+  }
   c.set("role", role);
 
   if (PUBLIC_PATHS.has(c.req.path)) {
@@ -45,6 +67,11 @@ export const apiKeyAuth: MiddlewareHandler<{ Bindings: Env; Variables: AuthVaria
 
   if (role === null) {
     return c.json({ error: "unauthorized" }, 401);
+  }
+
+  // Fence: the lookup above is already path-gated; this keeps a kvk role off every other route regardless.
+  if (role === "kvk" && !isKvkPath(path)) {
+    return c.json({ error: "forbidden" }, 403);
   }
 
   const isAdminRoute = c.req.path === "/api/admin" || c.req.path.startsWith("/api/admin/");

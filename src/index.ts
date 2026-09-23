@@ -10,6 +10,7 @@ import aliasesRoutes from "./routes/aliases";
 import allocationsRoutes from "./routes/allocations";
 import analyticsRoutes from "./routes/analytics";
 import eventsRoutes from "./routes/events";
+import kvkRoutes from "./routes/kvk";
 import membersRoutes from "./routes/members";
 import scheduleAdminRoutes, { scheduleReadRoutes } from "./routes/schedule";
 import screenshotsRoutes from "./routes/screenshots";
@@ -26,7 +27,22 @@ app.use("/api/*", apiKeyAuth);
 app.get("/api/health", (c) => c.json({ ok: true }));
 
 // Lets clients discover which tier the presented X-Api-Key resolves to. Public GET, always 200.
-app.get("/api/auth/me", (c) => c.json({ role: c.get("role"), scheduler: c.env.SCHEDULER_ENABLED === "true" }));
+// `kvk` carries the KvK Prep open flag; key holders also get their alliance card (key masked). A request
+// with no valid key gets `{ enabled: false }` so it learns nothing.
+app.get("/api/auth/me", async (c) => {
+  const role = c.get("role");
+  const scheduler = c.env.SCHEDULER_ENABLED === "true";
+  if (role === null) return c.json({ role, scheduler, kvk: { enabled: false } });
+  const { kvkService } = createServices(c.env.DB);
+  const { enabled } = await kvkService.getEvent();
+  if (role !== "kvk") return c.json({ role, scheduler, kvk: { enabled } });
+  // Middleware just resolved this key, so the row exists (barring a delete in between → treat as no role).
+  const row = await kvkService.keyByValue(c.req.header("X-Api-Key")!);
+  if (!row) return c.json({ role: null, scheduler, kvk: { enabled: false } });
+  const { alliance_name, representative, color, key } = row;
+  const masked_key = `${key.slice(0, 8)}••••${key.slice(-4)}`;
+  return c.json({ role, scheduler, kvk: { enabled, alliance_name, representative, color, masked_key } });
+});
 
 app.route("/api/activity-types", activityTypesRoutes);
 app.route("/api/admin/allocations", allocationsRoutes);
@@ -36,6 +52,7 @@ app.route("/api/aliases", aliasesRoutes);
 // Mounted at /api/ingests, not /api/events: ad blockers ship filter-list rules for `/api/event(s)`
 // (a common analytics path), so the browser cancelled the request before it left the client.
 app.route("/api/ingests", eventsRoutes);
+app.route("/api/kvk", kvkRoutes);
 app.route("/api/members", membersRoutes);
 app.route("/api/schedule", scheduleReadRoutes);
 app.route("/api/screenshots", screenshotsRoutes);

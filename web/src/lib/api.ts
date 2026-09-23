@@ -108,7 +108,18 @@ export type ImportResult = {
   error?: string;
 };
 
-export type AuthMe = { role: "admin" | "manager" | "viewer" | null; scheduler: boolean };
+export type AuthMe = {
+  role: "admin" | "manager" | "viewer" | "kvk" | null;
+  scheduler: boolean;
+  /** KvK Prep: key holders also get their alliance card; everyone else just the open flag. */
+  kvk?: {
+    enabled: boolean;
+    alliance_name?: string;
+    representative?: string;
+    color?: string;
+    masked_key?: string;
+  };
+};
 
 // ---- Error + transport ------------------------------------------------------
 

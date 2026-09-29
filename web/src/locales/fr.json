@@ -1101,7 +1101,9 @@
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "Nommer {{position}}",
       "appointLabel": "Nommer {{position}} · Jour {{day}} · {{time}}",
-      "allHidden": "Tous les jours sont masqués. Affichez un poste pour un jour dans les paramètres de l'événement pour voir le planning."
+      "allHidden": "Tous les jours sont masqués. Affichez un poste pour un jour dans les paramètres de l'événement pour voir le planning.",
+      "copyFree": "Copier les créneaux libres de {{position}} · Jour {{day}}",
+      "noFree": "Aucun créneau libre à copier"
     },
     "slot": {
       "appoint": "Nommer {{position}}",
@@ -1139,7 +1141,10 @@
       "keyDeleted": "Clé supprimée",
       "keyDeletedSub": "Ses affectations restent sur le planning",
       "cleared": "Planning effacé",
-      "copyFailed": "Impossible de copier dans le presse-papiers"
+      "copyFailed": "Impossible de copier dans le presse-papiers",
+      "freeCopied_one": "{{count}} créneau libre copié",
+      "freeCopied_many": "{{count}} créneaux libres copiés",
+      "freeCopied_other": "{{count}} créneaux libres copiés"
     },
     "needKey": "Définissez votre clé API (barre du haut) pour gérer KvK Prep.",
     "banner": {

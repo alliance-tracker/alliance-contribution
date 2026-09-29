@@ -1046,7 +1046,9 @@
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "Appoint {{position}}",
       "appointLabel": "Appoint {{position}} · Day {{day}} · {{time}}",
-      "allHidden": "Every day is hidden. Show a position for a day in Event settings to see the schedule."
+      "allHidden": "Every day is hidden. Show a position for a day in Event settings to see the schedule.",
+      "copyFree": "Copy free {{position}} slots · Day {{day}}",
+      "noFree": "No free slots to copy"
     },
     "slot": {
       "appoint": "Appoint {{position}}",
@@ -1083,7 +1085,9 @@
       "keyDeleted": "Key deleted",
       "keyDeletedSub": "Its appointments stay on the schedule",
       "cleared": "Schedule cleared",
-      "copyFailed": "Couldn't copy to clipboard"
+      "copyFailed": "Couldn't copy to clipboard",
+      "freeCopied_one": "Copied {{count}} free slot",
+      "freeCopied_other": "Copied {{count}} free slots"
     },
     "needKey": "Set your API key (top bar) to manage KvK Prep.",
     "banner": {

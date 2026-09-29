@@ -1101,7 +1101,9 @@
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "Nombrar {{position}}",
       "appointLabel": "Nombrar {{position}} · Día {{day}} · {{time}}",
-      "allHidden": "Todos los días están ocultos. Muestra una posición para un día en Configuración del evento para ver el calendario."
+      "allHidden": "Todos los días están ocultos. Muestra una posición para un día en Configuración del evento para ver el calendario.",
+      "copyFree": "Copiar turnos libres de {{position}} · Día {{day}}",
+      "noFree": "No hay turnos libres para copiar"
     },
     "slot": {
       "appoint": "Nombrar {{position}}",
@@ -1139,7 +1141,10 @@
       "keyDeleted": "Clave eliminada",
       "keyDeletedSub": "Sus asignaciones permanecen en el calendario",
       "cleared": "Calendario vaciado",
-      "copyFailed": "No se pudo copiar al portapapeles"
+      "copyFailed": "No se pudo copiar al portapapeles",
+      "freeCopied_one": "{{count}} turno libre copiado",
+      "freeCopied_many": "{{count}} turnos libres copiados",
+      "freeCopied_other": "{{count}} turnos libres copiados"
     },
     "needKey": "Configura tu clave de API (barra superior) para gestionar KvK Prep.",
     "banner": {

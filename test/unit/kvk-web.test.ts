@@ -6,8 +6,11 @@ import {
   dayIso,
   fillCounts,
   firstFreeColor,
+  freeSlots,
+  freeSlotsText,
   gridStyle,
   holderCanEdit,
+  indexAppointments,
   KVK_COLORS,
   maskKey,
   otherSlotsFor,
@@ -112,6 +115,35 @@ describe("fillCounts", () => {
       row({ day: 3, position: "noble_advisor", slot: 1 }), // still not the key position
     ];
     expect(fillCounts(appts, days)).toEqual({ filled: 2, focus: 1 });
+  });
+});
+
+describe("freeSlots", () => {
+  const byKey = indexAppointments([
+    row({ day: 2, position: "chief_minister", slot: 0 }),
+    { day: 2, position: "chief_minister", slot: 2, filled: true } as KvkRedactedAppointment,
+    row({ day: 2, position: "noble_advisor", slot: 1 }), // other column
+  ]);
+
+  it("lists unbooked slots, a redacted row counting as booked", () => {
+    const free = freeSlots(byKey, 2, "chief_minister", { phase: "before", days: 3 });
+    expect(free.slice(0, 3)).toEqual([1, 3, 4]);
+    expect(free).toHaveLength(46);
+  });
+
+  it("skips slots already over", () => {
+    expect(freeSlots(byKey, 2, "chief_minister", { phase: "live", day: 2, slot: 45 })).toEqual([45, 46, 47]);
+    expect(freeSlots(byKey, 1, "chief_minister", { phase: "live", day: 2, slot: 0 })).toEqual([]);
+    expect(freeSlots(byKey, 3, "chief_minister", { phase: "live", day: 2, slot: 47 })).toHaveLength(48);
+    expect(freeSlots(byKey, 2, "chief_minister", { phase: "ended" })).toEqual([]);
+  });
+});
+
+describe("freeSlotsText", () => {
+  it("puts three start times per line under the two header lines", () => {
+    expect(freeSlotsText("Day 1: Construction", "Chief Minister", [0, 1, 34, 47], "UTC")).toBe(
+      "Day 1: Construction\nChief Minister\n00:00 · 00:30 · 17:00 UTC\n23:30 UTC",
+    );
   });
 });
 

@@ -1046,7 +1046,9 @@
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "{{position}} ernennen",
       "appointLabel": "{{position}} ernennen · Tag {{day}} · {{time}}",
-      "allHidden": "Jeder Tag ist ausgeblendet. Blende in den Ereigniseinstellungen eine Position für einen Tag ein, um den Zeitplan zu sehen."
+      "allHidden": "Jeder Tag ist ausgeblendet. Blende in den Ereigniseinstellungen eine Position für einen Tag ein, um den Zeitplan zu sehen.",
+      "copyFree": "Freie {{position}}-Slots kopieren · Tag {{day}}",
+      "noFree": "Keine freien Slots zum Kopieren"
     },
     "slot": {
       "appoint": "{{position}} ernennen",
@@ -1083,7 +1085,9 @@
       "keyDeleted": "Schlüssel gelöscht",
       "keyDeletedSub": "Seine Ernennungen bleiben im Zeitplan erhalten",
       "cleared": "Zeitplan geleert",
-      "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
+      "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen",
+      "freeCopied_one": "{{count}} freier Slot kopiert",
+      "freeCopied_other": "{{count}} freie Slots kopiert"
     },
     "needKey": "Lege deinen API-Schlüssel (obere Leiste) fest, um KvK Prep zu verwalten.",
     "banner": {

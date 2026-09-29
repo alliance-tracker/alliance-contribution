@@ -1,12 +1,14 @@
 import { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Check } from "lucide-react";
-import type { KvkAppointmentRow, KvkBoard, KvkBoardAppointment } from "@shared/types";
+import { Check, Copy } from "lucide-react";
+import type { KvkAppointmentRow, KvkBoard, KvkBoardAppointment, KvkPosition } from "@shared/types";
 import {
   currentDaySlot,
   DAYS,
   dayIso,
   DELETED_COLOR,
+  freeSlots,
+  freeSlotsText,
   gridStyle,
   indexAppointments,
   isRedacted,
@@ -37,6 +39,7 @@ export function ScheduleGrid({
   canEdit,
   onCellClick,
   day,
+  onToast,
 }: {
   board: KvkBoard;
   now: number;
@@ -44,6 +47,7 @@ export function ScheduleGrid({
   canEdit: (appt: KvkBoardAppointment | null) => boolean;
   onCellClick: (ref: KvkSlotRef, appt: KvkAppointmentRow | null) => void;
   day?: number;
+  onToast: (title: string) => void;
 }) {
   const { t } = useTranslation();
   const start = board.event.start_date;
@@ -62,6 +66,17 @@ export function ScheduleGrid({
       </div>
     );
   }
+
+  // navigator.clipboard.writeText can reject (insecure context, denied permission) — same
+  // copy-specific error toast as KvkPrep's key copy.
+  const copyFree = (dayNum: number, position: KvkPosition, slots: number[]) => {
+    const title = `${t("kvk.grid.day", { n: dayNum })}: ${t(`kvk.days.${DAYS[dayNum - 1]!.theme}` as const)}`;
+    const text = freeSlotsText(title, t(`kvk.positions.${position}.name` as const), slots, t("kvk.grid.utc"));
+    navigator.clipboard
+      .writeText(text)
+      .then(() => onToast(t("kvk.toast.freeCopied", { count: slots.length })))
+      .catch(() => onToast(t("kvk.toast.copyFailed")));
+  };
 
   const style = gridStyle(dayNums.reduce((n, d) => n + days[d - 1]!.shown.length, 0), !!day);
 
@@ -114,18 +129,34 @@ export function ScheduleGrid({
               );
             })}
           {dayNums.map((dayNum) =>
-            days[dayNum - 1]!.shown.map((p, pi) => (
-              <div
-                key={`${dayNum}-${p}`}
-                className={cn(
-                  "truncate border-b border-b-border px-[7px] py-2 text-[12px] font-semibold",
-                  sepClass(pi, days[dayNum - 1]!.shown.length),
-                  days[dayNum - 1]!.key === p ? "bg-ember-bg text-ember-fg" : "text-foreground",
-                )}
-              >
-                {t(`kvk.positions.${p}.name` as const)}
-              </div>
-            )),
+            days[dayNum - 1]!.shown.map((p, pi) => {
+              const free = freeSlots(byKey, dayNum, p, daySlot);
+              const label = free.length
+                ? t("kvk.grid.copyFree", { position: t(`kvk.positions.${p}.name` as const), day: dayNum })
+                : t("kvk.grid.noFree");
+              return (
+                <div
+                  key={`${dayNum}-${p}`}
+                  className={cn(
+                    "flex min-w-0 items-center gap-1 border-b border-b-border px-[7px] py-2 text-[12px] font-semibold",
+                    sepClass(pi, days[dayNum - 1]!.shown.length),
+                    days[dayNum - 1]!.key === p ? "bg-ember-bg text-ember-fg" : "text-foreground",
+                  )}
+                >
+                  <span className="truncate">{t(`kvk.positions.${p}.name` as const)}</span>
+                  <button
+                    type="button"
+                    className="ms-auto shrink-0 rounded-[4px] p-0.5 text-muted hover:text-foreground disabled:opacity-40 disabled:hover:text-muted"
+                    title={label}
+                    aria-label={label}
+                    disabled={free.length === 0}
+                    onClick={() => copyFree(dayNum, p, free)}
+                  >
+                    <Copy size={12} aria-hidden />
+                  </button>
+                </div>
+              );
+            }),
           )}
         </div>
 

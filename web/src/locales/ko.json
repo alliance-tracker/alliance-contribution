@@ -991,7 +991,9 @@
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "{{position}} 임명",
       "appointLabel": "{{position}} 임명 · {{day}}일차 · {{time}}",
-      "allHidden": "모든 날짜가 숨겨져 있습니다. 일정을 보려면 이벤트 설정에서 하루의 직책을 표시하세요."
+      "allHidden": "모든 날짜가 숨겨져 있습니다. 일정을 보려면 이벤트 설정에서 하루의 직책을 표시하세요.",
+      "copyFree": "{{position}} 빈 슬롯 복사 · {{day}}일차",
+      "noFree": "복사할 빈 슬롯이 없습니다"
     },
     "slot": {
       "appoint": "{{position}} 임명",
@@ -1027,7 +1029,8 @@
       "keyDeleted": "키 삭제됨",
       "keyDeletedSub": "배정 내역은 일정에 그대로 남습니다",
       "cleared": "일정이 초기화되었습니다",
-      "copyFailed": "클립보드에 복사하지 못했습니다"
+      "copyFailed": "클립보드에 복사하지 못했습니다",
+      "freeCopied_other": "빈 슬롯 {{count}}개를 복사했습니다"
     },
     "needKey": "KvK Prep을 관리하려면 API 키(상단 바)를 설정하세요.",
     "banner": {

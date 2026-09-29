@@ -140,6 +140,34 @@ export function fillCounts(
   return { filled, focus };
 }
 
+/** Unbooked slot numbers for one column, for the header's copy button. Slots already over don't
+ *  count: none once the event has ended or the day is past; on the live day, from the current slot
+ *  (still bookable for its remainder). A redacted row is booked, same as a full one. */
+export function freeSlots(
+  byKey: ReadonlyMap<string, KvkBoardAppointment>,
+  day: number,
+  position: KvkPosition,
+  daySlot: KvkDaySlot | null,
+): number[] {
+  if (daySlot?.phase === "ended" || (daySlot?.phase === "live" && day < daySlot.day)) return [];
+  const from = daySlot?.phase === "live" && day === daySlot.day ? daySlot.slot : 0;
+  const out: number[] = [];
+  for (let slot = from; slot < SLOTS; slot++) {
+    if (!byKey.has(slotKey({ day, position, slot }))) out.push(slot);
+  }
+  return out;
+}
+
+/** Clipboard text for `freeSlots`: two header lines, then slot start times three per line, each
+ *  line suffixed with `zone` so one pasted line still reads unambiguously. */
+export function freeSlotsText(title: string, subtitle: string, slots: readonly number[], zone: string): string {
+  const lines = [title, subtitle];
+  for (let i = 0; i < slots.length; i += 3) {
+    lines.push(`${slots.slice(i, i + 3).map((s) => slotLabel(s).start).join(" · ")} ${zone}`);
+  }
+  return lines.join("\n");
+}
+
 /** Sets day `day`'s (1-indexed) key position. A non-null key not already in `shown` is added, kept in
  *  `POSITIONS` order; `null` leaves `shown` as it is. Event settings' key picker. */
 export function setDayKey(days: readonly KvkDay[], day: number, key: KvkPosition | null): KvkDay[] {

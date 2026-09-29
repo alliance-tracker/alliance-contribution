@@ -42,6 +42,10 @@ settings** — managers and viewers see the schedule only, read-only.
   from each cell. A free slot is empty and clickable; a filled slot shows the alliance colour, the
   player ID and name. The current day is highlighted and a "Now" row tracks the live slot, both
   recomputed every 30 seconds, alongside the board refresh.
+- **Copy free slots** — the copy icon in each position header puts that column's free slots on
+  the clipboard, ready to paste into chat: "Day N: Theme", the position, then start times three per
+  line, each line ending in UTC. Slots already over are left out; the icon is disabled when none are
+  free.
 - **Access keys** (admin) — a table (cards on phone) of every alliance: colour, name,
   representative, masked key, slot count, last used, and Key/Link copy buttons.
 - **Event settings** (admin) — the enable toggle, start date with a preview of all 5 days (each with

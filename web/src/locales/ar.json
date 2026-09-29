@@ -1266,7 +1266,9 @@
       "cellTitle": "{{alliance}} · {{id}} {{name}}",
       "appointTitle": "تعيين {{position}}",
       "appointLabel": "تعيين {{position}} · يوم {{day}} · {{time}}",
-      "allHidden": "كل الأيام مخفية. أظهر منصبًا ليوم ما في إعدادات الحدث لعرض الجدول."
+      "allHidden": "كل الأيام مخفية. أظهر منصبًا ليوم ما في إعدادات الحدث لعرض الجدول.",
+      "copyFree": "نسخ فتحات {{position}} الفارغة · اليوم {{day}}",
+      "noFree": "لا توجد فتحات فارغة للنسخ"
     },
     "slot": {
       "appoint": "تعيين {{position}}",
@@ -1307,7 +1309,13 @@
       "keyDeleted": "تم حذف المفتاح",
       "keyDeletedSub": "تبقى تعييناته في الجدول",
       "cleared": "تم مسح الجدول",
-      "copyFailed": "تعذر النسخ إلى الحافظة"
+      "copyFailed": "تعذر النسخ إلى الحافظة",
+      "freeCopied_zero": "تم نسخ {{count}} فتحة فارغة",
+      "freeCopied_one": "تم نسخ فتحة فارغة واحدة ({{count}})",
+      "freeCopied_two": "تم نسخ فتحتين فارغتين ({{count}})",
+      "freeCopied_few": "تم نسخ {{count}} فتحات فارغة",
+      "freeCopied_many": "تم نسخ {{count}} فتحة فارغة",
+      "freeCopied_other": "تم نسخ {{count}} فتحة فارغة"
     },
     "needKey": "اضبط مفتاح API (الشريط العلوي) لإدارة KvK Prep.",
     "banner": {

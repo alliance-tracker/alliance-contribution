@@ -188,6 +188,7 @@ export function KvkPrep() {
               ownKeyId={ownKeyId}
               canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
               onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
+              onToast={showToast}
             />
           </div>
           <div className="flex flex-col gap-3 md:hidden">
@@ -198,6 +199,7 @@ export function KvkPrep() {
               ownKeyId={ownKeyId}
               canEdit={(a) => isAdmin || (ownKeyId !== null && board.event.enabled && holderCanEdit(a, ownKeyId))}
               onCellClick={(ref, appt) => setSlotTarget({ ref, appt })}
+              onToast={showToast}
               day={mobileDay ?? undefined}
             />
           </div>

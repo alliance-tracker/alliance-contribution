@@ -28,8 +28,8 @@ export const SLOTS = 48;
 export const DEFAULT_DAYS: readonly KvkDay[] = [
   { key: "chief_minister", shown: [...POSITIONS] },
   { key: "chief_minister", shown: [...POSITIONS] },
-  { key: "noble_advisor", shown: [...POSITIONS] },
   { key: null, shown: [...POSITIONS] },
+  { key: "noble_advisor", shown: [...POSITIONS] },
   { key: "chief_minister", shown: [...POSITIONS] },
 ];
 

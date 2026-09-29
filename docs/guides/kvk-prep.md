@@ -14,8 +14,8 @@ admin hands out.
 | --- | --- | --- |
 | 1 | Construction | Chief Minister |
 | 2 | Research | Chief Minister |
-| 3 | Training | Noble Advisor |
-| 4 | No focus | — |
+| 3 | No focus | — |
+| 4 | Training | Noble Advisor |
 | 5 | Final Push | Chief Minister |
 
 The key position and which positions get a column are set per day in Event settings, not fixed —

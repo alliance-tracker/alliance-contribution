@@ -22,8 +22,8 @@ import {
 const DEFAULT_DAYS: KvkDay[] = [
   { key: "chief_minister", shown: ["chief_minister", "noble_advisor"] },
   { key: "chief_minister", shown: ["chief_minister", "noble_advisor"] },
-  { key: "noble_advisor", shown: ["chief_minister", "noble_advisor"] },
   { key: null, shown: ["chief_minister", "noble_advisor"] },
+  { key: "noble_advisor", shown: ["chief_minister", "noble_advisor"] },
   { key: "chief_minister", shown: ["chief_minister", "noble_advisor"] },
 ];
 
@@ -95,21 +95,21 @@ describe("dayIso", () => {
 });
 
 describe("fillCounts", () => {
-  it("counts filled slots and focus slots, day 4 never counting toward focus with default days", () => {
+  it("counts filled slots and focus slots, day 3 never counting toward focus with default days", () => {
     const appts: KvkBoardAppointment[] = [
       row({ day: 1, position: "chief_minister", slot: 0 }), // focus day, matching position
       row({ day: 1, position: "noble_advisor", slot: 1 }), // focus day, non-focus position
-      row({ day: 4, position: "chief_minister", slot: 0 }), // no-focus day
-      row({ day: 4, position: "noble_advisor", slot: 1 }), // no-focus day
+      row({ day: 3, position: "chief_minister", slot: 0 }), // no-focus day
+      row({ day: 3, position: "noble_advisor", slot: 1 }), // no-focus day
     ];
     expect(fillCounts(appts, DEFAULT_DAYS)).toEqual({ filled: 4, focus: 1 });
   });
 
   it("counts focus per the day's configured key position", () => {
-    const days: KvkDay[] = DEFAULT_DAYS.map((d, i) => (i === 3 ? { ...d, key: "chief_minister" } : d));
+    const days: KvkDay[] = DEFAULT_DAYS.map((d, i) => (i === 2 ? { ...d, key: "chief_minister" } : d));
     const appts: KvkBoardAppointment[] = [
-      row({ day: 4, position: "chief_minister", slot: 0 }), // now a focus day
-      row({ day: 4, position: "noble_advisor", slot: 1 }), // still not the key position
+      row({ day: 3, position: "chief_minister", slot: 0 }), // now a focus day
+      row({ day: 3, position: "noble_advisor", slot: 1 }), // still not the key position
     ];
     expect(fillCounts(appts, days)).toEqual({ filled: 2, focus: 1 });
   });
@@ -182,8 +182,8 @@ describe("setDayKey", () => {
 
 describe("toggleShown", () => {
   it("removes a shown position", () => {
-    const next = toggleShown(DEFAULT_DAYS, 4, "noble_advisor");
-    expect(next[3]).toEqual({ key: null, shown: ["chief_minister"] });
+    const next = toggleShown(DEFAULT_DAYS, 3, "noble_advisor");
+    expect(next[2]).toEqual({ key: null, shown: ["chief_minister"] });
   });
 
   it("adds a hidden position back in POSITIONS order regardless of prior order", () => {

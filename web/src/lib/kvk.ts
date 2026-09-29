@@ -19,8 +19,8 @@ export type KvkDayTheme = "construction" | "research" | "training" | "none" | "f
 export const DAYS: readonly { theme: KvkDayTheme }[] = [
   { theme: "construction" },
   { theme: "research" },
-  { theme: "training" },
   { theme: "none" },
+  { theme: "training" },
   { theme: "finalPush" },
 ];
 

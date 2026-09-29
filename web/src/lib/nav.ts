@@ -8,7 +8,7 @@ import {
   Crown,
   type LucideIcon,
 } from "lucide-react";
-import type { TKey } from "@/i18n";
+import type { ParseKeys as TKey } from "i18next"; // not @/i18n: root tsconfig (via test/unit/nav.test.ts) has no alias or DOM
 
 /** `hue` is a CSS colour reference (a --color-nav-* token): the sidebar tile and the top-bar accent bar. */
 export type NavItem = { to: string; label: TKey; icon: LucideIcon; hue: string };
